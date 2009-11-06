@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+
+Name: libmsmcomm
+Description: A implemenation of the protocol to speak with msm modems
+Version: @VERSION@
+Requires:
+Libs: -L${libdir} -lmsmcomm
+Cflags: -I${includedir}/msmcomm-1.0
