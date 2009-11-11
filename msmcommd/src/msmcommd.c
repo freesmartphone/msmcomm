@@ -37,9 +37,18 @@
 
 #define MSMC_DEFAULT_SERIAL_PORT		"/dev/modemuart"
 
-#define MSMC_STATE_NULL					0
-#define MSMC_STATE_INIT					1
-#define MSMC_STATE_ACTIVE				2
+#define MSMC_STATE_NULL_0				0
+#define MSMC_STATE_NULL_1				1
+#define MSMC_STATE_INIT_0				2
+#define MSMC_STATE_INIT_1				3
+#define MSMC_STATE_ACTIVE				4
+
+#define MSMC_FRAME_TYPE_SYNC			1
+#define MSMC_FRAME_TYPE_SYNC_RESP		2
+#define MSMC_FRAME_TYPE_CONFIG			3
+#define MSMC_FRAME_TYPE_CONFIG_RESP		4
+#define MSMC_FRAME_TYPE ACK				5
+#define MSMC_FRAME_TYPE_DATA			6
 
 #define MSMC_FD_COUNT					2
 
@@ -61,8 +70,7 @@ struct msmc_context
 
 	/* HCI LL specific */
 	int state;
-	char seq_nr;
-	char ack_nr;
+	char next_expected_seq;
 };
 
 struct frame
@@ -73,6 +81,15 @@ struct frame
 	char ack;
 	char *payload;
 	unsigned int payload_len;
+};
+
+const char *frame_type_names[] = {
+	"SYNC",
+	"SYNC RESPONSE",
+	"CONFIG",
+	"CONFIG RESPONSE",
+	"ACKNOWLEDGE",
+	"DATA"
 };
 
 const unsigned short crc16tab_fcs[] = 
@@ -118,6 +135,12 @@ void crc16_calc(const char *buffer, size_t len, unsigned short *crc)
 		crc = (crc >> 8) ^ crc16tab_fcs[(crc ^ *buffer++) & 0xff];
 }
 
+void _next_sequence_nr(struct msmc_context *ctx)
+{
+	if (!ctx) return;
+	ctx->next_expected_seq = (ctx->next_expected_seq + 1) % 8;
+}
+
 
 struct msmc_context* msmcommd_context_new(void)
 {
@@ -127,9 +150,8 @@ struct msmc_context* msmcommd_context_new(void)
 
 	/* default settings */
 	ctx->port = 4496;
-
-	ctx->seq_nr = 0;
-	ctx->ack_nr = 0;
+	ctx->state = MSMC_STATE_NULL_0;
+	ctx->next_expected_seq = 0;
 }
 
 void _setup_modem(int fd)
@@ -179,23 +201,78 @@ void _ll_restart(struct msmc_context *ctx)
 		return;
 
 	/* reset state and send out sync packet */
-	ctx->state = MSMC_STATE_NULL;
-
-	/* FIXME */
+	ctx->state = MSMC_STATE_NULL_0;
 }
 
-void _ll_control(struct msmc_context *ctx, struct frame *fr)
+void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 {
 	if (!ctx || !fr)
 		return;
 
 	switch (ctx->state)
 	{
-	case MSMC_STATE_NULL:
+	case MSMC_STATE_NULL_0:
+		if (fr->type != MSMC_FRAME_TYPE_SYNC)
+		{
+			printf("wrong frame [type=%s] arrived in NULL_0 state! ignore frame ...\n",
+				   frame_type_names[fr->type]);
+			break;
+		}
+
+		ctx->state = MSMC_STATE_NULL_1;
+
+		/* FIXME send sync resp message */
+
 		break;
-	case MSMC_STATE_INIT:
+	case MSMC_STATE_NULL_1:
+		if (fr->type != MSMC_FRAME_TYPE_SYNC_RESP)
+		{
+			printf("wrong frame [type=%s] arrived in NULL_1 state! ignore frame ...\n",
+				   frame_type_names[fr->type]);
+			break;
+		}
+		
+		ctx->state = MSMC_STATE_INIT_0;
+
+		/* FIXME send config message */
+
+		break;
+	case MSMC_STATE_INIT_0:
+		if (fr->type != MSMC_FRAME_TYPE_CONFIG)
+		{
+			printf("wrong frame [type=%s] arrived in INIT_0 state! ignore frame ...\n",
+				   frame_type_names[fr->type]);
+			break;
+		}
+
+		ctx->state = MSMC_STATE_INIT_1;
+
+		/* FIXME send config response message */
+
+		break;
+	case MSMC_STATE_INIT_1:
+		if (fr->type != MSMC_FRAME_TYPE_CONFIG_RESP)
+		{
+			printf("wrong frame [type=%s] arrived in INIT_1 state! ignore frame ...\n",
+				   frame_type_names[fr->type]);
+			break;
+		}
+
+		ctx->state = MSMC_STATE_INIT_1;
+
+		/* FIXME send config response message */
+
 		break;
 	case MSMC_STATE_ACTIVE:
+		if (fr->type != MSMC_FRAME_TYPE_SYNC)
+		{
+			printf("wrong frame [type=%s] arrived in ACTIVE state! ignore frame ...\n",
+				   frame_type_names[fr->type]);
+			break;
+		}
+
+
+
 		break;
 	default:
 		printf("arrived in invalid state ... assuming restart!");
@@ -222,12 +299,14 @@ void _handle_frame(struct msmc_context *ctx, const char *data, unsigned int len)
 	f->addr = data[0];
 	f->type = data[1] >> 4;
 	f->seq  = data[2] >> 4;
-	f->seq  = data[2] & 0xf;
+	f->ack  = data[2] & 0xf;
 	f->payload = data + 3;
 	f->payload_len = len - 3;
 
-	/* decide what we do with the arrived frame */
-	_ll_control(struct msmc_context *ctx, f);
+	if (f->type < 5)
+		_link_establishment_control(ctx, f);
+	else
+		_ll_control(ctx, f);
 }
 
 void _handle_incomming_data(struct bsc_fd *bfd)
@@ -235,7 +314,7 @@ void _handle_incomming_data(struct bsc_fd *bfd)
 	struct msmc_context *ctx = bfd->data;
 	char buffer[MSMC_MAX_BUFFER_SIZE];
 	char *p;
-	int start, len;
+	int start, len, last;
 
 	ssize_t size = read(bfd->fd, buffer, sizeof(buffer));
 	if (size < 0)
@@ -243,11 +322,15 @@ void _handle_incomming_data(struct bsc_fd *bfd)
 
 	/* try to find a valid frame */
 	start = 0;
+	last = 0;
 	p = &buffer[start];
 	while(*p)
 	{
 		if(*p == 0x7e)
-			_handle_frame(ctx, p, p - start - 1);
+		{
+			last = p - staart - 1;
+			_handle_frame(ctx, p, last);
+		}
 		p++;
 	}
 
@@ -256,6 +339,8 @@ void _handle_incomming_data(struct bsc_fd *bfd)
 void _handle_outgoing_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
+
+	/* do we have data which should be send out? */
 }
 
 static void _serial_cb(struct bsc_fd *bfd, unsigned int flags)
@@ -266,20 +351,12 @@ static void _serial_cb(struct bsc_fd *bfd, unsigned int flags)
 		return _handle_outgoing_data(bfd);
 }
 
-static struct timer_list modem_bae_timer;
-struct struct timer_list network_base_timer;
+static struct timer_list timer;
 
-static void modem_timer_cb(void *_data)
+static void timer_cb(void *_data)
 {
-	struct bsc_fd *bfd = _data;
-	
 	/* schedule again */
 	bsc_schedule_timer(&timer, 0, 10);
-}
-
-static void network_timer_cb(void *_data)
-{
-	struct bsc_fd *bfd = _data;
 }
 
 int msmcommd_init(struct msmc_context *ctx)
@@ -288,7 +365,7 @@ int msmcommd_init(struct msmc_context *ctx)
 
 	printf("setting up ...\n");
 
-	ctx->state = MSMC_STATE_NULL;
+	ctx->state = MSMC_STATE_NULL_0;
 	ctx->seq = 0;
 	ctx->ack = 0;
 
@@ -307,10 +384,11 @@ int msmcommd_init(struct msmc_context *ctx)
 	_setup_modem(ctx->fds[MSMC_FD_SERIAL].fd);
 	bsc_register_fd(&ctx->fds[MSMC_FD_SERIAL]);
 
-	/* basic timer for modem port */
+	/* basic timer */
 	timer.cb = timer_cb;
-	timer.data = &ctx->fds[MSMC_FD_SERIAL];
 	bsc_schedule_timer(&timer, 0, 10); 
+
+	_ll_restart(ctx);
 }
 
 void msmcommd_context_free(struct msmc_context *ctx)
