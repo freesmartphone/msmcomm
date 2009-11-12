@@ -31,6 +31,7 @@
 #include <termios.h>
 #include <strings.h>
 #include <stdarg.h>
+#include <getopt.h>
 
 #include <include/select.h>
 #include <include/timer.h>
@@ -152,7 +153,7 @@ void debug(char *file, int line, const char *format, ...)
 	time_t tm;
 	tm = time(NULL);
 	timestamp = ctime(&tm);
-	fprintf(outfd, "%s ", timestamp);
+	//fprintf(outfd, "%s ", timestamp);
 	fprintf(outfd, "<%s:%d> ", file, line);
 	vfprintf(outfd, format, ap);
 	fprintf(outfd, "\033[0;m");
@@ -172,11 +173,11 @@ void info(const char *format, ...)
 	
 	fprintf(outfd, "%s", "\033[1,30m");
 
-	char *timestamp;
+	char *timestr;
 	time_t tm;
 	tm = time(NULL);
-	timestamp = ctime(&tm);
-	fprintf(outfd, "%s ", timestamp);
+	timestr = ctime(&tm);
+	//fprintf(outfd, "%s ", timestr);
 	
 	vfprintf(outfd, format, ap);
 	fprintf(outfd,"\033[0;m");
@@ -249,9 +250,35 @@ void _setup_network(int fd)
 {
 }
 
+void _frame_to_binary(struct frame *fr, char *data, unsigned int *len)
+{
+	if (!fr) {
+		data = NULL;
+		len = 0;
+	}
+	
+	*len = 3 + sizeof(fr->payload);
+	data = (char*) malloc(sizeof(char) * *len);
+
+	data[0] = fr->adress;
+	data[1] = fr->type << 4;
+	data[2] = (fr->seq << 4) | fr->ack;
+	memcpy(&data[3], fr->payload, fr->payload_len);
+}
+
 void msmc_frame_send(struct msmc_context *ctx, struct frame *fr)
 {
+	unsigned int len;
+	char *data;
+
 	if (!ctx || !fr) return;
+
+	/* convert our frame struct to raw binary data */
+	_frame_to_binary(fr, data, &len);
+
+	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
+
+	free(data);
 }
 
 void _frame_create(struct frame *fr, unsigned int type)
@@ -267,23 +294,20 @@ void _frame_create(struct frame *fr, unsigned int type)
 	fr->payload_len = 0;
 }
 
-struct timer_list sync_timer;
+static struct timer_list sync_timer;
 
-void sync_timer_cb(void *_data)
+static void sync_timer_cb(void *_data)
 {
 	struct frame fr;
 	struct msmc_context *ctx = (struct msmc_context*) _data;
-	
+
 	if (ctx->state == MSMC_STATE_NULL)
 	{
 		_frame_create(&fr, MSMC_FRAME_TYPE_SYNC);
 		msmc_frame_send(ctx, &fr);
 	}
-	else
-	{
-		/* we got already a sync response so we don't have to send out anymore sync messages */
-		bsc_del_timer(&sync_timer);
-	}
+
+	bsc_schedule_timer(&sync_timer, 0, MSMC_SYNC_SENT_INTERVAL);
 }
 
 void _link_restart(struct msmc_context *ctx)
@@ -296,6 +320,8 @@ void _link_restart(struct msmc_context *ctx)
 
 	/* the spec told us to send out three sync messages per second until we get a sync response from
 	 * the other device */
+	sync_timer.cb = sync_timer_cb;
+	sync_timer.data = ctx;
 	bsc_schedule_timer(&sync_timer, 0, MSMC_SYNC_SENT_INTERVAL);
 }
 
@@ -328,6 +354,8 @@ void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 
 	if (!ctx || !fr)
 		return;
+
+	DEBUG_MSG("handle incomming frame ...");
 
 	switch (ctx->state)
 	{
@@ -411,6 +439,8 @@ void _handle_frame(struct msmc_context *ctx, const char *data, unsigned int len)
 		DEBUG_MSG("crc checksum error! discarding frame ...\n");;
 		return;
 	}
+
+	DEBUG_MSG("handle frame ...\n");
 	
 	/* parse frame data */
 	f->adress = data[0];
@@ -432,6 +462,8 @@ void _handle_incomming_data(struct bsc_fd *bfd)
 	char buffer[MSMC_MAX_BUFFER_SIZE];
 	char *p;
 	int start, len, last;
+
+	DEBUG("data arrived ...\n");
 
 	ssize_t size = read(bfd->fd, buffer, sizeof(buffer));
 	if (size < 0)
@@ -472,10 +504,10 @@ static struct timer_list timer;
 
 static void timer_cb(void *_data)
 {
-	struct msmc_context *ctx = (struct msmc_context*) _data;
+	struct msmc_context *ctx = _data;
 
 	/* schedule again */
-	bsc_schedule_timer(&timer, 0, 10);
+	bsc_schedule_timer(&timer, 1, 0);
 }
 
 int msmcommd_init(struct msmc_context *ctx)
@@ -502,7 +534,7 @@ int msmcommd_init(struct msmc_context *ctx)
 	/* basic timer */
 	timer.cb = timer_cb;
 	timer.data = ctx;
-	bsc_schedule_timer(&timer, 0, 10); 
+	bsc_schedule_timer(&timer, 1, 0); 
 
 	_link_restart(ctx);
 }
@@ -526,15 +558,57 @@ int msmcommd_update(struct msmc_context *ctx)
 	retval = bsc_select_main(0);
 	if (retval < 0)
 		return -1;
-	
+
+	return 0;
+}
+
+void print_usage()
+{
+}
+
+void print_help()
+{
 }
 
 int main(int argc, char *argv[])
 {
 	int retval;
 	struct msmc_context *ctx;
-	
+	int option_index;
+
+	printf("msmcommd (c) 2009 by Simon Busch\n");
+
 	ctx = msmcommd_context_new();
+
+	/* parse options */
+	while(1) {
+		int c;
+		unsigned long ul;
+		char *slash;
+		static struct option long_options[] = {
+			{"serial-port", 1, 0, 's'},
+			{"help", 0, 0, 'h'},
+		};
+
+		c = getopt_long(argc, argv, "s", long_options,
+						&option_index);
+
+		if (c == -1)
+			break;
+
+		switch(c) {
+			case 's':
+				snprintf(ctx->serial_port, 30, "%s", optarg);
+				printf("using %s as serial port ...\n", ctx->serial_port);
+				break;
+			case 'h':
+				print_usage();
+				print_help();
+				msmcommd_context_free(ctx);
+				exit(0);
+		}
+	}
+	
 	msmcommd_init(ctx);
 
 	while (1)
