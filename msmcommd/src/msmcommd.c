@@ -34,6 +34,7 @@
 #include <include/select.h>
 #include <include/timer.h>
 
+#define DEBUG
 
 #define MSMC_DEFAULT_SERIAL_PORT		"/dev/modemuart"
 
@@ -49,6 +50,8 @@
 #define MSMC_FRAME_TYPE_CONFIG_RESP		4
 #define MSMC_FRAME_TYPE ACK				5
 #define MSMC_FRAME_TYPE_DATA			6
+
+#define MSMC_SYNC_SENT_INTERVAL			33
 
 #define MSMC_FD_COUNT					2
 
@@ -75,7 +78,7 @@ struct msmc_context
 
 struct frame
 {
-	char addr;
+	char adress;
 	char type;
 	char seq;
 	char ack;
@@ -134,6 +137,63 @@ void crc16_calc(const char *buffer, size_t len, unsigned short *crc)
 	while(len--)
 		crc = (crc >> 8) ^ crc16tab_fcs[(crc ^ *buffer++) & 0xff];
 }
+
+void debug(char *file, int line, const char *format, ...)
+{
+	va_list sp;
+	FILE *outfd = stderr;
+
+	va_start(ap, format);
+	
+	/* color */
+	fprintf(outfd, "%s", "\033[1;31m");
+
+	char *timestamp;
+	time_t tm;
+	tm = time(NULL);
+	timestamp = ctime(&tm);
+	fprintf(outfd, "%s ", timestamp);
+	fprintf(outfd, "<%s:%d> ", file, line);
+	vfprintf(outfd, format, ap);
+	fprintf(outfd, "\033[0;m");
+	fprintf(outfd, "\n");
+	
+	va_end(ap);
+
+	fflush(outfd);
+}
+
+void info(const char *format, ...)
+{
+	va_list sp;
+	FILE *outfd = stdout;
+
+	va_start(ap, format);
+	
+	fprintf(outfd, "%s", "\033[1,30m");
+
+	char *timestamp;
+	time_t tm;
+	tm = time(NULL);
+	timestamp = ctime(&tm);
+	fprintf(outfd, "%s ", timestamp);
+	
+	vfprintf(outfd, format, ap);
+	fprintf(outfd,"\033[0;m");
+	fprintf(outfd,"\n");
+
+	va_end(ap);
+
+	fflush(outfd);
+}
+
+#ifdef DEBUG
+#define DEBUG(fmt, args...) debug(__FILE__, __LINE__, fmt, ## args)
+#else
+#define DEBUG(fmt, args...)
+#endif
+
+#define INFO(fmt, args...) info(fmt, ##args)
 
 void _next_sequence_nr(struct msmc_context *ctx)
 {
@@ -195,6 +255,38 @@ void _setup_network(int fd)
 {
 }
 
+void _frame_create(struct frame *fr, unsigned int type)
+{
+	if (!fr)
+		fr = (struct frame*) malloc(sizeof(struct frame));
+	
+	fr->adress = 0xfa;
+	fr->type = type;
+	fr->seq = 0;
+	fr->ack = 0;
+	fr->payload = NULL;
+	fr->payload_len = 0;
+}
+
+struct timer_list sync_timer;
+
+void sync_timer_cb(void *_data)
+{
+	struct frame fr;
+	struct msmc_context *ctx = (struct msmc_context*) _data;
+	
+	if (ctx->state == MSMC_STATE_NULL_0)
+	{
+		_frame_create(&fr, MSMC_FRAME_TYPE_SYNC);
+		msmc_send_frame(ctx, &fr);
+	}
+	else
+	{
+		/* we got already a sync response so we don't have to send out anymore sync messages */
+		bsc_del_timer(&sync_timer);
+	}
+}
+
 void _ll_restart(struct msmc_context *ctx)
 {
 	if (!ctx)
@@ -202,10 +294,16 @@ void _ll_restart(struct msmc_context *ctx)
 
 	/* reset state and send out sync packet */
 	ctx->state = MSMC_STATE_NULL_0;
+
+	/* the spec told us to send out three sync messages per second until we get a sync response from
+	 * the other device */
+	bsc_schedule_timer(&sync_timer, 0, MSMC_SYNC_SENT_INTERVAL);
 }
 
-void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
+void _link_establishment_process(struct msmc_context *ctx, struct frame *fr)
 {
+	struct frame frout;
+
 	if (!ctx || !fr)
 		return;
 
@@ -214,70 +312,97 @@ void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 	case MSMC_STATE_NULL_0:
 		if (fr->type != MSMC_FRAME_TYPE_SYNC)
 		{
-			printf("wrong frame [type=%s] arrived in NULL_0 state! ignore frame ...\n",
+			DEBUG("wrong frame [type=%s] arrived in NULL_0 state! ignore frame ...\n",
 				   frame_type_names[fr->type]);
 			break;
 		}
 
 		ctx->state = MSMC_STATE_NULL_1;
 
-		/* FIXME send sync resp message */
-
+		/* send sync resp message */
+		_frame_create(&frout, MSMC_FRAME_TYPE_SYNC_RESP);
+		msmc_frame_send(ctx, &frout);
 		break;
+
 	case MSMC_STATE_NULL_1:
 		if (fr->type != MSMC_FRAME_TYPE_SYNC_RESP)
 		{
-			printf("wrong frame [type=%s] arrived in NULL_1 state! ignore frame ...\n",
+			DEBUG("wrong frame [type=%s] arrived in NULL_1 state! ignore frame ...\n",
 				   frame_type_names[fr->type]);
 			break;
 		}
 		
 		ctx->state = MSMC_STATE_INIT_0;
 
-		/* FIXME send config message */
-
+		/* send config message */
+		_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG);
+		msmc_frame_send(ctx, &frout);
 		break;
+
 	case MSMC_STATE_INIT_0:
 		if (fr->type != MSMC_FRAME_TYPE_CONFIG)
 		{
-			printf("wrong frame [type=%s] arrived in INIT_0 state! ignore frame ...\n",
+			DEBUG("wrong frame [type=%s] arrived in INIT_0 state! ignore frame ...\n",
 				   frame_type_names[fr->type]);
 			break;
 		}
 
 		ctx->state = MSMC_STATE_INIT_1;
 
-		/* FIXME send config response message */
-
+		/* send config response message */
+		_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG_RESP);
+		msmc_frame_send(ctx, &frout);
 		break;
+
 	case MSMC_STATE_INIT_1:
 		if (fr->type != MSMC_FRAME_TYPE_CONFIG_RESP)
 		{
-			printf("wrong frame [type=%s] arrived in INIT_1 state! ignore frame ...\n",
+			DEBUG("wrong frame [type=%s] arrived in INIT_1 state! ignore frame ...\n",
 				   frame_type_names[fr->type]);
 			break;
 		}
 
-		ctx->state = MSMC_STATE_INIT_1;
-
-		/* FIXME send config response message */
-
+		ctx->state = MSMC_STATE_ACTIVE;
 		break;
+
 	case MSMC_STATE_ACTIVE:
 		if (fr->type != MSMC_FRAME_TYPE_SYNC)
 		{
-			printf("wrong frame [type=%s] arrived in ACTIVE state! ignore frame ...\n",
+			DEBUG("wrong frame [type=%s] arrived in ACTIVE state! ignore frame ...\n",
 				   frame_type_names[fr->type]);
 			break;
 		}
 
-
-
-		break;
-	default:
-		printf("arrived in invalid state ... assuming restart!");
+		/* we got a sync frame in active state -> restart! */
 		_ll_restart(ctx);
 		break;
+
+	default:
+		DEBUG("arrived in invalid state ... assuming restart!");
+		_ll_restart(ctx);
+		break;
+	}
+}
+
+void _link_control(struct msmc_context *ctx, struct frame *fr)
+{
+	if (!ctx) return;
+
+	switch (ctx->state)
+	{
+		case MSMC_STATE_ACTIVE:
+			if (fr->type == MSMC_FRAME_TYPE_DATA)
+			{
+
+			}
+			else if (fr->type == MSMC_FRAME_TYPE_ACK)
+			{
+
+			}
+			break;
+
+		default:
+			break;
 	}
 }
 
@@ -291,12 +416,12 @@ void _handle_frame(struct msmc_context *ctx, const char *data, unsigned int len)
 	crc16_calc(data, len, &crc);
 	if (crc != fr_crc)
 	{
-		printf("crc checksum error! don't handle frame anymore ...\n");;
+		DEBUG("crc checksum error! don't handle frame anymore ...\n");;
 		return;
 	}
 	
 	/* parse frame data */
-	f->addr = data[0];
+	f->adress = data[0];
 	f->type = data[1] >> 4;
 	f->seq  = data[2] >> 4;
 	f->ack  = data[2] & 0xf;
@@ -306,7 +431,7 @@ void _handle_frame(struct msmc_context *ctx, const char *data, unsigned int len)
 	if (f->type < 5)
 		_link_establishment_control(ctx, f);
 	else
-		_ll_control(ctx, f);
+		_link_control(ctx, f);
 }
 
 void _handle_incomming_data(struct bsc_fd *bfd)
@@ -340,7 +465,7 @@ void _handle_outgoing_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 
-	/* do we have data which should be send out? */
+	/* do we have data to send? */
 }
 
 static void _serial_cb(struct bsc_fd *bfd, unsigned int flags)
@@ -355,6 +480,8 @@ static struct timer_list timer;
 
 static void timer_cb(void *_data)
 {
+	struct msmc_context *ctx = (struct msmc_context*) _data;
+
 	/* schedule again */
 	bsc_schedule_timer(&timer, 0, 10);
 }
@@ -363,7 +490,7 @@ int msmcommd_init(struct msmc_context *ctx)
 {
 	if (!ctx || strlen(ctx->serial_port) == 0) return;
 
-	printf("setting up ...\n");
+	INFO("setting up ...\n");
 
 	ctx->state = MSMC_STATE_NULL_0;
 	ctx->seq = 0;
@@ -386,6 +513,7 @@ int msmcommd_init(struct msmc_context *ctx)
 
 	/* basic timer */
 	timer.cb = timer_cb;
+	timer.data = ctx;
 	bsc_schedule_timer(&timer, 0, 10); 
 
 	_ll_restart(ctx);
@@ -393,7 +521,7 @@ int msmcommd_init(struct msmc_context *ctx)
 
 void msmcommd_context_free(struct msmc_context *ctx)
 {
-	printf("shutting down ...\n");
+	INFO("shutting down ...\n");
 
 	if (ctx)
 		free(ctx);
