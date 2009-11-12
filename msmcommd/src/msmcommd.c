@@ -30,28 +30,28 @@
 #include <unistd.h>
 #include <termios.h>
 #include <strings.h>
+#include <stdarg.h>
 
 #include <include/select.h>
 #include <include/timer.h>
 
 #define DEBUG
 
+#define MSMC_DEFAULT_SERIAL_BAUDRATE	B115200
 #define MSMC_DEFAULT_SERIAL_PORT		"/dev/modemuart"
 
-#define MSMC_STATE_NULL_0				0
-#define MSMC_STATE_NULL_1				1
-#define MSMC_STATE_INIT_0				2
-#define MSMC_STATE_INIT_1				3
-#define MSMC_STATE_ACTIVE				4
+#define MSMC_STATE_NULL					0
+#define MSMC_STATE_INIT					1
+#define MSMC_STATE_ACTIVE				2
 
 #define MSMC_FRAME_TYPE_SYNC			1
 #define MSMC_FRAME_TYPE_SYNC_RESP		2
 #define MSMC_FRAME_TYPE_CONFIG			3
 #define MSMC_FRAME_TYPE_CONFIG_RESP		4
-#define MSMC_FRAME_TYPE ACK				5
+#define MSMC_FRAME_TYPE_ACK				5
 #define MSMC_FRAME_TYPE_DATA			6
 
-#define MSMC_SYNC_SENT_INTERVAL			33
+#define MSMC_SYNC_SENT_INTERVAL			250
 
 #define MSMC_FD_COUNT					2
 
@@ -133,14 +133,14 @@ const unsigned short crc16tab_fcs[] =
 
 void crc16_calc(const char *buffer, size_t len, unsigned short *crc)
 {
-	crc = 0xffff;
+	*crc = 0xffff;
 	while(len--)
-		crc = (crc >> 8) ^ crc16tab_fcs[(crc ^ *buffer++) & 0xff];
+		*crc = (*crc >> 8) ^ crc16tab_fcs[(*crc ^ *buffer++) & 0xff];
 }
 
 void debug(char *file, int line, const char *format, ...)
 {
-	va_list sp;
+	va_list ap;
 	FILE *outfd = stderr;
 
 	va_start(ap, format);
@@ -165,7 +165,7 @@ void debug(char *file, int line, const char *format, ...)
 
 void info(const char *format, ...)
 {
-	va_list sp;
+	va_list ap;
 	FILE *outfd = stdout;
 
 	va_start(ap, format);
@@ -188,19 +188,12 @@ void info(const char *format, ...)
 }
 
 #ifdef DEBUG
-#define DEBUG(fmt, args...) debug(__FILE__, __LINE__, fmt, ## args)
+#define DEBUG_MSG(fmt, args...) debug(__FILE__, __LINE__, fmt, ## args)
 #else
-#define DEBUG(fmt, args...)
+#define DEBUG_MSG(fmt, args...)
 #endif
 
 #define INFO(fmt, args...) info(fmt, ##args)
-
-void _next_sequence_nr(struct msmc_context *ctx)
-{
-	if (!ctx) return;
-	ctx->next_expected_seq = (ctx->next_expected_seq + 1) % 8;
-}
-
 
 struct msmc_context* msmcommd_context_new(void)
 {
@@ -209,13 +202,14 @@ struct msmc_context* msmcommd_context_new(void)
 	ctx = (struct msmc_context*) malloc(sizeof(struct msmc_context));
 
 	/* default settings */
-	ctx->port = 4496;
-	ctx->state = MSMC_STATE_NULL_0;
+	ctx->network_port = 4496;
+	ctx->state = MSMC_STATE_NULL;
 	ctx->next_expected_seq = 0;
 }
 
 void _setup_modem(int fd)
 {
+	int v24;
 	struct termios options;
 	bzero(&options, sizeof(options));
 
@@ -255,6 +249,11 @@ void _setup_network(int fd)
 {
 }
 
+void msmc_frame_send(struct msmc_context *ctx, struct frame *fr)
+{
+	if (!ctx || !fr) return;
+}
+
 void _frame_create(struct frame *fr, unsigned int type)
 {
 	if (!fr)
@@ -278,7 +277,7 @@ void sync_timer_cb(void *_data)
 	if (ctx->state == MSMC_STATE_NULL)
 	{
 		_frame_create(&fr, MSMC_FRAME_TYPE_SYNC);
-		msmc_send_frame(ctx, &fr);
+		msmc_frame_send(ctx, &fr);
 	}
 	else
 	{
@@ -293,7 +292,7 @@ void _link_restart(struct msmc_context *ctx)
 		return;
 
 	/* reset state and send out sync packet */
-	ctx->state = MSMC_STATE_NULL_0;
+	ctx->state = MSMC_STATE_NULL;
 
 	/* the spec told us to send out three sync messages per second until we get a sync response from
 	 * the other device */
@@ -318,12 +317,12 @@ void _frame_type_response(struct msmc_context *ctx, struct frame *fr)
 			msmc_frame_send(ctx, &frout);
 			break;
 		default:
-			DEBUG("could not create response for unsupported frame type!\n");
+			DEBUG_MSG("could not create response for unsupported frame type!\n");
 			break;
 	}
 }
 
-void _link_establishment_link(struct msmc_context *ctx, struct frame *fr)
+void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 {
 	struct frame frout;
 
@@ -375,7 +374,7 @@ void _link_establishment_link(struct msmc_context *ctx, struct frame *fr)
 		break;
 
 	default:
-		DEBUG("arrived in invalid state ... assuming restart!");
+		DEBUG_MSG("arrived in invalid state ... assuming restart!");
 		_link_restart(ctx);
 		break;
 	}
@@ -409,7 +408,7 @@ void _handle_frame(struct msmc_context *ctx, const char *data, unsigned int len)
 	crc16_calc(data, len, &crc);
 	if (crc != fr_crc)
 	{
-		DEBUG("crc checksum error! don't handle frame anymore ...\n");;
+		DEBUG_MSG("crc checksum error! discarding frame ...\n");;
 		return;
 	}
 	
@@ -446,7 +445,7 @@ void _handle_incomming_data(struct bsc_fd *bfd)
 	{
 		if(*p == 0x7e)
 		{
-			last = p - staart - 1;
+			last = p - start - 1;
 			_handle_frame(ctx, p, last);
 		}
 		p++;
@@ -485,10 +484,6 @@ int msmcommd_init(struct msmc_context *ctx)
 
 	INFO("setting up ...\n");
 
-	ctx->state = MSMC_STATE_NULL_0;
-	ctx->seq = 0;
-	ctx->ack = 0;
-
 	/* setup modem port */
 	ctx->fds[MSMC_FD_SERIAL].cb = _serial_cb;
 	ctx->fds[MSMC_FD_SERIAL].data = ctx;
@@ -520,7 +515,7 @@ void msmcommd_context_free(struct msmc_context *ctx)
 		free(ctx);
 }
 
-int msmcommd_update(msmc_context *ctx)
+int msmcommd_update(struct msmc_context *ctx)
 {
 	fd_set rfds;
 	int retval;
