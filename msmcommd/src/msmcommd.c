@@ -275,7 +275,7 @@ void sync_timer_cb(void *_data)
 	struct frame fr;
 	struct msmc_context *ctx = (struct msmc_context*) _data;
 	
-	if (ctx->state == MSMC_STATE_NULL_0)
+	if (ctx->state == MSMC_STATE_NULL)
 	{
 		_frame_create(&fr, MSMC_FRAME_TYPE_SYNC);
 		msmc_send_frame(ctx, &fr);
@@ -287,7 +287,7 @@ void sync_timer_cb(void *_data)
 	}
 }
 
-void _ll_restart(struct msmc_context *ctx)
+void _link_restart(struct msmc_context *ctx)
 {
 	if (!ctx)
 		return;
@@ -300,7 +300,30 @@ void _ll_restart(struct msmc_context *ctx)
 	bsc_schedule_timer(&sync_timer, 0, MSMC_SYNC_SENT_INTERVAL);
 }
 
-void _link_establishment_process(struct msmc_context *ctx, struct frame *fr)
+void _frame_type_response(struct msmc_context *ctx, struct frame *fr)
+{
+	struct frame frout;
+
+	if (!ctx || !fr) return;
+
+	switch (fr->type)
+	{
+		case MSMC_FRAME_TYPE_SYNC:
+			_frame_create(&frout, MSMC_FRAME_TYPE_SYNC_RESP);
+			msmc_frame_send(ctx, &frout);
+			break;
+		case MSMC_FRAME_TYPE_CONFIG:
+			_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG_RESP);
+			/* FIXME include link configuration in frame header */
+			msmc_frame_send(ctx, &frout);
+			break;
+		default:
+			DEBUG("could not create response for unsupported frame type!\n");
+			break;
+	}
+}
+
+void _link_establishment_link(struct msmc_context *ctx, struct frame *fr)
 {
 	struct frame frout;
 
@@ -309,77 +332,51 @@ void _link_establishment_process(struct msmc_context *ctx, struct frame *fr)
 
 	switch (ctx->state)
 	{
-	case MSMC_STATE_NULL_0:
-		if (fr->type != MSMC_FRAME_TYPE_SYNC)
-		{
-			DEBUG("wrong frame [type=%s] arrived in NULL_0 state! ignore frame ...\n",
-				   frame_type_names[fr->type]);
-			break;
+	case MSMC_STATE_NULL:
+		/* Ignore every other frame type than SYNC and SYNC RESP */
+		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
+			bsc_del_timer(&sync_timer);
+			_frame_type_response(ctx, fr);
 		}
-
-		ctx->state = MSMC_STATE_NULL_1;
-
-		/* send sync resp message */
-		_frame_create(&frout, MSMC_FRAME_TYPE_SYNC_RESP);
-		msmc_frame_send(ctx, &frout);
+		else if (fr->type == MSMC_FRAME_TYPE_SYNC_RESP) {
+			/* Move on into INIT state and send out config message */
+			ctx->state = MSMC_STATE_INIT;
+			_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG);
+			msmc_frame_send(ctx, &frout);
+		}
 		break;
 
-	case MSMC_STATE_NULL_1:
-		if (fr->type != MSMC_FRAME_TYPE_SYNC_RESP)
-		{
-			DEBUG("wrong frame [type=%s] arrived in NULL_1 state! ignore frame ...\n",
-				   frame_type_names[fr->type]);
-			break;
+	case MSMC_STATE_INIT:
+		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
+			/* response with a SYNC RESP message */
+			_frame_type_response(ctx, fr);
 		}
-		
-		ctx->state = MSMC_STATE_INIT_0;
-
-		/* send config message */
-		_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG);
-		msmc_frame_send(ctx, &frout);
-		break;
-
-	case MSMC_STATE_INIT_0:
-		if (fr->type != MSMC_FRAME_TYPE_CONFIG)
-		{
-			DEBUG("wrong frame [type=%s] arrived in INIT_0 state! ignore frame ...\n",
-				   frame_type_names[fr->type]);
-			break;
+		else if (fr->type == MSMC_FRAME_TYPE_CONFIG) {
+			/* response with CONFIG RESP message */
+			_frame_type_response(ctx, fr);
 		}
-
-		ctx->state = MSMC_STATE_INIT_1;
-
-		/* send config response message */
-		_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG_RESP);
-		msmc_frame_send(ctx, &frout);
-		break;
-
-	case MSMC_STATE_INIT_1:
-		if (fr->type != MSMC_FRAME_TYPE_CONFIG_RESP)
-		{
-			DEBUG("wrong frame [type=%s] arrived in INIT_1 state! ignore frame ...\n",
-				   frame_type_names[fr->type]);
-			break;
+		else if (fr->type == MSMC_FRAME_TYPE_CONFIG_RESP) {
+			/* Move on into ACTIVE state */
+			ctx->state = MSMC_STATE_ACTIVE;
 		}
-
-		ctx->state = MSMC_STATE_ACTIVE;
 		break;
 
 	case MSMC_STATE_ACTIVE:
-		if (fr->type != MSMC_FRAME_TYPE_SYNC)
-		{
-			DEBUG("wrong frame [type=%s] arrived in ACTIVE state! ignore frame ...\n",
-				   frame_type_names[fr->type]);
-			break;
+		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
+			/* The spec told us to restart the whole stack if we receive a sync message in ACTIVE
+			   state */
+			_link_restart(ctx);
 		}
-
-		/* we got a sync frame in active state -> restart! */
-		_ll_restart(ctx);
+		else if (fr->type == MSMC_FRAME_TYPE_CONFIG) {
+			/* If we receive a CONFIG message in ACTIVE state we send out a CONFIG RESP with our
+			   currrent configuration settings */
+			_frame_type_response(ctx, fr);
+		}
 		break;
 
 	default:
 		DEBUG("arrived in invalid state ... assuming restart!");
-		_ll_restart(ctx);
+		_link_restart(ctx);
 		break;
 	}
 }
@@ -391,13 +388,9 @@ void _link_control(struct msmc_context *ctx, struct frame *fr)
 	switch (ctx->state)
 	{
 		case MSMC_STATE_ACTIVE:
-			if (fr->type == MSMC_FRAME_TYPE_DATA)
-			{
-
+			if (fr->type == MSMC_FRAME_TYPE_DATA) {
 			}
-			else if (fr->type == MSMC_FRAME_TYPE_ACK)
-			{
-
+			else if (fr->type == MSMC_FRAME_TYPE_ACK) {
 			}
 			break;
 
@@ -516,7 +509,7 @@ int msmcommd_init(struct msmc_context *ctx)
 	timer.data = ctx;
 	bsc_schedule_timer(&timer, 0, 10); 
 
-	_ll_restart(ctx);
+	_link_restart(ctx);
 }
 
 void msmcommd_context_free(struct msmc_context *ctx)
