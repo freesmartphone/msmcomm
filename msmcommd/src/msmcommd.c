@@ -214,32 +214,37 @@ void _setup_modem(int fd)
 	struct termios options;
 	bzero(&options, sizeof(options));
 
-	/* local read */
-	options.c_cflag &= ~PARENB;
-	options.c_cflag &= ~CSTOPB;
-	options.c_cflag &= ~CSIZE;
-	options.c_cflag |= CS8;
+	if (fd < 0)
+		return;
 
-	/* hardware flow control on */
-	options.c_cflag |= CRTSCTS;
-
-	/* software flow control off */
-	options.c_iflag &= ~(IXON | IXOFF | IXANY);
-
-	/* we want raw i/o */
-	options.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
-	options.c_iflag &= ~(INLCR | ICRNL | IGNCR);
-
-	options.c_cc[VMIN] = 0;
-	options.c_cc[VTIME] = 2;
+	options.c_cflag = CRTSCTS | CS8 | CLOCAL | CREAD;
+	options.c_iflag = IGNPAR;
+	options.c_oflag = 0;
+	options.c_lflag = ICANON;
 	options.c_cc[VINTR] = 0;
 	options.c_cc[VQUIT] = 0;
+	options.c_cc[VERASE] = 0;
+	options.c_cc[VKILL] = 0;
+	options.c_cc[VEOF] = 0;
+	options.c_cc[VTIME] = 0;
+	options.c_cc[VMIN] = 0;
+	options.c_cc[VSWTC] = 0;
 	options.c_cc[VSTART] = 0;
 	options.c_cc[VSTOP] = 0;
 	options.c_cc[VSUSP] = 0;
+	options.c_cc[VEOL] = 0;
+	options.c_cc[VREPRINT] = 0;
+	options.c_cc[VDISCARD] = 0;
+	options.c_cc[VWERASE] = 0;
+	options.c_cc[VLNEXT] = 0;
+	options.c_cc[VEOL2] = 0;
 
 	cfsetispeed(&options, B115200);
 	cfsetospeed(&options, B115200);
+
+	tcflush(fd, TCIFLUSH);
+	if (tcsetattr(fd, TCSANOW, &options)
+		perror("tcsetattr()");
 
 	/* set ready to read/write */
 	v24 = TIOCM_DTR | TIOCM_RTS;
