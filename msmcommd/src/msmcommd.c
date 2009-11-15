@@ -196,7 +196,7 @@ void info(const char *format, ...)
 
 #define INFO(fmt, args...) info(fmt, ##args)
 
-struct msmc_context* msmcommd_context_new(void)
+struct msmc_context* msmc_context_new(void)
 {
 	struct msmc_context *ctx;
 
@@ -208,7 +208,7 @@ struct msmc_context* msmcommd_context_new(void)
 	ctx->next_expected_seq = 0;
 }
 
-void _setup_modem(int fd)
+void msmc_setup_modem(int fd)
 {
 	int v24;
 	struct termios options;
@@ -243,7 +243,7 @@ void _setup_modem(int fd)
 	cfsetospeed(&options, B115200);
 
 	tcflush(fd, TCIFLUSH);
-	if (tcsetattr(fd, TCSANOW, &options)
+	if (tcsetattr(fd, TCSANOW, &options))
 		perror("tcsetattr()");
 
 	/* set ready to read/write */
@@ -251,11 +251,11 @@ void _setup_modem(int fd)
 	ioctl(fd, TIOCMBIS, &v24);
 }
 
-void _setup_network(int fd)
+void msmc_setup_network(int fd)
 {
 }
 
-void _frame_to_binary(struct frame *fr, char *data, unsigned int *len)
+void msmc_frame_to_binary(struct frame *fr, char *data, unsigned int *len)
 {
 	if (!fr) {
 		data = NULL;
@@ -279,14 +279,14 @@ void msmc_frame_send(struct msmc_context *ctx, struct frame *fr)
 	if (!ctx || !fr) return;
 
 	/* convert our frame struct to raw binary data */
-	_frame_to_binary(fr, data, &len);
+	msmc_frame_to_binary(fr, data, &len);
 
 	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
 
 	free(data);
 }
 
-void _frame_create(struct frame *fr, unsigned int type)
+void msmc_frame_create(struct frame *fr, unsigned int type)
 {
 	if (!fr)
 		fr = (struct frame*) malloc(sizeof(struct frame));
@@ -308,17 +308,19 @@ static void sync_timer_cb(void *_data)
 
 	if (ctx->state == MSMC_STATE_NULL)
 	{
-		_frame_create(&fr, MSMC_FRAME_TYPE_SYNC);
+		msmc_frame_create(&fr, MSMC_FRAME_TYPE_SYNC);
 		msmc_frame_send(ctx, &fr);
 	}
 
 	bsc_schedule_timer(&sync_timer, 0, MSMC_SYNC_SENT_INTERVAL);
 }
 
-void _link_restart(struct msmc_context *ctx)
+void msmc_link_restart(struct msmc_context *ctx)
 {
 	if (!ctx)
 		return;
+
+	DEBUG_MSG("restarting link control layer ...\n");
 
 	/* reset state and send out sync packet */
 	ctx->state = MSMC_STATE_NULL;
@@ -330,7 +332,7 @@ void _link_restart(struct msmc_context *ctx)
 	bsc_schedule_timer(&sync_timer, 0, MSMC_SYNC_SENT_INTERVAL);
 }
 
-void _frame_type_response(struct msmc_context *ctx, struct frame *fr)
+void msmc_frame_type_response(struct msmc_context *ctx, struct frame *fr)
 {
 	struct frame frout;
 
@@ -339,11 +341,11 @@ void _frame_type_response(struct msmc_context *ctx, struct frame *fr)
 	switch (fr->type)
 	{
 		case MSMC_FRAME_TYPE_SYNC:
-			_frame_create(&frout, MSMC_FRAME_TYPE_SYNC_RESP);
+			msmc_frame_create(&frout, MSMC_FRAME_TYPE_SYNC_RESP);
 			msmc_frame_send(ctx, &frout);
 			break;
 		case MSMC_FRAME_TYPE_CONFIG:
-			_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG_RESP);
+			msmc_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG_RESP);
 			/* FIXME include link configuration in frame header */
 			msmc_frame_send(ctx, &frout);
 			break;
@@ -353,7 +355,7 @@ void _frame_type_response(struct msmc_context *ctx, struct frame *fr)
 	}
 }
 
-void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
+void msmc_link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 {
 	struct frame frout;
 
@@ -368,12 +370,13 @@ void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 		/* Ignore every other frame type than SYNC and SYNC RESP */
 		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
 			bsc_del_timer(&sync_timer);
-			_frame_type_response(ctx, fr);
+			msmc_frame_type_response(ctx, fr);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_SYNC_RESP) {
 			/* Move on into INIT state and send out config message */
+			DEBUG_MSG("entering INIT state ...\n");
 			ctx->state = MSMC_STATE_INIT;
-			_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG);
+			msmc_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG);
 			msmc_frame_send(ctx, &frout);
 		}
 		break;
@@ -381,14 +384,15 @@ void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 	case MSMC_STATE_INIT:
 		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
 			/* response with a SYNC RESP message */
-			_frame_type_response(ctx, fr);
+			msmc_frame_type_response(ctx, fr);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_CONFIG) {
 			/* response with CONFIG RESP message */
-			_frame_type_response(ctx, fr);
+			msmc_frame_type_response(ctx, fr);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_CONFIG_RESP) {
 			/* Move on into ACTIVE state */
+			DEBUG_MSG("entering ACTIVE state ...\n");
 			ctx->state = MSMC_STATE_ACTIVE;
 		}
 		break;
@@ -397,23 +401,23 @@ void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
 			/* The spec told us to restart the whole stack if we receive a sync message in ACTIVE
 			   state */
-			_link_restart(ctx);
+			msmc_link_restart(ctx);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_CONFIG) {
 			/* If we receive a CONFIG message in ACTIVE state we send out a CONFIG RESP with our
 			   currrent configuration settings */
-			_frame_type_response(ctx, fr);
+			msmc_frame_type_response(ctx, fr);
 		}
 		break;
 
 	default:
 		DEBUG_MSG("arrived in invalid state ... assuming restart!");
-		_link_restart(ctx);
+		msmc_link_restart(ctx);
 		break;
 	}
 }
 
-void _link_control(struct msmc_context *ctx, struct frame *fr)
+void msmc_link_control(struct msmc_context *ctx, struct frame *fr)
 {
 	if (!ctx) return;
 
@@ -431,7 +435,7 @@ void _link_control(struct msmc_context *ctx, struct frame *fr)
 	}
 }
 
-void _handle_frame(struct msmc_context *ctx, const char *data, unsigned int len)
+void msmc_handle_frame(struct msmc_context *ctx, const char *data, unsigned int len)
 {
 	unsigned short crc, fr_crc;
 	struct frame *f = (struct frame*) malloc(sizeof(struct frame));
@@ -456,19 +460,19 @@ void _handle_frame(struct msmc_context *ctx, const char *data, unsigned int len)
 	f->payload_len = len - 3;
 
 	if (f->type < 5)
-		_link_establishment_control(ctx, f);
+		msmc_link_establishment_control(ctx, f);
 	else
-		_link_control(ctx, f);
+		msmc_link_control(ctx, f);
 }
 
-void _handle_incomming_data(struct bsc_fd *bfd)
+void msmc_handle_incomming_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 	char buffer[MSMC_MAX_BUFFER_SIZE];
 	char *p;
 	int start, len, last;
 
-	DEBUG("data arrived ...\n");
+	DEBUG_MSG("data arrived ...\n");
 
 	ssize_t size = read(bfd->fd, buffer, sizeof(buffer));
 	if (size < 0)
@@ -483,14 +487,14 @@ void _handle_incomming_data(struct bsc_fd *bfd)
 		if(*p == 0x7e)
 		{
 			last = p - start - 1;
-			_handle_frame(ctx, p, last);
+			msmc_handle_frame(ctx, p, last);
 		}
 		p++;
 	}
 
 }
 
-void _handle_outgoing_data(struct bsc_fd *bfd)
+void msmc_handle_outgoing_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 
@@ -500,9 +504,9 @@ void _handle_outgoing_data(struct bsc_fd *bfd)
 static void _serial_cb(struct bsc_fd *bfd, unsigned int flags)
 {
 	if (flags & BSC_FD_READ)
-		return _handle_incomming_data(bfd);
+		return msmc_handle_incomming_data(bfd);
 	if (flags & BSC_FD_WRITE) 
-		return _handle_outgoing_data(bfd);
+		return msmc_handle_outgoing_data(bfd);
 }
 
 static struct timer_list timer;
@@ -533,7 +537,7 @@ int msmcommd_init(struct msmc_context *ctx)
 		return -1;
 	}
 
-	_setup_modem(ctx->fds[MSMC_FD_SERIAL].fd);
+	msmc_setup_modem(ctx->fds[MSMC_FD_SERIAL].fd);
 	bsc_register_fd(&ctx->fds[MSMC_FD_SERIAL]);
 
 	/* basic timer */
@@ -541,10 +545,10 @@ int msmcommd_init(struct msmc_context *ctx)
 	timer.data = ctx;
 	bsc_schedule_timer(&timer, 1, 0); 
 
-	_link_restart(ctx);
+	msmc_link_restart(ctx);
 }
 
-void msmcommd_context_free(struct msmc_context *ctx)
+void msmc_context_free(struct msmc_context *ctx)
 {
 	INFO("shutting down ...\n");
 
@@ -552,7 +556,7 @@ void msmcommd_context_free(struct msmc_context *ctx)
 		free(ctx);
 }
 
-int msmcommd_update(struct msmc_context *ctx)
+int msmc_update(struct msmc_context *ctx)
 {
 	fd_set rfds;
 	int retval;
@@ -583,7 +587,7 @@ int main(int argc, char *argv[])
 
 	printf("msmcommd (c) 2009 by Simon Busch\n");
 
-	ctx = msmcommd_context_new();
+	ctx = msmc_context_new();
 
 	/* parse options */
 	while(1) {
@@ -609,7 +613,7 @@ int main(int argc, char *argv[])
 			case 'h':
 				print_usage();
 				print_help();
-				msmcommd_context_free(ctx);
+				msmc_context_free(ctx);
 				exit(0);
 		}
 	}
@@ -618,12 +622,12 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
-		retval = msmcommd_update(ctx);
+		retval = msmc_update(ctx);
 		if (retval < 0)
 			exit(3);
 	}
 
-	msmcommd_context_free(ctx);
+	msmc_context_free(ctx);
 
 	exit(0);
 }
