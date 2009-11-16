@@ -32,6 +32,8 @@
 #include <strings.h>
 #include <stdarg.h>
 #include <getopt.h>
+#include <time.h>
+#include <string.h>
 
 #include <include/select.h>
 #include <include/timer.h>
@@ -153,11 +155,12 @@ void debug(char *file, int line, const char *format, ...)
 	/* color */
 	fprintf(outfd, "%s", "\033[1;31m");
 
-	char *timestamp;
-	time_t tm;
-	tm = time(NULL);
-	timestamp = ctime(&tm);
-	//fprintf(outfd, "%s ", timestamp);
+	char timestr[30];
+	time_t t;
+	t = time(NULL);
+	strftime(&timestr[0], 30, "%F %H:%M:%S", localtime(&t));
+	fprintf(outfd, "[%s] ", timestr);
+
 	fprintf(outfd, "<%s:%d> ", file, line);
 	vfprintf(outfd, format, ap);
 	fprintf(outfd, "\033[0;m");
@@ -168,37 +171,11 @@ void debug(char *file, int line, const char *format, ...)
 	fflush(outfd);
 }
 
-void info(const char *format, ...)
-{
-	va_list ap;
-	FILE *outfd = stdout;
-
-	va_start(ap, format);
-	
-	fprintf(outfd, "%s", "\033[1,30m");
-
-	char *timestr;
-	time_t tm;
-	tm = time(NULL);
-	timestr = ctime(&tm);
-	//fprintf(outfd, "%s ", timestr);
-	
-	vfprintf(outfd, format, ap);
-	fprintf(outfd,"\033[0;m");
-	fprintf(outfd,"\n");
-
-	va_end(ap);
-
-	fflush(outfd);
-}
-
 #ifdef DEBUG
 #define DEBUG_MSG(fmt, args...) debug(__FILE__, __LINE__, fmt, ## args)
 #else
 #define DEBUG_MSG(fmt, args...)
 #endif
-
-#define INFO(fmt, args...) info(fmt, ##args)
 
 struct msmc_context* msmc_context_new(void)
 {
@@ -477,6 +454,7 @@ void msmc_link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 		else {
 			DEBUG_MSG("recieve %s frame in ACTIVE state ... discard frame!",
 					  frame_type_names[fr->type]);
+		}
 		break;
 
 	default:
@@ -595,7 +573,7 @@ int msmcommd_init(struct msmc_context *ctx)
 {
 	if (!ctx || strlen(ctx->serial_port) == 0) return;
 
-	INFO("setting up ...\n");
+	DEBUG_MSG("setting up ...\n");
 
 	/* setup modem port */
 	ctx->fds[MSMC_FD_SERIAL].cb = _serial_cb;
@@ -622,7 +600,7 @@ int msmcommd_init(struct msmc_context *ctx)
 
 void msmc_context_free(struct msmc_context *ctx)
 {
-	INFO("shutting down ...\n");
+	DEBUG_MSG("shutting down ...\n");
 
 	if (ctx)
 		free(ctx);
