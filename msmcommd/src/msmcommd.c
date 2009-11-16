@@ -339,6 +339,7 @@ void msmc_frame_send(struct msmc_context *ctx, struct frame *fr)
 	crc ^= 0xffff;
 	memcpy(data + (len - 3), &crc, 2);
 
+	/* append end marker */
 	data[len-1] = (char)0x7e;
 
 	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
@@ -456,6 +457,10 @@ void msmc_link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 			DEBUG_MSG("entering ACTIVE state ...\n");
 			ctx->state = MSMC_STATE_ACTIVE;
 		}
+		else {
+			DEBUG_MSG("recieve %s frame in INIT state ... discard frame!",
+					  frame_type_names[fr->type]);
+		}
 		break;
 
 	case MSMC_STATE_ACTIVE:
@@ -469,6 +474,9 @@ void msmc_link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 			   currrent configuration settings */
 			msmc_frame_type_response(ctx, fr);
 		}
+		else {
+			DEBUG_MSG("recieve %s frame in ACTIVE state ... discard frame!",
+					  frame_type_names[fr->type]);
 		break;
 
 	default:
@@ -492,6 +500,7 @@ void msmc_link_control(struct msmc_context *ctx, struct frame *fr)
 			break;
 
 		default:
+			DEBUG_MSG("recieve invalid frame in ACTIVE state ... discard frame!");
 			break;
 	}
 }
