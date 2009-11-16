@@ -96,7 +96,7 @@ const char *frame_type_names[] = {
 	"DATA"
 };
 
-const unsigned short crc16tab_fcs[] = 
+static const unsigned short crc16tab_fcs[256] = 
 {
 	0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
 	0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
@@ -132,11 +132,15 @@ const unsigned short crc16tab_fcs[] =
 	0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78
 };
 
-void crc16_calc(const char *buffer, size_t len, unsigned short *crc)
+unsigned short crc16_calc(const char *data, int len) 
 {
-	*crc = 0xffff;
-	while(len--)
-		*crc = (*crc >> 8) ^ crc16tab_fcs[(*crc ^ *buffer++) & 0xff];
+	unsigned short sum = 0xffff;
+	if (!data) return;
+
+	while (len--)
+		sum = (sum >> 8) ^ crc16tab_fcs[(sum ^ (*data++)) & 0xff];
+	
+	return sum;
 }
 
 void debug(char *file, int line, const char *format, ...)
@@ -255,35 +259,92 @@ void msmc_setup_network(int fd)
 {
 }
 
-void msmc_frame_to_binary(struct frame *fr, char *data, unsigned int *len)
+void hexdump(const char *data, int len)
 {
-	if (!fr) {
-		data = NULL;
-		len = 0;
-	}
-	
-	*len = 3 + sizeof(fr->payload);
-	data = (char*) malloc(sizeof(char) * *len);
+	const char *p;
+	int count;
 
-	data[0] = fr->adress;
-	data[1] = fr->type << 4;
-	data[2] = (fr->seq << 4) | fr->ack;
-	memcpy(&data[3], fr->payload, fr->payload_len);
+	if (!data) return;
+
+	p = &data[0];
+	count = 0;
+	while (len--) {
+		if (count == 10) {
+			printf("\n");
+			count = 0;
+		}
+		printf("%02x ", *p++ & 0xff);
+		count++;
+	}
+	if(count <= 10)
+		printf("\n");
+}
+
+
+char* msmc_frame_decode(char *data, unsigned int len, unsigned int *new_len)
+{
+	char *decoded_data;
+	if (!data) return;
+	
+	decoded_data = (char*) malloc(sizeof(char) * len);
+	*new_len = 0;
+	while(len--)
+	{
+		/* replace:
+		 * - 0x7d 0x5d with 0x7d
+		 * - 0x7d 0x5e with 0x7e
+		 */
+		if (*data == 0x7d && len > 0)
+		{
+			if (*(data+1) == 0x5d)
+				*data++ = 0x7d;
+			else if(*(data+1) == 0x5e)
+				*data++ = 0x7e;
+		}
+		else 
+			*decoded_data = *data;
+
+		*new_len += 1;
+		decoded_data++;
+		data++;
+	}
+
+
 }
 
 void msmc_frame_send(struct msmc_context *ctx, struct frame *fr)
 {
-	unsigned int len;
-	char *data;
+	unsigned int len, decoded_payload_len;
+	char *data, *decoded_payload;
+	unsigned short crc;
 
 	if (!ctx || !fr) return;
 
+	/* encode data so 0x7e doesn't occur within the payload */
+	decoded_payload = msmc_frame_decode(&data[3], fr->payload_len, &decoded_payload_len);
+
 	/* convert our frame struct to raw binary data */
-	msmc_frame_to_binary(fr, data, &len);
+	len = 3 + decoded_payload_len + 2 + 1;
+	data = (char*) malloc(sizeof(char) * len);
+
+	data[0] = fr->adress & 0xff;
+	data[1] = (fr->type << 4) & 0xff;
+	data[2] = ((fr->seq << 4) | fr->ack) & 0xff;
+
+	/* attach payload */
+	memcpy(data + 3, decoded_payload, decoded_payload_len);
+
+	/* computer crc over header + data and append it */
+	crc = crc16_calc(&data[0], len - 3);
+	crc ^= 0xffff;
+	memcpy(data + (len - 3), &crc, 2);
+
+	data[len-1] = (char)0x7e;
 
 	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
 
 	free(data);
+	free(decoded_payload);
 }
 
 void msmc_frame_create(struct frame *fr, unsigned int type)
@@ -442,7 +503,7 @@ void msmc_handle_frame(struct msmc_context *ctx, const char *data, unsigned int 
 
 	/* the last two bytes are the crc checksum, check them! */
 	fr_crc = (data[len - 1] << 4) | data[len - 2];
-	crc16_calc(data, len, &crc);
+	crc = crc16_calc(data, len);
 	if (crc != fr_crc)
 	{
 		DEBUG_MSG("crc checksum error! discarding frame ...\n");;
@@ -475,6 +536,7 @@ void msmc_handle_incomming_data(struct bsc_fd *bfd)
 	DEBUG_MSG("data arrived ...\n");
 
 	ssize_t size = read(bfd->fd, buffer, sizeof(buffer));
+	DEBUG_MSG("data: len=%i\n", size);
 	if (size < 0)
 		return;
 
@@ -486,6 +548,7 @@ void msmc_handle_incomming_data(struct bsc_fd *bfd)
 	{
 		if(*p == 0x7e)
 		{
+			DEBUG_MSG("found valid frame\n");
 			last = p - start - 1;
 			msmc_handle_frame(ctx, p, last);
 		}
