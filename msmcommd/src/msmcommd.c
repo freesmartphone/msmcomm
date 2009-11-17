@@ -541,7 +541,6 @@ void msmc_handle_incomming_data(struct bsc_fd *bfd)
 		}
 		p++;
 	}
-
 }
 
 void msmc_handle_outgoing_data(struct bsc_fd *bfd)
@@ -566,7 +565,7 @@ static void timer_cb(void *_data)
 	struct msmc_context *ctx = _data;
 
 	/* schedule again */
-	bsc_schedule_timer(&timer, 1, 0);
+	bsc_schedule_timer(&timer, 0, 50);
 }
 
 int msmcommd_init(struct msmc_context *ctx)
@@ -593,7 +592,7 @@ int msmcommd_init(struct msmc_context *ctx)
 	/* basic timer */
 	timer.cb = timer_cb;
 	timer.data = ctx;
-	bsc_schedule_timer(&timer, 1, 0); 
+	bsc_schedule_timer(&timer, 0 , 50); 
 
 	msmc_link_restart(ctx);
 }
