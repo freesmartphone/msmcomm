@@ -63,6 +63,16 @@
 
 #define MSMC_MAX_BUFFER_SIZE			4096
 
+#define MSMC_LOG_LEVEL_DEBUG			0
+#define MSMC_LOG_LEVEL_ERROR			1
+#define MSMC_LOG_LEVEL_INFO				2
+
+const char *log_level_color[] = {
+	"\033[1;31m",
+	"\033[1;32m",
+	"\033[1;33m",
+};
+
 struct msmc_context
 {
 	/* Options, flags etc. */
@@ -145,7 +155,7 @@ unsigned short crc16_calc(const char *data, int len)
 	return sum;
 }
 
-void debug(char *file, int line, const char *format, ...)
+void log_message(char *file, int line, int level, const char *format, ...)
 {
 	va_list ap;
 	FILE *outfd = stderr;
@@ -153,7 +163,7 @@ void debug(char *file, int line, const char *format, ...)
 	va_start(ap, format);
 	
 	/* color */
-	fprintf(outfd, "%s", "\033[1;31m");
+	fprintf(outfd, "%s", log_level_color[level]);
 
 	char timestr[30];
 	time_t t;
@@ -172,7 +182,7 @@ void debug(char *file, int line, const char *format, ...)
 }
 
 #ifdef DEBUG
-#define DEBUG_MSG(fmt, args...) debug(__FILE__, __LINE__, fmt, ## args)
+#define DEBUG_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_DEBUG, fmt, ## args)
 #else
 #define DEBUG_MSG(fmt, args...)
 #endif
@@ -191,47 +201,56 @@ struct msmc_context* msmc_context_new(void)
 
 void msmc_setup_modem(int fd)
 {
-	int v24;
+	int ret;
 	struct termios options;
 	bzero(&options, sizeof(options));
 
 	if (fd < 0)
 		return;
 
-	options.c_cflag = CRTSCTS | CS8 | CLOCAL | CREAD;
-	options.c_iflag = IGNPAR;
-	options.c_oflag = 0;
-	options.c_lflag = ICANON;
-	options.c_cc[VINTR] = 0;
-	options.c_cc[VQUIT] = 0;
-	options.c_cc[VERASE] = 0;
-	options.c_cc[VKILL] = 0;
-	options.c_cc[VEOF] = 0;
-	options.c_cc[VTIME] = 0;
-	options.c_cc[VMIN] = 0;
-	options.c_cc[VSWTC] = 0;
-	options.c_cc[VSTART] = 0;
-	options.c_cc[VSTOP] = 0;
-	options.c_cc[VSUSP] = 0;
-	options.c_cc[VEOL] = 0;
-	options.c_cc[VREPRINT] = 0;
-	options.c_cc[VDISCARD] = 0;
-	options.c_cc[VWERASE] = 0;
-	options.c_cc[VLNEXT] = 0;
-	options.c_cc[VEOL2] = 0;
-
+	tcgetattr(fd, &options);
 	cfsetispeed(&options, B115200);
 	cfsetospeed(&options, B115200);
 
-	tcflush(fd, TCIFLUSH);
-	if (tcsetattr(fd, TCSANOW, &options))
-		perror("tcsetattr()");
+	/* local read */
+	options.c_cflag |= (CLOCAL | CREAD);
 
-	/* set ready to read/write */
-	v24 = TIOCM_DTR | TIOCM_RTS;
+	/* 8N1 */
+	options.c_cflag &= ~PARENB;
+	options.c_cflag &= ~CSTOPB;
+	options.c_cflag &= ~CSIZE;
+	options.c_cflag |= CS8;
+
+	/* raw input */
+	options.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+	options.c_lflag &= ~(INLCR | ICRNL | IGNCR);
+
+	/* raw output */
+	options.c_cflag &= ~(OPOST | OLCUC | ONLRET | ONOCR | OCRNL);
+
+	/* use hardware flow control */
+	options.c_cflag &= CRTSCTS;
+	options.c_iflag |= ~(IXON | IXOFF | IXANY);
+
+	/* no special character handling */
+	options.c_cc[VMIN] = 0;
+	options.c_cc[VTIME] = 2;
+	options.c_cc[VINTR] = 0;
+	options.c_cc[VQUIT] = 0;
+	options.c_cc[VSTART] = 0;
+	options.c_cc[VSTOP] = 0;
+	options.c_cc[VSUSP] = 0;
+
+	ret = tcsetattr(fd, TCSANOW, &options);
+	if (ret == -1) {
+		DEBUG_MSG("could not configure fd %d\n", fd);
+		exit(1);
+	}
+
+	/* if we use hardware flow control: set ready to read/write */
+	int v24 = TIOCM_DTR | TIOCM_RTS;
 	ioctl(fd, TIOCMBIS, &v24);
 }
-
 void msmc_setup_network(int fd)
 {
 }
@@ -644,7 +663,7 @@ int main(int argc, char *argv[])
 		unsigned long ul;
 		char *slash;
 		static struct option long_options[] = {
-			{"serial-port", 1, 0, 's'},
+			{"serial-port", 1, 1, 's'},
 			{"help", 0, 0, 'h'},
 		};
 
