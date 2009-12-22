@@ -19,9 +19,9 @@
  */
 
 #include <fcntl.h>
-#include <include/select.h>
-#include <include/linuxlist.h>
-#include <include/timer.h>
+#include <msmcomm/select.h>
+#include <msmcomm/linuxlist.h>
+#include <msmcomm/timer.h>
 
 static int maxfd = 0;
 static LLIST_HEAD(bsc_fds);

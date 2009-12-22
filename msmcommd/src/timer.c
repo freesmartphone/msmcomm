@@ -20,7 +20,7 @@
 
 #include <assert.h>
 #include <string.h>
-#include <include/timer.h>
+#include <msmcomm/timer.h>
 
 static LLIST_HEAD(timer_list);
 static struct timeval s_nearest_time;
