@@ -35,6 +35,8 @@
 #include <time.h>
 #include <string.h>
 
+#include <arpa/inet.h>
+
 #include <include/select.h>
 #include <include/timer.h>
 
@@ -42,6 +44,8 @@
 
 #define MSMC_DEFAULT_SERIAL_BAUDRATE	B115200
 #define MSMC_DEFAULT_SERIAL_PORT		"/dev/modemuart"
+
+#define MSMC_DEFAULT_NETWORK_PORT		3030
 
 #define MSMC_STATE_NULL					0
 #define MSMC_STATE_INIT					1
@@ -73,6 +77,8 @@ const char *log_level_color[] = {
 	"\033[1;33m",
 };
 
+unsigned char ifname[] = "eth0";
+
 struct msmc_context
 {
 	/* Options, flags etc. */
@@ -97,6 +103,13 @@ struct frame
 	unsigned char ack;
 	unsigned char *payload;
 	unsigned int payload_len;
+};
+
+struct msmc_control_message
+{
+	unsigned char	type;
+	unsigned int	payload_len;
+	unsigned char	*payload;
 };
 
 const char *frame_type_names[] = {
@@ -581,9 +594,55 @@ void msmc_handle_outgoing_data(struct bsc_fd *bfd)
 static void _serial_cb(struct bsc_fd *bfd, unsigned int flags)
 {
 	if (flags & BSC_FD_READ)
-		return msmc_handle_incomming_data(bfd);
+		msmc_handle_incomming_data(bfd);
 	if (flags & BSC_FD_WRITE) 
-		return msmc_handle_outgoing_data(bfd);
+		msmc_handle_outgoing_data(bfd);
+}
+
+void msmc_handle_control_message(struct msmc_context *ctx, struct msmc_control_message *ctrl)
+{
+	if (!ctx || !ctrl)
+		return;
+
+	/* FIXME */
+}
+
+void msmc_ctrl_handle_incomming_data(struct bsc_fd *bfd)
+{
+	struct msmc_context *ctx = bfd->data;
+	struct msmc_control_message ctrl;
+	struct sockaddr_in sa;
+	socklen_t sa_len = sizeof(sa);
+	size_t len;
+	char buffer[5012];
+
+	DEBUG_MSG("control message arrived ...");
+	len = recvfrom(bfd->fd, &buffer, sizeof(buffer), 0, (struct sockaddr*) &sa, &sa_len);
+
+	if (len < 0 || len < 5) {
+		DEBUG_MSG("error while reading control message from network port. discarding packet!");
+		return;
+	}
+
+	/* copy all data to ctrl structure */
+	ctrl.payload_len = len - 5;
+	ctrl.payload = &buffer[5];
+	ctrl.type = buffer[0];
+
+	msmc_handle_control_message(ctx, &ctrl);
+}
+
+void msmc_ctrl_handle_outgoing_data(struct bsc_fd *bfd)
+{
+	struct msmc_context *ctx = bfd->data;
+}
+
+static void _network_cb(struct bsc_fd *bfd, unsigned int flags)
+{
+	if (flags & BSC_FD_READ)
+		msmc_ctrl_handle_incomming_data(bfd);
+	if (flags & BSC_FD_WRITE)
+		msmc_ctrl_handle_outgoing_data(bfd);
 }
 
 static struct timer_list timer;
@@ -598,6 +657,9 @@ static void timer_cb(void *_data)
 
 int msmcommd_init(struct msmc_context *ctx)
 {
+	int fd, rc;
+	struct sockaddr_in sa;
+
 	if (!ctx || strlen(ctx->serial_port) == 0) return;
 
 	DEBUG_MSG("setting up ...\n");
@@ -623,12 +685,61 @@ int msmcommd_init(struct msmc_context *ctx)
 	bsc_schedule_timer(&timer, 0 , 50); 
 
 	msmc_link_restart(ctx);
+
+	/* setup network control port */
+	ctx->fds[MSMC_FD_NETWORK].cb = _network_cb;
+	ctx->fds[MSMC_FD_NETWORK].data = ctx;
+	ctx->fds[MSMC_FD_NETWORK].when = BSC_FD_READ | BSC_FD_WRITE;
+
+	/* open network socket */
+	fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (fd < 0) {
+		bsc_unregister_fd(&ctx->fds[MSMC_FD_SERIAL]);
+		close(ctx->fds[MSMC_FD_SERIAL].fd);
+		return -1;
+	}
+
+	/* bind to specific interface */
+	if (strlen(ifname) > 0) {
+		rc = setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, ifname, strlen(ifname));
+		if (rc < 0) {
+			close(fd);
+			bsc_unregister_fd(&ctx->fds[MSMC_FD_SERIAL]);
+			close(ctx->fds[MSMC_FD_SERIAL].fd);
+			return -1;
+		}
+	}
+	
+	/* bind to port */
+	sa.sin_family = AF_INET;
+	sa.sin_port = htons(MSMC_DEFAULT_NETWORK_PORT);
+	sa.sin_addr.s_addr = INADDR_ANY;
+
+	rc = bind(fd, (struct sockaddr*) &sa, sizeof(sa));
+	if (rc < 0) {
+		close(fd);
+		bsc_unregister_fd(&ctx->fds[MSMC_FD_SERIAL]);
+		close(ctx->fds[MSMC_FD_SERIAL].fd);
+		return -1;
+	}
+
+	ctx->fds[MSMC_FD_NETWORK].fd = fd;
+	bsc_register_fd(&ctx->fds[MSMC_FD_NETWORK]);
 }
 
 void msmc_context_free(struct msmc_context *ctx)
 {
 	DEBUG_MSG("shutting down ...\n");
 
+	/* close serial port */
+	bsc_unregister_fd(&ctx->fds[MSMC_FD_SERIAL]);
+	close(ctx->fds[MSMC_FD_SERIAL].fd);
+
+	/* close network port */
+	bsc_unregister_fd(&ctx->fds[MSMC_FD_NETWORK]);
+	close(ctx->fds[MSMC_FD_NETWORK].fd);
+
+	/* free context */
 	if (ctx)
 		free(ctx);
 }
