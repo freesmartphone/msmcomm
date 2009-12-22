@@ -63,6 +63,16 @@
 
 #define MSMC_MAX_BUFFER_SIZE			4096
 
+#define MSMC_LOG_LEVEL_DEBUG			0
+#define MSMC_LOG_LEVEL_ERROR			1
+#define MSMC_LOG_LEVEL_INFO				2
+
+const char *log_level_color[] = {
+	"\033[1;31m",
+	"\033[1;32m",
+	"\033[1;33m",
+};
+
 struct msmc_context
 {
 	/* Options, flags etc. */
@@ -76,16 +86,16 @@ struct msmc_context
 
 	/* HCI LL specific */
 	int state;
-	char next_expected_seq;
+	unsigned char next_expected_seq;
 };
 
 struct frame
 {
-	char adress;
-	char type;
-	char seq;
-	char ack;
-	char *payload;
+	unsigned char adress;
+	unsigned char type;
+	unsigned char seq;
+	unsigned char ack;
+	unsigned char *payload;
 	unsigned int payload_len;
 };
 
@@ -134,7 +144,7 @@ static const unsigned short crc16tab_fcs[256] =
 	0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78
 };
 
-unsigned short crc16_calc(const char *data, int len) 
+unsigned short crc16_calc(const unsigned char *data, int len) 
 {
 	unsigned short sum = 0xffff;
 	if (!data) return;
@@ -145,7 +155,7 @@ unsigned short crc16_calc(const char *data, int len)
 	return sum;
 }
 
-void debug(char *file, int line, const char *format, ...)
+void log_message(char *file, int line, int level, const char *format, ...)
 {
 	va_list ap;
 	FILE *outfd = stderr;
@@ -153,7 +163,7 @@ void debug(char *file, int line, const char *format, ...)
 	va_start(ap, format);
 	
 	/* color */
-	fprintf(outfd, "%s", "\033[1;31m");
+	fprintf(outfd, "%s", log_level_color[level]);
 
 	char timestr[30];
 	time_t t;
@@ -172,7 +182,7 @@ void debug(char *file, int line, const char *format, ...)
 }
 
 #ifdef DEBUG
-#define DEBUG_MSG(fmt, args...) debug(__FILE__, __LINE__, fmt, ## args)
+#define DEBUG_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_DEBUG, fmt, ## args)
 #else
 #define DEBUG_MSG(fmt, args...)
 #endif
@@ -191,52 +201,61 @@ struct msmc_context* msmc_context_new(void)
 
 void msmc_setup_modem(int fd)
 {
-	int v24;
+	int ret;
 	struct termios options;
 	bzero(&options, sizeof(options));
 
 	if (fd < 0)
 		return;
 
-	options.c_cflag = CRTSCTS | CS8 | CLOCAL | CREAD;
-	options.c_iflag = IGNPAR;
-	options.c_oflag = 0;
-	options.c_lflag = ICANON;
-	options.c_cc[VINTR] = 0;
-	options.c_cc[VQUIT] = 0;
-	options.c_cc[VERASE] = 0;
-	options.c_cc[VKILL] = 0;
-	options.c_cc[VEOF] = 0;
-	options.c_cc[VTIME] = 0;
-	options.c_cc[VMIN] = 0;
-	options.c_cc[VSWTC] = 0;
-	options.c_cc[VSTART] = 0;
-	options.c_cc[VSTOP] = 0;
-	options.c_cc[VSUSP] = 0;
-	options.c_cc[VEOL] = 0;
-	options.c_cc[VREPRINT] = 0;
-	options.c_cc[VDISCARD] = 0;
-	options.c_cc[VWERASE] = 0;
-	options.c_cc[VLNEXT] = 0;
-	options.c_cc[VEOL2] = 0;
-
+	tcgetattr(fd, &options);
 	cfsetispeed(&options, B115200);
 	cfsetospeed(&options, B115200);
 
-	tcflush(fd, TCIFLUSH);
-	if (tcsetattr(fd, TCSANOW, &options))
-		perror("tcsetattr()");
+	/* local read */
+	options.c_cflag |= (CLOCAL | CREAD);
 
-	/* set ready to read/write */
-	v24 = TIOCM_DTR | TIOCM_RTS;
+	/* 8N1 */
+	options.c_cflag &= ~PARENB;
+	options.c_cflag &= ~CSTOPB;
+	options.c_cflag &= ~CSIZE;
+	options.c_cflag |= CS8;
+
+	/* raw input */
+	options.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+	options.c_lflag &= ~(INLCR | ICRNL | IGNCR);
+
+	/* raw output */
+	options.c_cflag &= ~(OPOST | OLCUC | ONLRET | ONOCR | OCRNL);
+
+	/* use hardware flow control */
+	options.c_cflag &= CRTSCTS;
+	options.c_iflag |= ~(IXON | IXOFF | IXANY);
+
+	/* no special character handling */
+	options.c_cc[VMIN] = 0;
+	options.c_cc[VTIME] = 2;
+	options.c_cc[VINTR] = 0;
+	options.c_cc[VQUIT] = 0;
+	options.c_cc[VSTART] = 0;
+	options.c_cc[VSTOP] = 0;
+	options.c_cc[VSUSP] = 0;
+
+	ret = tcsetattr(fd, TCSANOW, &options);
+	if (ret == -1) {
+		DEBUG_MSG("could not configure fd %d\n", fd);
+		exit(1);
+	}
+
+	/* if we use hardware flow control: set ready to read/write */
+	int v24 = TIOCM_DTR | TIOCM_RTS;
 	ioctl(fd, TIOCMBIS, &v24);
 }
-
 void msmc_setup_network(int fd)
 {
 }
 
-void hexdump(const char *data, int len)
+void hexdump(const unsigned char *data, int len)
 {
 	const char *p;
 	int count;
@@ -258,12 +277,12 @@ void hexdump(const char *data, int len)
 }
 
 
-char* msmc_frame_decode(char *data, unsigned int len, unsigned int *new_len)
+char* msmc_frame_decode(unsigned char *data, unsigned int len, unsigned int *new_len)
 {
-	char *decoded_data;
+	unsigned char *decoded_data;
 	if (!data) return;
 	
-	decoded_data = (char*) malloc(sizeof(char) * len);
+	decoded_data = (unsigned char*) malloc(sizeof(unsigned char) * len);
 	*new_len = 0;
 	while(len--)
 	{
@@ -274,9 +293,15 @@ char* msmc_frame_decode(char *data, unsigned int len, unsigned int *new_len)
 		if (*data == 0x7d && len > 0)
 		{
 			if (*(data+1) == 0x5d)
-				*data++ = 0x7d;
+			{
+				*decoded_data++ = 0x7d;
+				data++;
+			}
 			else if(*(data+1) == 0x5e)
-				*data++ = 0x7e;
+			{
+				*decoded_data++ = 0x7e;
+				data++;
+			}
 		}
 		else 
 			*decoded_data = *data;
@@ -285,8 +310,6 @@ char* msmc_frame_decode(char *data, unsigned int len, unsigned int *new_len)
 		decoded_data++;
 		data++;
 	}
-
-
 }
 
 void msmc_frame_send(struct msmc_context *ctx, struct frame *fr)
@@ -302,7 +325,7 @@ void msmc_frame_send(struct msmc_context *ctx, struct frame *fr)
 
 	/* convert our frame struct to raw binary data */
 	len = 3 + decoded_payload_len + 2 + 1;
-	data = (char*) malloc(sizeof(char) * len);
+	data = (unsigned char*) malloc(sizeof(unsigned char) * len);
 
 	data[0] = fr->adress & 0xff;
 	data[1] = (fr->type << 4) & 0xff;
@@ -483,7 +506,7 @@ void msmc_link_control(struct msmc_context *ctx, struct frame *fr)
 	}
 }
 
-void msmc_handle_frame(struct msmc_context *ctx, const char *data, unsigned int len)
+void msmc_handle_frame(struct msmc_context *ctx, const unsigned char *data, unsigned int len)
 {
 	unsigned short crc, fr_crc;
 	struct frame *f = (struct frame*) malloc(sizeof(struct frame));
@@ -507,7 +530,8 @@ void msmc_handle_frame(struct msmc_context *ctx, const char *data, unsigned int 
 	f->payload = data + 3;
 	f->payload_len = len - 3;
 
-	if (f->type < 5)
+	/* delegate frame handling corresponding to the frame type */
+	if (f->type < MSMC_FRAME_TYPE_ACK)
 		msmc_link_establishment_control(ctx, f);
 	else
 		msmc_link_control(ctx, f);
@@ -548,6 +572,10 @@ void msmc_handle_outgoing_data(struct bsc_fd *bfd)
 	struct msmc_context *ctx = bfd->data;
 
 	/* do we have data to send? */
+	/* FIXME 
+	 * - sequnce number handling
+	 * - process list of packets we have to send
+	 */
 }
 
 static void _serial_cb(struct bsc_fd *bfd, unsigned int flags)
@@ -644,7 +672,7 @@ int main(int argc, char *argv[])
 		unsigned long ul;
 		char *slash;
 		static struct option long_options[] = {
-			{"serial-port", 1, 0, 's'},
+			{"serial-port", 1, 1, 's'},
 			{"help", 0, 0, 'h'},
 		};
 
