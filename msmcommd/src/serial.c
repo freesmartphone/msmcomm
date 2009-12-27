@@ -23,7 +23,7 @@
 
 extern const char *frame_type_names[];
 
-void _setup_modem(int fd)
+void _serial_modem_setup(int fd)
 {
 	int ret;
 	struct termios options;
@@ -257,7 +257,7 @@ void _link_control(struct msmc_context *ctx, struct frame *fr)
 	}
 }
 
-void _handle_frame(struct msmc_context *ctx, const unsigned char *data, unsigned int len)
+void _frame_handle(struct msmc_context *ctx, const unsigned char *data, unsigned int len)
 {
 	unsigned short crc, fr_crc;
 	struct frame *f = (struct frame*) malloc(sizeof(struct frame));
@@ -288,7 +288,7 @@ void _handle_frame(struct msmc_context *ctx, const unsigned char *data, unsigned
 		_link_control(ctx, f);
 }
 
-void _handle_incomming_data(struct bsc_fd *bfd)
+void _serial_incomming_data_handle(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 	char buffer[MSMC_MAX_BUFFER_SIZE];
@@ -312,13 +312,18 @@ void _handle_incomming_data(struct bsc_fd *bfd)
 		{
 			DEBUG_MSG("found valid frame\n");
 			last = p - start - 1;
-			_handle_frame(ctx, p, last);
+			_frame_handle(ctx, p, last);
 		}
 		p++;
 	}
 }
 
-void _handle_outgoing_data(struct bsc_fd *bfd)
+void _serial_data_schedule(struct msmc_context *ctx, const unsigned char *data, unsigned int len)
+{
+
+}
+
+void _serial_outgoing_data_handle(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 
@@ -332,9 +337,9 @@ void _handle_outgoing_data(struct bsc_fd *bfd)
 static void _serial_cb(struct bsc_fd *bfd, unsigned int flags)
 {
 	if (flags & BSC_FD_READ)
-		_handle_incomming_data(bfd);
+		_serial_incomming_data_handle(bfd);
 	if (flags & BSC_FD_WRITE) 
-		_handle_outgoing_data(bfd);
+		_serial_outgoing_data_handle(bfd);
 }
 
 void msmc_serial_init(struct msmc_context *ctx)
@@ -351,7 +356,7 @@ void msmc_serial_init(struct msmc_context *ctx)
 		return -1;
 	}
 
-	_setup_modem(ctx->fds[MSMC_FD_SERIAL].fd);
+	_serial_modem_setup(ctx->fds[MSMC_FD_SERIAL].fd);
 	bsc_register_fd(&ctx->fds[MSMC_FD_SERIAL]);
 
 	_link_restart(ctx);

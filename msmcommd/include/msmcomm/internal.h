@@ -74,37 +74,47 @@
 #define MSMC_LOG_LEVEL_ERROR			1
 #define MSMC_LOG_LEVEL_INFO				2
 
+#define MSMC_CONTROL_MSG_TYPE_DATA		0
+#define MSMC_CONTROL_MSG_TYPE_CMD		1
+#define MSMC_CONTROL_MSG_TYPE_RSP		2
+
+#define MSMC_CONTROL_MSG_CMD_RESET_LL	0
+
+#define MSMC_CONTROL_MSG_RSP_RESET_LL_OK	0
+#define MSMC_CONTROL_MSG_RSP_DATA_SCHEDULED	1
+
 struct msmc_context
 {
 	/* Options, flags etc. */
-	int network_port;
-	const char serial_port[30];
-
-	struct bsc_fd fds[MSMC_FD_COUNT];
-
-	struct llist_head *in_buffer;
-	struct llist_head *out_buffer;
+	int					network_port;
+	const char			serial_port[30];
+	struct bsc_fd		fds[MSMC_FD_COUNT];
 
 	/* HCI LL specific */
-	int state;
-	unsigned char next_expected_seq;
+	int					state;
+	unsigned char		next_expected_seq;
 };
 
 struct frame
 {
-	unsigned char adress;
-	unsigned char type;
-	unsigned char seq;
-	unsigned char ack;
-	unsigned char *payload;
-	unsigned int payload_len;
+	unsigned char	 adress;
+	unsigned char	 type;
+	unsigned char	 seq;
+	unsigned char	 ack;
+	unsigned char	*payload;
+	unsigned int	 payload_len;
 };
 
-struct msmc_control_message
+#define CONTROL_MESSAGE_HEADER_SIZE		1
+#define CONTROL_MESSAGE_LEN(ctrl_msg) (ctrl_msg->payload_len + CONTROL_MESSAGE_HEADER_SIZE)
+
+struct control_message
 {
-	unsigned char	type;
-	unsigned int	payload_len;
-	unsigned char	*payload;
+	struct llist_head	 list;
+	unsigned char		 type;
+	struct sockaddr_in	*client;
+	unsigned int		 payload_len;
+	unsigned char		*payload;
 };
 
 void log_message(char *file, int line, int level, const char *format, ...);

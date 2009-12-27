@@ -22,18 +22,83 @@
 
 extern unsigned char ifname[];
 
-void _control_message_handle(struct msmc_context *ctx, struct msmc_control_message *ctrl)
-{
-	if (!ctx || !ctrl)
-		return;
+LLIST_HEAD(control_msg_tx_queue);
 
-	/* FIXME */
+struct control_message* _control_message_new(void)
+{
+	return (struct control_message*) malloc(sizeof(struct control_message));
 }
 
-void _incomming_data_handle(struct bsc_fd *bfd)
+void _control_message_format_rsp(struct control_message *ctrl_msg, int rsp_type)
+{
+	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_RSP;
+	ctrl_msg->payload_len = 1;
+	ctrl_msg->payload = (unsigned char*) malloc(sizeof(unsigned char));
+	ctrl_msg->payload[0] = rsp_type;
+}
+
+void _control_message_send(struct msmc_context *ctx, struct control_message *ctrl_msg)
+{
+	/* build control message packet to send to our client */
+	unsigned char *ctrlp = (unsigned char*) calloc(sizeof(unsigned char), CONTROL_MESSAGE_LEN(ctrl_msg));
+
+	ctrlp[0] = ctrl_msg->type;
+	memcpy(&ctrlp[1], &ctrl_msg->payload[0], ctrl_msg->payload_len);
+
+	sendto(ctx->fds[MSMC_FD_NETWORK].fd, ctrlp, sizeof(ctrlp), 0,
+		   (struct sockaddr*) ctrl_msg->client, sizeof(ctrl_msg->client));
+}
+
+void _network_data_schedule(struct msmc_context *ctx, struct control_message *ctrl_msg)
+{
+	/* schedule data */
+	llist_add_tail(&control_msg_tx_queue, &ctrl_msg->list);
+}
+
+void _control_message_cmd_handle(struct msmc_context *ctx, unsigned char cmd)
+{
+	switch(cmd)
+	{
+	case MSMC_CONTROL_MSG_CMD_RESET_LL:
+		break;
+	default:
+		break;
+	}
+}
+
+void _control_message_handle(struct msmc_context *ctx, struct control_message *ctrl)
+{
+	switch(ctrl->type)
+	{
+	case MSMC_CONTROL_MSG_TYPE_DATA:
+		/* We received new data to send to our connected mobile station */
+		_serial_data_schedule(ctx, ctrl->payload, ctrl->payload_len);
+
+		/* Tell our client that we received the data */
+		struct control_message *rsp = _control_message_new();
+		_control_message_format_rsp(rsp, MSMC_CONTROL_MSG_RSP_DATA_SCHEDULED);
+		_network_data_schedule(ctx, rsp);
+
+		break;
+	case MSMC_CONTROL_MSG_TYPE_CMD:
+		if (ctrl->payload_len == 0 || ctrl->payload == NULL)
+		{
+			DEBUG_MSG("received control message with NULL payload!");
+			return;
+		}
+
+		unsigned char cmd = ctrl->payload[0];
+		_control_message_cmd_handle(ctx, cmd); 
+		break;
+	default:
+		break;
+	}
+}
+
+void _network_incomming_data_handle(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
-	struct msmc_control_message ctrl;
+	struct control_message ctrl;
 	struct sockaddr_in sa;
 	socklen_t sa_len = sizeof(sa);
 	size_t len;
@@ -42,27 +107,42 @@ void _incomming_data_handle(struct bsc_fd *bfd)
 	DEBUG_MSG("control message arrived ...");
 	len = recvfrom(bfd->fd, &buffer, sizeof(buffer), 0, (struct sockaddr*) &sa, &sa_len);
 
-	if (len < 0 || len < 5) {
-		DEBUG_MSG("error while reading control message from network port. discarding packet!");
+	if (len < 0 || len <= 1) {
+		DEBUG_MSG("control message received in wrong format ... dropping message.");
 		return;
 	}
 
+	/* control message packet format:
+	 * [0] = type of the message (DATA, CMD or RSP)
+	 * [1] - * = payload
+	 */
+
 	/* copy all data to ctrl structure */
-	ctrl.payload_len = len - 5;
-	ctrl.payload = &buffer[5];
+	ctrl.payload_len = len - 1;
+	ctrl.payload = &buffer[1];
 	ctrl.type = buffer[0];
+	ctrl.client = &sa;
 
 	_control_message_handle(ctx, &ctrl);
+}
+
+void _network_outgoing_data_handle(struct bsc_fd *bfd)
+{
+	struct msmc_context *ctx = bfd->data;
+
+	/* loop through our trx-queue and send every control message to it's client */
+	struct control_message *ctrl_msg;
+	llist_for_each_entry(ctrl_msg, &control_msg_tx_queue, list) {
+		_control_message_send(ctx, ctrl_msg);
+	}
 }
 
 static void _network_cb(struct bsc_fd *bfd, unsigned int flags)
 {
 	if (flags & BSC_FD_READ)
-		_incomming_data_handle(bfd);
-#if 0
+		_network_incomming_data_handle(bfd);
 	if (flags & BSC_FD_WRITE)
-		msmc_ctrl_handle_outgoing_data(bfd);
-#endif
+		_network_outgoing_data_handle(bfd);
 }
 
 int msmc_network_init(struct msmc_context *ctx)
