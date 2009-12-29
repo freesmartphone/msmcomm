@@ -23,24 +23,40 @@
 extern unsigned char ifname[];
 
 LLIST_HEAD(control_msg_tx_queue);
+LLIST_HEAD(client_subcriptions);
 
 struct control_message* _control_message_new(void)
 {
 	return (struct control_message*) malloc(sizeof(struct control_message));
 }
 
+void _control_message_format_data(struct control_message *ctrl_msg, const unsigned char *data, const
+								  unsigned int len, unsigned int copy_data)
+{
+	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_DATA;
+	ctrl_msg->payload_len = len;
+
+	if (copy_data) {
+		ctrl_msg->payload = NEW(unsigned char, len);
+		memcpy(ctrl_msg->payload, data, len);
+	}
+	else {
+		ctrl_msg->payload = data;
+	}
+}
+
 void _control_message_format_rsp(struct control_message *ctrl_msg, int rsp_type)
 {
 	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_RSP;
 	ctrl_msg->payload_len = 1;
-	ctrl_msg->payload = (unsigned char*) malloc(sizeof(unsigned char));
+	ctrl_msg->payload = (unsigned char*) calloc(sizeof(unsigned char), MSMC_CONTROL_MSG_RSP_SIZE);
 	ctrl_msg->payload[0] = rsp_type;
 }
 
 void _control_message_send(struct msmc_context *ctx, struct control_message *ctrl_msg)
 {
 	/* build control message packet to send to our client */
-	unsigned char *ctrlp = (unsigned char*) calloc(sizeof(unsigned char), CONTROL_MESSAGE_LEN(ctrl_msg));
+	unsigned char *ctrlp = (unsigned char*) calloc(sizeof(unsigned char), MSMC_CONTROL_MESSAGE_LEN(ctrl_msg));
 
 	ctrlp[0] = ctrl_msg->type;
 	memcpy(&ctrlp[1], &ctrl_msg->payload[0], ctrl_msg->payload_len);
@@ -55,11 +71,20 @@ void _network_data_schedule(struct msmc_context *ctx, struct control_message *ct
 	llist_add_tail(&control_msg_tx_queue, &ctrl_msg->list);
 }
 
-void _control_message_cmd_handle(struct msmc_context *ctx, unsigned char cmd)
+void _control_message_cmd_handle(struct msmc_context *ctx, unsigned int cmd, struct control_message *ctrl_msg)
 {
+	struct client_subscription *csubs;
+
 	switch(cmd)
 	{
 	case MSMC_CONTROL_MSG_CMD_RESET_LL:
+		break;
+	case MSMC_CONTROL_MSG_CMD_SUBSCRIBE:
+		/* create a new subscription for the client so he get informed about incomming data in the
+		 * future */
+		csubs = NEW(struct client_subscription, 1);
+		memcpy(csubs->client, ctrl_msg->client, sizeof(struct sockaddr_in));
+		llist_add_tail(&client_subcriptions, &csubs->list);
 		break;
 	default:
 		break;
@@ -81,14 +106,13 @@ void _control_message_handle(struct msmc_context *ctx, struct control_message *c
 
 		break;
 	case MSMC_CONTROL_MSG_TYPE_CMD:
-		if (ctrl->payload_len == 0 || ctrl->payload == NULL)
-		{
+		if (ctrl->payload_len == 0 || ctrl->payload == NULL) {
 			DEBUG_MSG("received control message with NULL payload!");
 			return;
 		}
 
 		unsigned char cmd = ctrl->payload[0];
-		_control_message_cmd_handle(ctx, cmd); 
+		_control_message_cmd_handle(ctx, cmd, ctrl); 
 		break;
 	default:
 		break;
@@ -124,6 +148,19 @@ void _network_incomming_data_handle(struct bsc_fd *bfd)
 	ctrl.client = &sa;
 
 	_control_message_handle(ctx, &ctrl);
+}
+
+static void _network_serial_data_handle(struct msmc_context *ctx, const unsigned char *data, const unsigned int len)
+{
+	struct client_subscription *csubs;
+	struct control_message ctrlm;
+
+	/* we received data from the serial port -> forward it to all registered clients */
+	llist_for_each_entry(csubs, &client_subcriptions, list) {
+		ctrlm.client = csubs->client;
+		_control_message_format_data(&ctrlm, data, len, 0);
+		_control_message_send(ctx, &ctrlm);
+	}
 }
 
 void _network_outgoing_data_handle(struct bsc_fd *bfd)
@@ -189,6 +226,9 @@ int msmc_network_init(struct msmc_context *ctx)
 
 	ctx->fds[MSMC_FD_NETWORK].fd = fd;
 	bsc_register_fd(&ctx->fds[MSMC_FD_NETWORK]);
+
+	/* register the callback handler for incomming data on serial front */
+	msmc_serial_data_handler_add(ctx, _network_serial_data_handle);
 
 	return 0;
 }

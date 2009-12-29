@@ -45,6 +45,8 @@
 
 #define DEBUG
 
+#define NEW(type, count) (type*) malloc(sizeof(type) * count)
+
 #define MSMC_DEFAULT_SERIAL_BAUDRATE	B115200
 #define MSMC_DEFAULT_SERIAL_PORT		"/dev/modemuart"
 
@@ -79,6 +81,7 @@
 #define MSMC_CONTROL_MSG_TYPE_RSP		2
 
 #define MSMC_CONTROL_MSG_CMD_RESET_LL	0
+#define MSMC_CONTROL_MSG_CMD_SUBSCRIBE	1
 
 #define MSMC_CONTROL_MSG_RSP_RESET_LL_OK	0
 #define MSMC_CONTROL_MSG_RSP_DATA_SCHEDULED	1
@@ -95,6 +98,14 @@ struct msmc_context
 	unsigned char		next_expected_seq;
 };
 
+typedef void (*msmc_data_handler_cb_t) (struct msmc_context *ctx, const unsigned char *data, unsigned int len);
+
+struct msmc_data_handler
+{
+	struct llist_head		list;
+	msmc_data_handler_cb_t	cb;
+};
+
 struct frame
 {
 	unsigned char	 adress;
@@ -105,8 +116,9 @@ struct frame
 	unsigned int	 payload_len;
 };
 
-#define CONTROL_MESSAGE_HEADER_SIZE		1
-#define CONTROL_MESSAGE_LEN(ctrl_msg) (ctrl_msg->payload_len + CONTROL_MESSAGE_HEADER_SIZE)
+#define MSMC_CONTROL_MESSAGE_HEADER_SIZE		1
+#define MSMC_CONTROL_MSG_RSP_SIZE				1
+#define MSMC_CONTROL_MESSAGE_LEN(ctrl_msg) (ctrl_msg->payload_len + MSMC_CONTROL_MESSAGE_HEADER_SIZE)
 
 struct control_message
 {
@@ -115,6 +127,12 @@ struct control_message
 	struct sockaddr_in	*client;
 	unsigned int		 payload_len;
 	unsigned char		*payload;
+};
+
+struct client_subscription
+{
+	struct llist_head   list;
+	struct sockaddr_in *client;
 };
 
 void log_message(char *file, int line, int level, const char *format, ...);
@@ -129,6 +147,13 @@ void hexdump(const unsigned char *data, int len);
 
 unsigned char* msmc_frame_decode(unsigned char *data, unsigned int len, unsigned int *new_len);
 void msmc_frame_create(struct frame *fr, unsigned int type);
+
+void msmc_serial_init(struct msmc_context *ctx);
+void msmc_serial_shutdown(struct msmc_context *ctx);
+void msmc_serial_data_handler_add (struct msmc_context *ctx, msmc_data_handler_cb_t cb);
+
+int msmc_network_init(struct msmc_context *ctx);
+void msmc_network_shutdown(struct msmc_context *ctx);
 
 #endif
 

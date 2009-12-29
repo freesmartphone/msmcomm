@@ -23,6 +23,8 @@
 
 extern const char *frame_type_names[];
 
+LLIST_HEAD(data_handlers);
+
 void _serial_modem_setup(int fd)
 {
 	int ret;
@@ -246,8 +248,16 @@ void _link_control(struct msmc_context *ctx, struct frame *fr)
 	{
 		case MSMC_STATE_ACTIVE:
 			if (fr->type == MSMC_FRAME_TYPE_DATA) {
+				/* FIXME add handling of seq/ack number */
+
+				/* we have new data for our registered data handlers */
+				struct msmc_data_handler *dh;
+				llist_for_each_entry(dh, &data_handlers, list) {
+					dh->cb(ctx, fr->payload, fr->payload_len);
+				}
 			}
 			else if (fr->type == MSMC_FRAME_TYPE_ACK) {
+				/* FIXME add handling of seq/ack number */
 			}
 			break;
 
@@ -340,6 +350,13 @@ static void _serial_cb(struct bsc_fd *bfd, unsigned int flags)
 		_serial_incomming_data_handle(bfd);
 	if (flags & BSC_FD_WRITE) 
 		_serial_outgoing_data_handle(bfd);
+}
+
+void msmc_serial_data_handler_add (struct msmc_context *ctx, msmc_data_handler_cb_t cb)
+{
+	struct msmc_data_handler *dh = NEW(struct msmc_data_handler, 1);
+	dh->cb = cb;
+	llist_add_tail(&data_handlers, &dh->list);
 }
 
 void msmc_serial_init(struct msmc_context *ctx)
