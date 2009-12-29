@@ -107,11 +107,14 @@ int msmcommd_init(struct msmc_context *ctx)
 
 	DEBUG_MSG("setting up ...\n");
 
-
 	/* basic timer */
 	timer.cb = timer_cb;
 	timer.data = ctx;
 	bsc_schedule_timer(&timer, 0 , 50); 
+
+	/* serial and network components */
+	msmc_serial_init(ctx);
+	msmc_network_init(ctx);
 }
 
 void msmc_context_free(struct msmc_context *ctx)
