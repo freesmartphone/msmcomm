@@ -101,7 +101,7 @@ void _frame_send(struct msmc_context *ctx, struct frame *fr)
 	memcpy(data + 3, decoded_payload, decoded_payload_len);
 
 	/* computer crc over header + data and append it */
-	crc = crc16_calc(&data[0], len - 3);
+	crc = crc16_calc(&data[0], len - 4);
 	crc ^= 0xffff;
 	memcpy(data + (len - 3), &crc, 2);
 
@@ -359,7 +359,7 @@ void msmc_serial_data_handler_add (struct msmc_context *ctx, msmc_data_handler_c
 	llist_add_tail(&data_handlers, &dh->list);
 }
 
-void msmc_serial_init(struct msmc_context *ctx)
+int msmc_serial_init(struct msmc_context *ctx)
 {
 	/* setup modem port */
 	ctx->fds[MSMC_FD_SERIAL].cb = _serial_cb;
@@ -368,10 +368,7 @@ void msmc_serial_init(struct msmc_context *ctx)
 	ctx->fds[MSMC_FD_SERIAL].fd = open(ctx->serial_port, O_RDWR | O_NOCTTY);
 
 	if (ctx->fds[MSMC_FD_SERIAL].fd < 0)
-	{
-		perror("Failed to open serial port!");
-		return -1;
-	}
+		return ctx->fds[MSMC_FD_SERIAL].fd;
 
 	_serial_modem_setup(ctx->fds[MSMC_FD_SERIAL].fd);
 	bsc_register_fd(&ctx->fds[MSMC_FD_SERIAL]);

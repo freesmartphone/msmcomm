@@ -18,27 +18,36 @@
  *
  */
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <netinet/in.h>
+#include <msmcomm/internal.h>
 
-#include <fcntl.h>
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <termios.h>
-#include <strings.h>
-#include <stdarg.h>
-#include <getopt.h>
-#include <time.h>
-#include <string.h>
+const char *log_level_color[] = {
+	"\033[1;31m",
+	"\033[1;32m",
+	"\033[1;33m",
+};
 
-#include <arpa/inet.h>
 
-int main(int argc, char *argv[])
+void log_message(char *file, int line, int level, const char *format, ...)
 {
-}
+	va_list ap;
+	FILE *outfd = stderr;
 
+	va_start(ap, format);
+
+	/* color */
+	fprintf(outfd, "%s", log_level_color[level]);
+
+	char timestr[30];
+	time_t t;
+	t = time(NULL);
+	strftime(&timestr[0], 30, "%F %H:%M:%S", localtime(&t));
+	fprintf(outfd, "[%s] ", timestr);
+
+	fprintf(outfd, "<%s:%d> ", file, line);
+	vfprintf(outfd, format, ap);
+	fprintf(outfd, "\033[0;m");
+	fprintf(outfd, "\n");
+
+	va_end(ap);
+	fflush(outfd);
+}

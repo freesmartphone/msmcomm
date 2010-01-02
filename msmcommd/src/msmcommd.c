@@ -20,13 +20,7 @@
 
 #include <msmcomm/internal.h>
 
-const char *log_level_color[] = {
-	"\033[1;31m",
-	"\033[1;32m",
-	"\033[1;33m",
-};
-
-unsigned char ifname[] = "eth0";
+char ifname[] = "eth0";
 
 const char *frame_type_names[] = {
 	"SYNC",
@@ -36,32 +30,6 @@ const char *frame_type_names[] = {
 	"ACKNOWLEDGE",
 	"DATA"
 };
-
-
-void log_message(char *file, int line, int level, const char *format, ...)
-{
-	va_list ap;
-	FILE *outfd = stderr;
-
-	va_start(ap, format);
-
-	/* color */
-	fprintf(outfd, "%s", log_level_color[level]);
-
-	char timestr[30];
-	time_t t;
-	t = time(NULL);
-	strftime(&timestr[0], 30, "%F %H:%M:%S", localtime(&t));
-	fprintf(outfd, "[%s] ", timestr);
-
-	fprintf(outfd, "<%s:%d> ", file, line);
-	vfprintf(outfd, format, ap);
-	fprintf(outfd, "\033[0;m");
-	fprintf(outfd, "\n");
-
-	va_end(ap);
-	fflush(outfd);
-}
 
 void hexdump(const unsigned char *data, int len)
 {
@@ -105,7 +73,7 @@ int msmcommd_init(struct msmc_context *ctx)
 {
 	if (!ctx || strlen(ctx->serial_port) == 0) return;
 
-	DEBUG_MSG("setting up ...\n");
+	DEBUG_MSG("setting up ...");
 
 	/* basic timer */
 	timer.cb = timer_cb;
@@ -113,13 +81,20 @@ int msmcommd_init(struct msmc_context *ctx)
 	bsc_schedule_timer(&timer, 0 , 50); 
 
 	/* serial and network components */
-	msmc_serial_init(ctx);
-	msmc_network_init(ctx);
+	if (msmc_serial_init(ctx) > 0) {
+		ERROR_MSG("failed to init serial component!");
+		exit(1);
+	}
+	if (msmc_network_init(ctx, ifname) < 0) {
+		ERROR_MSG("failed to init network component!");
+		msmc_serial_shutdown(ctx);
+		exit(1);
+	}
 }
 
 void msmc_context_free(struct msmc_context *ctx)
 {
-	DEBUG_MSG("shutting down ...\n");
+	DEBUG_MSG("shutting down ...");
 
 	msmc_serial_shutdown(ctx);
 	msmc_network_shutdown(ctx);
@@ -162,8 +137,11 @@ int main(int argc, char *argv[])
 
 	ctx = msmc_context_new();
 
+	/* set default configuration */
+	snprintf(&ctx->serial_port[0], 30, "/dev/modemuart"); 
+
 	/* parse options */
-	while(1) {
+/*	while(1) {
 		int c;
 		unsigned long ul;
 		char *slash;
@@ -189,8 +167,9 @@ int main(int argc, char *argv[])
 				msmc_context_free(ctx);
 				exit(0);
 		}
-	}
-	
+	}*/
+
+	DEBUG_MSG("init msmcommd ...");
 	msmcommd_init(ctx);
 
 	while (1)

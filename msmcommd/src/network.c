@@ -20,50 +20,8 @@
 
 #include <msmcomm/internal.h>
 
-extern unsigned char ifname[];
-
 LLIST_HEAD(control_msg_tx_queue);
 LLIST_HEAD(client_subcriptions);
-
-struct control_message* _control_message_new(void)
-{
-	return (struct control_message*) malloc(sizeof(struct control_message));
-}
-
-void _control_message_format_data(struct control_message *ctrl_msg, const unsigned char *data, const
-								  unsigned int len, unsigned int copy_data)
-{
-	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_DATA;
-	ctrl_msg->payload_len = len;
-
-	if (copy_data) {
-		ctrl_msg->payload = NEW(unsigned char, len);
-		memcpy(ctrl_msg->payload, data, len);
-	}
-	else {
-		ctrl_msg->payload = data;
-	}
-}
-
-void _control_message_format_rsp(struct control_message *ctrl_msg, int rsp_type)
-{
-	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_RSP;
-	ctrl_msg->payload_len = 1;
-	ctrl_msg->payload = (unsigned char*) calloc(sizeof(unsigned char), MSMC_CONTROL_MSG_RSP_SIZE);
-	ctrl_msg->payload[0] = rsp_type;
-}
-
-void _control_message_send(struct msmc_context *ctx, struct control_message *ctrl_msg)
-{
-	/* build control message packet to send to our client */
-	unsigned char *ctrlp = (unsigned char*) calloc(sizeof(unsigned char), MSMC_CONTROL_MESSAGE_LEN(ctrl_msg));
-
-	ctrlp[0] = ctrl_msg->type;
-	memcpy(&ctrlp[1], &ctrl_msg->payload[0], ctrl_msg->payload_len);
-
-	sendto(ctx->fds[MSMC_FD_NETWORK].fd, ctrlp, sizeof(ctrlp), 0,
-		   (struct sockaddr*) ctrl_msg->client, sizeof(ctrl_msg->client));
-}
 
 void _network_data_schedule(struct msmc_context *ctx, struct control_message *ctrl_msg)
 {
@@ -100,8 +58,8 @@ void _control_message_handle(struct msmc_context *ctx, struct control_message *c
 		_serial_data_schedule(ctx, ctrl->payload, ctrl->payload_len);
 
 		/* Tell our client that we received the data */
-		struct control_message *rsp = _control_message_new();
-		_control_message_format_rsp(rsp, MSMC_CONTROL_MSG_RSP_DATA_SCHEDULED);
+		struct control_message *rsp = msmc_control_message_new();
+		msmc_control_message_format_rsp(rsp, MSMC_CONTROL_MSG_RSP_DATA_SCHEDULED);
 		_network_data_schedule(ctx, rsp);
 
 		break;
@@ -158,8 +116,8 @@ static void _network_serial_data_handle(struct msmc_context *ctx, const unsigned
 	/* we received data from the serial port -> forward it to all registered clients */
 	llist_for_each_entry(csubs, &client_subcriptions, list) {
 		ctrlm.client = csubs->client;
-		_control_message_format_data(&ctrlm, data, len, 0);
-		_control_message_send(ctx, &ctrlm);
+		msmc_control_message_format_data(&ctrlm, data, len, 0);
+		msmc_control_message_send(ctx->fds[MSMC_FD_NETWORK].fd, &ctrlm);
 	}
 }
 
@@ -170,7 +128,9 @@ void _network_outgoing_data_handle(struct bsc_fd *bfd)
 	/* loop through our trx-queue and send every control message to it's client */
 	struct control_message *ctrl_msg;
 	llist_for_each_entry(ctrl_msg, &control_msg_tx_queue, list) {
-		_control_message_send(ctx, ctrl_msg);
+		msmc_control_message_send(ctx->fds[MSMC_FD_NETWORK].fd, ctrl_msg);
+		llist_del(&ctrl_msg->list);
+		msmc_control_message_free(ctrl_msg);
 	}
 }
 
@@ -182,10 +142,12 @@ static void _network_cb(struct bsc_fd *bfd, unsigned int flags)
 		_network_outgoing_data_handle(bfd);
 }
 
-int msmc_network_init(struct msmc_context *ctx)
+int msmc_network_init(struct msmc_context *ctx, const char *ifname)
 {
 	int fd, rc;
 	struct sockaddr_in sa;
+
+	DEBUG_MSG("init network component ...\n");
 
 	/* setup network control port */
 	ctx->fds[MSMC_FD_NETWORK].cb = _network_cb;
@@ -194,21 +156,14 @@ int msmc_network_init(struct msmc_context *ctx)
 
 	/* open network socket */
 	fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-	if (fd < 0) {
-		bsc_unregister_fd(&ctx->fds[MSMC_FD_SERIAL]);
-		close(ctx->fds[MSMC_FD_SERIAL].fd);
-		return -1;
-	}
+	if (fd < 0)
+		return fd;
 
 	/* bind to specific interface */
-	if (strlen(ifname) > 0) {
+	if (ifname) {
 		rc = setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, ifname, strlen(ifname));
-		if (rc < 0) {
-			close(fd);
-			bsc_unregister_fd(&ctx->fds[MSMC_FD_SERIAL]);
-			close(ctx->fds[MSMC_FD_SERIAL].fd);
-			return -1;
-		}
+		if (rc < 0)
+			goto err;
 	}
 	
 	/* bind to port */
@@ -217,20 +172,21 @@ int msmc_network_init(struct msmc_context *ctx)
 	sa.sin_addr.s_addr = INADDR_ANY;
 
 	rc = bind(fd, (struct sockaddr*) &sa, sizeof(sa));
-	if (rc < 0) {
-		close(fd);
-		bsc_unregister_fd(&ctx->fds[MSMC_FD_SERIAL]);
-		close(ctx->fds[MSMC_FD_SERIAL].fd);
-		return -1;
-	}
-
+	if (rc < 0)
+		goto err;
+	
 	ctx->fds[MSMC_FD_NETWORK].fd = fd;
 	bsc_register_fd(&ctx->fds[MSMC_FD_NETWORK]);
 
 	/* register the callback handler for incomming data on serial front */
 	msmc_serial_data_handler_add(ctx, _network_serial_data_handle);
 
-	return 0;
+	DEBUG_MSG("-> finished!\n");
+
+	return fd;
+err:
+	close(fd);
+	return rc;
 }
 
 void msmc_network_shutdown(struct msmc_context *ctx)
