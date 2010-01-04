@@ -19,8 +19,6 @@
  */
 
 #include <msmcomm/internal.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 
 struct msmcterm_context 
 {
