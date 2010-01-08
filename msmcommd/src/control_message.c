@@ -20,12 +20,7 @@
 
 #include <msmcomm/internal.h>
 
-struct control_message* msmc_control_message_new(void)
-{
-	return (struct control_message*) malloc(sizeof(struct control_message));
-}
-
-void msmc_control_message_client_set(struct control_message *ctrl_msg, const char *client_addr)
+void ctrl_msg_set_client(struct control_message *ctrl_msg, const char *client_addr)
 {
 	ctrl_msg->client = NEW(struct sockaddr_in, 1);
 	ctrl_msg->client->sin_family = AF_INET;
@@ -33,14 +28,14 @@ void msmc_control_message_client_set(struct control_message *ctrl_msg, const cha
 	inet_aton(client_addr, ctrl_msg->client->sin_addr.s_addr);
 }
 
-void msmc_control_message_free(struct control_message *ctrl_msg)
+void free_ctrl_msg(struct control_message *ctrl_msg)
 {
 	if (ctrl_msg->client)
 		free(ctrl_msg->client);
 	free(ctrl_msg);
 }
 
-void msmc_control_message_format_data(struct control_message *ctrl_msg, const unsigned char *data, const
+void ctrl_msg_format_data_type(struct control_message *ctrl_msg, const unsigned char *data, const
 								  unsigned int len, unsigned int copy_data)
 {
 	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_DATA;
@@ -55,7 +50,7 @@ void msmc_control_message_format_data(struct control_message *ctrl_msg, const un
 	}
 }
 
-void msmc_control_message_format_rsp(struct control_message *ctrl_msg, int rsp_type)
+void ctrl_msg_format_rsp_type(struct control_message *ctrl_msg, int rsp_type)
 {
 	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_RSP;
 	ctrl_msg->payload_len = 1;
@@ -63,7 +58,7 @@ void msmc_control_message_format_rsp(struct control_message *ctrl_msg, int rsp_t
 	ctrl_msg->payload[0] = rsp_type;
 }
 
-void msmc_control_message_format_cmd(struct control_message *ctrl_msg, int cmd_type)
+void ctrl_msg_format_cmd_type(struct control_message *ctrl_msg, int cmd_type)
 {
 	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_CMD;
 	ctrl_msg->payload = 1;
@@ -71,7 +66,7 @@ void msmc_control_message_format_cmd(struct control_message *ctrl_msg, int cmd_t
 	ctrl_msg->payload[0] = cmd_type;
 }
 
-void msmc_control_message_send(int fd, struct control_message *ctrl_msg)
+void send_ctrl_msg(int fd, struct control_message *ctrl_msg)
 {
 	/* build control message packet to send to our client */
 	unsigned char *ctrlp = (unsigned char*) calloc(sizeof(unsigned char), MSMC_CONTROL_MESSAGE_LEN(ctrl_msg));

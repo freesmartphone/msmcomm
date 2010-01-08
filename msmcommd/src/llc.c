@@ -25,7 +25,7 @@ extern const char *frame_type_names[];
 
 LLIST_HEAD(data_handlers);
 
-void _serial_modem_setup(int fd)
+static void serial_port_setup(int fd)
 {
 	int ret;
 	struct termios options;
@@ -78,7 +78,7 @@ void _serial_modem_setup(int fd)
 	ioctl(fd, TIOCMBIS, &v24);
 }
 
-void _frame_send(struct msmc_context *ctx, struct frame *fr)
+void send_frame(struct msmc_context *ctx, struct frame *fr)
 {
 	unsigned int len, decoded_payload_len;
 	char *data, *decoded_payload;
@@ -87,7 +87,7 @@ void _frame_send(struct msmc_context *ctx, struct frame *fr)
 	if (!ctx || !fr) return;
 
 	/* encode data so 0x7e doesn't occur within the payload */
-	decoded_payload = msmc_frame_decode(&data[3], fr->payload_len, &decoded_payload_len);
+	decoded_payload = decode_frame_data(&data[3], fr->payload_len, &decoded_payload_len);
 
 	/* convert our frame struct to raw binary data */
 	len = 3 + decoded_payload_len + 2 + 1;
@@ -123,14 +123,14 @@ static void sync_timer_cb(void *_data)
 
 	if (ctx->state == MSMC_STATE_NULL)
 	{
-		msmc_frame_create(&fr, MSMC_FRAME_TYPE_SYNC);
-		_frame_send(ctx, &fr);
+		init_frame(&fr, MSMC_FRAME_TYPE_SYNC);
+		send_frame(ctx, &fr);
 	}
 
 	bsc_schedule_timer(&sync_timer, 0, MSMC_SYNC_SENT_INTERVAL);
 }
 
-void _link_restart(struct msmc_context *ctx)
+static void restart_link(struct msmc_context *ctx)
 {
 	if (!ctx)
 		return;
@@ -147,7 +147,7 @@ void _link_restart(struct msmc_context *ctx)
 	bsc_schedule_timer(&sync_timer, 0, MSMC_SYNC_SENT_INTERVAL);
 }
 
-void _frame_type_handle(struct msmc_context *ctx, struct frame *fr)
+static void handle_frame_type(struct msmc_context *ctx, struct frame *fr)
 {
 	struct frame frout;
 
@@ -156,13 +156,13 @@ void _frame_type_handle(struct msmc_context *ctx, struct frame *fr)
 	switch (fr->type)
 	{
 		case MSMC_FRAME_TYPE_SYNC:
-			msmc_frame_create(&frout, MSMC_FRAME_TYPE_SYNC_RESP);
-			_frame_send(ctx, &frout);
+			init_frame(&frout, MSMC_FRAME_TYPE_SYNC_RESP);
+			send_frame(ctx, &frout);
 			break;
 		case MSMC_FRAME_TYPE_CONFIG:
-			msmc_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG_RESP);
+			init_frame(&frout, MSMC_FRAME_TYPE_CONFIG_RESP);
 			/* FIXME include link configuration in frame header */
-			_frame_send(ctx, &frout);
+			send_frame(ctx, &frout);
 			break;
 		default:
 			DEBUG_MSG("could not create response for unsupported frame type!\n");
@@ -170,7 +170,7 @@ void _frame_type_handle(struct msmc_context *ctx, struct frame *fr)
 	}
 }
 
-void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
+static void link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 {
 	struct frame frout;
 
@@ -185,25 +185,25 @@ void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 		/* Ignore every other frame type than SYNC and SYNC RESP */
 		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
 			bsc_del_timer(&sync_timer);
-			_frame_type_handle(ctx, fr);
+			handle_frame_type(ctx, fr);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_SYNC_RESP) {
 			/* Move on into INIT state and send out config message */
 			DEBUG_MSG("entering INIT state ...\n");
 			ctx->state = MSMC_STATE_INIT;
-			msmc_frame_create(&frout, MSMC_FRAME_TYPE_CONFIG);
-			_frame_send(ctx, &frout);
+			init_frame(&frout, MSMC_FRAME_TYPE_CONFIG);
+			send_frame(ctx, &frout);
 		}
 		break;
 
 	case MSMC_STATE_INIT:
 		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
 			/* response with a SYNC RESP message */
-			_frame_type_handle(ctx, fr);
+			handle_frame_type(ctx, fr);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_CONFIG) {
 			/* response with CONFIG RESP message */
-			_frame_type_handle(ctx, fr);
+			handle_frame_type(ctx, fr);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_CONFIG_RESP) {
 			/* Move on into ACTIVE state */
@@ -220,12 +220,12 @@ void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
 			/* The spec told us to restart the whole stack if we receive a sync message in ACTIVE
 			   state */
-			_link_restart(ctx);
+			restart_link(ctx);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_CONFIG) {
 			/* If we receive a CONFIG message in ACTIVE state we send out a CONFIG RESP with our
 			   currrent configuration settings */
-			_frame_type_handle(ctx, fr);
+			handle_frame_type(ctx, fr);
 		}
 		else {
 			DEBUG_MSG("recieve %s frame in ACTIVE state ... discard frame!",
@@ -235,12 +235,12 @@ void _link_establishment_control(struct msmc_context *ctx, struct frame *fr)
 
 	default:
 		DEBUG_MSG("arrived in invalid state ... assuming restart!");
-		_link_restart(ctx);
+		restart_link(ctx);
 		break;
 	}
 }
 
-void _link_control(struct msmc_context *ctx, struct frame *fr)
+static void link_control(struct msmc_context *ctx, struct frame *fr)
 {
 	if (!ctx) return;
 
@@ -267,7 +267,7 @@ void _link_control(struct msmc_context *ctx, struct frame *fr)
 	}
 }
 
-void _frame_handle(struct msmc_context *ctx, const unsigned char *data, unsigned int len)
+static void handle_frame(struct msmc_context *ctx, const unsigned char *data, unsigned int len)
 {
 	unsigned short crc, fr_crc;
 	struct frame *f = (struct frame*) malloc(sizeof(struct frame));
@@ -293,12 +293,12 @@ void _frame_handle(struct msmc_context *ctx, const unsigned char *data, unsigned
 
 	/* delegate frame handling corresponding to the frame type */
 	if (f->type < MSMC_FRAME_TYPE_ACK)
-		_link_establishment_control(ctx, f);
+		link_establishment_control(ctx, f);
 	else
-		_link_control(ctx, f);
+		link_control(ctx, f);
 }
 
-void _serial_incomming_data_handle(struct bsc_fd *bfd)
+static void handle_llc_incomming_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 	char buffer[MSMC_MAX_BUFFER_SIZE];
@@ -322,18 +322,18 @@ void _serial_incomming_data_handle(struct bsc_fd *bfd)
 		{
 			DEBUG_MSG("found valid frame\n");
 			last = p - start - 1;
-			_frame_handle(ctx, p, last);
+			handle_frame(ctx, p, last);
 		}
 		p++;
 	}
 }
 
-void _serial_data_schedule(struct msmc_context *ctx, const unsigned char *data, unsigned int len)
+void schedule_llc_data(struct msmc_context *ctx, const unsigned char *data, unsigned int len)
 {
 
 }
 
-void _serial_outgoing_data_handle(struct bsc_fd *bfd)
+void handle_llc_outgoing_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 
@@ -344,25 +344,25 @@ void _serial_outgoing_data_handle(struct bsc_fd *bfd)
 	 */
 }
 
-static void _serial_cb(struct bsc_fd *bfd, unsigned int flags)
+static void _llc_cb(struct bsc_fd *bfd, unsigned int flags)
 {
 	if (flags & BSC_FD_READ)
-		_serial_incomming_data_handle(bfd);
+		handle_llc_incomming_data(bfd);
 	if (flags & BSC_FD_WRITE) 
-		_serial_outgoing_data_handle(bfd);
+		handle_llc_outgoing_data(bfd);
 }
 
-void msmc_serial_data_handler_add (struct msmc_context *ctx, msmc_data_handler_cb_t cb)
+void register_llc_data_handler (struct msmc_context *ctx, msmc_data_handler_cb_t cb)
 {
 	struct msmc_data_handler *dh = NEW(struct msmc_data_handler, 1);
 	dh->cb = cb;
 	llist_add_tail(&data_handlers, &dh->list);
 }
 
-int msmc_serial_init(struct msmc_context *ctx)
+int init_llc(struct msmc_context *ctx)
 {
 	/* setup modem port */
-	ctx->fds[MSMC_FD_SERIAL].cb = _serial_cb;
+	ctx->fds[MSMC_FD_SERIAL].cb = _llc_cb;
 	ctx->fds[MSMC_FD_SERIAL].data = ctx;
 	ctx->fds[MSMC_FD_SERIAL].when = BSC_FD_READ | BSC_FD_WRITE;
 	ctx->fds[MSMC_FD_SERIAL].fd = open(ctx->serial_port, O_RDWR | O_NOCTTY);
@@ -370,17 +370,16 @@ int msmc_serial_init(struct msmc_context *ctx)
 	if (ctx->fds[MSMC_FD_SERIAL].fd < 0)
 		return ctx->fds[MSMC_FD_SERIAL].fd;
 
-	_serial_modem_setup(ctx->fds[MSMC_FD_SERIAL].fd);
+	serial_port_setup(ctx->fds[MSMC_FD_SERIAL].fd);
 	bsc_register_fd(&ctx->fds[MSMC_FD_SERIAL]);
 
-	_link_restart(ctx);
+	restart_link(ctx);
 }
 
-void msmc_serial_shutdown(struct msmc_context *ctx)
+void shutdown_llc(struct msmc_context *ctx)
 {
 	/* close serial port */
 	bsc_unregister_fd(&ctx->fds[MSMC_FD_SERIAL]);
 	close(ctx->fds[MSMC_FD_SERIAL].fd);
-
 }
 

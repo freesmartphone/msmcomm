@@ -20,11 +20,8 @@
 
 #include <msmcomm/internal.h>
 
-void msmc_frame_create(struct frame *fr, unsigned int type)
+void init_frame(struct frame *fr, unsigned int type)
 {
-	if (!fr)
-		fr = (struct frame*) malloc(sizeof(struct frame));
-	
 	fr->adress = 0xfa;
 	fr->type = type;
 	fr->seq = 0;
@@ -33,7 +30,7 @@ void msmc_frame_create(struct frame *fr, unsigned int type)
 	fr->payload_len = 0;
 }
 
-unsigned char* msmc_frame_decode(unsigned char *data, unsigned int len, unsigned int *new_len)
+unsigned char* decode_frame_data(unsigned char *data, unsigned int len, unsigned int *new_len)
 {
 	unsigned char *decoded_data;
 	if (!data) return;

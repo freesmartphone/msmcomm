@@ -148,23 +148,22 @@ void hexdump(const unsigned char *data, int len);
 #define ERROR_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_ERROR, fmt, ## args)
 #define INFO_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_INFO, fmt, ## args)
 
-unsigned char* msmc_frame_decode(unsigned char *data, unsigned int len, unsigned int *new_len);
-void msmc_frame_create(struct frame *fr, unsigned int type);
+unsigned char* decode_frame_data(unsigned char *data, unsigned int len, unsigned int *new_len);
+void init_frame(struct frame *fr, unsigned int type);
 
-int msmc_serial_init(struct msmc_context *ctx);
-void msmc_serial_shutdown(struct msmc_context *ctx);
-void msmc_serial_data_handler_add (struct msmc_context *ctx, msmc_data_handler_cb_t cb);
+int init_llc(struct msmc_context *ctx);
+void shutdown_llc(struct msmc_context *ctx);
+void register_llc_data_handler(struct msmc_context *ctx, msmc_data_handler_cb_t cb);
 
-int msmc_network_init(struct msmc_context *ctx, const char *ifname);
-void msmc_network_shutdown(struct msmc_context *ctx);
+int init_control_interface(struct msmc_context *ctx, const char *ifname);
+void shutdown_control_interface(struct msmc_context *ctx);
 
-struct control_message* msmc_control_message_new(void);
-void msmc_control_message_free(struct control_message *ctrl_msg);
-void msmc_control_message_format_data(struct control_message *ctrl_msg, const unsigned char *data, const
+void free_ctrl_msg(struct control_message *ctrl_msg);
+void ctrl_msg_format_data_type(struct control_message *ctrl_msg, const unsigned char *data, const
 								  unsigned int len, unsigned int copy_data);
-void msmc_control_message_format_rsp(struct control_message *ctrl_msg, int rsp_type);
-void msmc_control_message_format_cmd(struct control_message *ctrl_msg, int cmd_type);
-void msmc_control_message_send(int fd, struct control_message *ctrl_msg);
+void ctrl_msg_format_rsp_type(struct control_message *ctrl_msg, int rsp_type);
+void ctrl_msg_format_cmd_type(struct control_message *ctrl_msg, int cmd_type);
+void send_ctrl_msg(int fd, struct control_message *ctrl_msg);
 
 #endif
 

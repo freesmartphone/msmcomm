@@ -75,10 +75,10 @@ static void do_subscribe(struct msmcterm_context *ctx)
 		DEBUG_MSG("Subscription was already send and acknowledged. Don't resending request.");
 		return;
 	}
-	struct control_message *ctrl_msg = msmc_control_message_new();
-	msmc_control_message_format_cmd(ctrl_msg, MSMC_CONTROL_MSG_CMD_SUBSCRIBE);
-	msmc_control_message_send(ctx->bfd.fd, ctrl_msg);
-	msmc_control_message_free(ctrl_msg);
+	struct control_message *ctrl_msg = NEW(struct control_message, 1);
+	ctrl_msg_format_cmd_type(ctrl_msg, MSMC_CONTROL_MSG_CMD_SUBSCRIBE);
+	send_ctrl_msg(ctx->bfd.fd, ctrl_msg);
+	free_ctrl_msg(ctrl_msg);
 }
 
 static void do_help(void)

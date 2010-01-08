@@ -23,13 +23,13 @@
 LLIST_HEAD(control_msg_tx_queue);
 LLIST_HEAD(client_subcriptions);
 
-void _network_data_schedule(struct msmc_context *ctx, struct control_message *ctrl_msg)
+void schedule_ctrl_msg(struct msmc_context *ctx, struct control_message *ctrl_msg)
 {
 	/* schedule data */
 	llist_add_tail(&control_msg_tx_queue, &ctrl_msg->list);
 }
 
-void _control_message_cmd_handle(struct msmc_context *ctx, unsigned int cmd, struct control_message *ctrl_msg)
+void handle_ctrl_msg_command(struct msmc_context *ctx, unsigned int cmd, struct control_message *ctrl_msg)
 {
 	struct client_subscription *csubs;
 
@@ -49,18 +49,18 @@ void _control_message_cmd_handle(struct msmc_context *ctx, unsigned int cmd, str
 	}
 }
 
-void _control_message_handle(struct msmc_context *ctx, struct control_message *ctrl)
+void handle_ctrl_msg(struct msmc_context *ctx, struct control_message *ctrl)
 {
 	switch(ctrl->type)
 	{
 	case MSMC_CONTROL_MSG_TYPE_DATA:
 		/* We received new data to send to our connected mobile station */
-		_serial_data_schedule(ctx, ctrl->payload, ctrl->payload_len);
+		schedule_llc_data(ctx, ctrl->payload, ctrl->payload_len);
 
 		/* Tell our client that we received the data */
-		struct control_message *rsp = msmc_control_message_new();
-		msmc_control_message_format_rsp(rsp, MSMC_CONTROL_MSG_RSP_DATA_SCHEDULED);
-		_network_data_schedule(ctx, rsp);
+		struct control_message *rsp = NEW(struct control_message, 1);
+		ctrl_msg_format_rsp_type(rsp, MSMC_CONTROL_MSG_RSP_DATA_SCHEDULED);
+		schedule_ctrl_msg(ctx, rsp);
 
 		break;
 	case MSMC_CONTROL_MSG_TYPE_CMD:
@@ -70,14 +70,14 @@ void _control_message_handle(struct msmc_context *ctx, struct control_message *c
 		}
 
 		unsigned char cmd = ctrl->payload[0];
-		_control_message_cmd_handle(ctx, cmd, ctrl); 
+		handle_ctrl_msg_command(ctx, cmd, ctrl); 
 		break;
 	default:
 		break;
 	}
 }
 
-void _network_incomming_data_handle(struct bsc_fd *bfd)
+void handle_incomming_control_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 	struct control_message ctrl;
@@ -105,10 +105,10 @@ void _network_incomming_data_handle(struct bsc_fd *bfd)
 	ctrl.type = buffer[0];
 	ctrl.client = &sa;
 
-	_control_message_handle(ctx, &ctrl);
+	handle_ctrl_msg(ctx, &ctrl);
 }
 
-static void _network_serial_data_handle(struct msmc_context *ctx, const unsigned char *data, const unsigned int len)
+static void handle_data_from_llc(struct msmc_context *ctx, const unsigned char *data, const unsigned int len)
 {
 	struct client_subscription *csubs;
 	struct control_message ctrlm;
@@ -116,38 +116,38 @@ static void _network_serial_data_handle(struct msmc_context *ctx, const unsigned
 	/* we received data from the serial port -> forward it to all registered clients */
 	llist_for_each_entry(csubs, &client_subcriptions, list) {
 		ctrlm.client = csubs->client;
-		msmc_control_message_format_data(&ctrlm, data, len, 0);
-		msmc_control_message_send(ctx->fds[MSMC_FD_NETWORK].fd, &ctrlm);
+		ctrl_msg_format_data_type(&ctrlm, data, len, 0);
+		send_ctrl_msg(ctx->fds[MSMC_FD_NETWORK].fd, &ctrlm);
 	}
 }
 
-void _network_outgoing_data_handle(struct bsc_fd *bfd)
+void handle_outgoing_control_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 
 	/* loop through our trx-queue and send every control message to it's client */
 	struct control_message *ctrl_msg;
 	llist_for_each_entry(ctrl_msg, &control_msg_tx_queue, list) {
-		msmc_control_message_send(ctx->fds[MSMC_FD_NETWORK].fd, ctrl_msg);
+		send_ctrl_msg(ctx->fds[MSMC_FD_NETWORK].fd, ctrl_msg);
 		llist_del(&ctrl_msg->list);
-		msmc_control_message_free(ctrl_msg);
+		free_ctrl_msg(ctrl_msg);
 	}
 }
 
 static void _network_cb(struct bsc_fd *bfd, unsigned int flags)
 {
 	if (flags & BSC_FD_READ)
-		_network_incomming_data_handle(bfd);
+		handle_incomming_control_data(bfd);
 	if (flags & BSC_FD_WRITE)
-		_network_outgoing_data_handle(bfd);
+		handle_outgoing_control_data(bfd);
 }
 
-int msmc_network_init(struct msmc_context *ctx, const char *ifname)
+int init_control_interface(struct msmc_context *ctx, const char *ifname)
 {
 	int fd, rc;
 	struct sockaddr_in sa;
 
-	DEBUG_MSG("init network component ...\n");
+	DEBUG_MSG("init control interface ...\n");
 
 	/* setup network control port */
 	ctx->fds[MSMC_FD_NETWORK].cb = _network_cb;
@@ -179,7 +179,7 @@ int msmc_network_init(struct msmc_context *ctx, const char *ifname)
 	bsc_register_fd(&ctx->fds[MSMC_FD_NETWORK]);
 
 	/* register the callback handler for incomming data on serial front */
-	msmc_serial_data_handler_add(ctx, _network_serial_data_handle);
+	register_llc_data_handler(ctx, handle_data_from_llc);
 
 	DEBUG_MSG("-> finished!\n");
 
@@ -189,7 +189,7 @@ err:
 	return rc;
 }
 
-void msmc_network_shutdown(struct msmc_context *ctx)
+void shutdown_control_interface(struct msmc_context *ctx)
 {
 	/* close network port */
 	bsc_unregister_fd(&ctx->fds[MSMC_FD_NETWORK]);
