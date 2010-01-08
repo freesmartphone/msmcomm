@@ -1,5 +1,3 @@
-
-/* 
  * (c) 2009 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
@@ -80,25 +78,25 @@ static void serial_port_setup(int fd)
 
 void send_frame(struct msmc_context *ctx, struct frame *fr)
 {
-	unsigned int len, decoded_payload_len;
-	char *data, *decoded_payload;
-	unsigned short crc;
+	uint32_t len, encoded_payload_len;
+	uint8_t *data, *encoded_payload;
+	uint16_t crc;
 
 	if (!ctx || !fr) return;
 
 	/* encode data so 0x7e doesn't occur within the payload */
-	decoded_payload = decode_frame_data(&data[3], fr->payload_len, &decoded_payload_len);
+	encode_frame_data(&data[3], fr->payload_len, &encoded_payload_len, encoded_payload);
 
 	/* convert our frame struct to raw binary data */
-	len = 3 + decoded_payload_len + 2 + 1;
-	data = (unsigned char*) malloc(sizeof(unsigned char) * len);
+	len = 3 + encoded_payload_len + 2 + 1;
+	data = NEW(uint8_t, len);
 
 	data[0] = fr->adress & 0xff;
 	data[1] = (fr->type << 4) & 0xff;
 	data[2] = ((fr->seq << 4) | fr->ack) & 0xff;
 
 	/* attach payload */
-	memcpy(data + 3, decoded_payload, decoded_payload_len);
+	memcpy(data + 3, encoded_payload, encoded_payload_len);
 
 	/* computer crc over header + data and append it */
 	crc = crc16_calc(&data[0], len - 4);
@@ -111,7 +109,7 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
 
 	free(data);
-	free(decoded_payload);
+	free(encoded_payload);
 }
 
 static struct timer_list sync_timer;

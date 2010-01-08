@@ -148,7 +148,8 @@ void hexdump(const unsigned char *data, int len);
 #define ERROR_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_ERROR, fmt, ## args)
 #define INFO_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_INFO, fmt, ## args)
 
-unsigned char* decode_frame_data(unsigned char *data, unsigned int len, unsigned int *new_len);
+void encode_frame_data(uint8_t *data, uint32_t len, uint32_t *new_len, uint8_t *encdoded_data);
+void decode_frame_data(uint8_t *data, uint32_t len, uint32_t *new_len, uint8_t *decoed_data);
 void init_frame(struct frame *fr, unsigned int type);
 
 int init_llc(struct msmc_context *ctx);

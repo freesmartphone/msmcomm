@@ -20,7 +20,7 @@
 
 #include <msmcomm/internal.h>
 
-void init_frame(struct frame *fr, unsigned int type)
+void init_frame(struct frame *fr, uint32_t type)
 {
 	fr->adress = 0xfa;
 	fr->type = type;
@@ -30,38 +30,77 @@ void init_frame(struct frame *fr, unsigned int type)
 	fr->payload_len = 0;
 }
 
-unsigned char* decode_frame_data(unsigned char *data, unsigned int len, unsigned int *new_len)
+static void ensure_data_length(uint8_t *data, uint32_t &len, uint32_t count)
 {
-	unsigned char *decoded_data;
-	if (!data) return;
-	
-	decoded_data = (unsigned char*) malloc(sizeof(unsigned char) * len);
+	/* check wether data is big enough to contain some count more bytes */
+	if (len + count >= len) {
+		data = (uint8_t*)realloc(data, len+count);
+		len += count;
+	}
+}
+
+void encode_frame_data(uint8_t *data, uint32_t len, uint8_t *new_len, uint8_t *encoded_data)
+{
+	uint8_t *tmp = NEW(uint8_t, len*2);
+	uint32_t tmp_len = len*2;
+	uint8_t *p = &tmp[0];
 	*new_len = 0;
-	while(len--)
-	{
+	while(len--) {
+		/* replace: 
+		 * 0x7d with 0x7d 0x5d
+		 * 0x7e with 0x7d 0x5e
+		 */
+		if (*data == 0x7d) {
+			ensure_data_length(tmp, tmp_len, 2);
+			*p++ = 0x7d;
+			*p++ = 0x5d;
+			data += 2;
+			new_len += 2;
+		}
+		else if (*data == 0x7e) {
+			ensure_data_length(tmp, tmp_len, 2);
+			*p++ = 0x7d;
+			*p++ = 0x5d;
+			new_len += 2;
+		}
+		else {
+			*p++ = *data++;
+			*p++ = *data++;
+		}
+	}
+}
+
+void decode_frame_data(uint8_t *data, uint32_t len, uint32_t *new_len,
+								 uint8_t *decoded_data)
+{
+	uint8_t tmp[len];
+	uint8_t *p = &tmp[0];
+
+	*new_len = 0;
+	while(len--) {
 		/* replace:
 		 * - 0x7d 0x5d with 0x7d
 		 * - 0x7d 0x5e with 0x7e
 		 */
-		if (*data == 0x7d && len > 0)
-		{
-			if (*(data+1) == 0x5d)
-			{
-				*decoded_data++ = 0x7d;
+		if (*data == 0x7d && len > 0) {
+			if (*(data+1) == 0x5d) {
+				*p++ = 0x7d;
 				data++;
 			}
-			else if(*(data+1) == 0x5e)
-			{
-				*decoded_data++ = 0x7e;
+			else if(*(data+1) == 0x5e) {
+				*p++ = 0x7e;
 				data++;
 			}
 		}
 		else 
-			*decoded_data = *data;
+			*p++ = *data;
 
 		*new_len += 1;
-		decoded_data++;
+		p++;
 		data++;
 	}
+	
+	decoded_data = NEW(uint8_t, new_len);
+	memcpy(decoded_data, &tmp[0], new_len);
 }
 
