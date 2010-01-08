@@ -42,6 +42,7 @@
 
 #include <msmcomm/select.h>
 #include <msmcomm/timer.h>
+#include <msmcomm/talloc.h>
 
 #define DEBUG
 
