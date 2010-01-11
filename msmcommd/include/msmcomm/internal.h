@@ -96,10 +96,10 @@ struct msmc_context
 
 	/* HCI LL specific */
 	int					state;
-	unsigned char		next_expected_seq;
+	uint8_t		next_expected_seq;
 };
 
-typedef void (*msmc_data_handler_cb_t) (struct msmc_context *ctx, const unsigned char *data, unsigned int len);
+typedef void (*msmc_data_handler_cb_t) (struct msmc_context *ctx, const uint8_t *data, uint32_t len);
 
 struct msmc_data_handler
 {
@@ -109,12 +109,12 @@ struct msmc_data_handler
 
 struct frame
 {
-	unsigned char	 adress;
-	unsigned char	 type;
-	unsigned char	 seq;
-	unsigned char	 ack;
-	unsigned char	*payload;
-	unsigned int	 payload_len;
+	uint8_t adress;
+	uint8_t	 type;
+	uint8_t	 seq;
+	uint8_t	 ack;
+	uint8_t	*payload;
+	uint32_t	 payload_len;
 };
 
 #define MSMC_CONTROL_MESSAGE_HEADER_SIZE		1
@@ -123,22 +123,24 @@ struct frame
 
 struct control_message
 {
+	void				*mem_ctx;
 	struct llist_head	 list;
-	unsigned char		 type;
+	uint8_t				 type;
 	struct sockaddr_in	*client;
-	unsigned int		 payload_len;
-	unsigned char		*payload;
+	uint32_t			 payload_len;
+	uint8_t				*payload;
 };
 
 struct client_subscription
 {
-	struct llist_head   list;
-	struct sockaddr_in *client;
+	struct llist_head    list;
+	void				*mem_ctx;
+	struct sockaddr_in  *client;
 };
 
-void log_message(char *file, int line, int level, const char *format, ...);
-unsigned short crc16_calc(const unsigned char *data, int len); 
-void hexdump(const unsigned char *data, int len);
+void log_message(char *file, uint32_t line, uint32_t level, const char *format, ...);
+unsigned short crc16_calc(const uint8_t *data, uint32_t len); 
+void hexdump(const uint8_t *data, uint32_t len);
 
 #ifdef DEBUG
 #define DEBUG_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_DEBUG, fmt, ## args)
@@ -149,9 +151,11 @@ void hexdump(const unsigned char *data, int len);
 #define ERROR_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_ERROR, fmt, ## args)
 #define INFO_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_INFO, fmt, ## args)
 
-void encode_frame_data(uint8_t *data, uint32_t len, uint32_t *new_len, uint8_t *encdoded_data);
-void decode_frame_data(uint8_t *data, uint32_t len, uint32_t *new_len, uint8_t *decoed_data);
-void init_frame(struct frame *fr, unsigned int type);
+void init_mem(void);
+
+void encode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_len, uint8_t *encdoded_data);
+void decode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_len, uint8_t *decoed_data);
+void init_frame(struct frame *fr, uint32_t type);
 
 int init_llc(struct msmc_context *ctx);
 void shutdown_llc(struct msmc_context *ctx);
@@ -160,11 +164,10 @@ void register_llc_data_handler(struct msmc_context *ctx, msmc_data_handler_cb_t 
 int init_control_interface(struct msmc_context *ctx, const char *ifname);
 void shutdown_control_interface(struct msmc_context *ctx);
 
-void free_ctrl_msg(struct control_message *ctrl_msg);
-void ctrl_msg_format_data_type(struct control_message *ctrl_msg, const unsigned char *data, const
-								  unsigned int len, unsigned int copy_data);
-void ctrl_msg_format_rsp_type(struct control_message *ctrl_msg, int rsp_type);
-void ctrl_msg_format_cmd_type(struct control_message *ctrl_msg, int cmd_type);
+void ctrl_msg_format_data_type(struct control_message *ctrl_msg, uint8_t *data, const
+								  uint32_t len, uint8_t copy_data);
+void ctrl_msg_format_rsp_type(struct control_message *ctrl_msg, uint8_t rsp_type);
+void ctrl_msg_format_cmd_type(struct control_message *ctrl_msg, uint8_t cmd_type);
 void send_ctrl_msg(int fd, struct control_message *ctrl_msg);
 
 #endif

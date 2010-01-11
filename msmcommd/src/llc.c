@@ -1,3 +1,4 @@
+/*
  * (c) 2009 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
@@ -20,6 +21,8 @@
 #include <msmcomm/internal.h>
 
 extern const char *frame_type_names[];
+
+extern void *mem_llc_ctx;
 
 LLIST_HEAD(data_handlers);
 
@@ -89,7 +92,7 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 
 	/* convert our frame struct to raw binary data */
 	len = 3 + encoded_payload_len + 2 + 1;
-	data = NEW(uint8_t, len);
+	data = talloc_size(mem_llc_ctx, sizeof(uint8_t) * len);
 
 	data[0] = fr->adress & 0xff;
 	data[1] = (fr->type << 4) & 0xff;
@@ -108,8 +111,8 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 
 	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
 
-	free(data);
-	free(encoded_payload);
+	talloc_free(data);
+	talloc_free(encoded_payload);
 }
 
 static struct timer_list sync_timer;
@@ -265,10 +268,10 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 	}
 }
 
-static void handle_frame(struct msmc_context *ctx, const unsigned char *data, unsigned int len)
+static void handle_frame(struct msmc_context *ctx, const uint8_t *data, uint32_t len)
 {
 	unsigned short crc, fr_crc;
-	struct frame *f = (struct frame*) malloc(sizeof(struct frame));
+	struct frame *fr = talloc_zero(mem_llc_ctx, struct frame);
 
 	/* the last two bytes are the crc checksum, check them! */
 	fr_crc = (data[len - 1] << 4) | data[len - 2];
@@ -282,18 +285,21 @@ static void handle_frame(struct msmc_context *ctx, const unsigned char *data, un
 	DEBUG_MSG("handle frame ...\n");
 	
 	/* parse frame data */
-	f->adress = data[0];
-	f->type = data[1] >> 4;
-	f->seq  = data[2] >> 4;
-	f->ack  = data[2] & 0xf;
-	f->payload = data + 3;
-	f->payload_len = len - 3;
+	fr->adress = data[0];
+	fr->type = data[1] >> 4;
+	fr->seq  = data[2] >> 4;
+	fr->ack  = data[2] & 0xf;
+
+	/* decode frame payload first */
+	decode_frame_data(data + 3, len - 3, &fr->payload_len, fr->payload);
 
 	/* delegate frame handling corresponding to the frame type */
-	if (f->type < MSMC_FRAME_TYPE_ACK)
-		link_establishment_control(ctx, f);
+	if (fr->type < MSMC_FRAME_TYPE_ACK)
+		link_establishment_control(ctx, fr);
 	else
-		link_control(ctx, f);
+		link_control(ctx, fr);
+
+	talloc_free(fr);
 }
 
 static void handle_llc_incomming_data(struct bsc_fd *bfd)
@@ -326,7 +332,7 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 	}
 }
 
-void schedule_llc_data(struct msmc_context *ctx, const unsigned char *data, unsigned int len)
+void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t len)
 {
 
 }
@@ -342,7 +348,7 @@ void handle_llc_outgoing_data(struct bsc_fd *bfd)
 	 */
 }
 
-static void _llc_cb(struct bsc_fd *bfd, unsigned int flags)
+static void _llc_cb(struct bsc_fd *bfd, uint32_t flags)
 {
 	if (flags & BSC_FD_READ)
 		handle_llc_incomming_data(bfd);
@@ -352,7 +358,7 @@ static void _llc_cb(struct bsc_fd *bfd, unsigned int flags)
 
 void register_llc_data_handler (struct msmc_context *ctx, msmc_data_handler_cb_t cb)
 {
-	struct msmc_data_handler *dh = NEW(struct msmc_data_handler, 1);
+	struct msmc_data_handler *dh = talloc_zero(mem_llc_ctx, struct msmc_data_handler);
 	dh->cb = cb;
 	llist_add_tail(&data_handlers, &dh->list);
 }

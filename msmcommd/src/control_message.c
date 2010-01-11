@@ -20,29 +20,30 @@
 
 #include <msmcomm/internal.h>
 
-void ctrl_msg_set_client(struct control_message *ctrl_msg, const char *client_addr)
+extern void *mem_ctrl_ctx;
+
+void init_ctrl_msg(struct control_message *ctrl_msg)
 {
-	ctrl_msg->client = NEW(struct sockaddr_in, 1);
+	/* create new memory context for this control message */
+	ctrl_msg->mem_ctx = talloc_new(mem_ctrl_ctx);
+	ctrl_msg->client = talloc(mem_ctrl_ctx, struct sockaddr_in);
+}
+
+void ctrl_msg_set_client(struct control_message *ctrl_msg, const int8_t *client_addr)
+{
 	ctrl_msg->client->sin_family = AF_INET;
 	ctrl_msg->client->sin_port = htons(MSMC_DEFAULT_NETWORK_PORT);
-	inet_aton(client_addr, ctrl_msg->client->sin_addr.s_addr);
+	inet_aton(client_addr, &ctrl_msg->client->sin_addr);
 }
 
-void free_ctrl_msg(struct control_message *ctrl_msg)
-{
-	if (ctrl_msg->client)
-		free(ctrl_msg->client);
-	free(ctrl_msg);
-}
-
-void ctrl_msg_format_data_type(struct control_message *ctrl_msg, const unsigned char *data, const
-								  unsigned int len, unsigned int copy_data)
+void ctrl_msg_format_data_type(struct control_message *ctrl_msg, uint8_t *data, const
+								  uint32_t len, uint8_t copy_data)
 {
 	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_DATA;
 	ctrl_msg->payload_len = len;
 
 	if (copy_data) {
-		ctrl_msg->payload = NEW(unsigned char, len);
+		ctrl_msg->payload = talloc_size(ctrl_msg->mem_ctx, sizeof(uint8_t) * len);
 		memcpy(ctrl_msg->payload, data, len);
 	}
 	else {
@@ -50,30 +51,30 @@ void ctrl_msg_format_data_type(struct control_message *ctrl_msg, const unsigned 
 	}
 }
 
-void ctrl_msg_format_rsp_type(struct control_message *ctrl_msg, int rsp_type)
+void ctrl_msg_format_rsp_type(struct control_message *ctrl_msg, uint8_t rsp_type)
 {
 	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_RSP;
 	ctrl_msg->payload_len = 1;
-	ctrl_msg->payload = (unsigned char*) calloc(sizeof(unsigned char), MSMC_CONTROL_MSG_RSP_SIZE);
+	ctrl_msg->payload = talloc_size(ctrl_msg->mem_ctx, sizeof(uint8_t) * MSMC_CONTROL_MSG_RSP_SIZE);
 	ctrl_msg->payload[0] = rsp_type;
 }
 
-void ctrl_msg_format_cmd_type(struct control_message *ctrl_msg, int cmd_type)
+void ctrl_msg_format_cmd_type(struct control_message *ctrl_msg, uint8_t cmd_type)
 {
 	ctrl_msg->type = MSMC_CONTROL_MSG_TYPE_CMD;
 	ctrl_msg->payload = 1;
-	ctrl_msg->payload = (unsigned char*) calloc(sizeof(unsigned char), MSMC_CONTROL_MSG_RSP_SIZE);
+	ctrl_msg->payload = talloc_size(ctrl_msg->mem_ctx, sizeof(uint8_t) * MSMC_CONTROL_MSG_RSP_SIZE);
 	ctrl_msg->payload[0] = cmd_type;
 }
 
 void send_ctrl_msg(int fd, struct control_message *ctrl_msg)
 {
 	/* build control message packet to send to our client */
-	unsigned char *ctrlp = (unsigned char*) calloc(sizeof(unsigned char), MSMC_CONTROL_MESSAGE_LEN(ctrl_msg));
+	uint8_t *ctrlp = talloc_size(mem_ctrl_ctx, sizeof(uint8_t) * MSMC_CONTROL_MESSAGE_LEN(ctrl_msg));
 
 	ctrlp[0] = ctrl_msg->type;
 	memcpy(&ctrlp[1], &ctrl_msg->payload[0], ctrl_msg->payload_len);
-
 	sendto(fd, ctrlp, sizeof(ctrlp), 0, (struct sockaddr*) ctrl_msg->client, sizeof(ctrl_msg->client));
+	talloc_free(ctrlp);
 }
 

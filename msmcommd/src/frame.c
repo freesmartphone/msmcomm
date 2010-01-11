@@ -20,6 +20,8 @@
 
 #include <msmcomm/internal.h>
 
+extern void *mem_llc_ctx;
+
 void init_frame(struct frame *fr, uint32_t type)
 {
 	fr->adress = 0xfa;
@@ -30,54 +32,59 @@ void init_frame(struct frame *fr, uint32_t type)
 	fr->payload_len = 0;
 }
 
-static void ensure_data_length(uint8_t *data, uint32_t &len, uint32_t count)
+static void ensure_data_length(uint8_t *data, uint32_t *len, uint32_t count)
 {
 	/* check wether data is big enough to contain some count more bytes */
-	if (len + count >= len) {
-		data = (uint8_t*)realloc(data, len+count);
-		len += count;
+	if (*len + count >= *len) {
+		data = talloc_realloc(mem_llc_ctx, data, uint8_t, *len+count);
+		*len += count;
 	}
 }
 
-void encode_frame_data(uint8_t *data, uint32_t len, uint8_t *new_len, uint8_t *encoded_data)
+void encode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_len, uint8_t *encoded_data)
 {
-	uint8_t *tmp = NEW(uint8_t, len*2);
+	uint8_t *tmp = talloc_size(mem_llc_ctx, sizeof(uint8_t) * len * 2);
+	uint32_t n = len;
 	uint32_t tmp_len = len*2;
 	uint8_t *p = &tmp[0];
 	*new_len = 0;
-	while(len--) {
+	while(n--) {
 		/* replace: 
 		 * 0x7d with 0x7d 0x5d
 		 * 0x7e with 0x7d 0x5e
 		 */
 		if (*data == 0x7d) {
-			ensure_data_length(tmp, tmp_len, 2);
+			ensure_data_length(tmp, &tmp_len, 2);
 			*p++ = 0x7d;
 			*p++ = 0x5d;
 			data += 2;
 			new_len += 2;
 		}
 		else if (*data == 0x7e) {
-			ensure_data_length(tmp, tmp_len, 2);
+			ensure_data_length(tmp, &tmp_len, 2);
 			*p++ = 0x7d;
 			*p++ = 0x5d;
 			new_len += 2;
 		}
 		else {
 			*p++ = *data++;
-			*p++ = *data++;
+			new_len++;
 		}
 	}
+
+	encoded_data = talloc_size(mem_llc_ctx, sizeof(uint8_t) * (*new_len));
+	talloc_free(tmp);
 }
 
-void decode_frame_data(uint8_t *data, uint32_t len, uint32_t *new_len,
+void decode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_len,
 								 uint8_t *decoded_data)
 {
 	uint8_t tmp[len];
 	uint8_t *p = &tmp[0];
+	uint32_t n = len;
 
 	*new_len = 0;
-	while(len--) {
+	while(n--) {
 		/* replace:
 		 * - 0x7d 0x5d with 0x7d
 		 * - 0x7d 0x5e with 0x7e
@@ -100,7 +107,7 @@ void decode_frame_data(uint8_t *data, uint32_t len, uint32_t *new_len,
 		data++;
 	}
 	
-	decoded_data = NEW(uint8_t, new_len);
+	decoded_data = talloc_size(mem_llc_ctx, sizeof(uint8_t) * (*new_len));
 	memcpy(decoded_data, &tmp[0], new_len);
 }
 

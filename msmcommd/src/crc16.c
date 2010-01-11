@@ -18,7 +18,9 @@
  *
  */
 
-static const unsigned short crc16tab_fcs[256] = 
+#include <stdint.h>
+
+static const uint16_t crc16tab_fcs[256] = 
 {
 	0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
 	0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
@@ -54,9 +56,9 @@ static const unsigned short crc16tab_fcs[256] =
 	0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78
 };
 
-unsigned short crc16_calc(const unsigned char *data, int len) 
+uint16_t crc16_calc(const uint8_t *data, uint32_t len) 
 {
-	unsigned short sum = 0xffff;
+	uint16_t sum = 0xffff;
 	if (!data) return;
 
 	while (len--)

@@ -27,7 +27,7 @@ const char *log_level_color[] = {
 };
 
 
-void log_message(char *file, int line, int level, const char *format, ...)
+void log_message(char *file, uint32_t line, uint32_t level, const char *format, ...)
 {
 	va_list ap;
 	FILE *outfd = stderr;

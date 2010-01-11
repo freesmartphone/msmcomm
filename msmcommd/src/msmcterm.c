@@ -20,6 +20,8 @@
 
 #include <msmcomm/internal.h>
 
+extern void *mem_term_ctx;
+
 struct msmcterm_context 
 {
 	struct bsc_fd bfd;
@@ -75,10 +77,10 @@ static void do_subscribe(struct msmcterm_context *ctx)
 		DEBUG_MSG("Subscription was already send and acknowledged. Don't resending request.");
 		return;
 	}
-	struct control_message *ctrl_msg = NEW(struct control_message, 1);
+	struct control_message *ctrl_msg = talloc(mem_term_ctx, struct control_message);
 	ctrl_msg_format_cmd_type(ctrl_msg, MSMC_CONTROL_MSG_CMD_SUBSCRIBE);
 	send_ctrl_msg(ctx->bfd.fd, ctrl_msg);
-	free_ctrl_msg(ctrl_msg);
+	talloc_free(mem_term_ctx);
 }
 
 static void do_help(void)
@@ -104,6 +106,8 @@ int main(int argc, char *argv[])
 	char buf[INBUF_SIZE];
 	int ret;
 	struct msmcterm_context ctx;
+
+	init_mem();
 
 	/* default configuration */
 	/* FIXME let the user define this options through cmdline arguments */

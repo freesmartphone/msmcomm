@@ -31,7 +31,7 @@ const char *frame_type_names[] = {
 	"DATA"
 };
 
-void hexdump(const unsigned char *data, int len)
+void hexdump(const uint8_t *data, uint32_t len)
 {
 	const char *p;
 	int count;
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
 
 	printf("msmcommd (c) 2009 by Simon Busch\n");
 
-	ctx = NEW(struct msmc_context, 1);
+	ctx = talloc(NULL, struct msmc_context);
 
 	handle_options(ctx, argc, argv);
 
@@ -148,6 +148,7 @@ int main(int argc, char *argv[])
 	}
 
 	shutdown_all(ctx);
+	talloc_free(ctx);
 
 	exit(0);
 }

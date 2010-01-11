@@ -23,13 +23,21 @@
 LLIST_HEAD(control_msg_tx_queue);
 LLIST_HEAD(client_subcriptions);
 
-void schedule_ctrl_msg(struct msmc_context *ctx, struct control_message *ctrl_msg)
+extern void *mem_ctrl_ctx;
+
+static void init_client_subscription(struct client_subscription *csubs)
+{
+	csubs->mem_ctx = talloc_new(mem_ctrl_ctx);
+	csubs->client = talloc(csubs->mem_ctx, struct sockaddr_in);
+}
+
+static void schedule_ctrl_msg(struct msmc_context *ctx, struct control_message *ctrl_msg)
 {
 	/* schedule data */
 	llist_add_tail(&control_msg_tx_queue, &ctrl_msg->list);
 }
 
-void handle_ctrl_msg_command(struct msmc_context *ctx, unsigned int cmd, struct control_message *ctrl_msg)
+static void handle_ctrl_msg_command(struct msmc_context *ctx, uint32_t cmd, struct control_message *ctrl_msg)
 {
 	struct client_subscription *csubs;
 
@@ -40,7 +48,8 @@ void handle_ctrl_msg_command(struct msmc_context *ctx, unsigned int cmd, struct 
 	case MSMC_CONTROL_MSG_CMD_SUBSCRIBE:
 		/* create a new subscription for the client so he get informed about incomming data in the
 		 * future */
-		csubs = NEW(struct client_subscription, 1);
+		csubs = talloc(mem_ctrl_ctx, struct client_subscription);
+		init_client_subscription(csubs);
 		memcpy(csubs->client, ctrl_msg->client, sizeof(struct sockaddr_in));
 		llist_add_tail(&client_subcriptions, &csubs->list);
 		break;
@@ -49,7 +58,7 @@ void handle_ctrl_msg_command(struct msmc_context *ctx, unsigned int cmd, struct 
 	}
 }
 
-void handle_ctrl_msg(struct msmc_context *ctx, struct control_message *ctrl)
+static void handle_ctrl_msg(struct msmc_context *ctx, struct control_message *ctrl)
 {
 	switch(ctrl->type)
 	{
@@ -57,8 +66,9 @@ void handle_ctrl_msg(struct msmc_context *ctx, struct control_message *ctrl)
 		/* We received new data to send to our connected mobile station */
 		schedule_llc_data(ctx, ctrl->payload, ctrl->payload_len);
 
-		/* Tell our client that we received the data */
-		struct control_message *rsp = NEW(struct control_message, 1);
+		/* Tell our client that we received the data and scheduled it */
+		struct control_message *rsp = talloc(mem_ctrl_ctx, struct control_message);
+		init_ctrl_msg(rsp);
 		ctrl_msg_format_rsp_type(rsp, MSMC_CONTROL_MSG_RSP_DATA_SCHEDULED);
 		schedule_ctrl_msg(ctx, rsp);
 
@@ -69,7 +79,7 @@ void handle_ctrl_msg(struct msmc_context *ctx, struct control_message *ctrl)
 			return;
 		}
 
-		unsigned char cmd = ctrl->payload[0];
+		uint8_t cmd = ctrl->payload[0];
 		handle_ctrl_msg_command(ctx, cmd, ctrl); 
 		break;
 	default:
@@ -77,14 +87,14 @@ void handle_ctrl_msg(struct msmc_context *ctx, struct control_message *ctrl)
 	}
 }
 
-void handle_incomming_control_data(struct bsc_fd *bfd)
+static void handle_incomming_control_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 	struct control_message ctrl;
 	struct sockaddr_in sa;
 	socklen_t sa_len = sizeof(sa);
 	size_t len;
-	char buffer[5012];
+	uint8_t buffer[5012];
 
 	DEBUG_MSG("control message arrived ...");
 	len = recvfrom(bfd->fd, &buffer, sizeof(buffer), 0, (struct sockaddr*) &sa, &sa_len);
@@ -108,7 +118,7 @@ void handle_incomming_control_data(struct bsc_fd *bfd)
 	handle_ctrl_msg(ctx, &ctrl);
 }
 
-static void handle_data_from_llc(struct msmc_context *ctx, const unsigned char *data, const unsigned int len)
+static void handle_data_from_llc(struct msmc_context *ctx, const uint8_t *data, const uint32_t len)
 {
 	struct client_subscription *csubs;
 	struct control_message ctrlm;
@@ -121,7 +131,7 @@ static void handle_data_from_llc(struct msmc_context *ctx, const unsigned char *
 	}
 }
 
-void handle_outgoing_control_data(struct bsc_fd *bfd)
+static void handle_outgoing_control_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 
@@ -130,11 +140,11 @@ void handle_outgoing_control_data(struct bsc_fd *bfd)
 	llist_for_each_entry(ctrl_msg, &control_msg_tx_queue, list) {
 		send_ctrl_msg(ctx->fds[MSMC_FD_NETWORK].fd, ctrl_msg);
 		llist_del(&ctrl_msg->list);
-		free_ctrl_msg(ctrl_msg);
+		talloc_free(ctrl_msg);
 	}
 }
 
-static void _network_cb(struct bsc_fd *bfd, unsigned int flags)
+static void _network_cb(struct bsc_fd *bfd, uint32_t flags)
 {
 	if (flags & BSC_FD_READ)
 		handle_incomming_control_data(bfd);
@@ -194,5 +204,7 @@ void shutdown_control_interface(struct msmc_context *ctx)
 	/* close network port */
 	bsc_unregister_fd(&ctx->fds[MSMC_FD_NETWORK]);
 	close(ctx->fds[MSMC_FD_NETWORK].fd);
+
+	talloc_free(mem_ctrl_ctx);
 }
 
