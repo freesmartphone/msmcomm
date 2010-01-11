@@ -108,6 +108,6 @@ void decode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_le
 	}
 	
 	decoded_data = talloc_size(mem_llc_ctx, sizeof(uint8_t) * (*new_len));
-	memcpy(decoded_data, &tmp[0], new_len);
+	memcpy(decoded_data, &tmp[0], *new_len);
 }
 

@@ -25,7 +25,6 @@ extern void *mem_term_ctx;
 struct msmcterm_context 
 {
 	struct bsc_fd bfd;
-	int subscription_done;
 	char ifname[30];
 	char remote_host[30];
 };
@@ -71,23 +70,11 @@ static void do_exit(void)
 	exit(1);
 }
 
-static void do_subscribe(struct msmcterm_context *ctx)
-{
-	if (ctx->subscription_done) {
-		DEBUG_MSG("Subscription was already send and acknowledged. Don't resending request.");
-		return;
-	}
-	struct control_message *ctrl_msg = talloc(mem_term_ctx, struct control_message);
-	ctrl_msg_format_cmd_type(ctrl_msg, MSMC_CONTROL_MSG_CMD_SUBSCRIBE);
-	send_ctrl_msg(ctx->bfd.fd, ctrl_msg);
-	talloc_free(mem_term_ctx);
-}
 
 static void do_help(void)
 {
 	printf("help            - this help\n");
 	printf("[exit|quit]     - quit this application\n");
-	printf("subscribe       - subscribe on remote host to let him forward incomming data to us\n");
 }
 
 #define INBUF_SIZE		4096
@@ -114,7 +101,6 @@ int main(int argc, char *argv[])
 	snprintf(ctx.ifname, 30, "usb0");
 	snprintf(ctx.remote_host, 30, "192.168.0.202");
 
-	ctx.subscription_done = 0;
 	ctx.bfd.fd = udp_socket_open(ctx.ifname);
 
 	print_headline();
@@ -143,10 +129,6 @@ int main(int argc, char *argv[])
 		}
 		if (!strncasecmp((char*)buf, "exit", 4)) {
 			do_exit();
-		}
-		if (!strncasecmp((char*)buf, "subscribe", 9)) {
-			do_subscribe(&ctx);
-			done = 1;
 		}
 
 		if (!done)

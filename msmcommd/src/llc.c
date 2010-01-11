@@ -307,7 +307,7 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 	struct msmc_context *ctx = bfd->data;
 	char buffer[MSMC_MAX_BUFFER_SIZE];
 	char *p;
-	int start, len, last;
+	uint32_t start, len, last;
 
 	DEBUG_MSG("data arrived ...\n");
 
