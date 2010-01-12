@@ -88,7 +88,7 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	if (!ctx || !fr) return;
 
 	/* encode data so 0x7e doesn't occur within the payload */
-	encode_frame_data(&data[3], fr->payload_len, &encoded_payload_len, encoded_payload);
+	encode_frame(fr);
 
 	/* convert our frame struct to raw binary data */
 	len = 3 + encoded_payload_len + 2 + 1;
@@ -291,7 +291,7 @@ static void handle_frame(struct msmc_context *ctx, const uint8_t *data, uint32_t
 	fr->ack  = data[2] & 0xf;
 
 	/* decode frame payload first */
-	decode_frame_data(data + 3, len - 3, &fr->payload_len, fr->payload);
+	decode_frame(fr);
 
 	/* delegate frame handling corresponding to the frame type */
 	if (fr->type < MSMC_FRAME_TYPE_ACK)

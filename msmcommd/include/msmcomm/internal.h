@@ -133,9 +133,9 @@ void hexdump(const uint8_t *data, uint32_t len);
 
 void init_talloc(void);
 
-void encode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_len, uint8_t *encdoded_data);
-void decode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_len, uint8_t *decoed_data);
 void init_frame(struct frame *fr, uint32_t type);
+void encode_frame(struct frame *fr);
+void decode_frame(struct frame *fr);
 
 int init_llc(struct msmc_context *ctx);
 void shutdown_llc(struct msmc_context *ctx);
