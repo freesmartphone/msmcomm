@@ -24,12 +24,16 @@
 	fprintf(stdout, "TEST %s [%s]\n", __FUNCTION__, name);
 
 #define PASSED \
-	fprintf(stdout, "PASSED!\n");
+	fprintf(stdout, "\033[1;32m"); \
+	fprintf(stdout, "PASSED!"); \
+	fprintf(stdout, "\033[0;m\n");
 
 #define COMPARE(result, op, value) \
 	if (!((result) op (value))) {\
-		fprintf(stderr, "FAILED! Compare failed. Was 0x%x should be 0x%x in %s:%d\n", result, value, __FILE__, \
+		fprintf(stderr, "\033[1;31m"); \
+		fprintf(stderr, "FAILED! Compare failed. Was 0x%x should be 0x%x in %s:%d", result, value, __FILE__, \
 				__LINE__); \
+		fprintf(stderr, "\033[0;m\n"); \
 		exit(-1); \
 	}
 
@@ -74,6 +78,7 @@ static void test_decode_frame_data(void)
 	fr.payload[2] = 0x13;
 	fr.payload[3] = 0x7d;
 	fr.payload[4] = 0x5d;
+	fr.payload_len = 5;
 
 	/* do decoding of frame data */
 	decode_frame(&fr);

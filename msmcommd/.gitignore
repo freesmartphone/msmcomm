@@ -4,6 +4,7 @@
 *.sub
 *.guess
 *.log
+*.swp
 missing
 depcomp
 Makefile
@@ -21,3 +22,5 @@ src/msmcommd
 src/msmcterm
 stamp-h1
 .gitignore
+tests/frame_test
+tests/.deps

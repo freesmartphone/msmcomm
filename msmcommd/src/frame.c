@@ -64,10 +64,36 @@ void encode_frame(struct frame *fr)
 
 void decode_frame(struct frame *fr)
 {
-	while(0) {
-		/* replace:
-		 * - 0x7d 0x5d with 0x7d
-		 * - 0x7d 0x5e with 0x7e
-		 */
-	}
+	uint8_t *decoded_data = talloc_size(talloc_llc_ctx, sizeof(uint8_t) * fr->payload_len);
+	uint8_t *p = decoded_data;
+	uint8_t *data = fr->payload;
+	uint8_t *tmp = 0;
+	uint32_t decoded_data_len = fr->payload_len;
+
+	while(fr->payload_len--) {
+		if (*data == 0x7d)
+		{
+			/* replace:
+			* - 0x7d 0x5d with 0x7d
+			* - 0x7d 0x5e with 0x7e
+			*/
+			tmp = data + 1;
+			if (*tmp && (*tmp == 0x5d || *tmp == 0x5e)) {
+				data += 2;
+				*p++ = 0x70 | (*tmp & 0xf);
+				decoded_data = talloc_realloc(talloc_llc_ctx, decoded_data, uint8_t,
+											  --decoded_data_len);
+			}
+		}
+		else 
+		{
+			*p = *data;
+			p++; data++;
+		}
+ 	}
+
+	fr->payload = talloc_realloc(talloc_llc_ctx, fr->payload, uint8_t, decoded_data_len);
+	memcpy(fr->payload, decoded_data, decoded_data_len);
+	fr->payload_len = decoded_data_len;
+	talloc_free(decoded_data);
 }
