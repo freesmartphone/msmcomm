@@ -22,7 +22,7 @@
 
 extern const char *frame_type_names[];
 
-extern void *mem_llc_ctx;
+extern void *talloc_llc_ctx;
 
 LLIST_HEAD(data_handlers);
 
@@ -92,7 +92,7 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 
 	/* convert our frame struct to raw binary data */
 	len = 3 + encoded_payload_len + 2 + 1;
-	data = talloc_size(mem_llc_ctx, sizeof(uint8_t) * len);
+	data = talloc_size(talloc_llc_ctx, sizeof(uint8_t) * len);
 
 	data[0] = fr->adress & 0xff;
 	data[1] = (fr->type << 4) & 0xff;
@@ -271,7 +271,7 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 static void handle_frame(struct msmc_context *ctx, const uint8_t *data, uint32_t len)
 {
 	unsigned short crc, fr_crc;
-	struct frame *fr = talloc_zero(mem_llc_ctx, struct frame);
+	struct frame *fr = talloc_zero(talloc_llc_ctx, struct frame);
 
 	/* the last two bytes are the crc checksum, check them! */
 	fr_crc = (data[len - 1] << 4) | data[len - 2];
@@ -358,7 +358,7 @@ static void _llc_cb(struct bsc_fd *bfd, uint32_t flags)
 
 void register_llc_data_handler (struct msmc_context *ctx, msmc_data_handler_cb_t cb)
 {
-	struct msmc_data_handler *dh = talloc_zero(mem_llc_ctx, struct msmc_data_handler);
+	struct msmc_data_handler *dh = talloc_zero(talloc_llc_ctx, struct msmc_data_handler);
 	dh->cb = cb;
 	llist_add_tail(&data_handlers, &dh->list);
 }
@@ -382,6 +382,13 @@ int init_llc(struct msmc_context *ctx)
 
 void shutdown_llc(struct msmc_context *ctx)
 {
+	/* remove all data handlers */
+	struct msmc_data_handler *dh;
+	llist_for_each_entry(dh, &data_handlers, list) {
+		llist_del(&dh->list);
+		talloc_free(dh);
+	}
+
 	/* close serial port */
 	bsc_unregister_fd(&ctx->fds[MSMC_FD_SERIAL]);
 	close(ctx->fds[MSMC_FD_SERIAL].fd);

@@ -34,7 +34,7 @@ static int udp_socket_open(const char *ifname)
 	int fd, rc;
 	struct sockaddr_in sa;
 	
-	fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	fd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (fd < 0)
 		return fd;
 
@@ -48,9 +48,6 @@ static int udp_socket_open(const char *ifname)
 	sa.sin_port = htons(MSMC_DEFAULT_NETWORK_PORT);
 	sa.sin_addr.s_addr = INADDR_ANY;
 
-	rc = bind(fd, (struct sockaddr*) &sa, sizeof(sa));
-	if (rc < 0)
-		goto err;
 	
 	return fd;
 
@@ -70,11 +67,15 @@ static void do_exit(void)
 	exit(1);
 }
 
-
 static void do_help(void)
 {
 	printf("help            - this help\n");
 	printf("[exit|quit]     - quit this application\n");
+}
+
+static void do_dump(void)
+{
+	/* FIXME */
 }
 
 #define INBUF_SIZE		4096
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
 	int ret;
 	struct msmcterm_context ctx;
 
-	init_mem();
+	init_talloc();
 
 	/* default configuration */
 	/* FIXME let the user define this options through cmdline arguments */
@@ -129,6 +130,9 @@ int main(int argc, char *argv[])
 		}
 		if (!strncasecmp((char*)buf, "exit", 4)) {
 			do_exit();
+		}
+		if (!strncasecmp((char*)buf, "dump", 4)) {
+			do_dump();
 		}
 
 		if (!done)

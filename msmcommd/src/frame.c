@@ -20,7 +20,7 @@
 
 #include <msmcomm/internal.h>
 
-extern void *mem_llc_ctx;
+extern void *talloc_llc_ctx;
 
 void init_frame(struct frame *fr, uint32_t type)
 {
@@ -36,14 +36,14 @@ static void ensure_data_length(uint8_t *data, uint32_t *len, uint32_t count)
 {
 	/* check wether data is big enough to contain some count more bytes */
 	if (*len + count >= *len) {
-		data = talloc_realloc(mem_llc_ctx, data, uint8_t, *len+count);
+		data = talloc_realloc(talloc_llc_ctx, data, uint8_t, *len+count);
 		*len += count;
 	}
 }
 
 void encode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_len, uint8_t *encoded_data)
 {
-	uint8_t *tmp = talloc_size(mem_llc_ctx, sizeof(uint8_t) * len * 2);
+	uint8_t *tmp = talloc_size(talloc_llc_ctx, sizeof(uint8_t) * len * 2);
 	uint32_t n = len;
 	uint32_t tmp_len = len*2;
 	uint8_t *p = &tmp[0];
@@ -72,7 +72,7 @@ void encode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_le
 		}
 	}
 
-	encoded_data = talloc_size(mem_llc_ctx, sizeof(uint8_t) * (*new_len));
+	encoded_data = talloc_size(talloc_llc_ctx, sizeof(uint8_t) * (*new_len));
 	talloc_free(tmp);
 }
 
@@ -107,7 +107,7 @@ void decode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_le
 		data++;
 	}
 	
-	decoded_data = talloc_size(mem_llc_ctx, sizeof(uint8_t) * (*new_len));
+	decoded_data = talloc_size(talloc_llc_ctx, sizeof(uint8_t) * (*new_len));
 	memcpy(decoded_data, &tmp[0], *new_len);
 }
 

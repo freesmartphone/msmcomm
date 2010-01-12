@@ -37,6 +37,7 @@
 #include <getopt.h>
 #include <time.h>
 #include <string.h>
+#include <errno.h>
 
 #include <arpa/inet.h>
 
@@ -77,16 +78,6 @@
 #define MSMC_LOG_LEVEL_ERROR			1
 #define MSMC_LOG_LEVEL_INFO				2
 
-#define MSMC_CONTROL_MSG_TYPE_DATA		0
-#define MSMC_CONTROL_MSG_TYPE_CMD		1
-#define MSMC_CONTROL_MSG_TYPE_RSP		2
-
-#define MSMC_CONTROL_MSG_CMD_RESET_LL	0
-#define MSMC_CONTROL_MSG_CMD_SUBSCRIBE	1
-
-#define MSMC_CONTROL_MSG_RSP_RESET_LL_OK	0
-#define MSMC_CONTROL_MSG_RSP_DATA_SCHEDULED	1
-
 struct msmc_context
 {
 	/* Options, flags etc. */
@@ -117,25 +108,14 @@ struct frame
 	uint32_t	 payload_len;
 };
 
-#define MSMC_CONTROL_MESSAGE_HEADER_SIZE		1
-#define MSMC_CONTROL_MSG_RSP_SIZE				1
-#define MSMC_CONTROL_MESSAGE_LEN(ctrl_msg) (ctrl_msg->payload_len + MSMC_CONTROL_MESSAGE_HEADER_SIZE)
-
-struct control_message
+struct relay_connection
 {
-	void				*mem_ctx;
-	struct llist_head	 list;
-	uint8_t				 type;
-	struct sockaddr_in	*client;
-	uint32_t			 payload_len;
-	uint8_t				*payload;
-};
-
-struct client_subscription
-{
-	struct llist_head    list;
-	void				*mem_ctx;
-	struct sockaddr_in  *client;
+	struct llist_head list;
+	struct sockaddr addr;
+	uint32_t in_count;
+	uint32_t out_count;
+	struct bsc_fd bfd;
+	struct msmc_context *ctx;
 };
 
 void log_message(char *file, uint32_t line, uint32_t level, const char *format, ...);
@@ -151,7 +131,7 @@ void hexdump(const uint8_t *data, uint32_t len);
 #define ERROR_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_ERROR, fmt, ## args)
 #define INFO_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_INFO, fmt, ## args)
 
-void init_mem(void);
+void init_talloc(void);
 
 void encode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_len, uint8_t *encdoded_data);
 void decode_frame_data(const uint8_t *data, const uint32_t len, uint32_t *new_len, uint8_t *decoed_data);
@@ -161,14 +141,8 @@ int init_llc(struct msmc_context *ctx);
 void shutdown_llc(struct msmc_context *ctx);
 void register_llc_data_handler(struct msmc_context *ctx, msmc_data_handler_cb_t cb);
 
-int init_control_interface(struct msmc_context *ctx, const char *ifname);
-void shutdown_control_interface(struct msmc_context *ctx);
-
-void ctrl_msg_format_data_type(struct control_message *ctrl_msg, uint8_t *data, const
-								  uint32_t len, uint8_t copy_data);
-void ctrl_msg_format_rsp_type(struct control_message *ctrl_msg, uint8_t rsp_type);
-void ctrl_msg_format_cmd_type(struct control_message *ctrl_msg, uint8_t cmd_type);
-void send_ctrl_msg(int fd, struct control_message *ctrl_msg);
+int init_relay_interface(struct msmc_context *ctx);
+void shutdown_relay_interface(struct msmc_context *ctx);
 
 #endif
 

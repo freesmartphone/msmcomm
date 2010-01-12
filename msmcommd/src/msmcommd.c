@@ -20,7 +20,7 @@
 
 #include <msmcomm/internal.h>
 
-char ifname[] = "eth0";
+char ifname[] = "eth1";
 
 const char *frame_type_names[] = {
 	"SYNC",
@@ -62,18 +62,6 @@ static void timer_cb(void *_data)
 	bsc_schedule_timer(&timer, 0, 50);
 }
 
-static int setup_sock(struct msmc_context *ctx) 
-{
-	struct sockaddr_in addr;
-	struct bsc_fd *bfd = &ctx->fds[MSMC_NETWORK_FD];
-	int ret;
-
-	bfd->fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	bfd->cb = cb;
-	bfd->when = BSC_FD_READ | BSC_FD_WRITE;
-	bfd->data = data;
-}
-
 static int init_all(struct msmc_context *ctx)
 {
 	if (!ctx || strlen(ctx->serial_port) == 0) return;
@@ -90,6 +78,13 @@ static int init_all(struct msmc_context *ctx)
 		ERROR_MSG("failed to init serial component!");
 		exit(1);
 	}
+
+	if (init_relay_interface(ctx)) {
+		ERROR_MSG("failed to init relay interface!");
+		shutdown_llc(ctx);
+		exit(1);
+	}
+
 }
 
 static void shutdown_all(struct msmc_context *ctx)
@@ -138,6 +133,8 @@ int main(int argc, char *argv[])
 	int option_index;
 
 	printf("msmcommd (c) 2009 by Simon Busch\n");
+
+	init_talloc();
 
 	ctx = talloc(NULL, struct msmc_context);
 
