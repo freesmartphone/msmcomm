@@ -21,8 +21,8 @@
 #include <msmcomm/internal.h>
 
 const char *log_level_color[] = {
+	"",
 	"\033[1;31m",
-	"\033[1;32m",
 	"\033[1;33m",
 };
 

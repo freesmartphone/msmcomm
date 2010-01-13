@@ -66,21 +66,18 @@ static int init_all(struct msmc_context *ctx)
 {
 	if (!ctx || strlen(ctx->serial_port) == 0) return;
 
-	DEBUG_MSG("setting up ...");
-
 	/* basic timer */
 	timer.cb = timer_cb;
 	timer.data = ctx;
 	bsc_schedule_timer(&timer, 0 , 50); 
 
 	/* serial and network components */
-	if (init_llc(ctx) > 0) {
-		ERROR_MSG("failed to init serial component!");
+	if (init_llc(ctx) < 0) {
+		talloc_free(ctx);
 		exit(1);
 	}
 
-	if (init_relay_interface(ctx)) {
-		ERROR_MSG("failed to init relay interface!");
+	if (init_relay_interface(ctx) < 0) {
 		shutdown_llc(ctx);
 		exit(1);
 	}
@@ -89,13 +86,11 @@ static int init_all(struct msmc_context *ctx)
 
 static void shutdown_all(struct msmc_context *ctx)
 {
-	DEBUG_MSG("shutting down ...");
-
 	shutdown_llc(ctx);
 
 	/* free context */
 	if (ctx)
-		free(ctx);
+		talloc_free(ctx);
 }
 
 static int update_all(struct msmc_context *ctx)
@@ -113,17 +108,61 @@ static int update_all(struct msmc_context *ctx)
 	return 0;
 }
 
-static void print_usage()
+static void do_print_version()
 {
 }
 
-static void print_help()
+static void do_print_help()
 {
 }
 
-static void handle_options(struct msmc_context *ctx, int arc, char *argv[])
+static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 {
+	opterr = 0;
+	int option_index;
+	int chr;
 
+	struct option opts[] = {
+		{ "serial-port", required_argument, 0, 's' },
+		{ "help", no_argument, 0, 'h' },
+		{ "version", no_argument, 0, 'v'},
+	};
+
+	while (1) {
+		option_index = 0;
+		chr = getopt_long(argc, argv, "s:hv", opts, &option_index);
+
+		if (chr == -1)
+			break;
+
+		switch(chr) {
+			case 's':
+				snprintf(ctx->serial_port, 30, "%s", optarg);
+				break;
+			case 'h':
+				do_print_help();
+				break;
+			case 'v':
+				do_print_version();
+				break;
+			case '?':
+				break;
+			default:
+				break;
+		}
+	}
+}
+
+static void print_configuration(struct msmc_context *ctx)
+{
+	printf("configuration:\n");
+#ifdef DEBUG
+	printf("...mode: debug\n");
+#else
+	printf("...tmode: normal\n");
+#endif
+	printf("...serial port: %s\n", ctx->serial_port);
+	printf("...network relay port: %i\n", MSMC_DEFAULT_NETWORK_PORT);
 }
 
 int main(int argc, char *argv[])
@@ -137,8 +176,11 @@ int main(int argc, char *argv[])
 	init_talloc();
 
 	ctx = talloc(NULL, struct msmc_context);
+	snprintf(ctx->serial_port, 30, MSMC_DEFAULT_SERIAL_PORT);
 
 	handle_options(ctx, argc, argv);
+
+	print_configuration(ctx);
 
 	/* startup everything we need */
 	init_all(ctx);
