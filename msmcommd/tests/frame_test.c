@@ -98,11 +98,13 @@ static void test_decode_frame_data(void)
 
 static void test_memleaks(void)
 {
-	/* FIXME */
+	TEST("memory leaks");
+	talloc_report(NULL, stderr);
 }
 
 int main(int argc, char **argv)
 {
+	talloc_enable_leak_report();
 	init_talloc();
 
 	test_encode_frame_data();

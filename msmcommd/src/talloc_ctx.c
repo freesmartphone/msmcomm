@@ -26,6 +26,9 @@ void *talloc_relay_ctx;
 
 void init_talloc(void)
 {
+#ifdef DEBUG
+	talloc_enable_leak_report();
+#endif
 	talloc_llc_ctx = talloc_named_const(talloc_llc_ctx, 0, "llc");
 	talloc_relay_ctx = talloc_named_const(talloc_relay_ctx, 0, "relay");
 	talloc_term_ctx = talloc_named_const(talloc_term_ctx, 0, "term");
