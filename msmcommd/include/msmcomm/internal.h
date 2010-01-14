@@ -78,16 +78,23 @@
 #define MSMC_LOG_LEVEL_ERROR			1
 #define MSMC_LOG_LEVEL_INFO				2
 
+#define MSMC_LLC_WINDOW_SIZE			8
+#define MSMC_LLC_MAX_SEQUENCE_NR		0xf
+
 struct msmc_context
 {
 	/* Options, flags etc. */
 	int					network_port;
-	const char			serial_port[30];
+	char	    		serial_port[30];
 	struct bsc_fd		fds[MSMC_FD_COUNT];
 
 	/* HCI LL specific */
 	int					state;
-	uint8_t		next_expected_seq;
+	uint8_t				window_size;
+	uint8_t				next_seq;
+	uint8_t				next_ack;
+	uint8_t				expected_seq;
+	uint8_t				last_ack;
 };
 
 typedef void (*msmc_data_handler_cb_t) (struct msmc_context *ctx, const uint8_t *data, uint32_t len);
@@ -100,6 +107,7 @@ struct msmc_data_handler
 
 struct frame
 {
+    struct llist_head list;
 	uint8_t adress;
 	uint8_t	 type;
 	uint8_t	 seq;

@@ -21,10 +21,20 @@
 #include <msmcomm/internal.h>
 
 extern const char *frame_type_names[];
-
 extern void *talloc_llc_ctx;
 
 LLIST_HEAD(data_handlers);
+LLIST_HEAD(tx_queue);
+LLIST_HEAD(ack_queue);
+
+struct timer_list ack_timer;
+
+static uint8_t next_sequence_nr(struct msmc_context *ctx)
+{
+	uint8_t seq = ctx->next_seq;
+	ctx->next_seq = (ctx->next_seq + 1) % MSMC_LLC_MAX_SEQUENCE_NR;
+	return seq;
+}
 
 static void serial_port_setup(int fd)
 {
@@ -140,6 +150,10 @@ static void restart_link(struct msmc_context *ctx)
 
 	/* reset state and send out sync packet */
 	ctx->state = MSMC_STATE_NULL;
+	ctx->window_size = MSMC_LLC_WINDOW_SIZE;
+	ctx->next_seq = 0;
+	ctx->next_ack = 0;
+	ctx->expected_seq = 0;
 
 	/* the spec told us to send out three sync messages per second until we get a sync response from
 	 * the other device */
@@ -235,10 +249,56 @@ static void link_establishment_control(struct msmc_context *ctx, struct frame *f
 		break;
 
 	default:
-		DEBUG_MSG("arrived in invalid state ... assuming restart!");
+		ERROR_MSG("arrived in invalid state ... assuming restart!");
 		restart_link(ctx);
 		break;
 	}
+}
+
+/* a <= b < c (modulo) */
+static uint8_t is_valid_ack(uint8_t a, uint8_t b, uint8_t c)
+{
+	uint8_t valid = 0;
+	if (((a <= b) && (b < c)) || ((c < a) && (a <= b)) || ((b < c) && (c < a)))
+		valid = 1;
+	return valid;
+}
+
+static void process_rcvd_ack(struct msmc_context *ctx, const uint8_t ack)
+{
+	struct frame *fr;
+	uint32_t count;
+
+	/* count of frames which are not acknowledged should be less or equal than 
+	 * the max window size */
+	if (llist_count(&ack_queue) > MSMC_LLC_WINDOW_SIZE) {
+		/* resend and remove them from ack_queue */
+		count = 0;
+		llist_for_each_entry(fr, &ack_queue, list) {
+			if (count == MSMC_LLC_WINDOW_SIZE)
+				break;
+
+			llist_del(&fr->list);
+			send_frame(ctx, fr);
+
+			count++;
+		}
+	}
+
+	/* check which frames are acknowledged with this ack */
+	llist_for_each_entry(fr, &ack_queue, list) {
+		if (!is_valid_ack(ctx->last_ack, fr->seq, ack))
+			break;
+		llist_del(&fr->list);
+	}
+
+	if (llist_empty(&ack_queue)) {
+		/* ack_queue is empty so stop ack timer */
+		bsc_del_timer(&ack_timer);
+	}
+
+	ctx->last_ack = ack;
+	ctx->expected_seq = ack;
 }
 
 static void link_control(struct msmc_context *ctx, struct frame *fr)
@@ -249,8 +309,15 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 	{
 		case MSMC_STATE_ACTIVE:
 			if (fr->type == MSMC_FRAME_TYPE_DATA) {
-				/* FIXME add handling of seq/ack number */
-
+				/* Our frame is not the frame with the expected sequence nr */
+				if (fr->seq != ctx->expected_seq) {
+					/* FIXME We should really drop this frame? */
+					return;
+				}
+				
+				/* handle received acknowledge */
+				process_rcvd_ack(ctx, fr->ack);
+				
 				/* we have new data for our registered data handlers */
 				struct msmc_data_handler *dh;
 				llist_for_each_entry(dh, &data_handlers, list) {
@@ -258,12 +325,14 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 				}
 			}
 			else if (fr->type == MSMC_FRAME_TYPE_ACK) {
-				/* FIXME add handling of seq/ack number */
+				/* this frame is a pure ack frame and does not has a valid seq 
+				   nr so ingore it */
+				process_rcvd_ack(ctx, fr->ack);
 			}
 			break;
 
 		default:
-			DEBUG_MSG("recieve invalid frame in ACTIVE state ... discard frame!");
+			ERROR_MSG("recieve invalid frame in ACTIVE state ... discard frame!");
 			break;
 	}
 }
@@ -334,18 +403,56 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 
 void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t len)
 {
+	struct frame *fr = talloc(talloc_llc_ctx, struct frame);
+	fr->type = MSMC_FRAME_TYPE_DATA;
+	fr->payload = data;
+	fr->payload = len;
 
+	llist_add_tail(&fr->list, &tx_queue);
 }
 
-void handle_llc_outgoing_data(struct bsc_fd *bfd)
+static void ack_timer_cb(void *data)
+{
+	struct msmc_context *ctx = (struct msmc_context*) data;
+	struct frame *fr;
+
+	/* ack timer event occured, so one or more frames are not acknowledged
+	 * in time, so we have to resend this frames */
+	llist_for_each_entry(fr, &ack_queue, list) {
+		/* remove frame from ack_queue, send_frame will add it again later */
+		llist_del(&fr->list);
+		send_frame(ctx, fr);
+	}
+}
+
+static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
+{
+	/* FIXME inlude check if ack_queue length is greater than the current window 
+	 * size? */
+
+	/* Save frame for resending if transmission goes wrong */
+	llist_add_tail(&fr->list, &ack_queue);
+
+	/* Reschedule timer cause we received a new frame */
+	bsc_reschedule_timer(&ack_timer, 1, 0);
+}
+
+static void handle_llc_outgoing_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
+	struct frame *fr;
 
-	/* do we have data to send? */
-	/* FIXME 
-	 * - sequnce number handling
-	 * - process list of packets we have to send
-	 */
+	llist_for_each_entry(fr, &tx_queue, list) {
+		/* prepare frame with correct seq and ack */
+		fr->seq = next_sequence_nr(ctx);
+		fr->ack = ctx->next_ack;
+
+		send_frame(ctx, fr);
+
+		/* remove from tx queue and start ack timer */
+		llist_del(&fr->list);
+		add_ack_timer(ctx, fr);
+	}
 }
 
 static void _llc_cb(struct bsc_fd *bfd, uint32_t flags)
@@ -360,7 +467,7 @@ void register_llc_data_handler (struct msmc_context *ctx, msmc_data_handler_cb_t
 {
 	struct msmc_data_handler *dh = talloc_zero(talloc_llc_ctx, struct msmc_data_handler);
 	dh->cb = cb;
-	llist_add_tail(&data_handlers, &dh->list);
+	llist_add_tail(&dh->list, &data_handlers);
 }
 
 int init_llc(struct msmc_context *ctx)
@@ -371,22 +478,28 @@ int init_llc(struct msmc_context *ctx)
 	ctx->fds[MSMC_FD_SERIAL].when = BSC_FD_READ | BSC_FD_WRITE;
 	ctx->fds[MSMC_FD_SERIAL].fd = open(ctx->serial_port, O_RDWR | O_NOCTTY);
 
-	if (ctx->fds[MSMC_FD_SERIAL].fd < 0)
+	if (ctx->fds[MSMC_FD_SERIAL].fd < 0) {
+		ERROR_MSG("failed to open serial port '%s'", ctx->serial_port);
 		return ctx->fds[MSMC_FD_SERIAL].fd;
+	}
 
 	serial_port_setup(ctx->fds[MSMC_FD_SERIAL].fd);
 	bsc_register_fd(&ctx->fds[MSMC_FD_SERIAL]);
 
 	restart_link(ctx);
+
+	return 1;
 }
 
 void shutdown_llc(struct msmc_context *ctx)
 {
 	/* remove all data handlers */
-	struct msmc_data_handler *dh;
-	llist_for_each_entry(dh, &data_handlers, list) {
-		llist_del(&dh->list);
-		talloc_free(dh);
+	if (!llist_empty(&data_handlers)) {
+		struct msmc_data_handler *dh;
+		llist_for_each_entry(dh, &data_handlers, list) {
+			llist_del(&dh->list);
+			talloc_free(dh);
+		}
 	}
 
 	/* close serial port */

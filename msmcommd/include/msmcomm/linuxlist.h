@@ -53,6 +53,17 @@ struct llist_head {
 	(ptr)->next = (ptr); (ptr)->prev = (ptr); \
 } while (0)
 
+static inline int llist_count(struct llist_head *head)
+{
+	struct llist_head *list = head;
+	int count = 0;
+	while (list) {
+		list = list->next;
+		count++;
+	}
+	return count;
+}
+
 /*
  * Insert a new entry between two known consecutive entries. 
  *

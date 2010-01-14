@@ -57,6 +57,7 @@ struct timer_list {
  */
 void bsc_add_timer(struct timer_list *timer);
 void bsc_schedule_timer(struct timer_list *timer, int seconds, int microseconds);
+void bsc_reschedule_timer(struct timer_list *timer, int seconds, int microseconds);
 void bsc_del_timer(struct timer_list *timer);
 int bsc_timer_pending(struct timer_list *timer);
 
