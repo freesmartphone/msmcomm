@@ -81,7 +81,7 @@ int init_relay_interface(struct msmc_context *ctx)
 
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(4223);
+	addr.sin_port = htons(MSMC_DEFAULT_NETWORK_PORT);
 	addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK); /* FIXME currently we only listen on the
 													  loopback interface */ 
 
