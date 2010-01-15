@@ -172,6 +172,7 @@ int main(int argc, char *argv[])
 	int option_index;
 
 	printf("msmcommd (c) 2009 by Simon Busch\n");
+	printf("not ready for use ... just testing out how this damn protocol works\n");
 
 	init_talloc();
 
