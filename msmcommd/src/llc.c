@@ -112,7 +112,7 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	memcpy(data + 3, encoded_payload, encoded_payload_len);
 
 	/* computer crc over header + data and append it */
-	crc = crc16_calc(&data[0], len - 4);
+	crc = crc16_calc(&data[0], len - 3);
 	crc ^= 0xffff;
 	memcpy(data + (len - 3), &crc, 2);
 
@@ -384,6 +384,8 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 	DEBUG_MSG("data: len=%i\n", size);
 	if (size < 0)
 		return;
+
+	hexdump(buffer, size);
 
 	/* try to find a valid frame */
 	start = 0;
