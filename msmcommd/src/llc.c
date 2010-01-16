@@ -39,6 +39,33 @@ static uint8_t next_sequence_nr(struct msmc_context *ctx)
 static void serial_port_setup(int fd)
 {
 	int ret;
+	int flush = 0;
+	struct hsuart_mode mode;
+
+	if (fd < 0)
+		return;
+
+	/* configure the hsuart like TelephonyInterfaceLayerGsm does */
+
+	/* flush everything */
+	flush = HSUART_RX_QUEUE | HSUART_TX_QUEUE | HSUART_RX_FIFO | HSUART_TX_FIFO;
+	ioctl(fd, HSUART_IOCTL_FLUSH, flush);
+
+	/* get current mode */
+	ioctl(fd, HSUART_IOCTL_GET_UARTMODE, &mode);
+
+	/* speed and flow control */
+	mode.speed = HSUART_SPEED_115K;
+	mode.flags |= HSUART_MODE_PARITY_NONE;
+	mode.flags |= HSUART_MODE_FLOW_CTRL_HW;
+
+	ioctl(fd, HSUART_IOCTL_SET_UARTMODE, &mode);
+
+	/* we want flow control for the rx line */
+	ioctl(fd, HSUART_IOCTL_RX_FLOW, HSUART_RX_FLOW_ON);
+
+
+#if 0
 	struct termios options;
 	bzero(&options, sizeof(options));
 
@@ -87,6 +114,7 @@ static void serial_port_setup(int fd)
 	/* if we use hardware flow control: set ready to read/write */
 	int v24 = TIOCM_DTR | TIOCM_RTS;
 	ioctl(fd, TIOCMBIS, &v24);
+#endif 
 }
 
 void send_frame(struct msmc_context *ctx, struct frame *fr)
@@ -385,8 +413,6 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 	if (size < 0)
 		return;
 
-	hexdump(buffer, size);
-
 	/* try to find a valid frame */
 	start = 0;
 	last = 0;
@@ -508,4 +534,3 @@ void shutdown_llc(struct msmc_context *ctx)
 	bsc_unregister_fd(&ctx->fds[MSMC_FD_SERIAL]);
 	close(ctx->fds[MSMC_FD_SERIAL].fd);
 }
-

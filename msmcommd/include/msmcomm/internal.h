@@ -44,6 +44,7 @@
 #include <msmcomm/select.h>
 #include <msmcomm/timer.h>
 #include <msmcomm/talloc.h>
+#include <msmcomm/hsuart.h>
 
 #define DEBUG
 
@@ -65,7 +66,7 @@
 #define MSMC_FRAME_TYPE_ACK				5
 #define MSMC_FRAME_TYPE_DATA			6
 
-#define MSMC_SYNC_SENT_INTERVAL			250
+#define MSMC_SYNC_SENT_INTERVAL			800
 
 #define MSMC_FD_COUNT					2
 
