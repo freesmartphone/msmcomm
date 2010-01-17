@@ -20,6 +20,7 @@ src/.deps
 src/Makefile
 src/msmcommd
 src/msmcterm
+src/msmc_forward
 stamp-h1
 .gitignore
 tests/frame_test
