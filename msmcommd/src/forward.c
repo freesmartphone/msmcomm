@@ -20,6 +20,13 @@
 
 #include <msmcomm/internal.h>
 
+/* 
+ * code copied from serial_forward utility (git.freesmartphone.org/cornucopia.git)
+ * authors:
+ * Holger 'Zecke' Freyther <ich@selfish.org>
+ * Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+ */
+
 static void forward_data(int source_fd, int dest_fd)
 {
     fd_set rfds;
