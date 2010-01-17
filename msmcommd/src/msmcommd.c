@@ -31,6 +31,8 @@ const char *frame_type_names[] = {
 	"DATA"
 };
 
+int use_serial_port = 1;
+
 void hexdump(const uint8_t *data, uint32_t len)
 {
 	const char *p;
@@ -121,16 +123,21 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 	opterr = 0;
 	int option_index;
 	int chr;
+	int check_arg[2];
+	check_arg[0] = 0;
+	check_arg[1] = 0;
 
 	struct option opts[] = {
 		{ "serial-port", required_argument, 0, 's' },
+		{ "network", required_argument, 0, 'n'},
+		{ "network-port", required_argument, 0, 'p'},
 		{ "help", no_argument, 0, 'h' },
 		{ "version", no_argument, 0, 'v'},
 	};
 
 	while (1) {
 		option_index = 0;
-		chr = getopt_long(argc, argv, "s:hv", opts, &option_index);
+		chr = getopt_long(argc, argv, "s:n:p:hv", opts, &option_index);
 
 		if (chr == -1)
 			break;
@@ -138,6 +145,23 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 		switch(chr) {
 			case 's':
 				snprintf(ctx->serial_port, 30, "%s", optarg);
+				check_arg[0] = 1;
+				if (check_arg[1]) {
+					printf("you cannot use msmcommd with a serial port and a network port!\n");
+					exit(1);
+				}
+				break;
+			case 'n':
+				snprintf(ctx->network_addr, 30, "%s", optarg);
+				check_arg[1] = 1;
+				if (check_arg[0]) {
+					printf("you cannot use msmcommd with a network port and a serial port!\n");
+					exit(1);
+				}
+				use_serial_port = 0;
+				break;
+			case 'p':
+				snprintf(ctx->network_port, 10, "%s", optarg);
 				break;
 			case 'h':
 				do_print_help();
@@ -159,9 +183,14 @@ static void print_configuration(struct msmc_context *ctx)
 #ifdef DEBUG
 	printf("...mode: debug\n");
 #else
-	printf("...tmode: normal\n");
+	printf("...mode: normal\n");
 #endif
-	printf("...serial port: %s\n", ctx->serial_port);
+	if (use_serial_port) {
+		printf("...serial port: %s\n", ctx->serial_port);
+	}
+	else {
+		printf("...network port: %s:%i\n", ctx->network_addr, ctx->network_port);
+	}
 	printf("...network relay port: %i\n", MSMC_DEFAULT_NETWORK_PORT);
 }
 

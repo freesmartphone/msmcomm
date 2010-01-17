@@ -22,6 +22,7 @@
 
 extern const char *frame_type_names[];
 extern void *talloc_llc_ctx;
+extern int use_serial_port;
 
 LLIST_HEAD(data_handlers);
 LLIST_HEAD(tx_queue);
@@ -36,11 +37,46 @@ static uint8_t next_sequence_nr(struct msmc_context *ctx)
 	return seq;
 }
 
-static void serial_port_setup(int fd)
+static int network_port_setup(struct msmc_context *ctx)
+{
+	int fd;
+
+	/* FIXME enhance log output */
+
+	fd = socket(PF_INET, SOCK_STREAM, 0);
+	if (fd < 0) {
+		perror("Failed to create network socket");
+		return EXIT_FAILURE;
+	}
+
+	struct hostent* host = gethostbyname(ctx->network_addr);
+	if (!host) {
+		printf("Failed to get the hostent\n");
+		return EXIT_FAILURE;
+	}
+
+	struct sockaddr_in addr = { 0, };
+	addr.sin_family = PF_INET;
+	addr.sin_port = htons(atoi(ctx->network_port));
+	addr.sin_addr = *(struct in_addr*)host->h_addr;
+
+	int result = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
+	if (result < 0) {
+		perror("Connection failed");
+		return EXIT_FAILURE;
+	}
+
+	return fd;
+}
+
+static int serial_port_setup(struct msmc_context *ctx)
 {
 	int ret;
 	int flush = 0;
 	struct hsuart_mode mode;
+	int fd;
+
+	fd = open(ctx->serial_port, O_RDWR | O_NOCTTY);
 
 	if (fd < 0)
 		return;
@@ -64,6 +100,7 @@ static void serial_port_setup(int fd)
 	/* we want flow control for the rx line */
 	ioctl(fd, HSUART_IOCTL_RX_FLOW, HSUART_RX_FLOW_ON);
 
+	return fd;
 
 #if 0
 	struct termios options;
@@ -504,6 +541,13 @@ int init_llc(struct msmc_context *ctx)
 	ctx->fds[MSMC_FD_SERIAL].cb = _llc_cb;
 	ctx->fds[MSMC_FD_SERIAL].data = ctx;
 	ctx->fds[MSMC_FD_SERIAL].when = BSC_FD_READ | BSC_FD_WRITE;
+	
+	if (use_serial_port)
+		ctx->fds[MSMC_FD_SERIAL].fd = serial_port_setup(ctx);
+	else 
+		ctx->fds[MSMC_FD_NETWORK].fd = network_port_setup(ctx);
+
+#if 0
 	ctx->fds[MSMC_FD_SERIAL].fd = open(ctx->serial_port, O_RDWR | O_NOCTTY);
 
 	if (ctx->fds[MSMC_FD_SERIAL].fd < 0) {
@@ -512,6 +556,8 @@ int init_llc(struct msmc_context *ctx)
 	}
 
 	serial_port_setup(ctx->fds[MSMC_FD_SERIAL].fd);
+#endif 
+
 	bsc_register_fd(&ctx->fds[MSMC_FD_SERIAL]);
 
 	restart_link(ctx);

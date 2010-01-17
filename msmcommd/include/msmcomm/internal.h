@@ -25,6 +25,7 @@
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #include <netinet/in.h>
+#include <netdb.h>
 
 #include <fcntl.h>
 #include <limits.h>
@@ -85,8 +86,9 @@
 struct msmc_context
 {
 	/* Options, flags etc. */
-	int					network_port;
+	char				network_port[10];
 	char	    		serial_port[30];
+	char				network_addr[30];
 	struct bsc_fd		fds[MSMC_FD_COUNT];
 
 	/* HCI LL specific */
