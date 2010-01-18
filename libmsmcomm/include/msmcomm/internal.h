@@ -1,5 +1,5 @@
 /* 
- * (c) 2009 by Simon Busch <morphis@gravedo.de>
+ * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,4 +17,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+
+#ifndef INTERNAL_H_
+#define INTERNAL_H_
+
+#include <msmcomm/linuxlist.h>
+#include <msmcomm/msmcomm.h>
+
+struct msmcomm_context
+{
+	msmcomm_event_handler_cb event_cb;
+	msmcomm_write_handler_cb write_cb;
+};
+
+struct msmcomm_message
+{
+	uint8_t group_id;
+	uint8_t msg_id;
+};
+
+#endif
 

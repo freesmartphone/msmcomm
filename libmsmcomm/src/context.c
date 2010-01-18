@@ -18,4 +18,36 @@
  *
  */
 
+#include <msmcomm/internal.h>
+
+int msmcomm_init(struct msmcomm_context *ctx)
+{
+	ctx->write_cb = NULL;
+	ctx->event_cb = NULL;
+	return 0;
+}
+
+int msmcomm_read_from_modem(struct msmcomm_context *ctx, int modem_fd)
+{
+	return -1;
+}
+
+void msmcomm_register_event_handler(struct msmcomm_context *ctx, msmcomm_event_handler_cb
+									event_handler)
+{
+	ctx->event_cb = event_handler;
+}
+
+void msmcomm_register_write_handler(struct msmcomm_context *ctx, msmcomm_write_handler_cb
+									write_handler)
+{
+	ctx->write_cb = write_handler;
+}
+
+void msmcomm_shutdown(struct msmcomm_context *ctx)
+{
+}
+
+
+
 
