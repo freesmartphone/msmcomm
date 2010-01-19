@@ -90,6 +90,7 @@ static int init_all(struct msmc_context *ctx)
 static void shutdown_all(struct msmc_context *ctx)
 {
 	shutdown_llc(ctx);
+	shutdown_relay_interface(ctx);
 
 	/* free context */
 	if (ctx)
@@ -120,6 +121,26 @@ static void do_print_help()
 		   "serial port than you can specify the port\n");
 	printf(" -t --talloc-report enable talloc memory report\n");
 	printf(" -h --help this help\n");
+}
+
+static void signal_handler(int signal)
+{
+	fprintf(stdout, "signal %u received\n", signal);
+
+	switch (signal) {
+		case SIGINT:
+			/* FIXME how to get the current context? */
+			/* shutdown_all(ctx); */
+			exit(0);
+			break;
+		case SIGABRT:
+		case SIGUSR1:
+		case SIGUSR2:
+			talloc_report_full(NULL, stderr);
+			break;
+		default:
+			break;
+	}
 }
 
 static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
@@ -208,12 +229,22 @@ int main(int argc, char *argv[])
 
 	init_talloc();
 
+	/* setup signal handlers */
+	signal(SIGINT, &signal_handler);
+	signal(SIGABRT, &signal_handler);
+	signal(SIGUSR1, &signal_handler);
+	signal(SIGUSR2, &signal_handler);
+	signal(SIGPIPE, SIG_IGN);
+
+	/* default configuration */
 	ctx = talloc(NULL, struct msmc_context);
 	snprintf(ctx->serial_port, 30, MSMC_DEFAULT_SERIAL_PORT);
 	snprintf(ctx->network_port, 10, "4242");
 
+	/* command line option handling */
 	handle_options(ctx, argc, argv);
 
+	/* react on options */
 	init_talloc_late();
 
 	print_configuration(ctx);

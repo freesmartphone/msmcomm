@@ -39,6 +39,8 @@
 #include <time.h>
 #include <string.h>
 #include <errno.h>
+#include <signal.h>
+#include <fcntl.h>
 
 #include <arpa/inet.h>
 
