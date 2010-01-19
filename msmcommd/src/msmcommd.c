@@ -111,10 +111,6 @@ static int update_all(struct msmc_context *ctx)
 	return 0;
 }
 
-static void do_print_version()
-{
-}
-
 static void do_print_help()
 {
 	printf("help: \n");
@@ -124,7 +120,6 @@ static void do_print_help()
 		   "serial port than you can specify the port\n");
 	printf(" -t --talloc-report enable talloc memory report\n");
 	printf(" -h --help this help\n");
-	printf(" -v --version print the version of msmcommd\n");
 }
 
 static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
@@ -141,7 +136,6 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 		{ "network", required_argument, 0, 'n'},
 		{ "network-port", required_argument, 0, 'p'},
 		{ "help", no_argument, 0, 'h' },
-		{ "version", no_argument, 0, 'v'},
 	};
 
 	while (1) {
@@ -174,9 +168,6 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 				break;
 			case 'h':
 				do_print_help();
-				exit(1);
-			case 'v':
-				do_print_version();
 				exit(1);
 			case 't':
 				use_talloc_report = 1;
