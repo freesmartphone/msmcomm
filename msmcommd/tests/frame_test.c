@@ -38,6 +38,7 @@
 	}
 
 extern void *talloc_llc_ctx;
+extern int use_talloc_report;
 
 static void test_encode_frame_data(void)
 {
@@ -104,8 +105,9 @@ static void test_memleaks(void)
 
 int main(int argc, char **argv)
 {
-	talloc_enable_leak_report();
+	use_talloc_report = 1;
 	init_talloc();
+	init_talloc_late();
 
 	test_encode_frame_data();
 	test_decode_frame_data();

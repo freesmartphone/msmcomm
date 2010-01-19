@@ -24,12 +24,17 @@ void *talloc_llc_ctx;
 void *talloc_term_ctx;
 void *talloc_relay_ctx;
 
+int use_talloc_report = 0;
+
 void init_talloc(void)
 {
-#ifdef DEBUG
-	talloc_enable_leak_report();
-#endif
 	talloc_llc_ctx = talloc_named_const(talloc_llc_ctx, 0, "llc");
 	talloc_relay_ctx = talloc_named_const(talloc_relay_ctx, 0, "relay");
 	talloc_term_ctx = talloc_named_const(talloc_term_ctx, 0, "term");
+}
+
+void init_talloc_late(void)
+{
+	if (use_talloc_report)
+		talloc_enable_leak_report();
 }

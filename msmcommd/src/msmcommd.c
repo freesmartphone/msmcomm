@@ -32,6 +32,7 @@ const char *frame_type_names[] = {
 };
 
 int use_serial_port = 1;
+extern int use_talloc_report;
 
 void hexdump(const uint8_t *data, uint32_t len)
 {
@@ -61,7 +62,7 @@ static void timer_cb(void *_data)
 	struct msmc_context *ctx = _data;
 
 	/* schedule again */
-	bsc_schedule_timer(&timer, 0, 50);
+	bsc_schedule_timer(&timer, 0, 500);
 }
 
 static int init_all(struct msmc_context *ctx)
@@ -71,7 +72,7 @@ static int init_all(struct msmc_context *ctx)
 	/* basic timer */
 	timer.cb = timer_cb;
 	timer.data = ctx;
-	bsc_schedule_timer(&timer, 0 , 50); 
+	bsc_schedule_timer(&timer, 0 , 500); 
 
 	/* serial and network components */
 	if (init_llc(ctx) < 0) {
@@ -116,6 +117,14 @@ static void do_print_version()
 
 static void do_print_help()
 {
+	printf("help: \n");
+	printf(" -s --serial-port the serial port which provides the modem link\n");
+	printf(" -n --network remote network adress to use instead of a serial port\n");
+	printf(" -p --network-port if you use a network connection instead of a " \
+		   "serial port than you can specify the port\n");
+	printf(" -t --talloc-report enable talloc memory report\n");
+	printf(" -h --help this help\n");
+	printf(" -v --version print the version of msmcommd\n");
 }
 
 static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
@@ -137,7 +146,7 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 
 	while (1) {
 		option_index = 0;
-		chr = getopt_long(argc, argv, "s:n:p:hv", opts, &option_index);
+		chr = getopt_long(argc, argv, "s:n:p:hvt", opts, &option_index);
 
 		if (chr == -1)
 			break;
@@ -165,9 +174,12 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 				break;
 			case 'h':
 				do_print_help();
-				break;
+				exit(1);
 			case 'v':
 				do_print_version();
+				exit(1);
+			case 't':
+				use_talloc_report = 1;
 				break;
 			case '?':
 				break;
@@ -210,6 +222,8 @@ int main(int argc, char *argv[])
 	snprintf(ctx->network_port, 10, "4242");
 
 	handle_options(ctx, argc, argv);
+
+	init_talloc_late();
 
 	print_configuration(ctx);
 
