@@ -257,8 +257,6 @@ static void link_establishment_control(struct msmc_context *ctx, struct frame *f
 	if (!ctx || !fr)
 		return;
 
-	DEBUG_MSG("handle incomming frame ...");
-
 	switch (ctx->state)
 	{
 	case MSMC_STATE_NULL:
@@ -292,7 +290,7 @@ static void link_establishment_control(struct msmc_context *ctx, struct frame *f
 		}
 		else {
 			DEBUG_MSG("recieve %s frame in INIT state ... discard frame!",
-					  frame_type_names[fr->type]);
+					  frame_type_names[fr->type-1]);
 		}
 		break;
 
@@ -309,7 +307,7 @@ static void link_establishment_control(struct msmc_context *ctx, struct frame *f
 		}
 		else {
 			DEBUG_MSG("recieve %s frame in ACTIVE state ... discard frame!",
-					  frame_type_names[fr->type]);
+					  frame_type_names[fr->type-1]);
 		}
 		break;
 
@@ -402,22 +400,20 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 	}
 }
 
-static void handle_frame(struct msmc_context *ctx, const uint8_t *data, uint32_t len)
+static void handle_frame(struct msmc_context *ctx, uint8_t *data, uint32_t len)
 {
-	unsigned short crc, fr_crc;
+	unsigned short crc, fr_crc, crc_result = 0xf0b8;
 	struct frame *fr = talloc_zero(talloc_llc_ctx, struct frame);
 
 	/* the last two bytes are the crc checksum, check them! */
-	fr_crc = (data[len - 1] << 4) | data[len - 2];
+	fr_crc = (data[len-2] << 4) | data[len-1];
 	crc = crc16_calc(data, len);
-	if (crc != fr_crc)
+	if (crc != crc_result)
 	{
 		DEBUG_MSG("crc checksum error! discarding frame ...\n");;
 		return;
 	}
 
-	DEBUG_MSG("handle frame ...\n");
-	
 	/* parse frame data */
 	fr->adress = data[0];
 	fr->type = data[1] >> 4;
@@ -440,27 +436,22 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
 	char buffer[MSMC_MAX_BUFFER_SIZE];
-	char *p;
-	uint32_t start, len, last;
-
-	DEBUG_MSG("data arrived ...\n");
+	uint8_t *p, *start, *end;
+	uint8_t len;
 
 	ssize_t size = read(bfd->fd, buffer, sizeof(buffer));
-	DEBUG_MSG("data: len=%i\n", size);
 	if (size < 0)
 		return;
 
 	/* try to find a valid frame */
-	start = 0;
-	last = 0;
-	p = &buffer[start];
-	while(*p)
-	{
-		if(*p == 0x7e)
-		{
-			DEBUG_MSG("found valid frame\n");
-			last = p - start - 1;
-			handle_frame(ctx, p, last);
+	p = buffer;
+	start = buffer;
+	end = &buffer[size-1];
+	while (p <= end) {
+		if (*p == 0x7e) {
+			len = p - start;
+			handle_frame(ctx, start, len);
+			start = p + 1;
 		}
 		p++;
 	}
@@ -545,7 +536,7 @@ int init_llc(struct msmc_context *ctx)
 	if (use_serial_port)
 		ctx->fds[MSMC_FD_SERIAL].fd = serial_port_setup(ctx);
 	else 
-		ctx->fds[MSMC_FD_NETWORK].fd = network_port_setup(ctx);
+		ctx->fds[MSMC_FD_SERIAL].fd = network_port_setup(ctx);
 
 #if 0
 	ctx->fds[MSMC_FD_SERIAL].fd = open(ctx->serial_port, O_RDWR | O_NOCTTY);

@@ -189,7 +189,7 @@ static void print_configuration(struct msmc_context *ctx)
 		printf("...serial port: %s\n", ctx->serial_port);
 	}
 	else {
-		printf("...network port: %s:%i\n", ctx->network_addr, ctx->network_port);
+		printf("...network port: %s:%s\n", ctx->network_addr, ctx->network_port);
 	}
 	printf("...network relay port: %i\n", MSMC_DEFAULT_NETWORK_PORT);
 }
@@ -207,6 +207,7 @@ int main(int argc, char *argv[])
 
 	ctx = talloc(NULL, struct msmc_context);
 	snprintf(ctx->serial_port, 30, MSMC_DEFAULT_SERIAL_PORT);
+	snprintf(ctx->network_port, 10, "4242");
 
 	handle_options(ctx, argc, argv);
 
