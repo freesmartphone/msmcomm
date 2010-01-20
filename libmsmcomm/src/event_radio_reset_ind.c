@@ -1,5 +1,5 @@
 /* 
- * (c) 2009 by Simon Busch <morphis@gravedo.de>
+ * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,27 +18,14 @@
  *
  */
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <netinet/in.h>
+#include <msmcomm/internal.h>
 
-#include <fcntl.h>
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <termios.h>
-#include <strings.h>
-#include <stdarg.h>
-#include <getopt.h>
-#include <time.h>
-#include <string.h>
-
-#include <arpa/inet.h>
-
-int main(int argc, char *argv[])
+unsigned int event_reset_radio_ind_is_valid(struct msmcomm_message *msg)
 {
+	return (msg->group_id == 0x1d) && (msg->msg_id == 0x0);
 }
 
+void event_reset_radio_ind_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	/* no data to handle */
+}

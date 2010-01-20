@@ -1,7 +1,7 @@
 NULL =
 
 AM_CPPFLAGS = \
--I$(top_srcdir) \
+-I$(top_srcdir)/include \
 $(NULL)
 
 lib_LTLIBRARIES = \
@@ -9,8 +9,14 @@ libmsmcomm.la
 $(NULL)
 
 libmsmcomm_la_SOURCES = \
-msmcomm.c \
-msmcomm.h \
+context.c \
+message.c \
+message_types.c \
+message_change_operation_mode.c \
+response_types.c \
+response_cm_ph.c \
+event_radio_reset_ind.c \
+
 $(NULL)
 
 msmcommincludedir = $(includedir)/msmcomm-1.0

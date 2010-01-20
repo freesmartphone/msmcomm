@@ -20,46 +20,18 @@
 
 #include <msmcomm/internal.h>
 
-int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *msg)
-{
-	uint8_t *data;
-	uint32_t len;
-	
-	return 1;
-}
+extern unsigned int resp_cm_ph_is_valid(struct msmcomm_message *msg);
+extern void resp_cm_ph_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len);
 
-uint32_t msmcomm_message_get_size(struct msmcomm_message *msg)
-{
-	uint32_t len;
+extern unsigned int evt_radio_reset_ind_is_valid(struct msmcomm_message *msg);
+extern void evt_radio_reset_ind_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len);
 
-	/* handle specific groups of message and than specify the actual size of the
-	 * message on message id layer */
-	
-	return len;
-}
-
-struct msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx)
-{
-	return NULL;
-}
-
-void msmcomm_message_set_type(struct msmcomm_message *msg, int type)
-{
-}
-
-int msmcomm_message_get_type(struct msmcomm_message *msg)
-{
-	return -1;
-}
-
-void msmcomm_message_set_group_id(struct msmcomm_message *msg, int group_id)
-{
-}
-
-void msmcomm_message_set_msg_id(struct msmcomm_message *msg, int msg_id)
-{
-}
-
-
-
+struct response_descriptor resp_descriptors[] = {
+	{	MSMCOMM_CM_PH_RESPONSE, 
+		resp_cm_ph_is_valid, 
+		resp_cm_ph_handle_data },
+	{	MSMCOMM_RESET_RADIO_IND_EVENT,
+		evt_radio_reset_ind_is_valid,
+		evt_radio_reset_ind_handle_data },
+};
 

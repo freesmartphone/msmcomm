@@ -21,13 +21,10 @@
 #ifndef MSMCOMM_H_
 #define MSMCOMM_H_
 
-/* message group ids */
-#define MSMCOMM_MESSAGE_GROUP_XXX			0x1
-#define MSMCOMM_MESSAGE_GROUP_YYY			0x2
-
-/* message msg ids */
-#define MSMCOMM_MESSAGE_MSG_XXX1			0x1
-#define MSMCOMM_MESSAGE_MSG_YYY1			0x2
+#define MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE				1
+#define MSMCOMM_MESSAGE_CMD_GET_IMEI							2
+#define MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO					3
+#define MSMCOMM_MESSAGE_CMD_TEST_ALIVE							4
 
 struct msmcomm_context;
 struct msmcomm_message;
@@ -35,21 +32,17 @@ struct msmcomm_message;
 typedef (*msmcomm_event_handler_cb) (struct msmcomm_context *ctx, int event);
 typedef (*msmcomm_write_handler_cb) (struct msmcomm_context *ctx, uint8_t *data, uint32_t len);
 
-int     msmcomm_init(struct msmcomm_context *ctx);
-int     msmcomm_shutdown(struct msmcomm_context *ctx);
-int		msmcomm_read_from_modem(struct msmcomm_context *ctx, int fd);
-int		msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *msg);
-void    msmcomm_register_event_handler(struct msmcomm_context *ctx, msmcomm_event_handler_cb
-                                    event_handler);
-void	msmcomm_register_write_handler(struct msmcomm_context *ctx, msmcomm_write_handler_cb
-									   write_handler);
+int			msmcomm_init(struct msmcomm_context *ctx);
+int			msmcomm_shutdown(struct msmcomm_context *ctx);
+int			msmcomm_read_from_modem(struct msmcomm_context *ctx, int fd);
+int			msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *msg);
+void		msmcomm_register_event_handler(struct msmcomm_context *ctx, msmcomm_event_handler_cb event_handler);
+void		msmcomm_register_write_handler(struct msmcomm_context *ctx, msmcomm_write_handler_cb write_handler);
 
-struct  msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx);
-uint32_t msmcomm_message_get_size(struct msmcomm_message *msg);
-void    msmcomm_message_set_type(struct msmcomm_message *msg, int type);
-int     msmcomm_message_get_type(struct msmcomm_message *msg);
-void    msmcomm_message_set_group_id(struct msmcomm_message *msg, uint8_t group_id);
-void    msmcomm_message_set_msg_id(struct msmcomm_message *msg, uint8_t msg_id);
+struct		msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx, unsigned int type);
+uint32_t	msmcomm_message_get_size(struct msmcomm_message *msg);
+
+void		msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_message *msg, uint8_t operator_mode);
 
 #endif
 
