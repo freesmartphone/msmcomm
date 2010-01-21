@@ -18,7 +18,7 @@
  *
  */
 
-#include <msmcomm/internal.h>
+#include "internal.h"
 
 unsigned int event_reset_radio_ind_is_valid(struct msmcomm_message *msg)
 {

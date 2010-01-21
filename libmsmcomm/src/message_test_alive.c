@@ -18,14 +18,30 @@
  *
  */
 
-#include "internal.h"
+#include <msmcomm/internal.h>
 
-unsigned int resp_cm_ph_is_valid(struct msmcomm_message *msg)
+struct test_alive_msg
 {
-	return (msg->group_id == 0x4) && (msg->msg_id == 0x1);
+	uint8_t unknown0;
+	uint8_t unknown1;
+	uint8_t unknown3[3];
+	uint8_t operator_mode;
 }
 
-void resp_cm_ph_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void msg_test_alive_init(struct msmcomm_message *msg)
 {
-	/* FIXME */
+
+}
+
+uint32_t msg_test_alive_get_size(struct msmcomm_message *msg)
+{
+}
+
+void msg_test_alive_free(struct msmcomm_message *msg)
+{
+}
+
+uint8_t* msg_test_alive_prepare_data(struct msmcomm_message *msg)
+{
+	return NULL;
 }

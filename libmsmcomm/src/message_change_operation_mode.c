@@ -18,7 +18,7 @@
  *
  */
 
-#include <msmcomm/internal.h>
+#include "internal.h"
 
 struct change_operation_mode_msg
 {
@@ -26,7 +26,7 @@ struct change_operation_mode_msg
 	uint8_t unknown1;
 	uint8_t unknown3[3];
 	uint8_t operator_mode;
-}
+};
 
 void msg_change_operation_mode_init(struct msmcomm_message *msg)
 {
@@ -37,12 +37,12 @@ void msg_change_operation_mode_init(struct msmcomm_message *msg)
 		calloc(sizeof(struct change_operation_mode_msg), 1);
 
 	/* second byte is always 0x2 */
-	((struct change_operation_mode_msg)msg->payload)->unknown1 = 0x2;
+	((struct change_operation_mode_msg*)msg->payload)->unknown1 = 0x2;
 	
 	msmcomm_message_change_operation_mode_set_operator_mode(msg, 0x7);
 }
 
-void msg_change_operation_mode_get_size(struct msmcomm_message *msg)
+uint32_t msg_change_operation_mode_get_size(struct msmcomm_message *msg)
 {
 	return sizeof(struct change_operation_mode_msg);
 }
@@ -54,6 +54,10 @@ void msg_change_operation_mode_free(struct msmcomm_message *msg)
 
 void msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_message *msg, uint8_t operator_mode)
 {
-	((struct change_operation_mode_msg)msg->payload)->operator_mode = operator_mode;
+	((struct change_operation_mode_msg*)msg->payload)->operator_mode = operator_mode;
 }
 
+uint8_t* msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
+{
+	return NULL;
+}

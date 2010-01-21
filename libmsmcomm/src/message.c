@@ -18,48 +18,56 @@
  *
  */
 
-#include <msmcomm/internal.h>
+#include "internal.h"
+
+extern void *talloc_msmc_ctx;
+extern struct message_descriptor msg_descriptors[];
+extern unsigned int msg_descriptors_size;
 
 int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *msg)
 {
-	uint8_t *data;
-	uint32_t len;
-	
 	return 1;
 }
 
 uint32_t msmcomm_message_get_size(struct msmcomm_message *msg)
 {
-	uint32_t len;
+	if (msg && msg->descriptor && msg->descriptor->get_size)
+		return msg->descriptor->get_size(msg);
 
-	/* handle specific groups of message and than specify the actual size of the
-	 * message on message id layer */
-	
-	return len;
+	return 0;
 }
 
-struct msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx)
+struct msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx,
+											   unsigned int type)
 {
-	return NULL;
+	unsigned int found = 0;
+	int n;
+	struct msmcomm_message *msg = talloc(talloc_msmc_ctx, struct
+										 msmcomm_message);
+
+	for (n=0; n < msg_descriptors_size; n++) {
+		if (msg_descriptors[n].type == type) {
+			if (msg_descriptors[n].init)
+				msg_descriptors[n].init(msg);
+		
+			msg->descriptor = &msg_descriptors[0];
+			found = 1;
+		}
+	}
+
+	if (!found) {
+		talloc_free(msg);
+		msg = NULL;
+	}
+
+	return msg;
 }
 
-void msmcomm_message_set_type(struct msmcomm_message *msg, int type)
+uint32_t msmcomm_message_get_type(struct msmcomm_message *msg)
 {
+	if (msg && msg->descriptor)
+		msg->descriptor->type;
+
+	return MSMCOMM_MESSAGE_INVALID;
 }
-
-int msmcomm_message_get_type(struct msmcomm_message *msg)
-{
-	return -1;
-}
-
-void msmcomm_message_set_group_id(struct msmcomm_message *msg, int group_id)
-{
-}
-
-void msmcomm_message_set_msg_id(struct msmcomm_message *msg, int msg_id)
-{
-}
-
-
-
 

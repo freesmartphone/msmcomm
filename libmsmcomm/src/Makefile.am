@@ -1,7 +1,6 @@
 NULL =
 
 AM_CPPFLAGS = \
--I$(top_srcdir)/include \
 $(NULL)
 
 lib_LTLIBRARIES = \
@@ -16,11 +15,10 @@ message_change_operation_mode.c \
 response_types.c \
 response_cm_ph.c \
 event_radio_reset_ind.c \
-
+msmcomm.h \
 $(NULL)
 
 msmcommincludedir = $(includedir)/msmcomm-1.0
-
 msmcomminclude_HEADERS = \
 msmcomm.h \
 $(NULL)
@@ -28,10 +26,10 @@ $(NULL)
 libmsmcomm_la_LIBADD = \
 $(NULL)
 
-vapidir = $(datadir)/vala/vapi
+#vapidir = $(datadir)/vala/vapi
 
-dist_vapi_DATA = \
-msmcomm-1.0.vapi \
-$(NULL)
+#dist_vapi_DATA = \
+#msmcomm-1.0.vapi \
+#$(NULL)
 
-EXTRA_DIST = msmcomm-1.0.vapi
+#EXTRA_DIST = msmcomm-1.0.vapi

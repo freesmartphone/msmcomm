@@ -18,10 +18,13 @@
  *
  */
 
-#include <msmcomm/internal.h>
+#include "internal.h"
+
+void *talloc_msmc_ctx;
 
 int msmcomm_init(struct msmcomm_context *ctx)
 {
+	talloc_msmc_ctx = talloc_named_const(talloc_msmc_ctx, 0, "msmcomm");
 	ctx->write_cb = NULL;
 	ctx->event_cb = NULL;
 	return 0;
@@ -44,7 +47,7 @@ void msmcomm_register_write_handler(struct msmcomm_context *ctx, msmcomm_write_h
 	ctx->write_cb = write_handler;
 }
 
-void msmcomm_shutdown(struct msmcomm_context *ctx)
+int msmcomm_shutdown(struct msmcomm_context *ctx)
 {
 }
 

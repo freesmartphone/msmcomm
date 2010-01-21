@@ -21,10 +21,17 @@
 #ifndef MSMCOMM_H_
 #define MSMCOMM_H_
 
+#define MSMCOMM_MESSAGE_INVALID									0
 #define MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE				1
 #define MSMCOMM_MESSAGE_CMD_GET_IMEI							2
 #define MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO					3
 #define MSMCOMM_MESSAGE_CMD_TEST_ALIVE							4
+
+#define MSMCOMM_RESPONSE_INVALID								0
+#define MSMCOMM_RESPONSE_CM_PH									1
+
+#define MSMCOMM_EVENT_INVALID									0
+#define MSMCOMM_EVENT_RESET_RADIO_IND							1
 
 struct msmcomm_context;
 struct msmcomm_message;
@@ -41,6 +48,7 @@ void		msmcomm_register_write_handler(struct msmcomm_context *ctx, msmcomm_write_
 
 struct		msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx, unsigned int type);
 uint32_t	msmcomm_message_get_size(struct msmcomm_message *msg);
+uint32_t	msmcomm_message_get_type(struct msmcomm_message *msg);
 
 void		msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_message *msg, uint8_t operator_mode);
 
