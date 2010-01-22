@@ -11,10 +11,22 @@ libmsmcomm_la_SOURCES = \
 context.c \
 message.c \
 message_types.c \
-message_change_operation_mode.c \
+message_system.c \
+message_network.c \
+message_sim.c \
+message_call.c \
+message_gps \
 response_types.c \
-response_cm_ph.c \
-event_radio_reset_ind.c \
+response_system.c \
+response_network.c \
+response_sim.c \
+response_call.c \
+response_gps.c \
+event_system.c \
+event_network.c \
+event_sim.c \
+event_call.c \
+event_gps.c \
 msmcomm.h \
 $(NULL)
 

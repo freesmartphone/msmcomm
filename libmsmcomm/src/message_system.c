@@ -28,6 +28,10 @@ struct change_operation_mode_msg
 	uint8_t operator_mode;
 };
 
+struct test_alive_msg
+{
+};
+
 void msg_change_operation_mode_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x3;
@@ -58,6 +62,25 @@ void msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_mess
 }
 
 uint8_t* msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
+{
+	return NULL;
+}
+
+void msg_test_alive_init(struct msmcomm_message *msg)
+{
+
+}
+
+uint32_t msg_test_alive_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct test_alive_msg);
+}
+
+void msg_test_alive_free(struct msmcomm_message *msg)
+{
+}
+
+uint8_t* msg_test_alive_prepare_data(struct msmcomm_message *msg)
 {
 	return NULL;
 }

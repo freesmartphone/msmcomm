@@ -18,30 +18,5 @@
  *
  */
 
-#include <msmcomm/internal.h>
+#include "internal.h"
 
-struct test_alive_msg
-{
-	uint8_t unknown0;
-	uint8_t unknown1;
-	uint8_t unknown3[3];
-	uint8_t operator_mode;
-}
-
-void msg_test_alive_init(struct msmcomm_message *msg)
-{
-
-}
-
-uint32_t msg_test_alive_get_size(struct msmcomm_message *msg)
-{
-}
-
-void msg_test_alive_free(struct msmcomm_message *msg)
-{
-}
-
-uint8_t* msg_test_alive_prepare_data(struct msmcomm_message *msg)
-{
-	return NULL;
-}
