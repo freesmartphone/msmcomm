@@ -20,3 +20,36 @@
 
 #include "internal.h"
 
+extern void *talloc_msmc_ctx;
+
+struct get_imei_msg
+{
+	uint8_t unknown[6];
+} __attribute__ ((packed));
+
+void msg_get_imei_init(struct msmcomm_message *msg)
+{
+	msg->group_id = 0x1b;
+	msg->msg_id = 0x1;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_imei_msg);
+
+	/* this bytes unknown */
+	MESSAGE_CAST(msg, struct get_imei_msg)->unknown[1] = 0x5;
+	MESSAGE_CAST(msg, struct get_imei_msg)->unknown[5] = 0x1;
+}
+
+uint32_t msg_get_imei_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct get_imei_msg);
+}
+
+void msg_get_imei_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t* msg_get_imei_prepare_data(struct msmcomm_message *msg)
+{
+	return msg->payload;
+}

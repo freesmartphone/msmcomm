@@ -20,25 +20,27 @@
 
 #include "internal.h"
 
+extern void *talloc_msmc_ctx;
+
 struct change_operation_mode_msg
 {
 	uint8_t unknown0;
 	uint8_t unknown1;
 	uint8_t unknown3[3];
 	uint8_t operator_mode;
-};
+} __attribute__ ((packed));
 
 struct test_alive_msg
 {
-};
+	uint8_t unknown[5];
+} __attribute__ ((packed));
 
 void msg_change_operation_mode_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x3;
 	msg->msg_id = 0x0;
 
-	msg->payload = (struct change_operation_mode_msg*) 
-		calloc(sizeof(struct change_operation_mode_msg), 1);
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct change_operation_mode_msg);
 
 	/* second byte is always 0x2 */
 	((struct change_operation_mode_msg*)msg->payload)->unknown1 = 0x2;
@@ -53,22 +55,25 @@ uint32_t msg_change_operation_mode_get_size(struct msmcomm_message *msg)
 
 void msg_change_operation_mode_free(struct msmcomm_message *msg)
 {
-	free(msg->payload);
+	talloc_free(msg->payload);
 }
 
 void msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_message *msg, uint8_t operator_mode)
 {
-	((struct change_operation_mode_msg*)msg->payload)->operator_mode = operator_mode;
+	MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = operator_mode;
 }
 
 uint8_t* msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
 {
-	return NULL;
+	return msg->payload;
 }
 
 void msg_test_alive_init(struct msmcomm_message *msg)
 {
+	msg->group_id = 0x1b;
+	msg->msg_id = 0x8;
 
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct test_alive_msg);
 }
 
 uint32_t msg_test_alive_get_size(struct msmcomm_message *msg)
@@ -78,9 +83,10 @@ uint32_t msg_test_alive_get_size(struct msmcomm_message *msg)
 
 void msg_test_alive_free(struct msmcomm_message *msg)
 {
+	talloc_free(msg->payload);
 }
 
 uint8_t* msg_test_alive_prepare_data(struct msmcomm_message *msg)
 {
-	return NULL;
+	return msg->payload;
 }

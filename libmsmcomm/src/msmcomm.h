@@ -33,10 +33,14 @@
 #define MSMCOMM_EVENT_INVALID									0
 #define MSMCOMM_EVENT_RESET_RADIO_IND							1
 
+#define MSMCOMM_OPERATOR_MODE_RESET								0
+#define MSMCOMM_OPERATOR_MODE_ONLINE							1
+#define MSMCOMM_OPERATOR_MODE_OFFLINE							2
+
 struct msmcomm_context;
 struct msmcomm_message;
 
-typedef (*msmcomm_event_handler_cb) (struct msmcomm_context *ctx, int event);
+typedef (*msmcomm_event_handler_cb) (struct msmcomm_context *ctx, int event, struct msmcomm_message *message);
 typedef (*msmcomm_write_handler_cb) (struct msmcomm_context *ctx, uint8_t *data, uint32_t len);
 
 int			msmcomm_init(struct msmcomm_context *ctx);

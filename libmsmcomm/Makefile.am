@@ -1,4 +1,4 @@
-SUBDIRS = src
+SUBDIRS = src vapi
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = msmcomm-1.0.pc

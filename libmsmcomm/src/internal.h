@@ -46,6 +46,8 @@
 #include "linuxlist.h"
 #include "msmcomm.h"
 
+#define MESSAGE_CAST(message, type) ((type*)message->payload)
+
 struct msmcomm_context
 {
 	msmcomm_event_handler_cb event_cb;

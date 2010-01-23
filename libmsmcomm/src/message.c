@@ -26,6 +26,32 @@ extern unsigned int msg_descriptors_size;
 
 int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *msg)
 {
+	uint8_t *data, *payload;
+	uint32_t len;
+
+	/* caculate size of our message (header + payload) */
+	len = 2;
+	if (!msg->descriptor || !msg->descriptor->get_size)
+		return 0;
+	len += msg->descriptor->get_size(msg);
+
+	/* prepare payload */
+	if (!msg->descriptor || !msg->descriptor->prepare_data)
+		return 0;
+	payload = msg->descriptor->prepare_data(msg);
+
+	/* pack message into full packet */
+	data = talloc_size(talloc_msmc_ctx, sizeof(uint8_t) * len);
+	memset(data, 0, len);
+
+	data[0] = msg->group_id;
+	data[1] = msg->msg_id;
+	memcpy(&data[2], payload, len - 2);
+	ctx->write_cb(ctx, data, len);
+
+	/* cleanup */
+	talloc_free(data);
+
 	return 1;
 }
 
