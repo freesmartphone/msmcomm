@@ -166,7 +166,7 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	encode_frame(fr);
 
 	/* convert our frame struct to raw binary data */
-	len = 3 + encoded_payload_len + 2 + 1;
+	len = 3 + fr->payload_len + 2 + 1;
 	data = talloc_size(talloc_llc_ctx, sizeof(uint8_t) * len);
 
 	data[0] = fr->adress & 0xff;
@@ -174,7 +174,7 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	data[2] = ((fr->seq << 4) | fr->ack) & 0xff;
 
 	/* attach payload */
-	memcpy(data + 3, encoded_payload, encoded_payload_len);
+	memcpy(data + 3, fr->payload, fr->payload_len);
 
 	/* computer crc over header + data and append it */
 	crc = crc16_calc(&data[0], len - 3);
@@ -352,7 +352,7 @@ static void process_rcvd_ack(struct msmc_context *ctx, const uint8_t ack)
 	llist_for_each_entry(fr, &ack_queue, list) {
 		if (!is_valid_ack(ctx->last_ack, fr->seq, ack))
 			break;
-		llist_del(&fr->list);
+		llist_del_init(&fr->list);
 	}
 
 	if (llist_empty(&ack_queue)) {
@@ -459,10 +459,11 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 
 void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t len)
 {
-	struct frame *fr = talloc(talloc_llc_ctx, struct frame);
+	struct frame *fr = talloc_zero(talloc_llc_ctx, struct frame);
 	fr->type = MSMC_FRAME_TYPE_DATA;
-	fr->payload = data;
-	fr->payload = len;
+	fr->payload = talloc_zero_size(talloc_llc_ctx, sizeof(uint8_t) * len);
+	memcpy(fr->payload, data, len);
+	fr->payload_len = len;
 
 	llist_add_tail(&fr->list, &tx_queue);
 }
@@ -470,11 +471,11 @@ void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t l
 static void ack_timer_cb(void *data)
 {
 	struct msmc_context *ctx = (struct msmc_context*) data;
-	struct frame *fr;
+	struct frame *fr, *tmp;
 
 	/* ack timer event occured, so one or more frames are not acknowledged
 	 * in time, so we have to resend this frames */
-	llist_for_each_entry(fr, &ack_queue, list) {
+	llist_for_each_entry_safe(fr, tmp, &ack_queue, list) {
 		/* remove frame from ack_queue, send_frame will add it again later */
 		llist_del(&fr->list);
 		send_frame(ctx, fr);
@@ -490,25 +491,26 @@ static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
 	llist_add_tail(&fr->list, &ack_queue);
 
 	/* Reschedule timer cause we received a new frame */
-	bsc_reschedule_timer(&ack_timer, 1, 0);
+	//bsc_reschedule_timer(&ack_timer, 1, 0);
 }
 
 static void handle_llc_outgoing_data(struct bsc_fd *bfd)
 {
 	struct msmc_context *ctx = bfd->data;
-	struct frame *fr;
-
-	llist_for_each_entry(fr, &tx_queue, list) {
+	struct frame *fr, *tmp;
+	
+	llist_for_each_entry_safe(fr, tmp, &tx_queue, list) {	
 		/* prepare frame with correct seq and ack */
 		fr->seq = next_sequence_nr(ctx);
 		fr->ack = ctx->next_ack;
 
 		send_frame(ctx, fr);
-
+		
 		/* remove from tx queue and start ack timer */
-		llist_del(&fr->list);
+		llist_del_init(&fr->list);
 		add_ack_timer(ctx, fr);
 	}
+	
 }
 
 static void _llc_cb(struct bsc_fd *bfd, uint32_t flags)
@@ -528,6 +530,9 @@ void register_llc_data_handler (struct msmc_context *ctx, msmc_data_handler_cb_t
 
 int init_llc(struct msmc_context *ctx)
 {
+	INIT_LLIST_HEAD(&ack_queue);
+	INIT_LLIST_HEAD(&tx_queue);
+	
 	/* setup modem port */
 	ctx->fds[MSMC_FD_SERIAL].cb = _llc_cb;
 	ctx->fds[MSMC_FD_SERIAL].data = ctx;
@@ -560,8 +565,8 @@ void shutdown_llc(struct msmc_context *ctx)
 {
 	/* remove all data handlers */
 	if (!llist_empty(&data_handlers)) {
-		struct msmc_data_handler *dh;
-		llist_for_each_entry(dh, &data_handlers, list) {
+		struct msmc_data_handler *dh, *tmp;
+		llist_for_each_entry_safe(dh, tmp, &data_handlers, list) {
 			llist_del(&dh->list);
 			talloc_free(dh);
 		}

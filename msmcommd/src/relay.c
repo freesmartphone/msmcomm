@@ -27,11 +27,14 @@ extern void *talloc_relay_ctx;
 static int relay_client_data(struct bsc_fd *bfd, uint32_t what)
 {
 	struct relay_connection *conn = bfd->data;
-	int rc = 0;
+	int rc = 0, len;
 	uint8_t buffer[4096];
 
 	if (what & BSC_FD_READ) {
 		/* We got new data to send to our connected serial part */
+		len = recv(bfd->fd, buffer, 4096, 0);
+		DEBUG_MSG("got %i bytes from client\n", len);
+		schedule_llc_data(conn->ctx, buffer, len);
 	}
 
 	return rc;
@@ -39,6 +42,10 @@ static int relay_client_data(struct bsc_fd *bfd, uint32_t what)
 
 static void relay_data_from_llc(struct msmc_context *ctx, const uint8_t *data, uint32_t len)
 {
+	struct relay_connection *client;
+	llist_for_each_entry(client, &relay_connections, list) {
+		send(client->bfd.fd, data, len, 0);
+	}
 }
 
 static int relay_new_connection(struct bsc_fd *bfd, uint32_t what)
@@ -62,7 +69,7 @@ static int relay_new_connection(struct bsc_fd *bfd, uint32_t what)
 	conn->bfd.cb = relay_client_data;
 	conn->ctx = ctx;
 	bsc_register_fd(&conn->bfd);
-	llist_move_tail(&conn->list, &relay_connections);
+	llist_add_tail(&conn->list, &relay_connections);
 
 	return 0;
 }

@@ -153,6 +153,7 @@ void decode_frame(struct frame *fr);
 int init_llc(struct msmc_context *ctx);
 void shutdown_llc(struct msmc_context *ctx);
 void register_llc_data_handler(struct msmc_context *ctx, msmc_data_handler_cb_t cb);
+void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t len);
 
 int init_relay_interface(struct msmc_context *ctx);
 void shutdown_relay_interface(struct msmc_context *ctx);
