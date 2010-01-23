@@ -69,7 +69,8 @@
 #define MSMC_FRAME_TYPE_ACK				5
 #define MSMC_FRAME_TYPE_DATA			6
 
-#define MSMC_SYNC_SENT_INTERVAL			800
+#define MSMC_SYNC_SENT_INTERVAL_MS		0
+#define MSMC_SYNC_SENT_INTERVAL_SEC	 	1
 
 #define MSMC_FD_COUNT					2
 
@@ -113,8 +114,9 @@ struct msmc_data_handler
 struct frame
 {
     struct llist_head list;
-	uint8_t adress;
+	uint8_t address;
 	uint8_t	 type;
+	uint8_t unknown;
 	uint8_t	 seq;
 	uint8_t	 ack;
 	uint8_t	*payload;

@@ -8,6 +8,7 @@ libmsmcomm.la
 $(NULL)
 
 libmsmcomm_la_SOURCES = \
+talloc.c \
 context.c \
 message.c \
 message_types.c \

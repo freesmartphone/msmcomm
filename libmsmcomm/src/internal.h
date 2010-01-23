@@ -48,12 +48,6 @@
 
 #define MESSAGE_CAST(message, type) ((type*)message->payload)
 
-struct msmcomm_context
-{
-	msmcomm_event_handler_cb event_cb;
-	msmcomm_write_handler_cb write_cb;
-};
-
 struct msmcomm_message
 {
 	uint8_t group_id;

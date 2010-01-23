@@ -33,6 +33,15 @@ static int relay_client_data(struct bsc_fd *bfd, uint32_t what)
 	if (what & BSC_FD_READ) {
 		/* We got new data to send to our connected serial part */
 		len = recv(bfd->fd, buffer, 4096, 0);
+
+		/* connection closed? */
+		if (len <= 0) {
+			close(bfd->fd);
+			llist_del(&conn->list);
+			talloc_free(conn);
+			return rc;
+		}
+
 		DEBUG_MSG("got %i bytes from client\n", len);
 		schedule_llc_data(conn->ctx, buffer, len);
 	}
@@ -44,6 +53,7 @@ static void relay_data_from_llc(struct msmc_context *ctx, const uint8_t *data, u
 {
 	struct relay_connection *client;
 	llist_for_each_entry(client, &relay_connections, list) {
+		/* forward data to every connected client */
 		send(client->bfd.fd, data, len, 0);
 	}
 }

@@ -23,15 +23,15 @@
 extern unsigned int resp_cm_ph_is_valid(struct msmcomm_message *msg);
 extern void resp_cm_ph_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len);
 
-extern unsigned int evt_radio_reset_ind_is_valid(struct msmcomm_message *msg);
-extern void evt_radio_reset_ind_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len);
+extern unsigned int event_radio_reset_ind_is_valid(struct msmcomm_message *msg);
+extern void event_radio_reset_ind_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len);
 
 struct response_descriptor resp_descriptors[] = {
 	{	MSMCOMM_RESPONSE_CM_PH, 
 		resp_cm_ph_is_valid, 
 		resp_cm_ph_handle_data },
 	{	MSMCOMM_EVENT_RESET_RADIO_IND,
-		evt_radio_reset_ind_is_valid,
-		evt_radio_reset_ind_handle_data },
+		event_radio_reset_ind_is_valid,
+		event_radio_reset_ind_handle_data },
 };
 

@@ -156,8 +156,8 @@ static int serial_port_setup(struct msmc_context *ctx)
 
 void send_frame(struct msmc_context *ctx, struct frame *fr)
 {
-	uint32_t len, encoded_payload_len;
-	uint8_t *data, *encoded_payload;
+	uint32_t len;
+	uint8_t *data;
 	uint16_t crc;
 
 	if (!ctx || !fr) return;
@@ -169,8 +169,8 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	len = 3 + fr->payload_len + 2 + 1;
 	data = talloc_size(talloc_llc_ctx, sizeof(uint8_t) * len);
 
-	data[0] = fr->adress & 0xff;
-	data[1] = (fr->type << 4) & 0xff;
+	data[0] = fr->address & 0xff;
+	data[1] = ((fr->type << 4) | fr->unknown) & 0xff;
 	data[2] = ((fr->seq << 4) | fr->ack) & 0xff;
 
 	/* attach payload */
@@ -183,11 +183,13 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 
 	/* append end marker */
 	data[len-1] = (char)0x7e;
+	
+	DEBUG_MSG("send frame: ");
+	hexdump(data, len);
 
 	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
 
 	talloc_free(data);
-	talloc_free(encoded_payload);
 }
 
 static struct timer_list sync_timer;
@@ -203,7 +205,7 @@ static void sync_timer_cb(void *_data)
 		send_frame(ctx, &fr);
 	}
 
-	bsc_schedule_timer(&sync_timer, 0, MSMC_SYNC_SENT_INTERVAL);
+	bsc_schedule_timer(&sync_timer, MSMC_SYNC_SENT_INTERVAL_SEC, MSMC_SYNC_SENT_INTERVAL_MS);
 }
 
 static void restart_link(struct msmc_context *ctx)
@@ -224,7 +226,7 @@ static void restart_link(struct msmc_context *ctx)
 	 * the other device */
 	sync_timer.cb = sync_timer_cb;
 	sync_timer.data = ctx;
-	bsc_schedule_timer(&sync_timer, 0, MSMC_SYNC_SENT_INTERVAL);
+	bsc_schedule_timer(&sync_timer, MSMC_SYNC_SENT_INTERVAL_SEC, MSMC_SYNC_SENT_INTERVAL_MS);
 }
 
 static void handle_frame_type(struct msmc_context *ctx, struct frame *fr)
@@ -237,12 +239,22 @@ static void handle_frame_type(struct msmc_context *ctx, struct frame *fr)
 	{
 		case MSMC_FRAME_TYPE_SYNC:
 			init_frame(&frout, MSMC_FRAME_TYPE_SYNC_RESP);
+
+			/* FIXME found out why 0x8 is set beside the frame type */
+			frout.unknown = 0x8;
+
 			send_frame(ctx, &frout);
+			DEBUG_MSG("send SYNC RESP frame");
 			break;
 		case MSMC_FRAME_TYPE_CONFIG:
 			init_frame(&frout, MSMC_FRAME_TYPE_CONFIG_RESP);
+			
+			/* FIXME found out why 0x8 is set beside the frame type */
+			frout.unknown = 0x8;
+
 			/* FIXME include link configuration in frame header */
 			send_frame(ctx, &frout);
+			DEBUG_MSG("send CONFIG RESP frame");
 			break;
 		default:
 			DEBUG_MSG("could not create response for unsupported frame type!\n");
@@ -262,13 +274,17 @@ static void link_establishment_control(struct msmc_context *ctx, struct frame *f
 	case MSMC_STATE_NULL:
 		/* Ignore every other frame type than SYNC and SYNC RESP */
 		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
-			bsc_del_timer(&sync_timer);
+			DEBUG_MSG("received SYNC frame");
 			handle_frame_type(ctx, fr);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_SYNC_RESP) {
+			DEBUG_MSG("received SYNC RESP frame");
 			/* Move on into INIT state and send out config message */
-			DEBUG_MSG("entering INIT state ...\n");
+			DEBUG_MSG("entering INIT state ...");
+			bsc_del_timer(&sync_timer);
 			ctx->state = MSMC_STATE_INIT;
+			
+			DEBUG_MSG("send CONFIG frame");
 			init_frame(&frout, MSMC_FRAME_TYPE_CONFIG);
 			send_frame(ctx, &frout);
 		}
@@ -276,14 +292,17 @@ static void link_establishment_control(struct msmc_context *ctx, struct frame *f
 
 	case MSMC_STATE_INIT:
 		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
+			DEBUG_MSG("received SYNC frame");
 			/* response with a SYNC RESP message */
 			handle_frame_type(ctx, fr);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_CONFIG) {
+			DEBUG_MSG("received CONFIG frame");
 			/* response with CONFIG RESP message */
 			handle_frame_type(ctx, fr);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_CONFIG_RESP) {
+			DEBUG_MSG("received CONFIG RESP frame");
 			/* Move on into ACTIVE state */
 			DEBUG_MSG("entering ACTIVE state ...\n");
 			ctx->state = MSMC_STATE_ACTIVE;
@@ -296,13 +315,15 @@ static void link_establishment_control(struct msmc_context *ctx, struct frame *f
 
 	case MSMC_STATE_ACTIVE:
 		if (fr->type == MSMC_FRAME_TYPE_SYNC) {
-			/* The spec told us to restart the whole stack if we receive a sync message in ACTIVE
-			   state */
+			DEBUG_MSG("received SYNC frame");
+			/* The spec told us to restart the whole stack if we receive 
+			 * a sync message in ACTIVE state */
 			restart_link(ctx);
 		}
 		else if (fr->type == MSMC_FRAME_TYPE_CONFIG) {
-			/* If we receive a CONFIG message in ACTIVE state we send out a CONFIG RESP with our
-			   currrent configuration settings */
+			DEBUG_MSG("received CONFIG frame");
+			/* If we receive a CONFIG message in ACTIVE state we send out a 
+			 * CONFIG RESP with our currrent configuration settings */
 			handle_frame_type(ctx, fr);
 		}
 		else {
@@ -329,15 +350,17 @@ static uint8_t is_valid_ack(uint8_t a, uint8_t b, uint8_t c)
 
 static void process_rcvd_ack(struct msmc_context *ctx, const uint8_t ack)
 {
-	struct frame *fr;
+	struct frame *fr, *tmp;
 	uint32_t count;
+	
+	DEBUG_MSG("enter");
 
 	/* count of frames which are not acknowledged should be less or equal than 
 	 * the max window size */
 	if (llist_count(&ack_queue) > MSMC_LLC_WINDOW_SIZE) {
 		/* resend and remove them from ack_queue */
 		count = 0;
-		llist_for_each_entry(fr, &ack_queue, list) {
+		llist_for_each_entry_safe(fr, tmp, &ack_queue, list) {
 			if (count == MSMC_LLC_WINDOW_SIZE)
 				break;
 
@@ -349,10 +372,11 @@ static void process_rcvd_ack(struct msmc_context *ctx, const uint8_t ack)
 	}
 
 	/* check which frames are acknowledged with this ack */
-	llist_for_each_entry(fr, &ack_queue, list) {
+	llist_for_each_entry_safe(fr, tmp, &ack_queue, list) {
 		if (!is_valid_ack(ctx->last_ack, fr->seq, ack))
 			break;
-		llist_del_init(&fr->list);
+		llist_del(&fr->list);
+		DEBUG_MSG("remove acked frame");
 	}
 
 	if (llist_empty(&ack_queue)) {
@@ -362,6 +386,8 @@ static void process_rcvd_ack(struct msmc_context *ctx, const uint8_t ack)
 
 	ctx->last_ack = ack;
 	ctx->expected_seq = ack;
+	
+	DEBUG_MSG("leave");
 }
 
 static void link_control(struct msmc_context *ctx, struct frame *fr)
@@ -415,7 +441,7 @@ static void handle_frame(struct msmc_context *ctx, uint8_t *data, uint32_t len)
 	}
 
 	/* parse frame data */
-	fr->adress = data[0];
+	fr->address = data[0];
 	fr->type = data[1] >> 4;
 	fr->seq  = data[2] >> 4;
 	fr->ack  = data[2] & 0xf;
@@ -442,6 +468,9 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 	ssize_t size = read(bfd->fd, buffer, sizeof(buffer));
 	if (size < 0)
 		return;
+		
+	DEBUG_MSG("receive frame:");
+	hexdump(buffer, size);
 
 	/* try to find a valid frame */
 	p = buffer;
@@ -460,6 +489,7 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t len)
 {
 	struct frame *fr = talloc_zero(talloc_llc_ctx, struct frame);
+	fr->address = 0xfa;
 	fr->type = MSMC_FRAME_TYPE_DATA;
 	fr->payload = talloc_zero_size(talloc_llc_ctx, sizeof(uint8_t) * len);
 	memcpy(fr->payload, data, len);
@@ -477,8 +507,8 @@ static void ack_timer_cb(void *data)
 	 * in time, so we have to resend this frames */
 	llist_for_each_entry_safe(fr, tmp, &ack_queue, list) {
 		/* remove frame from ack_queue, send_frame will add it again later */
-		llist_del(&fr->list);
 		send_frame(ctx, fr);
+		llist_del(&fr->list);
 	}
 }
 
@@ -491,7 +521,8 @@ static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
 	llist_add_tail(&fr->list, &ack_queue);
 
 	/* Reschedule timer cause we received a new frame */
-	//bsc_reschedule_timer(&ack_timer, 1, 0);
+	bsc_reschedule_timer(&ack_timer, 1, 0);
+	printf("test");
 }
 
 static void handle_llc_outgoing_data(struct bsc_fd *bfd)
@@ -504,6 +535,7 @@ static void handle_llc_outgoing_data(struct bsc_fd *bfd)
 		fr->seq = next_sequence_nr(ctx);
 		fr->ack = ctx->next_ack;
 
+		DEBUG_MSG("fr->payload: 0x%x\n", fr->payload);
 		send_frame(ctx, fr);
 		
 		/* remove from tx queue and start ack timer */
@@ -542,6 +574,9 @@ int init_llc(struct msmc_context *ctx)
 		ctx->fds[MSMC_FD_SERIAL].fd = serial_port_setup(ctx);
 	else 
 		ctx->fds[MSMC_FD_SERIAL].fd = network_port_setup(ctx);
+
+	ack_timer.cb = ack_timer_cb;
+	ack_timer.data = ctx;
 
 #if 0
 	ctx->fds[MSMC_FD_SERIAL].fd = open(ctx->serial_port, O_RDWR | O_NOCTTY);

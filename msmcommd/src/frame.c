@@ -24,8 +24,9 @@ extern void *talloc_llc_ctx;
 
 void init_frame(struct frame *fr, uint32_t type)
 {
-	fr->adress = 0xfa;
+	fr->address = 0xfa;
 	fr->type = type;
+	fr->unknown = 0;
 	fr->seq = 0;
 	fr->ack = 0;
 	fr->payload = NULL;

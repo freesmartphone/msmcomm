@@ -20,12 +20,12 @@
 
 #include "internal.h"
 
-unsigned int event_reset_radio_ind_is_valid(struct msmcomm_message *msg)
+unsigned int event_radio_reset_ind_is_valid(struct msmcomm_message *msg)
 {
 	return (msg->group_id == 0x1d) && (msg->msg_id == 0x0);
 }
 
-void event_reset_radio_ind_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_radio_reset_ind_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
 	/* no data to handle */
 }

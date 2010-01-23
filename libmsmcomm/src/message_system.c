@@ -35,6 +35,11 @@ struct test_alive_msg
 	uint8_t unknown[5];
 } __attribute__ ((packed));
 
+struct get_firmware_msg
+{
+
+} __attribute__ ((packed));
+
 void msg_change_operation_mode_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x3;
@@ -90,3 +95,24 @@ uint8_t* msg_test_alive_prepare_data(struct msmcomm_message *msg)
 {
 	return msg->payload;
 }
+
+void msg_get_firmware_info_init(struct msmcomm_message *msg)
+{
+
+}
+
+uint32_t msg_get_firmware_info_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct get_firmware_msg);
+}
+
+void msg_get_firmware_info_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t* msg_get_firmware_info_prepare_data(struct msmcomm_message *msg)
+{
+	return msg->payload;
+}
+

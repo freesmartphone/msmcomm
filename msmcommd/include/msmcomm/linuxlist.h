@@ -53,16 +53,7 @@ struct llist_head {
 	(ptr)->next = (ptr); (ptr)->prev = (ptr); \
 } while (0)
 
-static inline int llist_count(struct llist_head *head)
-{
-	struct llist_head *list = head;
-	int count = 0;
-	while (list) {
-		list = list->next;
-		count++;
-	}
-	return count;
-}
+
 
 /*
  * Insert a new entry between two known consecutive entries. 
@@ -232,6 +223,16 @@ static inline void llist_splice_init(struct llist_head *llist,
 #define llist_for_each(pos, head) \
 	for (pos = (head)->next, prefetch(pos->next); pos != (head); \
         	pos = pos->next, prefetch(pos->next))
+        	
+static inline int llist_count(struct llist_head *head)
+{
+	int count = 0;
+	struct llist_head *list;
+	llist_for_each(list, head) {
+		count++;
+	}
+	return count;
+}
 
 /**
  * __llist_for_each	-	iterate over a llist

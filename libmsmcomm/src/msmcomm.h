@@ -40,8 +40,14 @@
 struct msmcomm_context;
 struct msmcomm_message;
 
-typedef (*msmcomm_event_handler_cb) (struct msmcomm_context *ctx, int event, struct msmcomm_message *message);
-typedef (*msmcomm_write_handler_cb) (struct msmcomm_context *ctx, uint8_t *data, uint32_t len);
+typedef void (*msmcomm_event_handler_cb) (struct msmcomm_context *ctx, int event, struct msmcomm_message *message);
+typedef void (*msmcomm_write_handler_cb) (struct msmcomm_context *ctx, uint8_t *data, uint32_t len);
+
+struct msmcomm_context
+{
+	msmcomm_event_handler_cb event_cb;
+	msmcomm_write_handler_cb write_cb;
+};
 
 int			msmcomm_init(struct msmcomm_context *ctx);
 int			msmcomm_shutdown(struct msmcomm_context *ctx);

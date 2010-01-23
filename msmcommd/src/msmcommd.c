@@ -72,7 +72,7 @@ static int init_all(struct msmc_context *ctx)
 	/* basic timer */
 	timer.cb = timer_cb;
 	timer.data = ctx;
-	bsc_schedule_timer(&timer, 0 , 500); 
+	bsc_schedule_timer(&timer, 0 , 50); 
 
 	/* serial and network components */
 	if (init_llc(ctx) < 0) {
