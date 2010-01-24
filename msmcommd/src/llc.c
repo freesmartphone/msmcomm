@@ -24,6 +24,9 @@ extern const char *frame_type_names[];
 extern void *talloc_llc_ctx;
 extern int use_serial_port;
 
+#define ENTER DEBUG_MSG("+%s", __FUNCTION__)
+#define LEAVE DEBUG_MSG("-%s", __FUNCTION__)
+
 LLIST_HEAD(data_handlers);
 LLIST_HEAD(tx_queue);
 LLIST_HEAD(ack_queue);
@@ -221,12 +224,17 @@ static void restart_link(struct msmc_context *ctx)
 	ctx->next_seq = 0;
 	ctx->next_ack = 0;
 	ctx->expected_seq = 0;
+	ctx->last_ack = 0;
 
 	/* the spec told us to send out three sync messages per second until we get a sync response from
 	 * the other device */
 	sync_timer.cb = sync_timer_cb;
 	sync_timer.data = ctx;
 	bsc_schedule_timer(&sync_timer, MSMC_SYNC_SENT_INTERVAL_SEC, MSMC_SYNC_SENT_INTERVAL_MS);
+
+	/* clean lists on restart */
+	INIT_LLIST_HEAD(&ack_queue);
+	INIT_LLIST_HEAD(&tx_queue);
 }
 
 static void handle_frame_type(struct msmc_context *ctx, struct frame *fr)
@@ -350,36 +358,45 @@ static uint8_t is_valid_ack(uint8_t a, uint8_t b, uint8_t c)
 
 static void process_rcvd_ack(struct msmc_context *ctx, const uint8_t ack)
 {
+	ENTER;
+
 	struct frame *fr, *tmp;
 	uint32_t count;
 	
-	DEBUG_MSG("enter");
+	count = llist_count(&ack_queue);
+	DEBUG_MSG("we have %i not acked frames", count);
 
 	/* count of frames which are not acknowledged should be less or equal than 
 	 * the max window size */
+	DEBUG_MSG("check if we are out of our current window");
 	if (llist_count(&ack_queue) > MSMC_LLC_WINDOW_SIZE) {
 		/* resend and remove them from ack_queue */
+		DEBUG_MSG("-> out of current window size");
 		count = 0;
 		llist_for_each_entry_safe(fr, tmp, &ack_queue, list) {
 			if (count == MSMC_LLC_WINDOW_SIZE)
 				break;
 
 			llist_del(&fr->list);
+			DEBUG_MSG("resend frame");
 			send_frame(ctx, fr);
-
 			count++;
 		}
 	}
 
 	/* check which frames are acknowledged with this ack */
+	DEBUG_MSG("check which frames are acknowledged with this ack");
 	llist_for_each_entry_safe(fr, tmp, &ack_queue, list) {
-		if (!is_valid_ack(ctx->last_ack, fr->seq, ack))
+		if (!is_valid_ack(ctx->last_ack, fr->seq, ack)) {
+			DEBUG_MSG("ack not valid");
 			break;
+		}
 		llist_del(&fr->list);
 		DEBUG_MSG("remove acked frame");
 	}
 
 	if (llist_empty(&ack_queue)) {
+		DEBUG_MSG("ack_queue is empty, remove ack_timer");
 		/* ack_queue is empty so stop ack timer */
 		bsc_del_timer(&ack_timer);
 	}
@@ -387,11 +404,13 @@ static void process_rcvd_ack(struct msmc_context *ctx, const uint8_t ack)
 	ctx->last_ack = ack;
 	ctx->expected_seq = ack;
 	
-	DEBUG_MSG("leave");
+	LEAVE;
 }
 
 static void link_control(struct msmc_context *ctx, struct frame *fr)
 {
+	ENTER;
+
 	if (!ctx) return;
 
 	switch (ctx->state)
@@ -424,6 +443,8 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 			ERROR_MSG("recieve invalid frame in ACTIVE state ... discard frame!");
 			break;
 	}
+
+	LEAVE;
 }
 
 static void handle_frame(struct msmc_context *ctx, uint8_t *data, uint32_t len)
@@ -500,6 +521,8 @@ void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t l
 
 static void ack_timer_cb(void *data)
 {
+	ENTER;
+
 	struct msmc_context *ctx = (struct msmc_context*) data;
 	struct frame *fr, *tmp;
 
@@ -508,12 +531,18 @@ static void ack_timer_cb(void *data)
 	llist_for_each_entry_safe(fr, tmp, &ack_queue, list) {
 		/* remove frame from ack_queue, send_frame will add it again later */
 		send_frame(ctx, fr);
-		llist_del(&fr->list);
 	}
+
+	/* Reschedule ack timer as we are still waiting for the right acknowledge */
+	bsc_reschedule_timer(&ack_timer, 1, 0);
+
+	LEAVE;
 }
 
 static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
 {
+	ENTER;
+
 	/* FIXME inlude check if ack_queue length is greater than the current window 
 	 * size? */
 
@@ -522,7 +551,8 @@ static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
 
 	/* Reschedule timer cause we received a new frame */
 	bsc_reschedule_timer(&ack_timer, 1, 0);
-	printf("test");
+
+	LEAVE;
 }
 
 static void handle_llc_outgoing_data(struct bsc_fd *bfd)
@@ -542,7 +572,6 @@ static void handle_llc_outgoing_data(struct bsc_fd *bfd)
 		llist_del_init(&fr->list);
 		add_ack_timer(ctx, fr);
 	}
-	
 }
 
 static void _llc_cb(struct bsc_fd *bfd, uint32_t flags)
