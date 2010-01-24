@@ -16,6 +16,7 @@ msmcommd_SOURCES = msmcommd.c \
                    talloc.c \
                    talloc_ctx.c \
                    relay.c \
+                   buffer.c \
 msmcommd_LDADD = 
 
 msmcterm_SOURCES = msmcterm.c select.c timer.c log.c talloc.c talloc_ctx.c

@@ -31,6 +31,12 @@
 #include <msmcomm/talloc.h>
 #include <msmcomm/buffer.h>
 
+extern void* talloc_llc_ctx;
+
+/* Does the I/O error indicate that the operation should be retried later? */
+#define ERRNO_IO_RETRY(EN) \
+		(((EN) == EAGAIN) || ((EN) == EWOULDBLOCK) || ((EN) == EINTR))
+
 /* Buffer master. */
 struct buffer {
 	/* Data list. */
@@ -68,7 +74,7 @@ struct buffer *buffer_new(size_t size)
 {
 	struct buffer *b;
 
-	b = talloc_zero(tall_vty_ctx, struct buffer);
+	b = talloc_zero(talloc_llc_ctx, struct buffer);
 
 	if (size)
 		b->size = size;
@@ -102,7 +108,7 @@ char *buffer_getstr(struct buffer *b)
 
 	for (data = b->head; data; data = data->next)
 		totlen += data->cp - data->sp;
-	if (!(s = _talloc_zero(tall_vty_ctx, (totlen + 1), "buffer_getstr")))
+	if (!(s = _talloc_zero(talloc_llc_ctx, (totlen + 1), "buffer_getstr")))
 		return NULL;
 	p = s;
 	for (data = b->head; data; data = data->next) {
@@ -137,7 +143,7 @@ static struct buffer_data *buffer_add(struct buffer *b)
 {
 	struct buffer_data *d;
 
-	d = _talloc_zero(tall_vty_ctx,
+	d = _talloc_zero(talloc_llc_ctx,
 			 offsetof(struct buffer_data, data[b->size]),
 			 "buffer_add");
 	if (!d)
