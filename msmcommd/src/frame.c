@@ -35,11 +35,14 @@ void init_frame(struct frame *fr, uint32_t type)
 
 void encode_frame(struct frame *fr)
 {
+	if (!fr || fr->payload_len == 0) 
+		return;
+
 	uint8_t *encoded_data = talloc_size(talloc_llc_ctx, sizeof(uint8_t) * fr->payload_len);
 	uint8_t *p = encoded_data;
 	uint8_t *data = fr->payload;
 	uint32_t encoded_data_len = fr->payload_len;
-	
+
 	while(fr->payload_len--) {
 		/* replace: 
 		 * 0x7d with 0x7d 0x5d
@@ -67,13 +70,19 @@ void encode_frame(struct frame *fr)
 
 void decode_frame(struct frame *fr)
 {
+	if (!fr || fr->payload_len == 0) 
+		return;
+	DEBUG_MSG("test1");
 	uint8_t *decoded_data = talloc_size(talloc_llc_ctx, sizeof(uint8_t) * fr->payload_len);
 	uint8_t *p = decoded_data;
 	uint8_t *data = fr->payload;
 	uint8_t *tmp = 0;
 	uint32_t decoded_data_len = fr->payload_len;
 
+	DEBUG_MSG("test");
+
 	while(fr->payload_len--) {
+		DEBUG_MSG("payload_len = %i", fr->payload_len);
 		if (*data == 0x7d)
 		{
 			/* replace:

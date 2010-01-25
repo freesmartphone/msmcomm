@@ -55,24 +55,9 @@ void hexdump(const uint8_t *data, uint32_t len)
 		printf("\n");
 }
 
-static struct timer_list timer;
-
-static void timer_cb(void *_data)
-{
-	struct msmc_context *ctx = _data;
-
-	/* schedule again */
-	bsc_schedule_timer(&timer, 0, 500);
-}
-
 static int init_all(struct msmc_context *ctx)
 {
 	if (!ctx || strlen(ctx->serial_port) == 0) return;
-
-	/* basic timer */
-	timer.cb = timer_cb;
-	timer.data = ctx;
-	bsc_schedule_timer(&timer, 0 , 50); 
 
 	/* serial and network components */
 	if (init_llc(ctx) < 0) {

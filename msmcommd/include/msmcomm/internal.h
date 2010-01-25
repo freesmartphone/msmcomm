@@ -48,6 +48,7 @@
 #include <msmcomm/timer.h>
 #include <msmcomm/talloc.h>
 #include <msmcomm/hsuart.h>
+#include <msmcomm/buffer.h>
 
 #define DEBUG
 
@@ -68,6 +69,8 @@
 #define MSMC_FRAME_TYPE_CONFIG_RESP		4
 #define MSMC_FRAME_TYPE_ACK				5
 #define MSMC_FRAME_TYPE_DATA			6
+
+#define MSMC_FRAME_FLAG_RESEND			(1 << 4)
 
 #define MSMC_SYNC_SENT_INTERVAL_MS		0
 #define MSMC_SYNC_SENT_INTERVAL_SEC	 	1
@@ -93,6 +96,9 @@ struct msmc_context
 	char	    		serial_port[30];
 	char				network_addr[30];
 	struct bsc_fd		fds[MSMC_FD_COUNT];
+
+	struct buffer		*rx_buf;
+	unsigned int		rx_buf_size;
 
 	/* HCI LL specific */
 	int					state;
