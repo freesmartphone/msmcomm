@@ -35,3 +35,41 @@ struct response_descriptor resp_descriptors[] = {
 		event_radio_reset_ind_handle_data },
 };
 
+const unsigned int resp_descriptors_count = sizeof(resp_descriptors) 
+											/ sizeof(struct response_descriptor);
+
+int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t len)
+{
+	int n;
+	struct msmcomm_message resp;
+
+	/* we can already report events to our user? */
+	if (ctx->event_cb == NULL) 
+		return 0;
+
+	/* ensure response len: response should be groupId + msgId + one byte data
+	 * as minimum*/
+	if (len < 3) 
+		return 0;
+	
+	resp.group_id = data[0];
+	resp.msg_id = data[1];
+
+	/* find the right rsp descriptor */
+	for (n=0; n<resp_descriptors_count; n++) {
+		if (resp_descriptors[n].is_valid == NULL ||
+			resp_descriptors[n].handle_data == NULL)
+			continue;
+		
+		if (resp_descriptors[n].is_valid(&resp)) {
+			/* let our descriptor handle the left data */
+			resp_descriptors[n].handle_data(&resp, data + 2, len - 2);
+
+			/* tell the user about the received event/response */
+			ctx->event_cb(ctx, resp_descriptors[n].type, &resp);
+		}
+	}
+
+	return 1;
+}
+

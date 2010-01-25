@@ -80,5 +80,7 @@ struct response_descriptor
     msmcomm_response_handle_data_t handle_data;
 };
 
+int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t len);
+
 #endif
 

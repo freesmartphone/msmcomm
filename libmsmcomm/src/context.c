@@ -20,6 +20,8 @@
 
 #include "internal.h"
 
+#define BUF_LEN			4096
+
 void *talloc_msmc_ctx;
 
 int msmcomm_init(struct msmcomm_context *ctx)
@@ -32,7 +34,16 @@ int msmcomm_init(struct msmcomm_context *ctx)
 
 int msmcomm_read_from_modem(struct msmcomm_context *ctx, int modem_fd)
 {
-	return -1;
+	int len;
+	uint8_t buf[BUF_LEN];
+
+	len = recv(modem_fd, buf, BUF_LEN, 0);
+	/* server disconnected? tell client about that! */
+	if (len <= 0)
+		return len;
+
+	/* what should we do with the received data? */
+	return handle_response_data(ctx, buf, len);
 }
 
 void msmcomm_register_event_handler(struct msmcomm_context *ctx, msmcomm_event_handler_cb
