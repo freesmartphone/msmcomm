@@ -166,21 +166,18 @@ static void network_event_cb(struct msmcomm_context *ctx, int event, struct msmc
 
 static int network_cb(struct bsc_fd *bfd, unsigned int flags)
 {
+	int rc;
 	/* read from modem */
-	if (flags & BSC_FD_READ)
-		msmcomm_read_from_modem(&ctx.msmcomm, bfd->fd);
+	if (flags & BSC_FD_READ) {
+		rc = msmcomm_read_from_modem(&ctx.msmcomm, bfd->fd);
+		if (rc < 0) {
+			do_exit();
+		}
+	}
 }
 
 
 #define INBUF_SIZE		4096
-
-struct timer_list default_timer;
-
-static void default_timer_cb(void *_data)
-{
-	/* schedule again */
-	bsc_schedule_timer(&default_timer, 0, 50);
-}
 
 static int console_cb(struct bsc_fd *bfd, unsigned int flags)
 {
@@ -268,10 +265,6 @@ int main(int argc, char *argv[])
 	msmcomm_register_event_handler(&ctx.msmcomm, network_event_cb);
 
 	print_headline();
-
-	/* basic timer */
-	default_timer.cb = default_timer_cb;
-	bsc_schedule_timer(&default_timer, 0 , 50); 
 
 	while(1) {
 		ret = bsc_select_main(0);
