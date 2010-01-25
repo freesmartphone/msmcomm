@@ -162,6 +162,9 @@ static void network_write_cb(struct msmcomm_context *msmc_ctx, uint8_t *data, ui
 
 static void network_event_cb(struct msmcomm_context *ctx, int event, struct msmcomm_message *message)
 {
+	if (event == MSMCOMM_EVENT_RESET_RADIO_IND) {
+		printf("got event: MSMCOMM_EVENT_RESET_RADIO_IND\n");
+	}
 }
 
 static int network_cb(struct bsc_fd *bfd, unsigned int flags)
