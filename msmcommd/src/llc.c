@@ -114,16 +114,11 @@ static int serial_port_setup(struct msmc_context *ctx)
 
 void send_frame(struct msmc_context *ctx, struct frame *fr)
 {
-	uint32_t len;
+	uint32_t len, tmp;
 	uint8_t *data;
 	uint16_t crc;
 
 	if (!ctx || !fr) return;
-
-	/* FIXME we have to first calculate the crc checksum and then decode the
-	** frame */
-	/* encode data so 0x7e doesn't occur within the payload */
-	encode_frame(fr);
 
 	/* convert our frame struct to raw binary data */
 	len = 3 + fr->payload_len + 2 + 1;
@@ -139,8 +134,27 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	/* computer crc over header + data and append it */
 	crc = crc16_calc(&data[0], len - 3);
 	crc ^= 0xffff;
-	memcpy(data + (len - 3), &crc, 2);
+	
+	/* save len of payload */
+	tmp = fr->payload_len; 
 
+	/* now encode whole frame payload */
+	encode_frame(fr);
+
+	if (tmp > fr->payload_len) {
+		/* some bytes are now encoded so payload size has grown -> resize frame
+		 * data */
+		len  -= tmp + fr->payload_len;
+		data = talloc_realloc(talloc_llc_ctx, data, uint8_t, len);
+
+		/* reset frame data without touching the header */
+		memset(data + 3, 0, len - 3);
+	}
+
+	/* attach payload again */
+	memcpy(data + 3, fr->payload, fr->payload_len);
+	
+	memcpy(data + (len - 3), &crc, 2);
 	/* append end marker */
 	data[len-1] = (char)0x7e;
 	
@@ -406,6 +420,8 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 
 				/* acknowledge this frame */
 				ack_frame(ctx, fr);
+
+				hexdump(fr->payload, fr->payload_len);
 
 				/* we have new data for our registered data handlers */
 				struct msmc_data_handler *dh;
