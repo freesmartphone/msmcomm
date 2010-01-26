@@ -20,6 +20,16 @@
 
 #include "internal.h"
 
+extern void *talloc_msmc_ctx;
+
+/*
+ * MSMCOMM_EVENT_RESET_RADIO_IND
+ */
+
+struct reset_radio_ind_event
+{
+} __attribute__ ((packed));
+
 unsigned int event_radio_reset_ind_is_valid(struct msmcomm_message *msg)
 {
 	return (msg->group_id == 0x1d) && (msg->msg_id == 0x0);
@@ -29,3 +39,65 @@ void event_radio_reset_ind_handle_data(struct msmcomm_message *msg, uint8_t *dat
 {
 	/* no data to handle */
 }
+
+void event_radio_reset_ind_free(struct msmcomm_message *msg)
+{
+}
+
+/*
+ * MSMCOMM_EVENT_CHARGER_STATUS
+ */
+
+struct charger_status_event 
+{
+	uint8_t unknown[14];
+} __attribute__ ((packed));
+
+unsigned int event_charger_status_is_valid(struct msmcomm_message *msg) 
+{
+	return (msg->group_id == 0x1d) && (msg->msg_id == 0x1);
+}
+
+void event_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	if (len != sizeof(struct charger_status_event))
+		return;
+
+	msg->payload = talloc(talloc_msmc_ctx, struct charger_status_event);
+	memcpy(msg->payload, data, len);
+}
+
+void event_charger_status_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+/*
+ * MSMCOMM_EVENT_OPERATOR_MODE
+ */
+
+struct operator_mode_event
+{
+	uint8_t unknown[15];
+} __attribute__ ((packed));
+
+unsigned int event_operator_mode_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x4) && (msg->msg_id == 0x1);
+}
+
+void event_operator_mode_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	if (len != sizeof(struct operator_mode_event))
+		return;
+
+	msg->payload = talloc(talloc_msmc_ctx, struct operator_mode_event);
+	memcpy(msg->payload, data, len);
+}
+
+void event_operator_mode_free(struct msmcomm_message *msg)
+{
+	if (msg->payload != NULL)
+		talloc_free(msg->payload);
+}
+

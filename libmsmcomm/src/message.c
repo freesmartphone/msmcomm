@@ -31,7 +31,7 @@ int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *ms
 
 	/* caculate size of our message (header + payload) */
 	len = 2;
-	if (!msg->descriptor || !msg->descriptor->get_size)
+	if (msg->descriptor == NULL || msg->descriptor->get_size == NULL)
 		return 0;
 	len += msg->descriptor->get_size(msg);
 
@@ -76,7 +76,7 @@ struct msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx,
 			if (msg_descriptors[n].init)
 				msg_descriptors[n].init(msg);
 		
-			msg->descriptor = &msg_descriptors[0];
+			msg->descriptor = &msg_descriptors[n];
 			found = 1;
 		}
 	}

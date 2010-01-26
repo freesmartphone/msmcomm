@@ -20,3 +20,71 @@
 
 #include "internal.h"
 
+extern void *talloc_msmc_ctx;
+
+/*
+ * MSMCOMM_EVENT_SIM_INSERTED
+ */
+
+struct sim_inserted_event
+{
+} __attribute__ ((packed));
+
+unsigned int event_sim_inserted_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x11) && (msg->msg_id == 0x0);
+}
+
+void event_sim_inserted_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	/* no data to handle */
+}
+
+void event_sim_inserted_free(struct msmcomm_message *msg)
+{
+}
+
+/*
+ * MSMCOMM_EVENT_PIN1_ENABLED
+ */
+
+struct pin1_enabled_event
+{
+} __attribute__ ((packed));
+
+unsigned int event_pin1_enabled_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x11) && (msg->msg_id == 0xc);
+}
+
+void event_pin1_enabled_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	/* no data to handle */
+}
+
+void event_pin1_enabled_free(struct msmcomm_message *msg)
+{
+}
+
+/*
+ * MSMCOMM_EVENT_PIN2_ENABLED
+ */
+
+struct pin2_enabled_event
+{
+} __attribute__ ((packed));
+
+unsigned int event_pin2_enabled_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x11) && (msg->msg_id == 0x13);
+}
+
+void event_pin2_enabled_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	/* no data to handle */
+}
+
+void event_pin2_enabled_free(struct msmcomm_message *msg)
+{
+}
+

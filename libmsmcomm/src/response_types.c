@@ -20,19 +20,47 @@
 
 #include "internal.h"
 
-extern unsigned int resp_cm_ph_is_valid(struct msmcomm_message *msg);
-extern void resp_cm_ph_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len);
+#define NEW_TYPE(type, name) \
+	extern unsigned int type##_##name##_is_valid(struct msmcomm_message *msg); \
+	extern void type##_##name##_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len); \
+	extern void type##_##name##_free(struct msmcomm_message *msg);
 
-extern unsigned int event_radio_reset_ind_is_valid(struct msmcomm_message *msg);
-extern void event_radio_reset_ind_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len);
+#define RESPONSE_TYPE(name) NEW_TYPE(resp, name)
+#define EVENT_TYPE(name) NEW_TYPE(event, name)
+
+#define TYPE_DATA(type, subtype, name) \
+	{	subtype, \
+		type##_##name##_is_valid, \
+		type##_##name##_handle_data, \
+		type##_##name##_free } 
+
+#define EVENT_DATA(type, name) TYPE_DATA(event, type, name)
+#define RESPONSE_DATA(type, name) TYPE_DATA(resp, type, name)
+
+RESPONSE_TYPE(get_imei)
+RESPONSE_TYPE(get_firmware_info)
+RESPONSE_TYPE(test_alive)
+
+EVENT_TYPE(radio_reset_ind)
+EVENT_TYPE(charger_status)
+EVENT_TYPE(sim_inserted)
+EVENT_TYPE(pin1_enabled)
+EVENT_TYPE(pin2_enabled)
+EVENT_TYPE(operator_mode)
 
 struct response_descriptor resp_descriptors[] = {
-	{	MSMCOMM_RESPONSE_CM_PH, 
-		resp_cm_ph_is_valid, 
-		resp_cm_ph_handle_data },
-	{	MSMCOMM_EVENT_RESET_RADIO_IND,
-		event_radio_reset_ind_is_valid,
-		event_radio_reset_ind_handle_data },
+	/* events */
+	EVENT_DATA(MSMCOMM_EVENT_RESET_RADIO_IND, radio_reset_ind),
+	EVENT_DATA(MSMCOMM_EVENT_CHARGER_STATUS, charger_status),
+	EVENT_DATA(MSMCOMM_EVENT_SIM_INSERTED, sim_inserted),
+	EVENT_DATA(MSMCOMM_EVENT_PIN1_ENABLED, pin1_enabled),
+	EVENT_DATA(MSMCOMM_EVENT_PIN2_ENABLED, pin2_enabled),
+	EVENT_DATA(MSMCOMM_EVENT_OPERATOR_MODE, operator_mode),
+
+	/* responses */
+	RESPONSE_DATA(MSMCOMM_RESPONSE_TEST_ALIVE, test_alive),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_GET_FIRMWARE_INFO, get_firmware_info),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_GET_IMEI, get_imei),
 };
 
 const unsigned int resp_descriptors_count = sizeof(resp_descriptors) 
@@ -54,11 +82,13 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 	
 	resp.group_id = data[0];
 	resp.msg_id = data[1];
+	resp.payload = NULL;
 
 	/* find the right rsp descriptor */
 	for (n=0; n<resp_descriptors_count; n++) {
 		if (resp_descriptors[n].is_valid == NULL ||
-			resp_descriptors[n].handle_data == NULL)
+			resp_descriptors[n].handle_data == NULL ||
+			resp_descriptors[n].free == NULL)
 			continue;
 		
 		if (resp_descriptors[n].is_valid(&resp)) {
@@ -67,6 +97,8 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 
 			/* tell the user about the received event/response */
 			ctx->event_cb(ctx, resp_descriptors[n].type, &resp);
+			
+			resp_descriptors[n].free(&resp);
 		}
 	}
 

@@ -27,11 +27,16 @@
 #define MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO					3
 #define MSMCOMM_MESSAGE_CMD_TEST_ALIVE							4
 
-#define MSMCOMM_RESPONSE_INVALID								0
-#define MSMCOMM_RESPONSE_CM_PH									1
+#define MSMCOMM_RESPONSE_TEST_ALIVE								101
+#define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO						102
+#define MSMCOMM_RESPONSE_GET_IMEI								103
 
-#define MSMCOMM_EVENT_INVALID									0
-#define MSMCOMM_EVENT_RESET_RADIO_IND							1
+#define MSMCOMM_EVENT_RESET_RADIO_IND							201
+#define MSMCOMM_EVENT_CHARGER_STATUS							202
+#define MSMCOMM_EVENT_SIM_INSERTED								203
+#define MSMCOMM_EVENT_PIN1_ENABLED								204
+#define MSMCOMM_EVENT_PIN2_ENABLED								205
+#define MSMCOMM_EVENT_OPERATOR_MODE								206
 
 #define MSMCOMM_OPERATOR_MODE_RESET								0
 #define MSMCOMM_OPERATOR_MODE_ONLINE							1
@@ -61,6 +66,7 @@ uint32_t	msmcomm_message_get_size(struct msmcomm_message *msg);
 uint32_t	msmcomm_message_get_type(struct msmcomm_message *msg);
 
 void		msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_message *msg, uint8_t operator_mode);
+void		msmcomm_message_get_firmware_info_get_info(struct msmcomm_message *msg, char *buffer, int len);
 
 #endif
 

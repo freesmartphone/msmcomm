@@ -37,7 +37,7 @@ struct test_alive_msg
 
 struct get_firmware_msg
 {
-
+	uint8_t unknown[5];
 } __attribute__ ((packed));
 
 void msg_change_operation_mode_init(struct msmcomm_message *msg)
@@ -65,6 +65,13 @@ void msg_change_operation_mode_free(struct msmcomm_message *msg)
 
 void msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_message *msg, uint8_t operator_mode)
 {
+	uint8_t mode = 0;
+
+	if (operator_mode == MSMCOMM_OPERATOR_MODE_RESET)
+		mode = 7;
+	else if (operator_mode == MSMCOMM_OPERATOR_MODE_ONLINE)
+		mode = 5;
+
 	MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = operator_mode;
 }
 
@@ -98,7 +105,10 @@ uint8_t* msg_test_alive_prepare_data(struct msmcomm_message *msg)
 
 void msg_get_firmware_info_init(struct msmcomm_message *msg)
 {
+	msg->group_id = 0x1b;
+	msg->msg_id = 0x08;
 
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_firmware_msg);
 }
 
 uint32_t msg_get_firmware_info_get_size(struct msmcomm_message *msg)
