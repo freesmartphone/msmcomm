@@ -155,6 +155,15 @@ static void do_change_operator_mode(char *args)
 	msmcomm_send_message(&ctx.msmcomm, msg);
 }
 
+static void do_get_firmware_info(void)
+{
+	struct msmcomm_message *msg;
+	msg = msmcomm_create_message(&ctx.msmcomm,
+								 MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO);
+	if (msg != NULL)
+		msmcomm_send_message(&ctx.msmcomm, msg);
+}
+
 static void network_write_cb(struct msmcomm_context *msmc_ctx, uint8_t *data, uint32_t len)
 {
 	send(ctx.net_fd.fd, data, len, 0);
@@ -164,6 +173,31 @@ static void network_event_cb(struct msmcomm_context *ctx, int event, struct msmc
 {
 	if (event == MSMCOMM_EVENT_RESET_RADIO_IND) {
 		printf("got event: MSMCOMM_EVENT_RESET_RADIO_IND\n");
+	}
+	else if (event == MSMCOMM_RESPONSE_GET_IMEI) {
+		printf("got response: MSMCOMM_RESPONSE_GET_IMEI\n");
+	}
+	else if (event == MSMCOMM_RESPONSE_GET_FIRMWARE_INFO) {
+		printf("got response: MSMCOMM_RESPONSE_GET_FIRMWARE_INFO\n");
+
+		char buffer[100];
+		msmcomm_message_get_firmware_info_get_info(message, &buffer, 100);
+		printf("info: %s\n", buffer);
+	}
+	else if (event == MSMCOMM_EVENT_CHARGER_STATUS) {
+		printf("got event: MSMCOMM_EVENT_CHARGER_STATUS\n");
+	}
+	else if (event == MSMCOMM_RESPONSE_TEST_ALIVE) {
+		printf("got response. MSMCOMM_RESPONSE_TEST_ALIVE\n");
+	}
+	else if (event == MSMCOMM_EVENT_SIM_INSERTED) {
+		printf("got event MSMCOMM_EVENT_SIM_INSERTED\n");
+	}
+	else if (event == MSMCOMM_EVENT_PIN1_ENABLED) {
+		printf("got event MSMCOMM_EVENT_PIN1_ENABLED\n");
+	}
+	else if (event == MSMCOMM_EVENT_PIN2_ENABLED) {
+		printf("got event MSMCOMM_EVENT_PIN2_ENABLED\n");
 	}
 }
 
@@ -217,6 +251,11 @@ static int console_cb(struct bsc_fd *bfd, unsigned int flags)
 			do_get_imei();
 			done = 1;
 		}
+		if (!strncasecmp((char*)buf, "get_firmware_info", 17)) {
+			do_get_firmware_info();
+			done = 1;
+		}
+
 		if (!done)
 			printf("!!! no such command available: %s\n", buf);
 	}

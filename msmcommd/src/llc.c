@@ -157,6 +157,8 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	memcpy(data + (len - 3), &crc, 2);
 	/* append end marker */
 	data[len-1] = (char)0x7e;
+
+	hexdump(data, len);
 	
 	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
 
@@ -420,8 +422,6 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 
 				/* acknowledge this frame */
 				ack_frame(ctx, fr);
-
-				hexdump(fr->payload, fr->payload_len);
 
 				/* we have new data for our registered data handlers */
 				struct msmc_data_handler *dh;
