@@ -32,6 +32,8 @@ LLIST_HEAD(tx_queue);
 LLIST_HEAD(ack_queue);
 
 struct timer_list ack_timer;
+struct timer_list tx_timer;
+unsigned int is_tx_timer = 0;
 
 static uint8_t next_sequence_nr(struct msmc_context *ctx)
 {
@@ -158,6 +160,7 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	/* append end marker */
 	data[len-1] = (char)0x7e;
 
+	DEBUG_MSG("send frame to modem");
 	hexdump(data, len);
 	
 	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
@@ -176,9 +179,8 @@ static void sync_timer_cb(void *_data)
 	{
 		init_frame(&fr, MSMC_FRAME_TYPE_SYNC);
 		send_frame(ctx, &fr);
+		bsc_schedule_timer(&sync_timer, MSMC_SYNC_SENT_INTERVAL_SEC, MSMC_SYNC_SENT_INTERVAL_MS);
 	}
-
-	bsc_schedule_timer(&sync_timer, MSMC_SYNC_SENT_INTERVAL_SEC, MSMC_SYNC_SENT_INTERVAL_MS);
 }
 
 static void restart_link(struct msmc_context *ctx)
@@ -423,6 +425,9 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 				/* acknowledge this frame */
 				ack_frame(ctx, fr);
 
+				DEBUG_MSG("receive date from modem");
+				hexdump(fr->payload, fr->payload_len);
+
 				/* we have new data for our registered data handlers */
 				struct msmc_data_handler *dh;
 				llist_for_each_entry(dh, &data_handlers, list) {
@@ -530,6 +535,12 @@ void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t l
 	fr->payload_len = len;
 
 	llist_add_tail(&fr->list, &tx_queue);
+
+	/* start tx_queue timer */
+	if (!is_tx_timer) {
+		is_tx_timer = 1;
+		bsc_schedule_timer(&tx_timer, 0, 50);
+	}
 }
 
 static void ack_timer_cb(void *data)
@@ -560,9 +571,9 @@ static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
 	bsc_reschedule_timer(&ack_timer, 1, 0);
 }
 
-static void handle_llc_outgoing_data(struct bsc_fd *bfd)
+static void handle_llc_outgoing_data(void *data)
 {
-	struct msmc_context *ctx = bfd->data;
+	struct msmc_context *ctx = data;
 	struct frame *fr, *tmp;
 	
 	llist_for_each_entry_safe(fr, tmp, &tx_queue, list) {	
@@ -576,14 +587,16 @@ static void handle_llc_outgoing_data(struct bsc_fd *bfd)
 		llist_del_init(&fr->list);
 		add_ack_timer(ctx, fr);
 	}
+
+	is_tx_timer = 0;
 }
 
 static void _llc_cb(struct bsc_fd *bfd, uint32_t flags)
 {
 	if (flags & BSC_FD_READ)
 		handle_llc_incomming_data(bfd);
-	if (flags & BSC_FD_WRITE) 
-		handle_llc_outgoing_data(bfd);
+/*	if (flags & BSC_FD_WRITE) 
+		handle_llc_outgoing_data(bfd); */
 }
 
 void register_llc_data_handler (struct msmc_context *ctx, msmc_data_handler_cb_t cb)
@@ -601,7 +614,7 @@ int init_llc(struct msmc_context *ctx)
 	/* setup modem port */
 	ctx->fds[MSMC_FD_SERIAL].cb = _llc_cb;
 	ctx->fds[MSMC_FD_SERIAL].data = ctx;
-	ctx->fds[MSMC_FD_SERIAL].when = BSC_FD_READ | BSC_FD_WRITE;
+	ctx->fds[MSMC_FD_SERIAL].when = BSC_FD_READ;
 	
 	if (use_serial_port)
 		ctx->fds[MSMC_FD_SERIAL].fd = serial_port_setup(ctx);
@@ -610,9 +623,13 @@ int init_llc(struct msmc_context *ctx)
 	
 	bsc_register_fd(&ctx->fds[MSMC_FD_SERIAL]);
 	
-	/* setup ack timer +/
+	/* setup ack timer */
 	ack_timer.cb = ack_timer_cb;
 	ack_timer.data = ctx;
+
+	/* setup tx timer */
+	tx_timer.cb = handle_llc_outgoing_data;
+	tx_timer.data = ctx;
 
 	/* setup rx buffer */
 	ctx->rx_buf = buffer_new(0);

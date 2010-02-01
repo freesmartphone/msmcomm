@@ -39,6 +39,10 @@ static int relay_client_data(struct bsc_fd *bfd, uint32_t what)
 			close(bfd->fd);
 			llist_del(&conn->list);
 			talloc_free(conn);
+			bsc_unregister_fd(bfd);
+
+			DEBUG_MSG("client disconnected");
+
 			return rc;
 		}
 

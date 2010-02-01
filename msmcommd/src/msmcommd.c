@@ -203,6 +203,13 @@ static void print_configuration(struct msmc_context *ctx)
 	printf("...network relay port: %i\n", MSMC_DEFAULT_NETWORK_PORT);
 }
 
+struct timer_list base_timer;
+
+static void base_timer_cb(void *data)
+{
+	bsc_schedule_timer(&base_timer, 5, 0);
+}
+
 int main(int argc, char *argv[])
 {
 	int retval;
@@ -220,6 +227,10 @@ int main(int argc, char *argv[])
 	signal(SIGUSR1, &signal_handler);
 	signal(SIGUSR2, &signal_handler);
 	signal(SIGPIPE, SIG_IGN);
+
+	/* base timer */
+	base_timer.cb = base_timer_cb;
+	bsc_schedule_timer(&base_timer, 5, 0);
 
 	/* default configuration */
 	ctx = talloc(NULL, struct msmc_context);
