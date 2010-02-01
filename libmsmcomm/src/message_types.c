@@ -37,12 +37,14 @@ MESSAGE_TYPE(change_operation_mode)
 MESSAGE_TYPE(test_alive)
 MESSAGE_TYPE(get_imei)
 MESSAGE_TYPE(get_firmware_info)
+MESSAGE_TYPE(get_phone_state_info)
 
 struct message_descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE,change_operation_mode),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_TEST_ALIVE, test_alive),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_IMEI, get_imei),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO, get_firmware_info),
+	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO, get_phone_state_info),
 };
 
 unsigned int msg_descriptors_size = (unsigned int)(sizeof(msg_descriptors) / sizeof(struct message_descriptor));

@@ -22,22 +22,28 @@
 
 extern void *talloc_msmc_ctx;
 
+/* 
+ * MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE
+ */
+
+/*
+onlineMode: 
+			fa 00 00 03 00
+			00 00 00 00 00 
+			05 f0 09 7e
+
+offlineMode:
+			fa 00 00 03 00
+			00 00 00 00 00
+			06 3b 36 7e
+*/
+
 struct change_operation_mode_msg
 {
 	uint8_t unknown0;
 	uint8_t unknown1;
 	uint8_t unknown3[3];
 	uint8_t operator_mode;
-} __attribute__ ((packed));
-
-struct test_alive_msg
-{
-	uint8_t unknown[5];
-} __attribute__ ((packed));
-
-struct get_firmware_msg
-{
-	uint8_t unknown[5];
 } __attribute__ ((packed));
 
 void msg_change_operation_mode_init(struct msmcomm_message *msg)
@@ -71,6 +77,8 @@ void msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_mess
 		mode = 7;
 	else if (operator_mode == MSMCOMM_OPERATOR_MODE_ONLINE)
 		mode = 5;
+	else if (operator_mode == MSMCOMM_OPERATOR_MODE_OFFLINE)
+		mode = 6;
 
 	MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = operator_mode;
 }
@@ -79,6 +87,15 @@ uint8_t* msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
 {
 	return msg->payload;
 }
+
+/*
+ * MSMCOMM_MESSAGE_CMD_TEST_ALIVE
+ */
+
+struct test_alive_msg
+{
+	uint8_t unknown[5];
+} __attribute__ ((packed));
 
 void msg_test_alive_init(struct msmcomm_message *msg)
 {
@@ -103,6 +120,15 @@ uint8_t* msg_test_alive_prepare_data(struct msmcomm_message *msg)
 	return msg->payload;
 }
 
+/*
+ * MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO
+ */
+
+struct get_firmware_msg
+{
+	uint8_t unknown[5];
+} __attribute__ ((packed));
+
 void msg_get_firmware_info_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x1b;
@@ -122,6 +148,41 @@ void msg_get_firmware_info_free(struct msmcomm_message *msg)
 }
 
 uint8_t* msg_get_firmware_info_prepare_data(struct msmcomm_message *msg)
+{
+	return msg->payload;
+}
+
+/*
+ * MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO
+ */
+
+struct get_phone_state_info_msg
+{
+	uint8_t unknown[5];
+} __attribute__ ((packed));
+
+void msg_get_phone_state_info_init(struct msmcomm_message *msg)
+{
+	msg->group_id = 0x3;
+	msg->msg_id = 0x5;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_phone_state_info_msg);
+
+	/* unknown why we have to set this byte */
+	MESSAGE_CAST(msg, struct get_phone_state_info_msg)->unknown[1] = 0xe;
+}
+
+uint32_t msg_get_phone_state_info_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct get_phone_state_info_msg);
+}
+
+void msg_get_phone_state_info_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t* msg_get_phone_state_info_prepare_data(struct msmcomm_message *msg)
 {
 	return msg->payload;
 }

@@ -40,6 +40,11 @@
 RESPONSE_TYPE(get_imei)
 RESPONSE_TYPE(get_firmware_info)
 RESPONSE_TYPE(test_alive)
+RESPONSE_TYPE(pdsm_pd_get_pos)
+RESPONSE_TYPE(pdsm_pd_end_session)
+RESPONSE_TYPE(pa_set_param)
+RESPONSE_TYPE(lcs_agent_client_rsp)
+RESPONSE_TYPE(xtra_set_data)
 
 EVENT_TYPE(radio_reset_ind)
 EVENT_TYPE(charger_status)
@@ -47,6 +52,12 @@ EVENT_TYPE(sim_inserted)
 EVENT_TYPE(pin1_enabled)
 EVENT_TYPE(pin2_enabled)
 EVENT_TYPE(operator_mode)
+EVENT_TYPE(cm_ph_info_available)
+EVENT_TYPE(pdsm_pd_done)
+EVENT_TYPE(pd_position_data)
+EVENT_TYPE(pd_parameter_change)
+EVENT_TYPE(pdsm_lcs)
+EVENT_TYPE(pdsm_xtra)
 
 struct response_descriptor resp_descriptors[] = {
 	/* events */
@@ -56,11 +67,22 @@ struct response_descriptor resp_descriptors[] = {
 	EVENT_DATA(MSMCOMM_EVENT_PIN1_ENABLED, pin1_enabled),
 	EVENT_DATA(MSMCOMM_EVENT_PIN2_ENABLED, pin2_enabled),
 	EVENT_DATA(MSMCOMM_EVENT_OPERATOR_MODE, operator_mode),
+	EVENT_DATA(MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE, cm_ph_info_available),
+	EVENT_DATA(MSMCOMM_EVENT_PDSM_PD_DONE, pdsm_pd_done),
+	EVENT_DATA(MSMCOMM_EVENT_PD_POSITION_DATA, pd_position_data),
+	EVENT_DATA(MSMCOMM_EVENT_PD_PARAMETER_CHANGE, pd_parameter_change),
+	EVENT_DATA(MSMCOMM_EVENT_PDSM_LCS, pdsm_lcs),
+	EVENT_DATA(MSMCOMM_EVENT_PDSM_XTRA, pdsm_xtra),
 
 	/* responses */
 	RESPONSE_DATA(MSMCOMM_RESPONSE_TEST_ALIVE, test_alive),
 	RESPONSE_DATA(MSMCOMM_RESPONSE_GET_FIRMWARE_INFO, get_firmware_info),
 	RESPONSE_DATA(MSMCOMM_RESPONSE_GET_IMEI, get_imei),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_PDSM_PD_GET_POS, pdsm_pd_get_pos),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_PDSM_PD_END_SESSION, pdsm_pd_end_session),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_PA_SET_PARAM, pa_set_param),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_LCS_AGENT_CLIENT_RSP, lcs_agent_client_rsp),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_XTRA_SET_DATA, xtra_set_data),
 };
 
 const unsigned int resp_descriptors_count = sizeof(resp_descriptors) 

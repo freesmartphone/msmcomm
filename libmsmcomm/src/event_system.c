@@ -101,3 +101,25 @@ void event_operator_mode_free(struct msmcomm_message *msg)
 		talloc_free(msg->payload);
 }
 
+/*
+ * MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE
+ */
+
+struct cm_ph_info_available_event
+{
+} __attribute__ ((packed));
+
+unsigned int event_cm_ph_info_available_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x5) && (msg->msg_id == 0xe);
+}
+
+void event_cm_ph_info_available_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+}
+
+void event_cm_ph_info_available_free(struct msmcomm_message *msg)
+{
+	if (msg->payload != NULL)
+		talloc_free(msg->payload);
+}
