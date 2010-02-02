@@ -52,6 +52,7 @@ struct msmcomm_message
 {
 	uint8_t group_id;
 	uint8_t msg_id;
+	uint32_t ref_id;
 	struct message_descriptor *descriptor;
 	void *payload;
 };

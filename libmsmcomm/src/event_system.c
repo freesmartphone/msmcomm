@@ -50,7 +50,9 @@ void event_radio_reset_ind_free(struct msmcomm_message *msg)
 
 struct charger_status_event 
 {
-	uint8_t unknown[14];
+	uint8_t unknown0[6];
+	uint16_t voltage;
+	uint8_t unknown1[7];
 } __attribute__ ((packed));
 
 unsigned int event_charger_status_is_valid(struct msmcomm_message *msg) 
@@ -70,6 +72,12 @@ void event_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data
 void event_charger_status_free(struct msmcomm_message *msg)
 {
 	talloc_free(msg->payload);
+}
+
+unsigned int msmcomm_event_charger_status_get_voltage(struct msmcomm_message *msg)
+{
+	/* FIXME */
+	return MSMCOMM_CHARGE_USB_MODE_500mA;
 }
 
 /*

@@ -127,6 +127,9 @@ static void do_help(void)
 	printf("get_phone_state_info - get current phone state\n");
 	printf("test_alive - test if the modem is actually running\n");
 	printf("verify_pin <pin> - authenticate to the sim card with your pin\n");
+	printf("get_charger_status - query the current charging status\n");
+	printf("charge_usb <voltage> - set the usb charging mode\n");
+	printf("\tvoltage: 0=250mA, 1=500mA, 2=1A\n");
 }
 
 static void do_dump(char *args)
@@ -213,6 +216,32 @@ static void do_verify_pin(char *args)
 	msmcomm_send_message(&ctx.msmcomm, msg);
 }
 
+static void do_get_charger_status(void)
+{
+	struct msmcomm_message *msg;
+	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS);
+	msmcomm_message_set_ref_id(msg, 0xa);
+	msmcomm_send_message(&ctx.msmcomm, msg);
+}
+
+static void do_charge_usb(char *args)
+{
+	struct msmcomm_message *msg;
+	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_CHARGE_USB);
+	msmcomm_message_set_ref_id(msg, 0xb);
+
+	int mode = atoi(args+1);
+
+	if (mode == 0)
+		msmcomm_message_charge_usb_set_mode(msg, MSMCOMM_CHARGE_USB_MODE_250mA);
+	else if (mode == 2)
+		msmcomm_message_charge_usb_set_mode(msg, MSMCOMM_CHARGE_USB_MODE_1A);
+	else
+		msmcomm_message_charge_usb_set_mode(msg, MSMCOMM_CHARGE_USB_MODE_500mA);
+
+	msmcomm_send_message(&ctx.msmcomm, msg);
+}
+
 static void network_write_cb(struct msmcomm_context *msmc_ctx, uint8_t *data, uint32_t len)
 {
 	send(ctx.net_fd.fd, data, len, 0);
@@ -235,6 +264,13 @@ static void network_event_cb(struct msmcomm_context *ctx, int event, struct msmc
 	}
 	else if (event == MSMCOMM_EVENT_CHARGER_STATUS) {
 		printf("got event: MSMCOMM_EVENT_CHARGER_STATUS\n");
+	}
+	else if (event == MSMCOMM_RESPONSE_GET_CHARGER_STATUS)
+	{
+		printf("got response MSMCOMM_RESPONSE_GET_CHARGER_STATUS\n");
+	}
+	else if (event == MSMCOMM_RESPONSE_CHARGE_USB) {
+		printf("got response MSMCOMM_RESPONSE_CHARGE_USB\n");
 	}
 	else if (event == MSMCOMM_RESPONSE_TEST_ALIVE) {
 		printf("got response. MSMCOMM_RESPONSE_TEST_ALIVE\n");
@@ -314,6 +350,16 @@ static int console_cb(struct bsc_fd *bfd, unsigned int flags)
 		}
 		if (!strncasecmp((char*)buf, "verify_pin", 10)) {
 			do_verify_pin(&buf[10]);
+			done = 1;
+		}
+		if (!strncasecmp((char*)buf, "get_charger_status", 18))
+		{
+			do_get_charger_status();
+			done = 1;
+		}
+		if (!strncasecmp((char*)buf, "charge_usb", 11))
+		{
+			do_charge_usb(&buf[11]);
 			done = 1;
 		}
 

@@ -124,3 +124,79 @@ void resp_get_imei_free(struct msmcomm_message *msg)
 		talloc_free(msg->payload);
 }
 
+/*
+ * MSMCOMM_RESPONSE_GET_CHARGER_STATUS
+ */
+
+struct get_charger_status_resp
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[4];
+	uint16_t voltage;
+	uint8_t unknown2[6];
+} __attribute__ ((packed));
+
+unsigned int resp_get_charger_status_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x1c) && (msg->msg_id == 0x16);
+}
+
+void resp_get_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	msg->payload = NULL;
+
+	if (len != sizeof(struct get_charger_status_resp))
+		return;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_charger_status_resp);
+	memcpy(msg->payload, data, len);
+}
+
+void resp_get_charger_status_free(struct msmcomm_message *msg)
+{
+	if (msg->payload != NULL)
+		talloc_free(msg->payload);
+}
+
+/*
+ * MSMCOMM_RESPONSE_CARGE_USB
+ */
+
+struct charge_usb_resp
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[4];
+	uint16_t voltage;
+	uint8_t unknown2[2];
+} __attribute__ ((packed));
+
+unsigned int resp_charge_usb_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x1c) && (msg->msg_id == 0x14);
+}
+
+void resp_charge_usb_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	msg->payload = NULL;
+
+	if (len != sizeof(struct charge_usb_resp))
+		return;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct charge_usb_resp);
+	memcpy(msg->payload, data, len);
+}
+
+void resp_charge_usb_free(struct msmcomm_message *msg)
+{
+	if (msg->payload != NULL)
+		talloc_free(msg->payload);
+}
+
+unsigned int msmcomm_resp_charge_usb_get_voltage(struct msmcomm_message *msg)
+{
+	/* FIXME */
+	return MSMCOMM_CHARGE_USB_MODE_500mA;
+}
+

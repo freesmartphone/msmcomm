@@ -41,7 +41,7 @@ offlineMode:
 struct change_operation_mode_msg
 {
 	uint8_t unknown0;
-	uint8_t unknown1;
+	uint8_t ref_id;
 	uint8_t unknown3[3];
 	uint8_t operator_mode;
 } __attribute__ ((packed));
@@ -52,9 +52,6 @@ void msg_change_operation_mode_init(struct msmcomm_message *msg)
 	msg->msg_id = 0x0;
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct change_operation_mode_msg);
-
-	/* second byte is always 0x2 */
-	((struct change_operation_mode_msg*)msg->payload)->unknown1 = 0x2;
 }
 
 uint32_t msg_change_operation_mode_get_size(struct msmcomm_message *msg)
@@ -75,12 +72,11 @@ void msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_mess
 		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = 0x5;
 	else if (operator_mode == MSMCOMM_OPERATION_MODE_OFFLINE)
 		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = 0x6;
-
-	printf("operator_mode = 0x%x\n", MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode);
 }
 
 uint8_t* msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
 {
+	MESSAGE_CAST(msg, struct change_operation_mode_msg)->ref_id = msg->ref_id;
 	return msg->payload;
 }
 
@@ -157,7 +153,9 @@ uint8_t* msg_get_firmware_info_prepare_data(struct msmcomm_message *msg)
 
 struct get_phone_state_info_msg
 {
-	uint8_t unknown[5];
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown[3];
 } __attribute__ ((packed));
 
 void msg_get_phone_state_info_init(struct msmcomm_message *msg)
@@ -166,9 +164,6 @@ void msg_get_phone_state_info_init(struct msmcomm_message *msg)
 	msg->msg_id = 0x5;
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_phone_state_info_msg);
-
-	/* unknown why we have to set this byte */
-	MESSAGE_CAST(msg, struct get_phone_state_info_msg)->unknown[1] = 0xe;
 }
 
 uint32_t msg_get_phone_state_info_get_size(struct msmcomm_message *msg)
@@ -183,6 +178,7 @@ void msg_get_phone_state_info_free(struct msmcomm_message *msg)
 
 uint8_t* msg_get_phone_state_info_prepare_data(struct msmcomm_message *msg)
 {
+	MESSAGE_CAST(msg, struct get_phone_state_info_msg)->ref_id = msg->ref_id;
 	return msg->payload;
 }
 
@@ -206,7 +202,9 @@ uint8_t* msg_get_phone_state_info_prepare_data(struct msmcomm_message *msg)
  
 struct set_audio_profile_msg
 {
-	uint8_t unknown[11];	
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[9];
 } __attribute__ ((packed));
 
 void msg_set_audio_profile_init(struct msmcomm_message *msg)
@@ -215,8 +213,6 @@ void msg_set_audio_profile_init(struct msmcomm_message *msg)
 	msg->msg_id = 0x0;
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct set_audio_profile_msg);
-
-	MESSAGE_CAST(msg, struct set_audio_profile_msg)->unknown[1] = 0x3c;
 }
 
 uint32_t msg_set_audio_profile_get_size(struct msmcomm_message *msg)
@@ -231,6 +227,101 @@ void msg_set_audio_profile_free(struct msmcomm_message *msg)
 
 uint8_t* msg_set_audio_profile_prepare_data(struct msmcomm_message *msg)
 {
+	MESSAGE_CAST(msg, struct set_audio_profile_msg)->ref_id = msg->ref_id;
 	return msg->payload;
+}
+
+/*
+ * MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS
+ */
+
+struct get_charger_status_msg
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[12];
+} __attribute__ ((packed));
+
+void msg_get_charger_status_init(struct msmcomm_message *msg)
+{
+	msg->group_id = 0x1b;
+	msg->msg_id = 0x15;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_charger_status_msg);
+
+	MESSAGE_CAST(msg, struct get_charger_status_msg)->ref_id = 0x0;
+}
+
+uint32_t msg_get_charger_status_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct get_charger_status_msg);
+}
+
+void msg_get_charger_status_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t* msg_get_charger_status_prepare_data(struct msmcomm_message *msg)
+{
+	return msg->payload;
+}
+
+/*
+ * MSMCOMM_MESSAGE_CMD_CHARGE_USB
+ */
+
+struct charge_usb_msg
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[4];
+	uint16_t voltage;
+	uint8_t unknown2[2];
+} __attribute__ ((packed));
+
+void msg_charge_usb_init(struct msmcomm_message *msg)
+{
+	msg->group_id = 0x1b;
+	msg->msg_id = 0x15;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct charge_usb_msg);
+}
+
+uint32_t msg_charge_usb_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct charge_usb_msg);
+}
+
+void msg_charge_usb_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t* msg_charge_usb_prepare_data(struct msmcomm_message *msg)
+{
+	MESSAGE_CAST(msg, struct charge_usb_msg)->ref_id = msg->ref_id;
+	return msg->payload;
+}
+
+void msmcomm_message_charge_usb_set_mode(struct msmcomm_message *msg, unsigned int mode)
+{
+	uint16_t voltage = 0;
+	switch(mode) {
+	case MSMCOMM_CHARGE_USB_MODE_250mA:
+		voltage = 250;
+		break;
+	case MSMCOMM_CHARGE_USB_MODE_500mA:
+		voltage = 500;
+		break;
+	case MSMCOMM_CHARGE_USB_MODE_1A:
+		voltage = 1000;
+		break;
+	default:
+		break;
+	}
+
+	/* little endian! */
+	MESSAGE_CAST(msg, struct charge_usb_msg)->voltage = ((voltage & 0xff) << 8) | ((voltage & 0xff00) >> 4);
 }
 

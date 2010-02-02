@@ -97,3 +97,14 @@ uint32_t msmcomm_message_get_type(struct msmcomm_message *msg)
 	return MSMCOMM_MESSAGE_INVALID;
 }
 
+uint8_t msmcomm_message_get_ref_id(struct msmcomm_message *msg)
+{
+	return msg->ref_id;
+}
+
+void msmcomm_message_set_ref_id(struct msmcomm_message *msg, uint8_t ref_id)
+{
+	msg->ref_id = ref_id;
+}
+
+

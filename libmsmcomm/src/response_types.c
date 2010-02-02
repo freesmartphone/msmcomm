@@ -60,6 +60,8 @@ RESPONSE_TYPE(xtra_set_data)
 RESPONSE_TYPE(get_sim_capabilities)
 RESPONSE_TYPE(sound)
 RESPONSE_TYPE(call_response)
+RESPONSE_TYPE(charge_usb)
+RESPONSE_TYPE(get_charger_status)
 
 EVENT_TYPE(radio_reset_ind)
 EVENT_TYPE(charger_status)
@@ -114,6 +116,8 @@ struct response_descriptor resp_descriptors[] = {
 	RESPONSE_DATA(MSMCOMM_RESPONSE_GET_SIM_CAPABILITIES, get_sim_capabilities),
 	RESPONSE_DATA(MSMCOMM_RESPONSE_SOUND, sound),
 //	RESPONSE_DATA(MSMCOMM_RESPONSE_CALL_RESPONSE, call_response),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_CHARGE_USB, charge_usb),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_GET_CHARGER_STATUS, get_charger_status),
 };
 
 const unsigned int resp_descriptors_count = sizeof(resp_descriptors) 
