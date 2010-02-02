@@ -16,13 +16,14 @@ message_system.c \
 message_network.c \
 message_sim.c \
 message_call.c \
-message_gps \
+message_gps.c \
 response_types.c \
 response_system.c \
 response_network.c \
 response_sim.c \
 response_call.c \
 response_gps.c \
+response_audio.c \
 event_system.c \
 event_network.c \
 group_sim_event.c \

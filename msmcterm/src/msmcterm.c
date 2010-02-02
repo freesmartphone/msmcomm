@@ -121,7 +121,12 @@ static void do_help(void)
 	printf("help            - this help\n");
 	printf("[exit|quit]     - quit this application\n");
 	printf("get_imei		- receive imei from modem\n");
-	printf("change_operation_mode - change operation modem of the modem\n");
+	printf("get_firmware_info - get firmware info string from modem\n");
+	printf("change_operation_mode [mode] - change operation modem of the modem\n");
+	printf("\tmodes: reset, online, offline\n");
+	printf("get_phone_state_info - get current phone state\n");
+	printf("test_alive - test if the modem is actually running\n");
+	printf("verify_pin <pin> - authenticate to the sim card with your pin\n");
 }
 
 static void do_dump(char *args)
@@ -151,7 +156,25 @@ static void do_change_operator_mode(char *args)
 {
 	struct msmcomm_message *msg;
 	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE);
-	msmcomm_message_change_operation_mode_set_operator_mode(msg, 7);
+
+	uint8_t mode = MSMCOMM_OPERATION_MODE_RESET;
+	
+	printf ("args = %s\n", args);
+	
+	if (!strncasecmp((char*)args+1, "reset", 5)) {
+		printf("-> reset\n");
+		mode = MSMCOMM_OPERATION_MODE_RESET;
+	}
+	if (!strncasecmp((char*)args+1, "online", 6)) {
+		printf("-> online\n");
+		mode = MSMCOMM_OPERATION_MODE_ONLINE;
+	}
+	if (!strncasecmp((char*)args+1, "offline", 7)) {
+		printf("-> offline\n");
+		mode = MSMCOMM_OPERATION_MODE_OFFLINE;
+	}
+
+	msmcomm_message_change_operation_mode_set_operator_mode(msg, mode);
 	msmcomm_send_message(&ctx.msmcomm, msg);
 }
 
@@ -162,6 +185,32 @@ static void do_get_firmware_info(void)
 								 MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO);
 	if (msg != NULL)
 		msmcomm_send_message(&ctx.msmcomm, msg);
+}
+
+static void do_test_alive(void)
+{
+	struct msmcomm_message *msg;
+	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_TEST_ALIVE);
+	msmcomm_send_message(&ctx.msmcomm, msg);
+}
+
+static void do_get_phone_state_info(void)
+{
+	struct msmcomm_message *msg;
+	msg = msmcomm_create_message(&ctx.msmcomm,
+								 MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO);
+	msmcomm_send_message(&ctx.msmcomm, msg);
+}
+
+static void do_verify_pin(char *args)
+{
+	struct msmcomm_message *msg;
+	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_VERIFY_PIN);
+	uint8_t pin[8];
+	args++;
+	snprintf(pin, 8, "%s", args);
+	msmcomm_message_verify_pin_set_pin(msg, pin, 8);	
+	msmcomm_send_message(&ctx.msmcomm, msg);
 }
 
 static void network_write_cb(struct msmcomm_context *msmc_ctx, uint8_t *data, uint32_t len)
@@ -179,9 +228,9 @@ static void network_event_cb(struct msmcomm_context *ctx, int event, struct msmc
 	}
 	else if (event == MSMCOMM_RESPONSE_GET_FIRMWARE_INFO) {
 		printf("got response: MSMCOMM_RESPONSE_GET_FIRMWARE_INFO\n");
-
+		
 		char buffer[100];
-		msmcomm_message_get_firmware_info_get_info(message, &buffer, 100);
+		msmcomm_resp_get_firmware_info_get_info(message, &buffer, 100);
 		printf("info: %s\n", buffer);
 	}
 	else if (event == MSMCOMM_EVENT_CHARGER_STATUS) {
@@ -190,14 +239,14 @@ static void network_event_cb(struct msmcomm_context *ctx, int event, struct msmc
 	else if (event == MSMCOMM_RESPONSE_TEST_ALIVE) {
 		printf("got response. MSMCOMM_RESPONSE_TEST_ALIVE\n");
 	}
-	else if (event == MSMCOMM_EVENT_SIM_INSERTED) {
-		printf("got event MSMCOMM_EVENT_SIM_INSERTED\n");
+	else if (event == MSMCOMM_EVENT_SIM_PIN1_ENABLED) {
+		printf("got event MSMCOMM_EVENT_SIM_PIN1_ENABLED\n");
 	}
-	else if (event == MSMCOMM_EVENT_PIN1_ENABLED) {
-		printf("got event MSMCOMM_EVENT_PIN1_ENABLED\n");
+	else if (event == MSMCOMM_EVENT_SIM_PIN2_ENABLED) {
+		printf("got event MSMCOMM_EVENT_SIM_PIN2_ENABLED\n");
 	}
-	else if (event == MSMCOMM_EVENT_PIN2_ENABLED) {
-		printf("got event MSMCOMM_EVENT_PIN2_ENABLED\n");
+	else if (event == MSMCOMM_EVENT_SIM_PIN1_VERIFIED) {
+		printf("got event MSMCOMM_EVENT_SIM_PIN1_VERIFIED\n");
 	}
 }
 
@@ -207,7 +256,7 @@ static int network_cb(struct bsc_fd *bfd, unsigned int flags)
 	/* read from modem */
 	if (flags & BSC_FD_READ) {
 		rc = msmcomm_read_from_modem(&ctx.msmcomm, bfd->fd);
-		if (rc < 0) {
+		if (rc <= 0) {
 			do_exit();
 		}
 	}
@@ -253,6 +302,18 @@ static int console_cb(struct bsc_fd *bfd, unsigned int flags)
 		}
 		if (!strncasecmp((char*)buf, "get_firmware_info", 17)) {
 			do_get_firmware_info();
+			done = 1;
+		}
+		if (!strncasecmp((char*)buf, "get_phone_state_info", 20)) {
+			do_get_phone_state_info();
+			done = 1;
+		}
+		if (!strncasecmp((char*)buf, "test_alive", 10)) {
+			do_test_alive();
+			done = 1;
+		}
+		if (!strncasecmp((char*)buf, "verify_pin", 10)) {
+			do_verify_pin(&buf[10]);
 			done = 1;
 		}
 

@@ -20,3 +20,40 @@
 
 #include "internal.h"
 
+extern void *talloc_msmc_ctx;
+
+/*
+ * MSMCOMM_RESPONSE_CM_CALL
+ */
+
+struct cm_call_resp
+{
+	uint8_t unknown0[0];
+	uint8_t ref_id;
+	uint8_t unknown1[9];
+} __attribute__ ((packed));
+
+unsigned int resp_cm_call_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x1) && (msg->msg_id == 0x1);
+}
+
+void resp_cm_call_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	if (len != sizeof(struct cm_call_resp))
+		return;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct cm_call_resp);
+	memcpy(msg->payload, data, len);
+}
+
+void resp_cm_call_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t msmcomm_message_cm_call_get_ref_id(struct msmcomm_message *msg)
+{
+	MESSAGE_CAST(msg, struct cm_call_resp)->ref_id;
+}
+

@@ -38,13 +38,13 @@ unsigned int is_tx_timer = 0;
 static uint8_t next_sequence_nr(struct msmc_context *ctx)
 {
 	uint8_t seq = ctx->next_seq;
-	ctx->next_seq = (ctx->next_seq + 1) % MSMC_LLC_MAX_SEQUENCE_NR;
+	ctx->next_seq = (ctx->next_seq + 1) % (MSMC_LLC_MAX_SEQUENCE_NR + 1);
 	return seq;
 }
 
 static uint8_t next_ack_nr(struct msmc_context *ctx)
 {
-	ctx->next_ack = (ctx->next_ack + 1) % MSMC_LLC_MAX_SEQUENCE_NR;
+	ctx->next_ack = (ctx->next_ack + 1) % (MSMC_LLC_MAX_SEQUENCE_NR + 1);
 	return ctx->next_ack;
 }
 
@@ -160,7 +160,7 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	/* append end marker */
 	data[len-1] = (char)0x7e;
 
-	DEBUG_MSG("send frame to modem");
+	DEBUG_MSG("send frame to modem (seq=0x%x, ack=0x%x)", fr->seq, fr->ack);
 	hexdump(data, len);
 	
 	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
@@ -425,7 +425,8 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 				/* acknowledge this frame */
 				ack_frame(ctx, fr);
 
-				DEBUG_MSG("receive date from modem");
+				DEBUG_MSG("receive date from modem (seq=0x%x, ack=0x%x)",
+						  fr->seq, fr->ack);
 				hexdump(fr->payload, fr->payload_len);
 
 				/* we have new data for our registered data handlers */
