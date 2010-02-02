@@ -38,6 +38,11 @@ MESSAGE_TYPE(test_alive)
 MESSAGE_TYPE(get_imei)
 MESSAGE_TYPE(get_firmware_info)
 MESSAGE_TYPE(get_phone_state_info)
+MESSAGE_TYPE(verify_pin)
+MESSAGE_TYPE(get_location_priv_pref)
+MESSAGE_TYPE(answer_call)
+MESSAGE_TYPE(set_audio_profile)
+MESSAGE_TYPE(end_call)
 
 struct message_descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE,change_operation_mode),
@@ -45,6 +50,11 @@ struct message_descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_IMEI, get_imei),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO, get_firmware_info),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO, get_phone_state_info),
+	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_VERIFY_PIN, verify_pin),
+	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_LOCATION_PRIV_PREF, get_location_priv_pref),
+	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_ANSWER_CALL, answer_call),
+	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_AUDIO_PROFILE, set_audio_profile),
+	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_END_CALL, end_call),
 };
 
 unsigned int msg_descriptors_size = (unsigned int)(sizeof(msg_descriptors) / sizeof(struct message_descriptor));

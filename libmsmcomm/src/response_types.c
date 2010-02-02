@@ -28,11 +28,21 @@
 #define RESPONSE_TYPE(name) NEW_TYPE(resp, name)
 #define EVENT_TYPE(name) NEW_TYPE(event, name)
 
+#define GROUP_TYPE(name) \
+	NEW_TYPE(group, name) \
+	extern unsigned int group_##name##_get_type(struct msmcomm_message *msg);
+
 #define TYPE_DATA(type, subtype, name) \
 	{	subtype, \
 		type##_##name##_is_valid, \
 		type##_##name##_handle_data, \
 		type##_##name##_free } 
+		
+#define GROUP_DATA(name) \
+	{	group_##name##_is_valid, \
+		group_##name##_handle_data, \
+		group_##name##_free, \
+		group_##name##_get_type } 
 
 #define EVENT_DATA(type, name) TYPE_DATA(event, type, name)
 #define RESPONSE_DATA(type, name) TYPE_DATA(resp, type, name)
@@ -45,12 +55,14 @@ RESPONSE_TYPE(pdsm_pd_end_session)
 RESPONSE_TYPE(pa_set_param)
 RESPONSE_TYPE(lcs_agent_client_rsp)
 RESPONSE_TYPE(xtra_set_data)
+RESPONSE_TYPE(verify_pin)
+RESPONSE_TYPE(get_sim_capabilities)
+RESPONSE_TYPE(get_voicemail_nr)
+RESPONSE_TYPE(set_audio_profile)
+RESPONSE_TYPE(call_response)
 
 EVENT_TYPE(radio_reset_ind)
 EVENT_TYPE(charger_status)
-EVENT_TYPE(sim_inserted)
-EVENT_TYPE(pin1_enabled)
-EVENT_TYPE(pin2_enabled)
 EVENT_TYPE(operator_mode)
 EVENT_TYPE(cm_ph_info_available)
 EVENT_TYPE(pdsm_pd_done)
@@ -58,14 +70,22 @@ EVENT_TYPE(pd_position_data)
 EVENT_TYPE(pd_parameter_change)
 EVENT_TYPE(pdsm_lcs)
 EVENT_TYPE(pdsm_xtra)
+EVENT_TYPE(power_state)
+EVENT_TYPE(cm_ss)
+
+GROUP_TYPE(sim)
+GROUP_TYPE(call)
+
+struct group_descriptor group_descriptors[] = {
+	GROUP_DATA(sim),
+	GROUP_DATA(call),
+};
+
 
 struct response_descriptor resp_descriptors[] = {
 	/* events */
 	EVENT_DATA(MSMCOMM_EVENT_RESET_RADIO_IND, radio_reset_ind),
 	EVENT_DATA(MSMCOMM_EVENT_CHARGER_STATUS, charger_status),
-	EVENT_DATA(MSMCOMM_EVENT_SIM_INSERTED, sim_inserted),
-	EVENT_DATA(MSMCOMM_EVENT_PIN1_ENABLED, pin1_enabled),
-	EVENT_DATA(MSMCOMM_EVENT_PIN2_ENABLED, pin2_enabled),
 	EVENT_DATA(MSMCOMM_EVENT_OPERATOR_MODE, operator_mode),
 	EVENT_DATA(MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE, cm_ph_info_available),
 	EVENT_DATA(MSMCOMM_EVENT_PDSM_PD_DONE, pdsm_pd_done),
@@ -73,6 +93,8 @@ struct response_descriptor resp_descriptors[] = {
 	EVENT_DATA(MSMCOMM_EVENT_PD_PARAMETER_CHANGE, pd_parameter_change),
 	EVENT_DATA(MSMCOMM_EVENT_PDSM_LCS, pdsm_lcs),
 	EVENT_DATA(MSMCOMM_EVENT_PDSM_XTRA, pdsm_xtra),
+	EVENT_DATA(MSMCOMM_EVENT_POWER_STATE, power_state),
+	EVENT_DATA(MSMCOMM_EVENT_CM_SS, cm_ss),
 
 	/* responses */
 	RESPONSE_DATA(MSMCOMM_RESPONSE_TEST_ALIVE, test_alive),
@@ -83,10 +105,16 @@ struct response_descriptor resp_descriptors[] = {
 	RESPONSE_DATA(MSMCOMM_RESPONSE_PA_SET_PARAM, pa_set_param),
 	RESPONSE_DATA(MSMCOMM_RESPONSE_LCS_AGENT_CLIENT_RSP, lcs_agent_client_rsp),
 	RESPONSE_DATA(MSMCOMM_RESPONSE_XTRA_SET_DATA, xtra_set_data),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_GET_SIM_CAPABILITIES, get_sim_capabilities),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_GET_VOICEMAIL_NR, get_voicemail_nr),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_SET_AUDIO_PROFILE, set_audio_profile),
+//	RESPONSE_DATA(MSMCOMM_RESPONSE_CALL_RESPONSE, call_response),
 };
 
 const unsigned int resp_descriptors_count = sizeof(resp_descriptors) 
 											/ sizeof(struct response_descriptor);
+const unsigned int group_descriptors_count = sizeof(group_descriptors) 
+											/ sizeof(struct group_descriptor);
 
 int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t len)
 {
@@ -105,6 +133,27 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 	resp.group_id = data[0];
 	resp.msg_id = data[1];
 	resp.payload = NULL;
+	
+	/* first we check if we have some group which handels this response/event */
+	for (n=0; n<group_descriptors_count; n++) {
+		/* is descriptor valid? */
+		if (group_descriptors[n].is_valid == NULL ||
+			group_descriptors[n].handle_data == NULL ||
+			group_descriptors[n].free == NULL || 
+			group_descriptors[n].get_type == NULL)
+			continue; 
+		
+		if (group_descriptors[n].is_valid(&resp)) {
+			/* let our descriptor handle the left data */
+			group_descriptors[n].handle_data(&resp, data + 2, len - 2);
+			
+			ctx->event_cb(ctx, group_descriptors[n].get_type(&resp), &resp);
+			
+			group_descriptors[n].free(&resp);
+			
+			return 1;
+		}
+	}
 
 	/* find the right rsp descriptor */
 	for (n=0; n<resp_descriptors_count; n++) {
@@ -119,11 +168,13 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 
 			/* tell the user about the received event/response */
 			ctx->event_cb(ctx, resp_descriptors[n].type, &resp);
-			
+
 			resp_descriptors[n].free(&resp);
+			
+			return 1;
 		}
 	}
 
-	return 1;
+	return 0;
 }
 

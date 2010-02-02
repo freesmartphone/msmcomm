@@ -55,8 +55,6 @@ void msg_change_operation_mode_init(struct msmcomm_message *msg)
 
 	/* second byte is always 0x2 */
 	((struct change_operation_mode_msg*)msg->payload)->unknown1 = 0x2;
-	
-	msmcomm_message_change_operation_mode_set_operator_mode(msg, 0x7);
 }
 
 uint32_t msg_change_operation_mode_get_size(struct msmcomm_message *msg)
@@ -71,16 +69,14 @@ void msg_change_operation_mode_free(struct msmcomm_message *msg)
 
 void msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_message *msg, uint8_t operator_mode)
 {
-	uint8_t mode = 0;
+	if (operator_mode == MSMCOMM_OPERATION_MODE_RESET)
+		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = 0x7;
+	else if (operator_mode == MSMCOMM_OPERATION_MODE_ONLINE)
+		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = 0x5;
+	else if (operator_mode == MSMCOMM_OPERATION_MODE_OFFLINE)
+		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = 0x6;
 
-	if (operator_mode == MSMCOMM_OPERATOR_MODE_RESET)
-		mode = 7;
-	else if (operator_mode == MSMCOMM_OPERATOR_MODE_ONLINE)
-		mode = 5;
-	else if (operator_mode == MSMCOMM_OPERATOR_MODE_OFFLINE)
-		mode = 6;
-
-	MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = operator_mode;
+	printf("operator_mode = 0x%x\n", MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode);
 }
 
 uint8_t* msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
@@ -94,15 +90,18 @@ uint8_t* msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
 
 struct test_alive_msg
 {
-	uint8_t unknown[5];
+	uint8_t unknown[6];
 } __attribute__ ((packed));
 
 void msg_test_alive_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x1b;
-	msg->msg_id = 0x8;
+	msg->msg_id = 0x1;
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct test_alive_msg);
+
+	MESSAGE_CAST(msg, struct test_alive_msg)->unknown[1] = 0x5;
+	MESSAGE_CAST(msg, struct test_alive_msg)->unknown[5] = 0x1;
 }
 
 uint32_t msg_test_alive_get_size(struct msmcomm_message *msg)
@@ -132,7 +131,7 @@ struct get_firmware_msg
 void msg_get_firmware_info_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x1b;
-	msg->msg_id = 0x08;
+	msg->msg_id = 0x9;
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_firmware_msg);
 }
@@ -183,6 +182,54 @@ void msg_get_phone_state_info_free(struct msmcomm_message *msg)
 }
 
 uint8_t* msg_get_phone_state_info_prepare_data(struct msmcomm_message *msg)
+{
+	return msg->payload;
+}
+
+/*
+ * MSMCOMM_MESSAGE_CMD_SET_AUDIO_PROFILE
+ */
+ 
+/* [CMD] tel.setaudioprofile 0 0
+ * handleAudioSettingsMessage Audio Profile Class 0 SubClass 0
+ * handleAudioSettingsMessage USER TTY FLAG 3
+ * handleAudioSettingsMessage !!!!!!!!!DISABLING TTY!!!!!!!!!
+ * .305297Z365ff490 +convertTilAudioProfileToHciSoundDevice 
+ * .306762Z375ff490 waitForSignal Forever signal=35D85CE0
+ * .307830Z365ff490 -convertTilAudioProfileToHciSoundDevice 
+ * .309387Z375ff490 +waitForSignal 
+ * .310485Z365ff490 setAudioProfile setAudioProfile 0 0
+ * PACKET: dir=write fd=11 fn='/dev/modemuart' len=16/0x10
+ * frame (type=Data, seq=05, ack=0c)
+ * 1e 00 00 3c 00 00 00 00 00 00 00 00 00            ...<.........   
+ */
+ 
+struct set_audio_profile_msg
+{
+	uint8_t unknown[11];	
+} __attribute__ ((packed));
+
+void msg_set_audio_profile_init(struct msmcomm_message *msg)
+{
+	msg->group_id = 0x1e;
+	msg->msg_id = 0x0;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct set_audio_profile_msg);
+
+	MESSAGE_CAST(msg, struct set_audio_profile_msg)->unknown[1] = 0x3c;
+}
+
+uint32_t msg_set_audio_profile_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct set_audio_profile_msg);
+}
+
+void msg_set_audio_profile_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t* msg_set_audio_profile_prepare_data(struct msmcomm_message *msg)
 {
 	return msg->payload;
 }

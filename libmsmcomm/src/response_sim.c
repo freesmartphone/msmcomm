@@ -20,3 +20,29 @@
 
 #include "internal.h"
 
+/*
+ * MSMCOMM_RESPONSE_GET_SIM_CAPABILITIES
+ */
+
+/* Notes:
+ * - when the voice mail number is aquired, this messages contains it
+ * - it's even the response for the verify-pin message
+ */
+struct get_sim_capabilities_resp
+{
+	uint8_t unknown[1935];
+} __attribute__ ((packed));
+
+unsigned int resp_get_sim_capabilities_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x10) && (msg->msg_id == 0x1);
+}
+
+void resp_get_sim_capabilities_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	/* FIXME */
+}
+
+void resp_get_sim_capabilities_free(struct msmcomm_message *msg)
+{
+}

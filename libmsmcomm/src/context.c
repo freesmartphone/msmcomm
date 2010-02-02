@@ -60,6 +60,15 @@ void msmcomm_register_write_handler(struct msmcomm_context *ctx, msmcomm_write_h
 
 int msmcomm_shutdown(struct msmcomm_context *ctx)
 {
+	/* FIXME */
+}
+
+unsigned int msmcomm_check_hci_version(unsigned int hci_version)
+{
+	unsigned int supported = 0;
+	if (hci_version == 0x6)
+		supported = 1;
+	return supported;
 }
 
 

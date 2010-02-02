@@ -25,9 +25,9 @@ response_call.c \
 response_gps.c \
 event_system.c \
 event_network.c \
-event_sim.c \
-event_call.c \
-event_gps.c \
+group_sim_event.c \
+group_call_event.c \
+group_gps_event.c \
 msmcomm.h \
 $(NULL)
 

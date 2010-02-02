@@ -20,3 +20,46 @@
 
 #include "internal.h"
 
+extern void *talloc_msmc_ctx;
+
+/*
+ * Call event group handler
+ */
+ 
+struct call_status_event
+{
+	uint8_t unknown0[4];
+	uint8_t number[15];
+	uint8_t unknown1[1089];
+} __attribute__ ((packed));
+
+unsigned int group_call_is_valid(struct msmcomm_message *msg)
+{
+	return msg->group_id == 0x2;
+}
+
+void group_call_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{ 
+}
+
+void group_call_free(struct msmcomm_message *msg)
+{ 
+}
+
+unsigned int group_call_get_type(struct msmcomm_message *msg)
+{
+	switch(msg->msg_id) {
+	case 0:
+		return MSMCOMM_EVENT_CALL_ORIGINATION;
+	case 6:
+		return MSMCOMM_EVENT_CALL_CONNECT;
+	case 3:
+		return MSMCOMM_EVENT_CALL_END;
+	default:
+		break;
+	}
+	
+	return MSMCOMM_MESSAGE_INVALID;
+}
+
+

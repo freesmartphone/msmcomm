@@ -24,19 +24,15 @@ extern void *talloc_msmc_ctx;
 
 struct get_imei_msg
 {
-	uint8_t unknown[6];
+	uint8_t unknown[5];
 } __attribute__ ((packed));
 
 void msg_get_imei_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x1b;
-	msg->msg_id = 0x1;
+	msg->msg_id = 0x8;
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_imei_msg);
-
-	/* this bytes unknown */
-	MESSAGE_CAST(msg, struct get_imei_msg)->unknown[1] = 0x5;
-	MESSAGE_CAST(msg, struct get_imei_msg)->unknown[5] = 0x1;
 }
 
 uint32_t msg_get_imei_get_size(struct msmcomm_message *msg)

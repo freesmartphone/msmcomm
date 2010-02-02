@@ -79,10 +79,13 @@ void resp_get_firmware_info_free(struct msmcomm_message *msg)
 		talloc_free(msg->payload);
 }
 
-void msmcomm_message_get_firmware_info_get_info(struct msmcomm_message *msg, char *buffer, int len)
+uint8_t msmcomm_resp_get_firmware_info_get_hci_version(struct msmcomm_message *msg)
 {
-	snprintf(buffer, len, "%s", MESSAGE_CAST(msg, struct
-											 get_firmware_info_resp)->firmware_version);
+}
+
+void msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg, char *buffer, int len)
+{
+	snprintf(buffer, len, "%s", MESSAGE_CAST(msg, struct get_firmware_info_resp)->firmware_version);
 }
 
 /*
@@ -109,6 +112,10 @@ void resp_get_imei_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_imei_resp);
 	memcpy(&msg->payload, data, len);
+}
+
+void msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg, uint8_t *buffer)
+{
 }
 
 void resp_get_imei_free(struct msmcomm_message *msg)

@@ -65,6 +65,8 @@ typedef unsigned int (*msmcomm_response_is_valid_t)(struct msmcomm_message *msg)
 typedef void (*msmcomm_response_handle_data_t)(struct msmcomm_message *msg, uint8_t *data, uint32_t len);
 typedef void (*msmcomm_response_free_t)(struct msmcomm_message *msg);
 
+typedef unsigned int (*msmcomm_group_get_type_t)(struct msmcomm_message *msg);
+
 struct message_descriptor
 {
 	unsigned int type;
@@ -80,6 +82,14 @@ struct response_descriptor
     msmcomm_response_is_valid_t is_valid;
     msmcomm_response_handle_data_t handle_data;
 	msmcomm_response_free_t free;
+};
+
+struct group_descriptor
+{
+	msmcomm_response_is_valid_t is_valid;
+	msmcomm_response_handle_data_t handle_data;
+	msmcomm_response_free_t free;
+	msmcomm_group_get_type_t get_type;
 };
 
 int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t len);
