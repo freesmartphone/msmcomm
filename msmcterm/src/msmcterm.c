@@ -286,6 +286,21 @@ static void network_event_cb(struct msmcomm_context *ctx, int event, struct msmc
 	else if (event == MSMCOMM_EVENT_SIM_PIN1_VERIFIED) {
 		printf("got event MSMCOMM_EVENT_SIM_PIN1_VERIFIED\n");
 	}
+	else if (event == MSMCOMM_EVENT_SIM_PIN1_BLOCKED) {
+		printf("got event MSMCOMM_EVENT_SIM_PIN1_BLOCKED\n");
+	}
+	else if (event == MSMCOMM_EVENT_CALL_INCOMMING) {
+		printf("got event MSMCOMM_EVENT_CALL_INCOMMING\n");
+	}
+	else if (event == MSMCOMM_EVENT_CALL_ORIGINATION) {
+		printf("got event MSMCOMM_EVENT_CALL_ORIGINATION\n");
+	}
+	else if (event == MSMCOMM_EVENT_CALL_CONNECT) {
+		printf("got event MSMCOMM_EVENT_CALL_CONNECT\n");
+	}
+	else if (event == MSMCOMM_EVENT_CALL_END) {
+		printf("got event MSMCOMM_EVENT_CALL_END\n");
+	}
 }
 
 static int network_cb(struct bsc_fd *bfd, unsigned int flags)
