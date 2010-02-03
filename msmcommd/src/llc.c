@@ -451,31 +451,45 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 static void handle_frame(struct msmc_context *ctx, uint8_t *data, uint32_t len)
 {
 	unsigned short crc, fr_crc, crc_result = 0xf0b8;
+	uint8_t *tmp;
+	uint32_t tmp_len;
 	struct frame *fr;
-
-	/* first we have decode the frame */
-	decode_frame(fr);
-
-	/* the last two bytes are the crc checksum, check them! */
-	fr_crc = (data[len-2] << 8) | data[len-1];
-	crc = crc16_calc(data, len);
-	if (crc != crc_result)
-	{
-		return;
-	}
 
 	fr = talloc_zero(talloc_llc_ctx, struct frame);
 
+	/* copy data for decoding */
+	tmp = talloc_size(talloc_llc_ctx, sizeof(uint8_t) * len);
+	memcpy(tmp, data, len);
+	fr->payload = tmp;
+	fr->payload_len = len;
+
+	/* decode frame */
+	decode_frame(fr);
+	tmp_len = fr->payload_len;
+	
+	/* the last two bytes are the crc checksum, check them! */
+	fr_crc = (tmp[len-2] << 8) | tmp[len-1];
+	crc = crc16_calc(tmp, tmp_len);
+	if (crc != crc_result)
+	{
+		DEBUG_MSG("CRC ERROR !!!");
+		DEBUG_MSG("len = %i", tmp_len);
+		DEBUG_MSG("fr_crc = 0x%x", fr_crc);
+		DEBUG_MSG("crc = 0x%x", crc);
+		hexdump(tmp, tmp_len);
+		return;
+	}
+
 	/* parse frame data */
-	fr->address = data[0];
-	fr->type = data[1] >> 4;
-	fr->seq  = data[2] >> 4;
-	fr->ack  = data[2] & 0xf;
+	fr->address = tmp[0];
+	fr->type = tmp[1] >> 4;
+	fr->seq  = tmp[2] >> 4;
+	fr->ack  = tmp[2] & 0xf;
 	fr->payload = NULL;
 	fr->payload_len = 0;
 	if (len > 5) {
-		fr->payload = &data[3];
-		fr->payload_len = len - 3;
+		fr->payload = &tmp[3];
+		fr->payload_len = tmp_len - 3;
 	}
 
 	/* delegate frame handling corresponding to the frame type */
@@ -485,6 +499,7 @@ static void handle_frame(struct msmc_context *ctx, uint8_t *data, uint32_t len)
 		link_control(ctx, fr);
 
 	talloc_free(fr);
+	talloc_free(tmp);
 }
 
 static void handle_llc_incomming_data(struct bsc_fd *bfd)
@@ -497,6 +512,8 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 	ssize_t size = read(bfd->fd, buffer, sizeof(buffer));
 	if (size < 0)
 		return;
+
+	DEBUG_MSG("got %i bytes from modem", size);
 
 	/* put everything into our rx buffer */
 	buffer_put(ctx->rx_buf, buffer, size);
