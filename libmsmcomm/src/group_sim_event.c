@@ -51,6 +51,8 @@ unsigned int group_sim_get_type(struct msmcomm_message *msg)
 		return MSMCOMM_EVENT_SIM_REAL_RESET_FAILURE;
 	
 	switch (msg->msg_id) {
+	case 0: 
+		return MSMCOMM_EVNET_SIM_INSERTED;
 	case 9:
 		return MSMCOMM_EVENT_SIM_PIN1_VERIFIED;
 	case 10:

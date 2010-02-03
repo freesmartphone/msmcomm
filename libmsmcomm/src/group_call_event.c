@@ -25,12 +25,17 @@ extern void *talloc_msmc_ctx;
 /*
  * Call event group handler
  */
- 
+
 struct call_status_event
 {
-	uint8_t unknown0[4];
-	uint8_t number[15];
-	uint8_t unknown1[1089];
+	uint8_t unknown0;
+	uint8_t call_id;
+	uint8_t host_call_id
+	uint8_t unknown1;
+	uint8_t caller_id[15];
+	uint8_t unknown2[50];
+	uint8_t caller_id_len;
+	uint8_t unknown2[1038];
 } __attribute__ ((packed));
 
 unsigned int group_call_is_valid(struct msmcomm_message *msg)
@@ -51,6 +56,8 @@ unsigned int group_call_get_type(struct msmcomm_message *msg)
 	switch(msg->msg_id) {
 	case 0:
 		return MSMCOMM_EVENT_CALL_ORIGINATION;
+	case 5:
+		return MSMCOMM_EVENT_CALL_INCOMMING;
 	case 6:
 		return MSMCOMM_EVENT_CALL_CONNECT;
 	case 3:
@@ -60,6 +67,13 @@ unsigned int group_call_get_type(struct msmcomm_message *msg)
 	}
 	
 	return MSMCOMM_MESSAGE_INVALID;
+}
+
+void msmcomm_event_call_status_get_caller_id
+	(struct msmcomm_message *msg, uint8_t *buffer, unsigned int len) 
+{
+	snprintf(buffer, len, "%s", 
+			 MESSAGE_CAST(msg, struct call_status_event)->caller_id);
 }
 
 

@@ -157,7 +157,7 @@ static void do_get_imei(void)
 	msmcomm_send_message(&ctx.msmcomm, msg);
 }
 
-static void do_change_operator_mode(char *args)
+static void do_change_operation_mode(char *args)
 {
 	struct msmcomm_message *msg;
 	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE);
@@ -179,7 +179,7 @@ static void do_change_operator_mode(char *args)
 		mode = MSMCOMM_OPERATION_MODE_OFFLINE;
 	}
 
-	msmcomm_message_change_operation_mode_set_operator_mode(msg, mode);
+	msmcomm_message_change_operation_mode_set_operation_mode(msg, mode);
 	msmcomm_send_message(&ctx.msmcomm, msg);
 }
 
@@ -345,8 +345,8 @@ static int console_cb(struct bsc_fd *bfd, unsigned int flags)
 		}
 
 		/* msmcomm command */
-		if (!strncasecmp((char*)buf, "change_operator_mode", 20)) {
-			do_change_operator_mode(&buf[20]);
+		if (!strncasecmp((char*)buf, "change_operation_mode", 21)) {
+			do_change_operation_mode(&buf[21]);
 			done = 1;
 		}
 		if (!strncasecmp((char*)buf, "get_imei", 8)) {

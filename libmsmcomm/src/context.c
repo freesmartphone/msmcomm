@@ -43,7 +43,9 @@ int msmcomm_read_from_modem(struct msmcomm_context *ctx, int modem_fd)
 		return len;
 
 	/* what should we do with the received data? */
-	return handle_response_data(ctx, buf, len);
+	handle_response_data(ctx, buf, len);
+
+	return 1;
 }
 
 void msmcomm_register_event_handler(struct msmcomm_context *ctx, msmcomm_event_handler_cb
