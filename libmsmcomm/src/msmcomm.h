@@ -150,31 +150,61 @@ struct msmcomm_context
 	msmcomm_write_handler_cb write_cb;
 };
 
-int				msmcomm_init(struct msmcomm_context *ctx);
-int				msmcomm_shutdown(struct msmcomm_context *ctx);
-int				msmcomm_read_from_modem(struct msmcomm_context *ctx, int fd);
-int				msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *msg);
-unsigned int 	msmcomm_check_hci_version(unsigned int hci_version);
-void			msmcomm_register_event_handler(struct msmcomm_context *ctx, msmcomm_event_handler_cb event_handler);
-void			msmcomm_register_write_handler(struct msmcomm_context *ctx, msmcomm_write_handler_cb write_handler);
+int				msmcomm_init
+	(struct msmcomm_context *ctx);
+int				msmcomm_shutdown
+	(struct msmcomm_context *ctx);
+int				msmcomm_read_from_modem
+	(struct msmcomm_context *ctx, int fd);
+int				msmcomm_send_message
+	(struct msmcomm_context *ctx, struct msmcomm_message *msg);
+unsigned int 	msmcomm_check_hci_version
+	(unsigned int hci_version);
+void			msmcomm_register_event_handler
+	(struct msmcomm_context *ctx, msmcomm_event_handler_cb event_handler);
+void			msmcomm_register_write_handler
+	(struct msmcomm_context *ctx, msmcomm_write_handler_cb write_handler);
 
-struct			msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx, unsigned int type);
-uint32_t		msmcomm_message_get_size(struct msmcomm_message *msg);
-uint32_t		msmcomm_message_get_type(struct msmcomm_message *msg);
-uint8_t 		msmcomm_message_get_ref_id(struct msmcomm_message *msg);
+/**
+ * These are common operations which are valid for all kind of messages
+ */
+struct			msmcomm_message* msmcomm_create_message
+	(struct msmcomm_context *ctx, unsigned int type);
+uint32_t		msmcomm_message_get_size
+	(struct msmcomm_message *msg);
+uint32_t		msmcomm_message_get_type
+	(struct msmcomm_message *msg);
+uint8_t 		msmcomm_message_get_ref_id
+	(struct msmcomm_message *msg);
 
-void			msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_message *msg, uint8_t operator_mode);
-void			msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, uint8_t *pin, int len);
-void 			msmcomm_message_charge_usb_set_mode(struct msmcomm_message *msg, unsigned int mode);
+/**
+ * These are message/response/event specific operations which only should be
+ * executed on the right message!
+ */
+void			msmcomm_message_change_operation_mode_set_operation_mode
+	(struct msmcomm_message *msg, uint8_t operation_mode);
+void			msmcomm_message_verify_pin_set_pin
+	(struct msmcomm_message *msg, uint8_t *pin, int len);
+void 			msmcomm_message_charge_usb_set_mode
+	(struct msmcomm_message *msg, unsigned int mode);
+void msmcomm_message_end_call_set_call_number
+	(struct msmcomm_message *msg, uint8_t call_nr);
 
-void			msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg, char *buffer, int len);
-uint8_t 		msmcomm_resp_get_firmware_info_get_hci_version(struct msmcomm_message *msg);
-void 			msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg, uint8_t *buffer);
-unsigned int 	msmcomm_resp_charge_usb_get_voltage(struct msmcomm_message *msg);
+void			msmcomm_resp_get_firmware_info_get_info
+	(struct msmcomm_message *msg, char *buffer, int len);
+uint8_t 		msmcomm_resp_get_firmware_info_get_hci_versioni
+	(struct msmcomm_message *msg);
+void 			msmcomm_resp_get_imei_get_imei
+	(struct msmcomm_message *msg, uint8_t *buffer);
+unsigned int 	msmcomm_resp_charge_usb_get_voltage
+	(struct msmcomm_message *msg);
 
-uint8_t 		msmcomm_event_power_state_get_state(struct msmcomm_message *msg);
-void 			msmcomm_event_call_status_get_number(struct msmcomm_message *msg, uint8_t *buffer, unsigned int len);
-unsigned int 	msmcomm_event_charger_status_get_voltage(struct msmcomm_message *msg);
+uint8_t 		msmcomm_event_power_state_get_state
+	(struct msmcomm_message *msg);
+void 			msmcomm_event_call_status_get_number
+	(struct msmcomm_message *msg, uint8_t *buffer, unsigned int len);
+unsigned int 	msmcomm_event_charger_status_get_voltage
+	(struct msmcomm_message *msg);
 
 #endif
 

@@ -43,7 +43,7 @@ struct change_operation_mode_msg
 	uint8_t unknown0;
 	uint8_t ref_id;
 	uint8_t unknown3[3];
-	uint8_t operator_mode;
+	uint8_t operation_mode;
 } __attribute__ ((packed));
 
 void msg_change_operation_mode_init(struct msmcomm_message *msg)
@@ -64,14 +64,14 @@ void msg_change_operation_mode_free(struct msmcomm_message *msg)
 	talloc_free(msg->payload);
 }
 
-void msmcomm_message_change_operation_mode_set_operator_mode(struct msmcomm_message *msg, uint8_t operator_mode)
+void msmcomm_message_change_operation_mode_set_operation_mode(struct msmcomm_message *msg, uint8_t operation_mode)
 {
-	if (operator_mode == MSMCOMM_OPERATION_MODE_RESET)
-		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = 0x7;
-	else if (operator_mode == MSMCOMM_OPERATION_MODE_ONLINE)
-		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = 0x5;
-	else if (operator_mode == MSMCOMM_OPERATION_MODE_OFFLINE)
-		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operator_mode = 0x6;
+	if (operation_mode == MSMCOMM_OPERATION_MODE_RESET)
+		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operation_mode = 0x7;
+	else if (operation_mode == MSMCOMM_OPERATION_MODE_ONLINE)
+		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operation_mode = 0x5;
+	else if (operation_mode == MSMCOMM_OPERATION_MODE_OFFLINE)
+		MESSAGE_CAST(msg, struct change_operation_mode_msg)->operation_mode = 0x6;
 }
 
 uint8_t* msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
@@ -322,6 +322,7 @@ void msmcomm_message_charge_usb_set_mode(struct msmcomm_message *msg, unsigned i
 	}
 
 	/* little endian! */
-	MESSAGE_CAST(msg, struct charge_usb_msg)->voltage = ((voltage & 0xff) << 8) | ((voltage & 0xff00) >> 4);
+	MESSAGE_CAST(msg, struct charge_usb_msg)->voltage = 
+		((voltage & 0xff) << 8) | ((voltage & 0xff00) >> 4);
 }
 

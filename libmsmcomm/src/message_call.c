@@ -115,7 +115,7 @@ uint8_t* msg_end_call_prepare_data(struct msmcomm_message *msg)
 	return msg->payload;
 }
 
-void msmcomm_message_end_call_set_call_nr(struct msmcomm_message *msg, uint8_t call_nr)
+void msmcomm_message_end_call_set_call_number(struct msmcomm_message *msg, uint8_t call_nr)
 {
 	MESSAGE_CAST(msg, struct end_call_msg)->call_nr = call_nr;
 }
