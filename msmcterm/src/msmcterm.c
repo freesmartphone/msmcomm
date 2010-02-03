@@ -72,6 +72,7 @@ static int tcp_sock_open(struct msmcterm_context *ctx)
 		return fd;
 	}
 
+#if 0
 	if (ctx->ifname) {
 		rc = setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, ctx->ifname,
 						strlen(ctx->ifname));
@@ -81,6 +82,7 @@ static int tcp_sock_open(struct msmcterm_context *ctx)
 			return rc;
 		}
 	}
+#endif 
 
 	rc = setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 	if (rc < 0) {
