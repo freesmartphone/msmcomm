@@ -46,6 +46,13 @@
 #include "linuxlist.h"
 #include "msmcomm.h"
 
+#define LOG_MESSAGE(message, args, ...) \
+{ \
+	char buffer[4096]; \
+	snprintf(buffer, 4096, fmt, ## args); \
+	ctx->log_cb(ctx->log_data, buffer, 4096); \
+} 
+
 #define MESSAGE_CAST(message, type) ((type*)message->payload)
 
 struct msmcomm_message

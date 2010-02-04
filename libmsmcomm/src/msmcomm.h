@@ -145,16 +145,19 @@ struct msmcomm_message;
 typedef void (*msmcomm_event_handler_cb) (void *user_data, int event, struct msmcomm_message *message);
 typedef void (*msmcomm_write_handler_cb) (void *user_data, uint8_t *data, uint32_t len);
 typedef int  (*msmcomm_read_handler_cb)  (void *user_data, uint8_t *data, uint32_t len);
+typedef void (*msmcomm_log_handler_cb) (void *user_data, char *buffer, unsigned int len);
 
 struct msmcomm_context
 {
 	msmcomm_event_handler_cb event_cb;
 	msmcomm_write_handler_cb write_cb;
 	msmcomm_read_handler_cb read_cb;
+	msmcomm_log_handler_cb log_cb;
 
 	void *event_data;
 	void *write_data;
 	void *read_data;
+	void *log_data;
 };
 
 int				msmcomm_init
@@ -173,6 +176,8 @@ void			msmcomm_register_write_handler
 	(struct msmcomm_context *ctx, msmcomm_write_handler_cb write_handler, void *data);
 void			msmcomm_register_read_handler
 	(struct msmcomm_context *ctx, msmcomm_read_handler_cb read_handler, void *data);
+void			msmcomm_register_log_handler
+	(struct msmcomm_context *ctx, msmcomm_log_handler_cb log_handler, void *data);
 
 /**
  * These are common operations which are valid for all kind of messages

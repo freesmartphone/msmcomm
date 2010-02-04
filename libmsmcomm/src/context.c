@@ -67,6 +67,13 @@ void msmcomm_register_read_handler
 	ctx->read_data = data;
 }
 
+void msmcomm_register_log_handler
+	(struct msmcomm_context *ctx, msmcomm_log_handler_cb log_handler, void *data)
+{
+	ctx->log_cb = log_handler;
+	ctx->log_data = data;
+}
+
 int msmcomm_shutdown(struct msmcomm_context *ctx)
 {
 	/* FIXME */
