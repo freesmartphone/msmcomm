@@ -30,12 +30,12 @@ struct call_status_event
 {
 	uint8_t unknown0;
 	uint8_t call_id;
-	uint8_t host_call_id
+	uint8_t host_call_id;
 	uint8_t unknown1;
 	uint8_t caller_id[15];
 	uint8_t unknown2[50];
 	uint8_t caller_id_len;
-	uint8_t unknown2[1038];
+	uint8_t unknown3[1038];
 } __attribute__ ((packed));
 
 unsigned int group_call_is_valid(struct msmcomm_message *msg)
@@ -45,10 +45,17 @@ unsigned int group_call_is_valid(struct msmcomm_message *msg)
 
 void group_call_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 { 
+	if (len != sizeof(struct call_status_event))
+		return;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct call_status_event);
+	memcpy(msg->payload, data, len);
 }
 
 void group_call_free(struct msmcomm_message *msg)
 { 
+	if (msg->payload != NULL)
+		talloc_free(msg->payload);
 }
 
 unsigned int group_call_get_type(struct msmcomm_message *msg)
