@@ -32,32 +32,39 @@ int msmcomm_init(struct msmcomm_context *ctx)
 	return 0;
 }
 
-int msmcomm_read_from_modem(struct msmcomm_context *ctx, int modem_fd)
+int msmcomm_read_from_modem(struct msmcomm_context *ctx)
 {
 	int len;
 	uint8_t buf[BUF_LEN];
 
-	len = recv(modem_fd, buf, BUF_LEN, 0);
+	len = ctx->read_cb(ctx->read_data, buf, BUF_LEN);
 	/* server disconnected? tell client about that! */
 	if (len <= 0)
 		return len;
 
 	/* what should we do with the received data? */
 	handle_response_data(ctx, buf, len);
-
-	return 1;
 }
 
-void msmcomm_register_event_handler(struct msmcomm_context *ctx, msmcomm_event_handler_cb
-									event_handler)
+void msmcomm_register_event_handler
+	(struct msmcomm_context *ctx, msmcomm_event_handler_cb event_handler, void *data)
 {
 	ctx->event_cb = event_handler;
+	ctx->event_data = data;
 }
 
-void msmcomm_register_write_handler(struct msmcomm_context *ctx, msmcomm_write_handler_cb
-									write_handler)
+void msmcomm_register_write_handler
+	(struct msmcomm_context *ctx, msmcomm_write_handler_cb write_handler, void *data)
 {
 	ctx->write_cb = write_handler;
+	ctx->write_data = data;
+}
+
+void msmcomm_register_read_handler
+	(struct msmcomm_context *ctx, msmcomm_read_handler_cb read_handler, void *data)
+{
+	ctx->read_cb = read_handler;
+	ctx->read_data = data;
 }
 
 int msmcomm_shutdown(struct msmcomm_context *ctx)

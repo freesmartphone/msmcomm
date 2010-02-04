@@ -90,7 +90,7 @@ struct response_descriptor resp_descriptors[] = {
 	/* events */
 	EVENT_DATA(MSMCOMM_EVENT_RESET_RADIO_IND, radio_reset_ind),
 	EVENT_DATA(MSMCOMM_EVENT_CHARGER_STATUS, charger_status),
-	EVENT_DATA(MSMCOMM_EVENT_OPERATOR_MODE, operator_mode),
+	EVENT_DATA(MSMCOMM_EVENT_OPERATION_MODE, operator_mode),
 	EVENT_DATA(MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE, cm_ph_info_available),
 	/*
 	EVENT_DATA(MSMCOMM_EVENT_PDSM_PD_DONE, pdsm_pd_done),
@@ -143,7 +143,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 	resp.msg_id = data[1];
 	resp.payload = NULL;
 	
-	/* first we check if we have some group which handels this response/event */
+	/* first we check if we have agroup which handle's this response or event */
 	for (n=0; n<group_descriptors_count; n++) {
 		/* is descriptor valid? */
 		if (group_descriptors[n].is_valid == NULL ||
@@ -176,7 +176,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 			resp_descriptors[n].handle_data(&resp, data + 2, len - 2);
 
 			/* tell the user about the received event/response */
-			ctx->event_cb(ctx, resp_descriptors[n].type, &resp);
+			ctx->event_cb(ctx->event_data, resp_descriptors[n].type, &resp);
 
 			resp_descriptors[n].free(&resp);
 			

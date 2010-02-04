@@ -53,7 +53,7 @@
 
 #define MSMCOMM_EVENT_RESET_RADIO_IND							201
 #define MSMCOMM_EVENT_CHARGER_STATUS							202
-#define MSMCOMM_EVENT_OPERATOR_MODE								206
+#define MSMCOMM_EVENT_OPERATION_MODE							206
 #define MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE						207
 #define MSMCOMM_EVENT_POWER_STATE								215
 #define MSMCOMM_EVENT_CM_SS										217
@@ -79,7 +79,7 @@
 /*
  * SIM events
  */
-#define MSMCOMM_EVNET_SIM_INSERTED								222
+#define MSMCOMM_EVENT_SIM_INSERTED								222
 #define MSMCOMM_EVENT_SIM_PIN1_VERIFIED							223
 #define MSMCOMM_EVENT_SIM_PIN1_BLOCKED 							224
 #define MSMCOMM_EVENT_SIM_PIN1_UNBLOCKED 						225
@@ -142,13 +142,19 @@
 struct msmcomm_context;
 struct msmcomm_message;
 
-typedef void (*msmcomm_event_handler_cb) (struct msmcomm_context *ctx, int event, struct msmcomm_message *message);
-typedef void (*msmcomm_write_handler_cb) (struct msmcomm_context *ctx, uint8_t *data, uint32_t len);
+typedef void (*msmcomm_event_handler_cb) (void *user_data, int event, struct msmcomm_message *message);
+typedef void (*msmcomm_write_handler_cb) (void *user_data, uint8_t *data, uint32_t len);
+typedef int  (*msmcomm_read_handler_cb)  (void *user_data, uint8_t *data, uint32_t len);
 
 struct msmcomm_context
 {
 	msmcomm_event_handler_cb event_cb;
 	msmcomm_write_handler_cb write_cb;
+	msmcomm_read_handler_cb read_cb;
+
+	void *event_data;
+	void *write_data;
+	void *read_data;
 };
 
 int				msmcomm_init
@@ -156,15 +162,17 @@ int				msmcomm_init
 int				msmcomm_shutdown
 	(struct msmcomm_context *ctx);
 int				msmcomm_read_from_modem
-	(struct msmcomm_context *ctx, int fd);
+	(struct msmcomm_context *ctx);
 int				msmcomm_send_message
 	(struct msmcomm_context *ctx, struct msmcomm_message *msg);
 unsigned int 	msmcomm_check_hci_version
 	(unsigned int hci_version);
 void			msmcomm_register_event_handler
-	(struct msmcomm_context *ctx, msmcomm_event_handler_cb event_handler);
+	(struct msmcomm_context *ctx, msmcomm_event_handler_cb event_handler, void *data);
 void			msmcomm_register_write_handler
-	(struct msmcomm_context *ctx, msmcomm_write_handler_cb write_handler);
+	(struct msmcomm_context *ctx, msmcomm_write_handler_cb write_handler, void *data);
+void			msmcomm_register_read_handler
+	(struct msmcomm_context *ctx, msmcomm_read_handler_cb read_handler, void *data);
 
 /**
  * These are common operations which are valid for all kind of messages
@@ -177,6 +185,8 @@ uint32_t		msmcomm_message_get_type
 	(struct msmcomm_message *msg);
 uint8_t 		msmcomm_message_get_ref_id
 	(struct msmcomm_message *msg);
+void			msmcomm_message_set_ref_id
+	(struct msmcomm_message *msg, uint8_t ref_id);
 
 /**
  * These are message/response/event specific operations which only should be
@@ -193,16 +203,16 @@ void msmcomm_message_end_call_set_call_number
 
 void			msmcomm_resp_get_firmware_info_get_info
 	(struct msmcomm_message *msg, char *buffer, int len);
-uint8_t 		msmcomm_resp_get_firmware_info_get_hci_versioni
+uint8_t 		msmcomm_resp_get_firmware_info_get_hci_version
 	(struct msmcomm_message *msg);
 void 			msmcomm_resp_get_imei_get_imei
-	(struct msmcomm_message *msg, uint8_t *buffer);
+	(struct msmcomm_message *msg, uint8_t *buffer, int len);
 unsigned int 	msmcomm_resp_charge_usb_get_voltage
 	(struct msmcomm_message *msg);
 
 uint8_t 		msmcomm_event_power_state_get_state
 	(struct msmcomm_message *msg);
-void 			msmcomm_event_call_status_get_number
+void 			msmcomm_event_call_status_get_caller_id
 	(struct msmcomm_message *msg, uint8_t *buffer, unsigned int len);
 unsigned int 	msmcomm_event_charger_status_get_voltage
 	(struct msmcomm_message *msg);
