@@ -1,0 +1,11 @@
+msmcommd:
+- implement daemon mode
+- logging: logfile, enable/disable
+- memory usage
+
+msmcterm:
+- rewrite in vala
+
+libmsmcomm:
+- add more messages
+- decrypt payload of messages
