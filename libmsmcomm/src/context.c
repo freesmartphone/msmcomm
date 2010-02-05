@@ -44,6 +44,8 @@ int msmcomm_read_from_modem(struct msmcomm_context *ctx)
 
 	/* what should we do with the received data? */
 	handle_response_data(ctx, buf, len);
+
+	return len;
 }
 
 void msmcomm_register_event_handler
