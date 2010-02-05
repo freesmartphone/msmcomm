@@ -48,20 +48,15 @@
 
 #include <msmcomm.h>
 
-struct msmcterm_context 
-{
-	struct bsc_fd net_fd;
-	struct bsc_fd con_fd;
-	char ifname[30];
-	char remote_host[30];
-	char remote_port[10];
-	struct msmcomm_context msmcomm;
-};
+struct bsc_fd net_fd;
+struct bsc_fd con_fd;
+char ifname[30];
+char remote_host[30];
+unsigned short remote_port;
 
 int dump_enabled = 0;
-struct msmcterm_context ctx;
 
-static int tcp_sock_open(struct msmcterm_context *ctx)
+static int tcp_sock_open()
 {
 	int fd, rc, on = 1;
 	struct sockaddr_in sa;
@@ -92,8 +87,8 @@ static int tcp_sock_open(struct msmcterm_context *ctx)
 	}
 
 	sa.sin_family = AF_INET;
-	sa.sin_port = htons(atoi(ctx->remote_port));
-	sa.sin_addr.s_addr = inet_addr(ctx->remote_host);
+	sa.sin_port = htons(remote_port);
+	sa.sin_addr.s_addr = inet_addr(remote_host);
 
 	rc = connect(fd, (struct sockaddr*) &sa, sizeof(sa));
 	if (rc < 0) {
@@ -112,9 +107,9 @@ static void print_headline(void)
 
 static void do_exit(void)
 {		
-	bsc_unregister_fd(&ctx.net_fd);
-	bsc_unregister_fd(&ctx.con_fd);
-	close(ctx.net_fd.fd);
+	bsc_unregister_fd(&net_fd);
+	bsc_unregister_fd(&con_fd);
+	close(net_fd.fd);
 	exit(1);
 }
 
@@ -150,17 +145,17 @@ static void do_dump(char *args)
 	}
 }
 
-static void do_get_imei(void)
+static void do_get_imei(struct msmcomm_context *ctx)
 {
 	struct msmcomm_message *msg;
-	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_GET_IMEI);
-	msmcomm_send_message(&ctx.msmcomm, msg);
+	msg = msmcomm_create_message(ctx, MSMCOMM_MESSAGE_CMD_GET_IMEI);
+	msmcomm_send_message(ctx, msg);
 }
 
-static void do_change_operation_mode(char *args)
+static void do_change_operation_mode(struct msmcomm_context *ctx, char *args)
 {
 	struct msmcomm_message *msg;
-	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE);
+	msg = msmcomm_create_message(ctx, MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE);
 
 	uint8_t mode = MSMCOMM_OPERATION_MODE_RESET;
 	
@@ -180,56 +175,56 @@ static void do_change_operation_mode(char *args)
 	}
 
 	msmcomm_message_change_operation_mode_set_operation_mode(msg, mode);
-	msmcomm_send_message(&ctx.msmcomm, msg);
+	msmcomm_send_message(ctx, msg);
 }
 
-static void do_get_firmware_info(void)
+static void do_get_firmware_info(struct msmcomm_context *ctx)
 {
 	struct msmcomm_message *msg;
-	msg = msmcomm_create_message(&ctx.msmcomm,
+	msg = msmcomm_create_message(ctx,
 								 MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO);
 	if (msg != NULL)
-		msmcomm_send_message(&ctx.msmcomm, msg);
+		msmcomm_send_message(ctx, msg);
 }
 
-static void do_test_alive(void)
+static void do_test_alive(struct msmcomm_context *ctx)
 {
 	struct msmcomm_message *msg;
-	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_TEST_ALIVE);
-	msmcomm_send_message(&ctx.msmcomm, msg);
+	msg = msmcomm_create_message(ctx, MSMCOMM_MESSAGE_CMD_TEST_ALIVE);
+	msmcomm_send_message(ctx, msg);
 }
 
-static void do_get_phone_state_info(void)
+static void do_get_phone_state_info(struct msmcomm_context *ctx)
 {
 	struct msmcomm_message *msg;
-	msg = msmcomm_create_message(&ctx.msmcomm,
+	msg = msmcomm_create_message(ctx,
 								 MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO);
-	msmcomm_send_message(&ctx.msmcomm, msg);
+	msmcomm_send_message(ctx, msg);
 }
 
-static void do_verify_pin(char *args)
+static void do_verify_pin(struct msmcomm_context *ctx, char *args)
 {
 	struct msmcomm_message *msg;
-	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_VERIFY_PIN);
+	msg = msmcomm_create_message(ctx, MSMCOMM_MESSAGE_CMD_VERIFY_PIN);
 	uint8_t pin[8];
 	args++;
 	snprintf(pin, 8, "%s", args);
 	msmcomm_message_verify_pin_set_pin(msg, pin, 8);	
-	msmcomm_send_message(&ctx.msmcomm, msg);
+	msmcomm_send_message(ctx, msg);
 }
 
-static void do_get_charger_status(void)
+static void do_get_charger_status(struct msmcomm_context *ctx)
 {
 	struct msmcomm_message *msg;
-	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS);
+	msg = msmcomm_create_message(ctx, MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS);
 	msmcomm_message_set_ref_id(msg, 0xa);
-	msmcomm_send_message(&ctx.msmcomm, msg);
+	msmcomm_send_message(ctx, msg);
 }
 
-static void do_charge_usb(char *args)
+static void do_charge_usb(struct msmcomm_context *ctx, char *args)
 {
 	struct msmcomm_message *msg;
-	msg = msmcomm_create_message(&ctx.msmcomm, MSMCOMM_MESSAGE_CMD_CHARGE_USB);
+	msg = msmcomm_create_message(ctx, MSMCOMM_MESSAGE_CMD_CHARGE_USB);
 	msmcomm_message_set_ref_id(msg, 0xb);
 
 	int mode = atoi(args+1);
@@ -241,15 +236,20 @@ static void do_charge_usb(char *args)
 	else
 		msmcomm_message_charge_usb_set_mode(msg, MSMCOMM_CHARGE_USB_MODE_500mA);
 
-	msmcomm_send_message(&ctx.msmcomm, msg);
+	msmcomm_send_message(ctx, msg);
 }
 
-static void network_write_cb(struct msmcomm_context *msmc_ctx, uint8_t *data, uint32_t len)
+static int network_write_cb(void *_data, uint8_t *data, uint32_t len)
 {
-	send(ctx.net_fd.fd, data, len, 0);
+	return send(net_fd.fd, data, len, 0);
 }
 
-static void network_event_cb(struct msmcomm_context *ctx, int event, struct msmcomm_message *message)
+static int network_read_cb(void *_data, uint8_t *data, uint32_t len)
+{
+	return recv(net_fd.fd, data, len, 0);
+}
+
+static void network_event_cb(void *_data, int event, struct msmcomm_message *message)
 {
 	if (event == MSMCOMM_EVENT_RESET_RADIO_IND) {
 		printf("got event: MSMCOMM_EVENT_RESET_RADIO_IND\n");
@@ -305,10 +305,12 @@ static void network_event_cb(struct msmcomm_context *ctx, int event, struct msmc
 
 static int network_cb(struct bsc_fd *bfd, unsigned int flags)
 {
+	struct msmcomm_context *ctx = (struct msmcomm_context*) bfd->data;
 	int rc;
+
 	/* read from modem */
 	if (flags & BSC_FD_READ) {
-		rc = msmcomm_read_from_modem(&ctx.msmcomm, bfd->fd);
+		rc = msmcomm_read_from_modem(ctx);
 		if (rc <= 0) {
 			do_exit();
 		}
@@ -322,6 +324,7 @@ static int console_cb(struct bsc_fd *bfd, unsigned int flags)
 {
 	char buf[INBUF_SIZE];
 	int ret;
+	struct msmcomm_context *ctx = (struct msmcomm_context*) bfd->data;
 
 	if (flags & BSC_FD_READ) {
 		ret = read(fileno(stdin), buf, INBUF_SIZE);
@@ -346,37 +349,37 @@ static int console_cb(struct bsc_fd *bfd, unsigned int flags)
 
 		/* msmcomm command */
 		if (!strncasecmp((char*)buf, "change_operation_mode", 21)) {
-			do_change_operation_mode(&buf[21]);
+			do_change_operation_mode(ctx, &buf[21]);
 			done = 1;
 		}
 		if (!strncasecmp((char*)buf, "get_imei", 8)) {
-			do_get_imei();
+			do_get_imei(ctx);
 			done = 1;
 		}
 		if (!strncasecmp((char*)buf, "get_firmware_info", 17)) {
-			do_get_firmware_info();
+			do_get_firmware_info(ctx);
 			done = 1;
 		}
 		if (!strncasecmp((char*)buf, "get_phone_state_info", 20)) {
-			do_get_phone_state_info();
+			do_get_phone_state_info(ctx);
 			done = 1;
 		}
 		if (!strncasecmp((char*)buf, "test_alive", 10)) {
-			do_test_alive();
+			do_test_alive(ctx);
 			done = 1;
 		}
 		if (!strncasecmp((char*)buf, "verify_pin", 10)) {
-			do_verify_pin(&buf[10]);
+			do_verify_pin(ctx, &buf[10]);
 			done = 1;
 		}
 		if (!strncasecmp((char*)buf, "get_charger_status", 18))
 		{
-			do_get_charger_status();
+			do_get_charger_status(ctx);
 			done = 1;
 		}
 		if (!strncasecmp((char*)buf, "charge_usb", 11))
 		{
-			do_charge_usb(&buf[11]);
+			do_charge_usb(ctx, &buf[11]);
 			done = 1;
 		}
 
@@ -397,38 +400,97 @@ static void signal_handler(int signal)
 	}
 }
 
+static void do_cmd_help()
+{
+	printf("usage: msmcterm [options]\n");
+	printf("\t-f, --interface=INTERFACE   specify a interface for the connection\n");
+	printf("\t-i, --ip-address=IP         specify the ip address to connect to\n");
+	printf("\t-p, --port=PORT             specify the port msmcterm should for the connection\n");
+	printf("\t-h, --help                  show this help\n");
+	exit(1);
+}
+
+static void handle_options(int argc, char *argv[])
+{
+	opterr = 0;
+	int option_index;
+	int chr;
+	int check_arg[2];
+	memset(check_arg, 0, 2);
+	
+	struct option opts[] = {
+		{ "interface", required_argument, 0, 'f' },
+		{ "ip-address", required_argument, 0, 'i' },
+		{ "port", required_argument, 0, 'p' },
+		{ "help", required_argument, 0, 'h' },
+	};
+
+	while(1) {
+		option_index = 0;
+		chr = getopt_long(argc, argv, "f:i:ph", opts, &option_index);
+		if (chr == -1)
+			break;
+		switch (chr) {
+		case 'f':
+			snprintf(ifname, 30, "%s", optarg);
+			break;
+		case 'i':
+			snprintf(remote_host, 30, "%s", optarg);
+			break;
+		case 'p':
+			remote_port = atoi(remote_port);
+			break;
+		case 'h':
+			do_cmd_help();
+			break;
+		case '?':
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	char buf[INBUF_SIZE];
 	int ret;
+	struct msmcomm_context ctx;
 
 	/* default configuration */
 	/* FIXME let the user define this options through cmdline arguments */
-	snprintf(ctx.ifname, 30, "lo");
-	snprintf(ctx.remote_host, 30, "127.0.0.1");
-	snprintf(ctx.remote_port, 10, "3030");
+	snprintf(ifname, 30, "lo");
+	snprintf(remote_host, 30, "127.0.0.1");
+	remote_port = 3030;
 
-	ctx.con_fd.fd = fileno(stdin);
-	ctx.con_fd.when = BSC_FD_READ;
-	ctx.con_fd.cb = console_cb;
-	bsc_register_fd(&ctx.con_fd);
+	handle_options(argc, argv);
 
-	ctx.net_fd.fd = tcp_sock_open(&ctx);
-	if (ctx.net_fd.fd < 0) {
+	printf("connecting to '%s:%i' on '%s'\n", remote_host, remote_port, ifname);
+
+	con_fd.fd = fileno(stdin);
+	con_fd.when = BSC_FD_READ;
+	con_fd.cb = console_cb;
+	con_fd.data = &ctx;
+	bsc_register_fd(&con_fd);
+
+	net_fd.fd = tcp_sock_open();
+	if (net_fd.fd < 0) {
 		printf("something went wrong while configuring the network" \
 			   "interface!\n");
 		exit(1);
 	}
 
-	ctx.net_fd.when = BSC_FD_READ;
-	ctx.net_fd.cb = network_cb;
-	bsc_register_fd(&ctx.net_fd);
+	net_fd.when = BSC_FD_READ;
+	net_fd.cb = network_cb;
+	net_fd.data = &ctx;
+	bsc_register_fd(&net_fd);
 
 	signal(SIGINT, &signal_handler);
 
-	msmcomm_init(&ctx.msmcomm);
-	msmcomm_register_write_handler(&ctx.msmcomm, network_write_cb);
-	msmcomm_register_event_handler(&ctx.msmcomm, network_event_cb);
+	msmcomm_init(&ctx);
+	msmcomm_register_write_handler(&ctx, network_write_cb, &ctx);
+	msmcomm_register_event_handler(&ctx, network_event_cb, &ctx);
+	msmcomm_register_read_handler(&ctx, network_read_cb, &ctx);
 
 	print_headline();
 
@@ -440,7 +502,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	msmcomm_shutdown(&ctx.msmcomm);
+	msmcomm_shutdown(&ctx);
 
 	return 0;
 }
