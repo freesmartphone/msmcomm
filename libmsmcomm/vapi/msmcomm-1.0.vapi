@@ -137,11 +137,11 @@
     }
 
     [CCode (cname = "msmcomm_event_handler_cb")]
-    public delegate EventHandlerCb(EventType event, Message? message);
+    public delegate void EventHandlerCb(EventType event, Message? message);
     [CCode (cname = "msmcomm_write_handler_cb")]
-    public delegate WriteHandlerCb(void *data, int len);
+    public delegate void WriteHandlerCb(void *data, int len);
     [CCode (cname = "msmcomm_read_handler_cb")]
-    public delegate EventHandlerCb(void *data, int len);
+    public delegate void ReadHandlerCb(void *data, int len);
 
     [CCode (cname = "msmcomm_check_hci_version")]
     public bool checkHciVersion(uint version);
@@ -161,7 +161,7 @@
         public void sendMessage(Message message);
 
         [CCode (cname = "msmcomm_register_event_handler")]
-        public void registerEventHandler(EventHandlerCb eventHandlerCb)
+        public void registerEventHandler(EventHandlerCb eventHandlerCb);
 
         [CCode (cname = "msmcomm_register_write_handler")]
         public void registerWriteHandler(WriteHandlerCb writeHandlerCb);
@@ -181,8 +181,8 @@
        [CCode (cname = "msmcomm_message_get_size")]
        public int getSize();
 
-       [CCode (cname = "msmcomm_message_get_type")]
-       public MessageType getType();
+       //[CCode (cname = "msmcomm_message_get_type")]
+       //public MessageType getType();
 
        [CCode (cname = "msmcomm_message_get_ref_id")]
        public uint8 getRefId();
@@ -198,8 +198,9 @@
     public class ChangeOperationModeCmd : Message
     {
         public ChangeOperationModeCmd(Context? context)
-            : base(context, CommandType.CHANGE_OPERATION_MODE)
-        { }
+        {
+            base(context, CommandType.CHANGE_OPERATION_MODE);
+        }
 
         [CCode (cname = "msmcomm_message_change_operation_mode_set_operation_mode")]
         public void setOperationMode(OperationMode oprtMode);
@@ -208,8 +209,9 @@
     public class VerifyPinCmd : Message
     {
         public VerifyPinCmd(Context? context)
-            : base(context, CommandType.VERIFY_PIN)
-        { }
+        {
+            base(context, CommandType.VERIFY_PIN);
+        }
 
         [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
         public void setPin(string pin);
@@ -218,8 +220,9 @@
     public class ChargeUsbCmd : Message
     {
         public ChargeUsbCmd(Context? context)
-            : base(context, CommandType.CHARGE_USB)
-        { }
+        {
+            base(context, CommandType.CHARGE_USB);
+        }
 
         [CCode (cname = "msmcomm_message_charge_usb_set_mode")]
         public void setMode(UsbChargeMode mode);
@@ -228,8 +231,9 @@
     public class EndCallCmd : Message
     {
         public EndCallCmd(Context? context)
-            : base(context, CommandType.END_CALL)
-        { }
+        {
+            base(context, CommandType.END_CALL);
+        }
 
         [CCode (cname = "msmcomm_message_end_call_set_call_number")]
         public void setCallNumber(uint8 call_nr);
@@ -238,8 +242,9 @@
     public class AnswerCallCmd : Message
     {
         public AnswerCallCmd(Context? context)
-            : base(context, CommandType.ANSWER_CALL)
-        { }
+        {
+            base(context, CommandType.ANSWER_CALL);
+        }
 
         /*
         [CCode (cname = "msmcomm_message_answer_call_set_call_number")]
