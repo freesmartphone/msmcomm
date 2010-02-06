@@ -32,10 +32,12 @@ unsigned int group_sim_is_valid(struct msmcomm_message *msg)
 }
 
 void group_sim_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
-{ }
+{ 
+}
 
 void group_sim_free(struct msmcomm_message *msg)
-{ }
+{ 
+}
 
 unsigned int group_sim_get_type(struct msmcomm_message *msg)
 {

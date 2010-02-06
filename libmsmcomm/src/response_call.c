@@ -42,14 +42,12 @@ void resp_cm_call_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32
 {
 	if (len != sizeof(struct cm_call_resp))
 		return;
-
-	msg->payload = talloc_zero(talloc_msmc_ctx, struct cm_call_resp);
-	memcpy(msg->payload, data, len);
+	
+	msg->payload = data;
 }
 
 void resp_cm_call_free(struct msmcomm_message *msg)
 {
-	talloc_free(msg->payload);
 }
 
 uint8_t msmcomm_message_cm_call_get_ref_id(struct msmcomm_message *msg)

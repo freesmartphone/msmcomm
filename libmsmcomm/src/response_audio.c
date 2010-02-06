@@ -38,17 +38,12 @@ unsigned int resp_sound_is_valid(struct msmcomm_message *msg)
 
 void resp_sound_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
-	if (len != sizeof(struct sound_resp)) {
-		msg->payload = NULL;
+	if (len != sizeof(struct sound_resp))
 		return;
-	}
 
-	msg->payload = talloc_zero(talloc_msmc_ctx, struct sound_resp);
-	memcpy(&msg->payload, data, len);
+	msg->payload = data;
 }
 
 void resp_sound_free(struct msmcomm_message *msg)
 {
-	if (msg->payload != NULL)
-		talloc_free(msg->payload);
 }

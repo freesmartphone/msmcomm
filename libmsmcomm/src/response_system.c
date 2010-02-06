@@ -65,18 +65,14 @@ unsigned int resp_get_firmware_info_is_valid(struct msmcomm_message *msg)
 void resp_get_firmware_info_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
 	if (len != sizeof(struct get_firmware_info_resp)) {
-		msg->payload = NULL;
 		return;
 	}
 
-	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_firmware_info_resp);
-	memcpy(&msg->payload, data, len);
+	msg->payload = data;
 }
 
 void resp_get_firmware_info_free(struct msmcomm_message *msg)
 {
-	if (msg->payload != NULL)
-		talloc_free(msg->payload);
 }
 
 uint8_t msmcomm_resp_get_firmware_info_get_hci_version(struct msmcomm_message *msg)
@@ -111,19 +107,30 @@ void resp_get_imei_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 		return;
 	}
 
-	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_imei_resp);
-	memcpy(&msg->payload, data, len);
+	msg->payload = data;
 }
 
 void msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg, uint8_t *buffer, int len)
 {
-	/* FIXME */
+	int n;
+	char chr, *p;
+	struct get_imei_resp *resp;
+
+	/* we need a least a buffer with 17 chars */
+	if (len < 17)
+		return;
+
+	resp = (struct get_imei_resp*) msg->payload;
+	p = buffer;
+	
+	/* imei consists of 17 bytes - each byte is one number of the imei */
+	for (n = 0; n < 17; n++) {
+		snprintf(&chr, 1, "%i", resp->imei[n]);
+	}
 }
 
 void resp_get_imei_free(struct msmcomm_message *msg)
 {
-	if (msg->payload != NULL)
-		talloc_free(msg->payload);
 }
 
 /*
@@ -146,19 +153,14 @@ unsigned int resp_get_charger_status_is_valid(struct msmcomm_message *msg)
 
 void resp_get_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
-	msg->payload = NULL;
-
 	if (len != sizeof(struct get_charger_status_resp))
 		return;
 
-	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_charger_status_resp);
-	memcpy(msg->payload, data, len);
+	msg->payload = data;
 }
 
 void resp_get_charger_status_free(struct msmcomm_message *msg)
 {
-	if (msg->payload != NULL)
-		talloc_free(msg->payload);
 }
 
 /*
@@ -181,19 +183,14 @@ unsigned int resp_charge_usb_is_valid(struct msmcomm_message *msg)
 
 void resp_charge_usb_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
-	msg->payload = NULL;
-
 	if (len != sizeof(struct charge_usb_resp))
 		return;
-
-	msg->payload = talloc_zero(talloc_msmc_ctx, struct charge_usb_resp);
-	memcpy(msg->payload, data, len);
+	
+	msg->payload = data;
 }
 
 void resp_charge_usb_free(struct msmcomm_message *msg)
 {
-	if (msg->payload != NULL)
-		talloc_free(msg->payload);
 }
 
 unsigned int msmcomm_resp_charge_usb_get_voltage(struct msmcomm_message *msg)

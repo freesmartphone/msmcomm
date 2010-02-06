@@ -173,7 +173,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 		
 		if (resp_descriptors[n].is_valid(&resp)) {
 			/* let our descriptor handle the left data */
-			resp_descriptors[n].handle_data(&resp, data + 2, len - 2);
+			resp_descriptors[n].handle_data(&resp, data + 2, len - 2 - 2);
 
 			/* tell the user about the received event/response */
 			ctx->event_cb(ctx->event_data, resp_descriptors[n].type, &resp);
