@@ -17,6 +17,9 @@ fi
 AC_LANG_C
 AC_PROG_INSTALL
 
-AC_CONFIG_FILES([Makefile libmsmcomm-1.0.pc src/Makefile vapi/Makefile])
+AC_CONFIG_FILES([Makefile
+	msmcomm-1.0.pc
+	src/Makefile
+	vapi/Makefile])
 AC_OUTPUT
-  
+

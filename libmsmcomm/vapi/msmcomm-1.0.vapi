@@ -1,5 +1,5 @@
-/* 
- * (c) 2009 by Simon Busch <morphis@gravedo.de>
+/**
+ * (C) 2009-2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or modify
@@ -16,13 +16,13 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- */
+ **/
 
  [CCode (cheader_filename = "msmcomm/msmcomm.h")]
- namespace msmcomm
+ namespace Msmcomm
  {
-    [CCode (cprefix = "MSMCOMM_MESSAGE_CMD")]
-    enum CommandType
+    [CCode (cprefix = "MSMCOMM_MESSAGE_CMD", cheader_filename = "msmcomm/msmcomm.h")]
+    public enum CommandType
     {
         CHANGE_OPERATION_MODE,
         GET_IMEI,
@@ -39,8 +39,8 @@
         CHARGE_USB
     }
 
-    [CCode (cprefix = "MSMCOMM_RESPONSE_")]
-    enum ResponseType
+    [CCode (cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm/msmcomm.h")]
+    public enum ResponseType
     {
         TEST_ALIVE,
         GET_FIRMWARE_INFO,
@@ -55,11 +55,11 @@
         SOUND,
         CM_CALL,
         GET_CHARGER_STATUS,
-        CHARGE_USB,
+        CHARGE_USB
     }
 
-    [CCode (cprefix = "MSMCOMM_EVENT_")]
-    enum EventType
+    [CCode (cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm/msmcomm.h")]
+    public enum EventType
     {
         RESET_RADIO_IND,
         CHARGER_STATUS,
@@ -117,31 +117,31 @@
         SIM_REFRESH_APP_RESET,
         SIM_REFRESH_3G_SESSION_RESET,
         SIM_APP_SELECTED,
-        SIM_DEFAULT,
+        SIM_DEFAULT
     }
 
-    [CCode (cprefix = "MSMCOMM_OPERATION_MODE_")]
-    enum OperationMode
+    [CCode (cprefix = "MSMCOMM_OPERATION_MODE_", cheader_filename = "msmcomm/msmcomm.h")]
+    public enum OperationMode
     {
         RESET,
         ONLINE,
-        OFFLINE,
+        OFFLINE
     }
 
-    [CCode (cprefix = "MSMCOMM_CHARGE_USB_")]
-    enum UsbChargeMode
+    [CCode (cprefix = "MSMCOMM_CHARGE_USB_", cheader_filename = "msmcomm/msmcomm.h")]
+    public enum UsbChargeMode
     {
         MODE_250mA,
         MODE_500mA,
-        MODE_1A,
+        MODE_1A
     }
 
     [CCode (cname = "msmcomm_event_handler_cb")]
-    public static delegate EventHandlerCb(EventType event, Message? message);
+    public delegate void EventHandlerCb(EventType event, Message? message);
     [CCode (cname = "msmcomm_write_handler_cb")]
-    public static delegate WriteHandlerCb(void *data, int len);
+    public delegate void WriteHandlerCb(void *data, int len);
     [CCode (cname = "msmcomm_read_handler_cb")]
-    public static delegate EventHandlerCb(void *data, int len);
+    public delegate void ReadHandlerCb(void *data, int len);
 
     [CCode (cname = "msmcomm_check_hci_version")]
     public bool checkHciVersion(uint version);
@@ -161,7 +161,7 @@
         public void sendMessage(Message message);
 
         [CCode (cname = "msmcomm_register_event_handler")]
-        public void registerEventHandler(EventHandlerCb eventHandlerCb)
+        public void registerEventHandler(EventHandlerCb eventHandlerCb);
 
         [CCode (cname = "msmcomm_register_write_handler")]
         public void registerWriteHandler(WriteHandlerCb writeHandlerCb);
@@ -181,8 +181,8 @@
        [CCode (cname = "msmcomm_message_get_size")]
        public int getSize();
 
-       [CCode (cname = "msmcomm_message_get_type")]
-       public MessageType getType();
+       //[CCode (cname = "msmcomm_message_get_type")]
+       //public MessageType getType();
 
        [CCode (cname = "msmcomm_message_get_ref_id")]
        public uint8 getRefId();
@@ -198,8 +198,9 @@
     public class ChangeOperationModeCmd : Message
     {
         public ChangeOperationModeCmd(Context? context)
-            : base(context, CommandType.CHANGE_OPERATION_MODE)
-        { }
+        {
+            base(context, CommandType.CHANGE_OPERATION_MODE);
+        }
 
         [CCode (cname = "msmcomm_message_change_operation_mode_set_operation_mode")]
         public void setOperationMode(OperationMode oprtMode);
@@ -208,8 +209,9 @@
     public class VerifyPinCmd : Message
     {
         public VerifyPinCmd(Context? context)
-            : base(context, CommandType.VERIFY_PIN)
-        { }
+        {
+            base(context, CommandType.VERIFY_PIN);
+        }
 
         [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
         public void setPin(string pin);
@@ -218,8 +220,9 @@
     public class ChargeUsbCmd : Message
     {
         public ChargeUsbCmd(Context? context)
-            : base(context, CommandType.CHARGE_USB)
-        { }
+        {
+            base(context, CommandType.CHARGE_USB);
+        }
 
         [CCode (cname = "msmcomm_message_charge_usb_set_mode")]
         public void setMode(UsbChargeMode mode);
@@ -228,8 +231,9 @@
     public class EndCallCmd : Message
     {
         public EndCallCmd(Context? context)
-            : base(context, CommandType.END_CALL)
-        { }
+        {
+            base(context, CommandType.END_CALL);
+        }
 
         [CCode (cname = "msmcomm_message_end_call_set_call_number")]
         public void setCallNumber(uint8 call_nr);
@@ -238,8 +242,9 @@
     public class AnswerCallCmd : Message
     {
         public AnswerCallCmd(Context? context)
-            : base(context, CommandType.ANSWER_CALL)
-        { }
+        {
+            base(context, CommandType.ANSWER_CALL);
+        }
 
         /*
         [CCode (cname = "msmcomm_message_answer_call_set_call_number")]
@@ -263,12 +268,12 @@
     public class GetImeiResp : Message
     {
         [CCode (cname = "msmcomm_resp_get_imei_get_imei")]
-        private void getImei(string imei);
+        private void _getImei(string imei);
 
-        private string getImei()
+        public string getImei()
         {
             string imei;
-            getImei(imei);
+            _getImei(imei);
             return imei;
         }
     }
@@ -286,29 +291,29 @@
     public class PowerStateEvent : Message
     {
         [CCode (cname = "msmcomm_event_power_state_get_state")]
-        uint8 getState();
+        public uint8 getState();
     }
 
     public class ChargerStatusEvent : Message
     {
         [CCode (cname = "msmcomm_event_charger_status_get_voltage")]
-        uint getVoltage();
+        public uint getVoltage();
     }
 
     public abstract class CallStatusEvent : Message
     {
         [CCode (cname = "msmcomm_event_call_status_get_caller_id")]
-        private void getCallerId(string callerId);
+        private void _getCallerId(string callerId);
 
         public string getCallerId()
         {
             string callerId;
-            getCallerId(callerId);
+            _getCallerId(callerId);
             return callerId;
         }
     }
 
-    public class CallIncommingEvent : CallStatusEvent
+    public class CallIncomingEvent : CallStatusEvent
     {
     }
 

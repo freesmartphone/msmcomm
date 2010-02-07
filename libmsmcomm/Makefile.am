@@ -1,11 +1,13 @@
-SUBDIRS = src vapi
+SUBDIRS = \
+	src \
+	vapi
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libmsmcomm-1.0.pc
+pkgconfig_DATA = msmcomm-1.0.pc
 
 EXTRA_DIST = \
-MAINTAINERS \
-libmsmcomm-1.0.pc.in
+	MAINTAINERS \
+	msmcomm-1.0.pc.in
 
 # Extra clean files so that maintainer-clean removes *everything*
 MAINTAINERCLEANFILES = aclocal.m4 compile config.guess config.sub \
