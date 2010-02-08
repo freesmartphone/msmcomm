@@ -37,7 +37,8 @@ def build_object(name, len, parts):
       to_print = "%s;" % to_print
     elif len > 1:
       to_print = "%s[%i];" % (to_print, len)
-
+    elif len == 0:
+      continue
     print_indent(to_print)
 
   print "};"
@@ -94,26 +95,25 @@ with open(sys.argv[1]) as f:
         unknown_counter += 1
         gap['type'] = 'uint8_t'
         object_parts.append(gap)
-        print gap
+        last_end_offset = last_end_offset + gap['len']
 
       # create current part
       part = {}
       part['name'] = rparts[2]
       part['type'] = rparts[1]
       part['len'] = (end_offset - start_offset +1) / byte_size[part['type']]
-      print part
 
       object_parts.append(part)
       last_end_offset = start_offset + part['len']
+
     elif line.startswith('end') and in_object:
       if not last_end_offset == object_len:
         gap = {}
         gap['name'] = 'unknown%i' % unknown_counter
         unknown_counter += 1
         gap['type'] = 'uint8_t'
-        gap['len'] = object_len - last_end_offset + 1
+        gap['len'] = object_len - last_end_offset
         object_parts.append(gap)
-        print gap
-
+      
       build_object(object_name, object_len, object_parts)
 
