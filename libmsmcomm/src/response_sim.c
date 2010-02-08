@@ -28,10 +28,6 @@
  * - when the voice mail number is aquired, this messages contains it
  * - it's even the response for the verify-pin message
  */
-struct get_sim_capabilities_resp
-{
-	uint8_t unknown[1935];
-} __attribute__ ((packed));
 
 unsigned int resp_get_sim_capabilities_is_valid(struct msmcomm_message *msg)
 {

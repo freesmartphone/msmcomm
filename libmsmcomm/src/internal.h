@@ -45,6 +45,7 @@
 #include "talloc.h"
 #include "linuxlist.h"
 #include "msmcomm.h"
+#include "structures.h"
 
 #define LOG_MESSAGE(message, args, ...) \
 { \

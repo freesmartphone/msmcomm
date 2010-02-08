@@ -26,6 +26,7 @@ extern void *talloc_msmc_ctx;
  * Call event group handler
  */
 
+#if 0
 struct call_status_event
 {
 	uint8_t unknown0;
@@ -35,8 +36,17 @@ struct call_status_event
 	uint8_t caller_id[15];
 	uint8_t unknown2[50];
 	uint8_t caller_id_len;
-	uint8_t unknown3[1038];
+	uint8_t unknown3[521];
+	uint8_t cause_value0;
+	uint8_t unknown4[4];
+	uint8_t cause_value1;
+	uint8_t unknown5[29];
+	uint8_t cause_value2;
+	uint8_t reject_type;
+	uint8_t reject_value;
+	uint8_t unknown3[479];
 } __attribute__ ((packed));
+#endif 
 
 unsigned int group_call_is_valid(struct msmcomm_message *msg)
 {
@@ -78,6 +88,23 @@ void msmcomm_event_call_status_get_caller_id
 {
 	snprintf(buffer, len, "%s", 
 			 MESSAGE_CAST(msg, struct call_status_event)->caller_id);
+}
+
+unsigned int msmcomm_event_call_status_get_cause_value(struct msmcomm_message *msg)
+{
+	uint8_t value = 0xff;
+
+	if (MESSAGE_CAST(msg, struct call_status_event)->cause_value0 == 0)
+		return MESSAGE_CAST(msg, struct call_status_event)->cause_value1;
+
+	if (MESSAGE_CAST(msg, struct call_status_event)->cause_value2 == 0)
+		return MESSAGE_CAST(msg, struct call_status_event)->cause_value2;
+
+	if (MESSAGE_CAST(msg, struct call_status_event)->reject_type == 0x3)
+		value = 0xe1;
+
+
+	return 0;
 }
 
 

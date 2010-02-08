@@ -26,13 +26,6 @@ extern void *talloc_msmc_ctx;
  * MSMCOMM_RESPONSE_CM_CALL
  */
 
-struct cm_call_resp
-{
-	uint8_t unknown0[0];
-	uint8_t ref_id;
-	uint8_t unknown1[9];
-} __attribute__ ((packed));
-
 unsigned int resp_cm_call_is_valid(struct msmcomm_message *msg)
 {
 	return (msg->group_id == 0x1) && (msg->msg_id == 0x1);

@@ -1,0 +1,122 @@
+#-------------------------------------------------------------------
+# Call management
+#-------------------------------------------------------------------
+
+start call_status_event 1108
+[1] uint8_t call_id
+[2] uint8_t host_call_id
+[4-18] uint8_t caller_id
+[68] uint8_t caller_id_len
+[591] uint8_t cause_value0
+[596] uint8_t cause_value1
+[625] uint8_t cause_value2
+[626] uint8_t reject_type
+[627] uint8_t reject_value
+end
+
+start cm_call_resp 11
+[1] uint8_t ref_id
+end
+
+#-------------------------------------------------------------------
+# SIM
+#-------------------------------------------------------------------
+start get_sim_capabilities_resp 1935
+end
+
+
+#-------------------------------------------------------------------
+# Network
+#-------------------------------------------------------------------
+
+start cm_ss_event 678
+[0-7] uint8_t change_field
+[8] uint8_t new_value
+[16-18] uint8_t plmn
+[22] uint8_t operator_name_len
+[23-102] uint8_t operator_name
+[126] uint8_t rssi
+[128] uint8_t ecio
+end
+
+#-------------------------------------------------------------------
+# System
+#-------------------------------------------------------------------
+
+start charger_status_event 14
+[6-7] uint16_t voltage
+end
+
+start radio_reset_ind_event 0
+end
+
+start operator_mode_event 0
+end
+
+start power_state_event 13
+[5] uint8_t power_state
+end
+
+start test_alive 0
+end
+
+start get_firmware_info_resp 144
+[5] uint8_t hci_version
+[9-21] uint8_t firmware_version
+end
+
+start get_imei_resp 22
+[5-21] uint8_t imei
+end
+
+start get_charger_status_resp 14
+[1] uint8_t ref_id
+[6-7] uint16_t voltage
+end
+
+start charge_usb_resp 9
+[1] uint8_t ref_id
+[6-7] uint16_t voltage
+end
+
+
+#-------------------------------------------------------------------
+# Audio
+#-------------------------------------------------------------------
+
+start sound_resp 12
+end
+
+#-------------------------------------------------------------------
+# GPS
+#-------------------------------------------------------------------
+
+start pdsm_pd_done_event 0
+end
+
+start pd_position_data_event 0
+end
+
+start pd_parameter_change_event 0
+end
+
+start pdsm_lcs_event 0
+end
+
+start pdsm_xtra_event 0
+end
+
+start pdsm_pd_get_pos_resp 0
+end
+
+start pdsm_pd_end_session_resp 0
+end
+
+start pa_set_param_resp 0
+end
+
+start lcs_agent_client_rsp_resp 0
+end
+
+start xtra_set_data_resp 0
+end

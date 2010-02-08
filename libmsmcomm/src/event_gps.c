@@ -26,10 +26,6 @@ extern void *talloc_msmc_ctx;
  * MSMCOMM_EVENT_PDSM_PD_DONE
  */
 
-struct pdsm_pd_done_event
-{
-} __attribute__ ((packed));
-
 unsigned int event_pdsm_pd_done_is_valid(struct msmcomm_message *msg)
 {
 	return (msg->group_id == 0x23) && (msg->msg_id == 0x1);
@@ -47,10 +43,6 @@ void event_pdsm_pd_done_free(struct msmcomm_message *msg)
 /*
  * MSMCOMM_EVENT_PD_POSITION_DATA
  */
-
-struct pd_position_data_event
-{
-} __attribute__ ((packed));
 
 unsigned int event_pd_position_data_is_valid(struct msmcomm_message *msg)
 {
@@ -71,10 +63,6 @@ void event_pd_position_data_free(struct msmcomm_message *msg)
  * MSMCOMM_EVENT_PD_PARAMTER_CHANGE
  */
 
-struct pd_parameter_change_event
-{
-} __attribute__ ((packed));
-
 unsigned int event_pd_parameter_change_is_valid(struct msmcomm_message *msg)
 {
 	//return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
@@ -94,10 +82,6 @@ void event_pd_parameter_change_free(struct msmcomm_message *msg)
  * MSMCOMM_EVENT_PDSM_LCS
  */
 
-struct pdsm_lcs_event
-{
-} __attribute__ ((packed));
-
 unsigned int event_pdsm_lcs_is_valid(struct msmcomm_message *msg)
 {
 	//return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
@@ -116,10 +100,6 @@ void event_pdsm_lcs_free(struct msmcomm_message *msg)
 /*
  * MSMCOMM_EVENT_PDSM_XTRA
  */
-
-struct pdsm_xtra_event
-{
-} __attribute__ ((packed));
 
 unsigned int event_pdsm_xtra_is_valid(struct msmcomm_message *msg)
 {

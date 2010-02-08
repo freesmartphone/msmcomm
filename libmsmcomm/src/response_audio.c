@@ -26,11 +26,6 @@ extern void *talloc_msmc_ctx;
  * MSMCOMM_RESPONSE_SOUND
  */
 
-struct sound_resp
-{
-	uint8_t unknown[12];
-} __attribute__ ((packed));
-
 unsigned int resp_sound_is_valid(struct msmcomm_message *msg)
 {
 	return (msg->group_id == 0x1f) && (msg->msg_id == 0x1);
