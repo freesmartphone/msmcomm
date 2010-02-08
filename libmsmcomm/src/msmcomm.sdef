@@ -1,0 +1,15 @@
+
+#
+# Event call status
+#
+start call_status_event 1108
+[1] uint8_t call_id
+[2] uint8_t host_call_id
+[4-18] uint8_t caller_id
+[68] uint8_t caller_id_len
+[591] uint8_t cause_value0
+[596] uint8_t cause_value1
+[625] uint8_t cause_value2
+[626] uint8_t reject_type
+[627] uint8_t reject_value
+end
