@@ -130,7 +130,10 @@ with open(sys.argv[1]) as f:
       part = {}
       part['name'] = rparts[2]
       part['type'] = rparts[1]
-      part['len'] = (end_offset - start_offset +1) / byte_size[part['type']]
+      if not part['type'] in byte_size:
+        print "fatal error: no valid type '%s'" % line
+        sys.exit(1)
+      part['len'] = (end_offset - start_offset + 1) / byte_size[part['type']]
 
       object_parts.append(part)
       last_end_offset = start_offset + part['len']
@@ -148,11 +151,14 @@ with open(sys.argv[1]) as f:
         print_object_header()
       first_object = False
       build_object(object_name, object_len, object_parts)
+
+      # reset everything
       object_parts = []
       object_name = ""
       object_len = 0
       unknown_counter = 0
       in_object = False
+      last_end_offset = 0
 
 print ""
 print "#endif"
