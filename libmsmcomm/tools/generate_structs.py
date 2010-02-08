@@ -44,7 +44,7 @@ def build_object(name, len, parts):
       continue
     print_indent(to_print)
 
-  print "};"
+  print "} __attribute__ ((packed));"
 
 in_object = False
 object_name = ""
