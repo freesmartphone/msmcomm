@@ -53,7 +53,7 @@ struct bsc_fd con_fd;
 char ifname[30];
 char remote_host[30];
 unsigned short remote_port;
-
+FILE *dump_file = NULL;
 int dump_enabled = 0;
 
 static int tcp_sock_open()
@@ -107,6 +107,8 @@ static void print_headline(void)
 
 static void do_exit(void)
 {		
+	if (dump_file != NULL)
+		fclose(dump_file);
 	bsc_unregister_fd(&net_fd);
 	bsc_unregister_fd(&con_fd);
 	close(net_fd.fd);
@@ -117,6 +119,7 @@ static void do_help(void)
 {
 	printf("help            - this help\n");
 	printf("[exit|quit]     - quit this application\n");
+	printf("dump 0/1		- enable/disable dump of incomming data from modem\n");
 	printf("get_imei		- receive imei from modem\n");
 	printf("get_firmware_info - get firmware info string from modem\n");
 	printf("change_operation_mode [mode] - change operation modem of the modem\n");
@@ -138,9 +141,23 @@ static void do_dump(char *args)
 	if (result && !dump_enabled) {
 		printf("-> enabled dumping of incomming data!\n");
 		dump_enabled = 1;
+
+		if (dump_file == NULL) {
+			dump_file = fopen("msmcomm.dump", "wa");
+			fprintf(dump_file,	
+					"==================================" \
+					" NEW DUMP " \
+					"==================================" \
+					"\n");
+		}
+
 	}
 	else if(dump_enabled) {
 		printf("-> disabled dumping of incomming data!\n");
+		if (dump_file != NULL) {
+			fclose(dump_file);
+			dump_file = NULL;
+		}
 		dump_enabled = 0;
 	}
 }
@@ -239,6 +256,27 @@ static void do_charge_usb(struct msmcomm_context *ctx, char *args)
 	msmcomm_send_message(ctx, msg);
 }
 
+void hexdump(FILE *file, const uint8_t *data, uint32_t len)
+{
+	const char *p;
+	int count;
+
+	if (!data) return;
+
+	p = &data[0];
+	count = 0;
+	while (len--) {
+		if (count == 10) {
+			fprintf(file, "\n");
+			count = 0;
+		}
+		fprintf(file, "%02x ", *p++ & 0xff);
+		count++;
+	}
+	if(count <= 10)
+		fprintf(file, "\n");
+}
+
 static int network_write_cb(void *_data, uint8_t *data, uint32_t len)
 {
 	return send(net_fd.fd, data, len, 0);
@@ -246,7 +284,12 @@ static int network_write_cb(void *_data, uint8_t *data, uint32_t len)
 
 static int network_read_cb(void *_data, uint8_t *data, uint32_t len)
 {
-	return recv(net_fd.fd, data, len, 0);
+	int rc;
+	rc = recv(net_fd.fd, data, len, 0);
+	if (dump_enabled && rc > 0) {
+		hexdump(dump_file, data, len);
+		fprintf(dump_file, "\n\n");
+	}
 }
 
 static void network_event_cb(void *_data, int event, struct msmcomm_message *message)
@@ -256,6 +299,9 @@ static void network_event_cb(void *_data, int event, struct msmcomm_message *mes
 	}
 	else if (event == MSMCOMM_RESPONSE_GET_IMEI) {
 		printf("got response: MSMCOMM_RESPONSE_GET_IMEI\n");
+		char buffer[17];
+		msmcomm_resp_get_imei_get_imei(message, buffer, 17);
+		printf("imei: %s\n", buffer);
 	}
 	else if (event == MSMCOMM_RESPONSE_GET_FIRMWARE_INFO) {
 		printf("got response: MSMCOMM_RESPONSE_GET_FIRMWARE_INFO\n");
@@ -300,6 +346,24 @@ static void network_event_cb(void *_data, int event, struct msmcomm_message *mes
 	}
 	else if (event == MSMCOMM_EVENT_CALL_END) {
 		printf("got event MSMCOMM_EVENT_CALL_END\n");
+	}
+	else if (event == MSMCOMM_EVENT_CM_SS) {
+		printf("got event MSMCOMM_EVENT_CM_SS\n");
+	
+#if 0
+		uint16_t change_field = msmcomm_event_cm_ss_get_change_field(message);
+		uint8_t plmn[3];
+		msmcomm_event_cm_ss_get_plmn(message, &plmn);
+		char operator_name[100];
+		msmcomm_event_cm_ss_get_operator_name(message, operator_name, 100);
+		uint8_t rssi = msmcomm_event_cm_ss_get_rssi(message);
+		uint8_t ecio = msmcomm_event_cm_ss_get_ecio(message);
+		printf("change field: 0x%x\n", change_field);
+		printf("plmn: 0x%x 0x%x 0x%x\n", plmn[0], plmn[1], plmn[2]);
+		printf("operator name: %s\n", operator_name);
+		printf("rssi: 0x%x (%i)\n", rssi, rssi);
+		printf("ecio: 0x%x (%i)\n", ecio, ecio);
+#endif
 	}
 }
 
