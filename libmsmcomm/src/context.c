@@ -1,4 +1,4 @@
-/* 
+/*
  * (c) 2009 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
@@ -23,6 +23,12 @@
 #define BUF_LEN			4096
 
 void *talloc_msmc_ctx;
+
+struct msmcomm_context *msmcomm_new()
+{
+	struct msmcomm_context* ctx = calloc(1, sizeof(struct msmcomm_context));
+	return msmcomm_init(ctx) ? ctx : 0;
+}
 
 int msmcomm_init(struct msmcomm_context *ctx)
 {

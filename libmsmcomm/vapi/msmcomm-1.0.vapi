@@ -151,7 +151,7 @@ namespace Msmcomm
     [Compact]
     public class Context
     {
-        [CCode (cname = "msmcomm_init")]
+        [CCode (cname = "msmcomm_new")]
         public Context();
 
         [CCode (cname = "msmcomm_read_from_modem")]
