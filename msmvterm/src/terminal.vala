@@ -34,6 +34,7 @@ public class Terminal : Object
 {
     private unowned GLib.Thread thread;
     private Msmcomm.Context context;
+    private FsoFramework.Transport transport;
 
     private string ip;
     private uint port;
@@ -50,20 +51,19 @@ public class Terminal : Object
 
     public bool open()
     {
-        stdout.printf( @"MSMVTERM: Connecting to $ip:$port..." );
-        stdout.flush();
+        stdout.printf( @"MSMVTERM: Connecting to $ip:$port...\n" );
 
-        var ok = true;
         context = new Msmcomm.Context();
+        transport = new FsoFramework.SocketTransport( "tcp", ip, port );
 
-        if ( ok )
+        if ( transport.open() )
         {
-            stdout.printf( "ONLINE\n" );
+            stdout.printf( @"MSMVTERM: ONLINE\n" );
             thread = GLib.Thread.create( cmdloop, true );
         }
         else
         {
-            stdout.printf( "Failed." );
+            stdout.printf( @"MSMVTERM: [ERR] Can't connect\n" );
             loop.quit();
         }
         return MAINLOOP_DONT_CALL_AGAIN;
