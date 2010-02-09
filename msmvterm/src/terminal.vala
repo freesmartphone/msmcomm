@@ -1,7 +1,7 @@
 /**
  * This file is part of msmvterm.
  *
- * (C) 2009 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+ * (C) 2009-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ public class Terminal : Object
 //========================================================================//
 {
     private unowned GLib.Thread thread;
+    private Commands commands;
 
     public Terminal()
     {
@@ -46,6 +47,8 @@ public class Terminal : Object
         buffer = new char[BUFFER_SIZE];
 
         thread = GLib.Thread.create( cmdloop, true );
+
+        commands = new Commands();
     }
 
     public bool open()
@@ -62,11 +65,13 @@ public class Terminal : Object
             {
                 break;
             }
-            else
+            if ( line == "" )
             {
-                Readline.History.add( line );
-                //transport.write( line + "\r\n", (int)line.length + 2 );
+                continue;
             }
+
+            Readline.History.add( line );
+            commands.dispatch( line );
         }
         Idle.add( () => { loop.quit(); return false; } );
         return null;
