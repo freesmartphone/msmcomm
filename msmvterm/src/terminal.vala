@@ -20,7 +20,6 @@
  **/
 
 using GLib;
-using FsoFramework;
 
 const bool MAINLOOP_CALL_AGAIN = true;
 const bool MAINLOOP_DONT_CALL_AGAIN = false;
@@ -33,89 +32,50 @@ char[] buffer;
 public class Terminal : Object
 //========================================================================//
 {
-    Transport transport;
-    weak Options options;
-    Reader reader;
+    private unowned GLib.Thread thread;
 
-    string transportname;
-    string portname;
-
-    public Terminal( Options option )
+    public Terminal()
     {
+        Readline.initialize();
+        Readline.readline_name = "msmvterm";
+        Readline.terminal_name = Environment.get_variable( "TERM" );
+
+        Readline.History.read( "%s/.msmvterm.history".printf( Environment.get_variable( "HOME" ) ) );
+        Readline.History.max_entries = 512;
+
         buffer = new char[BUFFER_SIZE];
-        this.options = options;
+
+        thread = GLib.Thread.create( cmdloop, true );
     }
 
     public bool open()
     {
-        if ( !parsePortspec() )
-        {
-            quitWithMessage( "FATAL: Can't parse portspec '%s'.".printf( options.portspec ) );
-            return MAINLOOP_DONT_CALL_AGAIN;
-        }
-
-        switch ( transportname )
-        {
-            case "serial":
-                transport = new SerialTransport( portname, options.portspeed );
-                break;
-            case "abyss":
-                transport = new AbyssTransport( portname.to_int() );
-                break;
-            case "unix":
-                transport = new SocketTransport( "unix", portname, 0 );
-                break;
-            case "tcp":
-            case "udp":
-                transport = new SocketTransport( transportname, portname, options.portspeed );
-                break;
-            default:
-                quitWithMessage( "FATAL: Unknown transport method '%s'.".printf( transportname ) );
-                return MAINLOOP_DONT_CALL_AGAIN;
-        }
-        transport.setDelegates( onTransportRead, onTransportHup );
-        transport.open();
-
-        if ( !transport.isOpen() )
-        {
-            quitWithMessage( "FATAL: Cannot open %s: %s".printf( options.portspec, Posix.strerror( Posix.errno ) ) );
-            return MAINLOOP_DONT_CALL_AGAIN;
-        }
-
-        reader = new Reader( transport );
-
         return MAINLOOP_DONT_CALL_AGAIN;
     }
 
-    public bool parsePortspec()
+    public void* cmdloop()
     {
-        if ( ":" in options.portspec )
+        while ( true )
         {
-            var elements = options.portspec.split( ":" );
-            if ( elements.length != 2 )
-                return false;
-
-            transportname = elements[0];
-            portname = elements[1];
+            var line = Readline.readline( "MSMVTERM> " );
+            if ( line == null ) // ctrl-d
+            {
+                break;
+            }
+            else
+            {
+                Readline.History.add( line );
+                //transport.write( line + "\r\n", (int)line.length + 2 );
+            }
         }
-        else
-        {
-            transportname = "serial";
-            portname = options.portspec;
-        }
-        return true;
+        Idle.add( () => { loop.quit(); return false; } );
+        return null;
     }
 
-    public void onTransportRead( Transport transport )
+    ~Terminal()
     {
-        int numread = transport.read( buffer, BUFFER_SIZE-1 );
-        buffer[numread] = 0;
-        stdout.printf( "%s", (string)buffer );
+        Readline.History.write( "%s/.msmvterm.history".printf( Environment.get_variable( "HOME" ) ) );
+        Readline.free_line_state();
+        Readline.cleanup_after_signal();
     }
-
-    public void onTransportHup( Transport transport )
-    {
-        quitWithMessage( "FATAL: Peer closed connection." );
-    }
-
 }
