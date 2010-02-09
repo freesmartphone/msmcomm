@@ -18,10 +18,10 @@
  *
  **/
 
- [CCode (cheader_filename = "msmcomm/msmcomm.h")]
- namespace Msmcomm
- {
-    [CCode (cprefix = "MSMCOMM_MESSAGE_CMD", cheader_filename = "msmcomm/msmcomm.h")]
+[CCode (cheader_filename = "msmcomm.h")]
+namespace Msmcomm
+{
+    [CCode (cprefix = "MSMCOMM_MESSAGE_CMD", cheader_filename = "msmcomm.h")]
     public enum CommandType
     {
         CHANGE_OPERATION_MODE,
@@ -39,7 +39,7 @@
         CHARGE_USB
     }
 
-    [CCode (cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm/msmcomm.h")]
+    [CCode (cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
     public enum ResponseType
     {
         TEST_ALIVE,
@@ -58,7 +58,7 @@
         CHARGE_USB
     }
 
-    [CCode (cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm/msmcomm.h")]
+    [CCode (cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
     public enum EventType
     {
         RESET_RADIO_IND,
@@ -120,7 +120,7 @@
         SIM_DEFAULT
     }
 
-    [CCode (cprefix = "MSMCOMM_OPERATION_MODE_", cheader_filename = "msmcomm/msmcomm.h")]
+    [CCode (cprefix = "MSMCOMM_OPERATION_MODE_", cheader_filename = "msmcomm.h")]
     public enum OperationMode
     {
         RESET,
@@ -128,7 +128,7 @@
         OFFLINE
     }
 
-    [CCode (cprefix = "MSMCOMM_CHARGE_USB_", cheader_filename = "msmcomm/msmcomm.h")]
+    [CCode (cprefix = "MSMCOMM_CHARGE_USB_", cheader_filename = "msmcomm.h")]
     public enum UsbChargeMode
     {
         MODE_250mA,
@@ -170,7 +170,7 @@
         public void registerReadHandler(ReadHandlerCb readHandlerCb);
     }
 
-    
+
     [CCode (cname = "struct msmcomm_message", free_function = "msmcomm_free_message")]
     [Compact]
     public class Message
@@ -252,7 +252,7 @@
         */
     }
 
-    /* 
+    /*
      * Response Messages
      */
 

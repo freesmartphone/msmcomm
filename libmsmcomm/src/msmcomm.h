@@ -21,6 +21,8 @@
 #ifndef MSMCOMM_H_
 #define MSMCOMM_H_
 
+#include <stdint.h>
+
 #define MSMCOMM_MESSAGE_INVALID									0
 #define MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE				1
 #define MSMCOMM_MESSAGE_CMD_GET_IMEI							2
