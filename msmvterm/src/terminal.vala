@@ -33,31 +33,52 @@ public class Terminal : Object
 //========================================================================//
 {
     private unowned GLib.Thread thread;
-    private Commands commands;
+    private Msmcomm.Context context;
 
-    public Terminal()
+    private string ip;
+    private uint port;
+
+    public Terminal( string ip = "127.0.0.1", uint port = 3030 )
     {
         Readline.initialize();
+
+        this.ip = ip;
+        this.port = port;
+
+        buffer = new char[BUFFER_SIZE];
+    }
+
+    public bool open()
+    {
+        stdout.printf( @"MSMVTERM: Connecting to $ip:$port..." );
+        stdout.flush();
+
+        var ok = true;
+        context = new Msmcomm.Context();
+
+        if ( ok )
+        {
+            stdout.printf( "ONLINE\n" );
+            thread = GLib.Thread.create( cmdloop, true );
+        }
+        else
+        {
+            stdout.printf( "Failed." );
+            loop.quit();
+        }
+        return MAINLOOP_DONT_CALL_AGAIN;
+    }
+
+    public void* cmdloop()
+    {
         Readline.readline_name = "msmvterm";
         Readline.terminal_name = Environment.get_variable( "TERM" );
 
         Readline.History.read( "%s/.msmvterm.history".printf( Environment.get_variable( "HOME" ) ) );
         Readline.History.max_entries = 512;
 
-        buffer = new char[BUFFER_SIZE];
+        var commands = new Commands( (owned) context );
 
-        thread = GLib.Thread.create( cmdloop, true );
-
-        commands = new Commands();
-    }
-
-    public bool open()
-    {
-        return MAINLOOP_DONT_CALL_AGAIN;
-    }
-
-    public void* cmdloop()
-    {
         while ( true )
         {
             var line = Readline.readline( "MSMVTERM> " );

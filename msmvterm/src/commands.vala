@@ -50,9 +50,11 @@ public static void MSG( string msg )
 public class Commands
 {
     private Gee.HashMap<string,CommandHolder> map;
+    private Msmcomm.Context msm;
 
-    public Commands()
+    public Commands( owned Msmcomm.Context context )
     {
+        msm = (owned) context;
         map = new Gee.HashMap<string,CommandHolder>();
         register( "help", help, "Show all known commands with their syntax" );
         register( "quit", () => { loop.quit(); }, "Quit this program" );
@@ -68,7 +70,6 @@ public class Commands
 
     private void register( string cmdname, CmdFunc func, string help, string? syntax = null, uint args = 0 )
     {
-        MSG( @"(registering command $cmdname)" );
         map[cmdname] = new CommandHolder( func, help, syntax ?? cmdname, args );
     }
 
