@@ -5,8 +5,6 @@ VALAC_ARGS = \
 	--vapidir vapi \
 	--pkg posix \
 	--pkg gio-2.0 \
-	--pkg dbus-glib-1 \
-	--pkg fsotransport-2.0 \
 	--pkg readline \
 	--pkg config \
 	--thread \
@@ -26,22 +24,20 @@ BUILT_SOURCES = src/.vala.stamp
 
 sbin_PROGRAMS = msmvterm
 
-fso_term_VALASOURCES = \
+msmvterm_VALASOURCES = \
 	src/main.vala \
 	src/terminal.vala \
-	src/reader.vala \
-	src/abysstransport.vala \
 	$(NULL)
 
-fso_term_SOURCES = \
-	$(fso_term_VALASOURCES:.vala=.c) \
+msmvterm_SOURCES = \
+	$(msmvterm_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-src/.vala.stamp: $(fso_term_VALASOURCES)
+src/.vala.stamp: $(msmvterm_VALASOURCES)
 	$(VALAC) -C $(VALAC_ARGS) $^
 	touch $@
 
-fso_term_LDADD = \
+msmvterm_LDADD = \
 	$(LIBREADLINE) \
 	$(LIBHISTORY) \
 	$(DEPS_LIBS) \
@@ -49,7 +45,7 @@ fso_term_LDADD = \
 
 EXTRA_DIST = \
 	MAINTAINERS \
-	$(fso_term_VALASOURCES) \
+	$(msmvterm_VALASOURCES) \
 	$(BUILT_SOURCES) \
 	$(NULL)
 
