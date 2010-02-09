@@ -25,6 +25,7 @@ extern void *talloc_msmc_ctx;
 /*
  * MSMCOMM_MESSAGE_CMD_VERIFY_PIN
  */
+#if 0
 struct verify_pin_msg
 {
 	uint8_t unknown0;
@@ -33,6 +34,7 @@ struct verify_pin_msg
 	uint8_t pin[8]; /* pin can be 4 or 8 bytes long */
 	uint8_t unknown2;
 } __attribute__ ((packed));
+#endif
 
 void msg_verify_pin_init(struct msmcomm_message *msg)
 {

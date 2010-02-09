@@ -33,10 +33,6 @@ extern void *talloc_msmc_ctx;
  * 00 01 00 3b 00 00 00 02 02 01 00                  ...;.......     
  */
  
-struct answer_call_msg
-{
-	uint8_t unknown[9];
-} __attribute__ ((packed));
 
 void msg_answer_call_init(struct msmcomm_message *msg)
 {
@@ -46,10 +42,9 @@ void msg_answer_call_init(struct msmcomm_message *msg)
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct answer_call_msg);
 
 	/* FIXME unknown why we have to set these bytes ... */
-	MESSAGE_CAST(msg, struct answer_call_msg)->unknown[1] = 0x3b;
-	MESSAGE_CAST(msg, struct answer_call_msg)->unknown[5] = 0x2;
-	MESSAGE_CAST(msg, struct answer_call_msg)->unknown[6] = 0x2;
-	MESSAGE_CAST(msg, struct answer_call_msg)->unknown[7] = 0x1;
+	MESSAGE_CAST(msg, struct answer_call_msg)->ref_id = 0x3b;
+	MESSAGE_CAST(msg, struct answer_call_msg)->host_id = 0x2;
+	MESSAGE_CAST(msg, struct answer_call_msg)->call_nr = 0x2;
 }
 
 uint32_t msg_answer_call_get_size(struct msmcomm_message *msg)
@@ -81,14 +76,6 @@ uint8_t* msg_answer_call_prepare_data(struct msmcomm_message *msg)
  * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
  */
  
-struct end_call_msg
-{
-	uint8_t unknown0[6];
-	uint8_t call_nr;
-	uint8_t unknown1[55];
-	
-} __attribute__ ((packed));
-
 void msg_end_call_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x0;
@@ -96,8 +83,9 @@ void msg_end_call_init(struct msmcomm_message *msg)
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct end_call_msg);
 
-	MESSAGE_CAST(msg, struct end_call_msg)->unknown0[1] = 0x3d;
-	MESSAGE_CAST(msg, struct end_call_msg)->unknown0[5] = 0x1;
+	MESSAGE_CAST(msg, struct end_call_msg)->ref_id = 0x3d;
+	MESSAGE_CAST(msg, struct end_call_msg)->host_id = 0x1;
+	MESSAGE_CAST(msg, struct end_call_msg)->call_nr = 0x2;
 }
 
 uint32_t msg_end_call_get_size(struct msmcomm_message *msg)

@@ -29,9 +29,9 @@ struct call_status_event
 	uint8_t host_call_id;
 	uint8_t unknown1;
 	uint8_t caller_id[15];
-	uint8_t unknown2[49];
+	uint8_t unknown2[45];
 	uint8_t caller_id_len;
-	uint8_t unknown3[522];
+	uint8_t unknown3[526];
 	uint8_t cause_value0;
 	uint8_t unknown4[4];
 	uint8_t cause_value1;
@@ -51,9 +51,41 @@ struct cm_call_resp
 } __attribute__ ((packed));
 
 
+struct answer_call_msg
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[3];
+	uint8_t host_id;
+	uint8_t call_nr;
+	uint8_t unknown2[2];
+} __attribute__ ((packed));
+
+
+struct end_call_msg
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[3];
+	uint8_t host_id;
+	uint8_t call_nr;
+	uint8_t unknown2[55];
+} __attribute__ ((packed));
+
+
 struct get_sim_capabilities_resp
 {
 	uint8_t unknown0[1935];
+} __attribute__ ((packed));
+
+
+struct verify_pin_msg
+{
+	uint8_t unknown0;
+	uint8_t pin_type;
+	uint8_t unknown1[4];
+	uint8_t pin[8];
+	uint8_t unknown2;
 } __attribute__ ((packed));
 
 
@@ -100,7 +132,7 @@ struct power_state_event
 } __attribute__ ((packed));
 
 
-struct test_alive
+struct test_alive_event
 {
 } __attribute__ ((packed));
 
@@ -133,6 +165,67 @@ struct get_charger_status_resp
 
 
 struct charge_usb_resp
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[4];
+	uint16_t voltage;
+	uint8_t unknown2[2];
+} __attribute__ ((packed));
+
+
+struct get_imei_msg
+{
+	uint8_t unknown0[5];
+} __attribute__ ((packed));
+
+
+struct change_operation_mode_msg
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[3];
+	uint8_t operation_mode;
+} __attribute__ ((packed));
+
+
+struct test_alive_msg
+{
+	uint8_t unknown0[6];
+} __attribute__ ((packed));
+
+
+struct get_firmware_msg
+{
+	uint8_t unknown0[5];
+} __attribute__ ((packed));
+
+
+struct get_phone_state_info_msg
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[3];
+} __attribute__ ((packed));
+
+
+struct set_audio_profile_msg
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[9];
+} __attribute__ ((packed));
+
+
+struct get_charger_status_msg
+{
+	uint8_t unknown0;
+	uint8_t ref_id;
+	uint8_t unknown1[12];
+} __attribute__ ((packed));
+
+
+struct charge_usb_msg
 {
 	uint8_t unknown0;
 	uint8_t ref_id;
@@ -195,6 +288,12 @@ struct lcs_agent_client_rsp_resp
 
 struct xtra_set_data_resp
 {
+} __attribute__ ((packed));
+
+
+struct get_location_priv_pref_msg
+{
+	uint8_t unknown0[13];
 } __attribute__ ((packed));
 
 #endif

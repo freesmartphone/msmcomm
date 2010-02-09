@@ -22,11 +22,6 @@
 
 extern void *talloc_msmc_ctx;
 
-struct get_imei_msg
-{
-	uint8_t unknown[5];
-} __attribute__ ((packed));
-
 void msg_get_imei_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x1b;

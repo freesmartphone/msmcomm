@@ -38,13 +38,6 @@ offlineMode:
 			06 3b 36 7e
 */
 
-struct change_operation_mode_msg
-{
-	uint8_t unknown0;
-	uint8_t ref_id;
-	uint8_t unknown3[3];
-	uint8_t operation_mode;
-} __attribute__ ((packed));
 
 void msg_change_operation_mode_init(struct msmcomm_message *msg)
 {
@@ -84,11 +77,6 @@ uint8_t* msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
  * MSMCOMM_MESSAGE_CMD_TEST_ALIVE
  */
 
-struct test_alive_msg
-{
-	uint8_t unknown[6];
-} __attribute__ ((packed));
-
 void msg_test_alive_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x1b;
@@ -96,8 +84,8 @@ void msg_test_alive_init(struct msmcomm_message *msg)
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct test_alive_msg);
 
-	MESSAGE_CAST(msg, struct test_alive_msg)->unknown[1] = 0x5;
-	MESSAGE_CAST(msg, struct test_alive_msg)->unknown[5] = 0x1;
+	MESSAGE_CAST(msg, struct test_alive_msg)->unknown0[1] = 0x5;
+	MESSAGE_CAST(msg, struct test_alive_msg)->unknown0[5] = 0x1;
 }
 
 uint32_t msg_test_alive_get_size(struct msmcomm_message *msg)
@@ -118,11 +106,6 @@ uint8_t* msg_test_alive_prepare_data(struct msmcomm_message *msg)
 /*
  * MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO
  */
-
-struct get_firmware_msg
-{
-	uint8_t unknown[5];
-} __attribute__ ((packed));
 
 void msg_get_firmware_info_init(struct msmcomm_message *msg)
 {
@@ -150,13 +133,6 @@ uint8_t* msg_get_firmware_info_prepare_data(struct msmcomm_message *msg)
 /*
  * MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO
  */
-
-struct get_phone_state_info_msg
-{
-	uint8_t unknown0;
-	uint8_t ref_id;
-	uint8_t unknown[3];
-} __attribute__ ((packed));
 
 void msg_get_phone_state_info_init(struct msmcomm_message *msg)
 {
@@ -200,13 +176,6 @@ uint8_t* msg_get_phone_state_info_prepare_data(struct msmcomm_message *msg)
  * 1e 00 00 3c 00 00 00 00 00 00 00 00 00            ...<.........   
  */
  
-struct set_audio_profile_msg
-{
-	uint8_t unknown0;
-	uint8_t ref_id;
-	uint8_t unknown1[9];
-} __attribute__ ((packed));
-
 void msg_set_audio_profile_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x1e;
@@ -234,13 +203,6 @@ uint8_t* msg_set_audio_profile_prepare_data(struct msmcomm_message *msg)
 /*
  * MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS
  */
-
-struct get_charger_status_msg
-{
-	uint8_t unknown0;
-	uint8_t ref_id;
-	uint8_t unknown1[12];
-} __attribute__ ((packed));
 
 void msg_get_charger_status_init(struct msmcomm_message *msg)
 {
@@ -270,15 +232,6 @@ uint8_t* msg_get_charger_status_prepare_data(struct msmcomm_message *msg)
 /*
  * MSMCOMM_MESSAGE_CMD_CHARGE_USB
  */
-
-struct charge_usb_msg
-{
-	uint8_t unknown0;
-	uint8_t ref_id;
-	uint8_t unknown1[4];
-	uint16_t voltage;
-	uint8_t unknown2[2];
-} __attribute__ ((packed));
 
 void msg_charge_usb_init(struct msmcomm_message *msg)
 {

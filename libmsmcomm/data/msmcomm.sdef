@@ -6,7 +6,7 @@ start call_status_event 1108
 [1] uint8_t call_id
 [2] uint8_t host_call_id
 [4-18] uint8_t caller_id
-[68] uint8_t caller_id_len
+[64] uint8_t caller_id_len
 [591] uint8_t cause_value0
 [596] uint8_t cause_value1
 [625] uint8_t cause_value2
@@ -18,10 +18,27 @@ start cm_call_resp 11
 [1] uint8_t ref_id
 end
 
+start answer_call_msg 9
+[1] uint8_t ref_id
+[5] uint8_t host_id
+[6] uint8_t call_nr
+end
+
+start end_call_msg 62
+[1] uint8_t ref_id
+[5] uint8_t host_id
+[6] uint8_t call_nr
+end
+
 #-------------------------------------------------------------------
 # SIM
 #-------------------------------------------------------------------
 start get_sim_capabilities_resp 1935
+end
+
+start verify_pin_msg 15
+[1] uint8_t pin_type
+[6-13] uint8_t pin
 end
 
 
@@ -57,7 +74,7 @@ start power_state_event 13
 [5] uint8_t power_state
 end
 
-start test_alive 0
+start test_alive_event 0
 end
 
 start get_firmware_info_resp 144
@@ -75,6 +92,37 @@ start get_charger_status_resp 14
 end
 
 start charge_usb_resp 9
+[1] uint8_t ref_id
+[6-7] uint16_t voltage
+end
+
+start get_imei_msg 5
+end
+
+start change_operation_mode_msg 6
+[1] uint8_t ref_id
+[5] uint8_t operation_mode
+end
+
+start test_alive_msg 6
+end
+
+start get_firmware_msg 5
+end
+
+start get_phone_state_info_msg 5
+[1] uint8_t ref_id
+end
+
+start set_audio_profile_msg 11
+[1] uint8_t ref_id
+end
+
+start get_charger_status_msg 14
+[1] uint8_t ref_id
+end
+
+start charge_usb_msg 9
 [1] uint8_t ref_id
 [6-7] uint16_t voltage
 end
@@ -119,4 +167,7 @@ start lcs_agent_client_rsp_resp 0
 end
 
 start xtra_set_data_resp 0
+end
+
+start get_location_priv_pref_msg 13
 end
