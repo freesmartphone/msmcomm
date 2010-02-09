@@ -130,13 +130,14 @@ void msmcomm_event_cm_ss_get_plmn(struct msmcomm_message *msg, uint8_t *plmn)
 }
 
 void msmcomm_event_cm_ss_get_operator_name
-	(struct msmcomm_message *msg, uint8_t *buffer, uint32_t len)
+	(struct msmcomm_message *msg, int8_t *buffer, uint32_t len)
 {
 	if (msg->payload == NULL);
 		return;
 
 	if (len < MESSAGE_CAST(msg, struct cm_ss_event)->operator_name_len)
 		return;
+
 	snprintf(buffer, len, "%s", MESSAGE_CAST(msg, struct cm_ss_event)->operator_name);
 }
 
@@ -144,6 +145,7 @@ uint8_t msmcomm_event_cm_ss_get_rssi(struct msmcomm_message *msg)
 {
 	if (msg->payload == NULL)
 		return;
+
 	return MESSAGE_CAST(msg, struct cm_ss_event)->rssi;
 }
 
@@ -151,6 +153,7 @@ uint8_t msmcomm_event_cm_ss_get_ecio(struct msmcomm_message *msg)
 {
 	if (msg->payload == NULL)
 		return;
+
 	return MESSAGE_CAST(msg, struct cm_ss_event)->ecio;
 }
 
@@ -158,6 +161,7 @@ uint8_t msmcomm_event_cm_ss_get_new_value(struct msmcomm_message *msg)
 {
 	if (msg->payload == NULL)
 		return 0x0;
+
 	return MESSAGE_CAST(msg, struct cm_ss_event)->new_value == 2 ? 1 : 0;
 }
 

@@ -92,7 +92,7 @@ struct msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx,
 uint32_t msmcomm_message_get_type(struct msmcomm_message *msg)
 {
 	if (msg && msg->descriptor)
-		msg->descriptor->type;
+		return msg->descriptor->type;
 
 	return MSMCOMM_MESSAGE_INVALID;
 }

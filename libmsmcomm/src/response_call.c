@@ -45,6 +45,9 @@ void resp_cm_call_free(struct msmcomm_message *msg)
 
 uint8_t msmcomm_message_cm_call_get_ref_id(struct msmcomm_message *msg)
 {
+#if 0
 	MESSAGE_CAST(msg, struct cm_call_resp)->ref_id;
+#endif
+	return 0;
 }
 

@@ -24,7 +24,7 @@
 	extern void msg_##name##_init(struct msmcomm_message *msg); \
 	extern uint32_t msg_##name##_get_size(struct msmcomm_message *msg); \
 	extern void msg_##name##_free(struct msmcomm_message *msg); \
-	extern uint8_t msg_##name##_prepare_data(struct msmcomm_message *msg);
+	extern uint8_t* msg_##name##_prepare_data(struct msmcomm_message *msg);
 
 #define MESSAGE_DATA(type, name) \
 	{	type, \

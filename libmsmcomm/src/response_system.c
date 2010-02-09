@@ -113,7 +113,7 @@ void resp_get_imei_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 void msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg, uint8_t *buffer, int len)
 {
 	int n;
-	char chr, *p;
+	uint8_t chr, *p;
 	struct get_imei_resp *resp;
 
 	/* we need a least a buffer with 17 chars */

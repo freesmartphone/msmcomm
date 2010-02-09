@@ -260,7 +260,7 @@ uint32_t msmcomm_event_cm_ss_get_change_field
 void msmcomm_event_cm_ss_get_plmn
 	(struct msmcomm_message *msg, uint8_t *plmn);
 void msmcomm_event_cm_ss_get_operator_name
-	(struct msmcomm_message *msg, uint8_t *buffer, uint32_t len);
+	(struct msmcomm_message *msg, int8_t *buffer, uint32_t len);
 uint8_t msmcomm_event_cm_ss_get_rssi
 	(struct msmcomm_message *msg);
 uint8_t msmcomm_event_cm_ss_get_ecio
