@@ -27,7 +27,7 @@ void *talloc_msmc_ctx;
 struct msmcomm_context *msmcomm_new()
 {
 	struct msmcomm_context* ctx = calloc(1, sizeof(struct msmcomm_context));
-	return msmcomm_init(ctx) ? ctx : 0;
+	return msmcomm_init(ctx) < 0 ? 0 : ctx;
 }
 
 int msmcomm_init(struct msmcomm_context *ctx)
