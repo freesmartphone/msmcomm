@@ -21,7 +21,7 @@
 [CCode (cheader_filename = "msmcomm.h")]
 namespace Msmcomm
 {
-    [CCode (cprefix = "MSMCOMM_MESSAGE_CMD", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", cprefix = "MSMCOMM_MESSAGE_CMD", cheader_filename = "msmcomm.h")]
     public enum CommandType
     {
         CHANGE_OPERATION_MODE,
@@ -39,7 +39,7 @@ namespace Msmcomm
         CHARGE_USB
     }
 
-    [CCode (cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
     public enum ResponseType
     {
         TEST_ALIVE,
@@ -58,7 +58,7 @@ namespace Msmcomm
         CHARGE_USB
     }
 
-    [CCode (cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
     public enum EventType
     {
         RESET_RADIO_IND,
@@ -120,7 +120,7 @@ namespace Msmcomm
         SIM_DEFAULT
     }
 
-    [CCode (cprefix = "MSMCOMM_OPERATION_MODE_", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", cprefix = "MSMCOMM_OPERATION_MODE_", cheader_filename = "msmcomm.h")]
     public enum OperationMode
     {
         RESET,
@@ -128,7 +128,7 @@ namespace Msmcomm
         OFFLINE
     }
 
-    [CCode (cprefix = "MSMCOMM_CHARGE_USB_", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", cprefix = "MSMCOMM_CHARGE_USB_", cheader_filename = "msmcomm.h")]
     public enum UsbChargeMode
     {
         MODE_250mA,
@@ -136,11 +136,11 @@ namespace Msmcomm
         MODE_1A
     }
 
-    [CCode (cname = "msmcomm_event_handler_cb")]
+    [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0)]
     public delegate void EventHandlerCb(EventType event, Message? message);
-    [CCode (cname = "msmcomm_write_handler_cb")]
+    [CCode (cname = "msmcomm_write_handler_cb", instance_pos = 0)]
     public delegate void WriteHandlerCb(void *data, int len);
-    [CCode (cname = "msmcomm_read_handler_cb")]
+    [CCode (cname = "msmcomm_read_handler_cb", instance_pos = 0)]
     public delegate void ReadHandlerCb(void *data, int len);
 
     [CCode (cname = "msmcomm_check_hci_version")]
