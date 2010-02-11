@@ -1,4 +1,4 @@
-/* 
+/*
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
@@ -47,7 +47,7 @@ int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *ms
 	data[0] = msg->group_id;
 	data[1] = msg->msg_id;
 	memcpy(&data[2], payload, len - 2);
-	ctx->write_cb(ctx, data, len);
+	ctx->write_cb(ctx->write_data, data, len);
 
 	/* cleanup */
 	talloc_free(data);
@@ -75,7 +75,7 @@ struct msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx,
 		if (msg_descriptors[n].type == type) {
 			if (msg_descriptors[n].init)
 				msg_descriptors[n].init(msg);
-		
+
 			msg->descriptor = &msg_descriptors[n];
 			found = 1;
 		}

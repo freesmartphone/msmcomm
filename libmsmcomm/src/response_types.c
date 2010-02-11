@@ -1,4 +1,4 @@
-/* 
+/*
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
@@ -36,13 +36,13 @@
 	{	subtype, \
 		type##_##name##_is_valid, \
 		type##_##name##_handle_data, \
-		type##_##name##_free } 
-		
+		type##_##name##_free }
+
 #define GROUP_DATA(name) \
 	{	group_##name##_is_valid, \
 		group_##name##_handle_data, \
 		group_##name##_free, \
-		group_##name##_get_type } 
+		group_##name##_get_type }
 
 #define EVENT_DATA(type, name) TYPE_DATA(event, type, name)
 #define RESPONSE_DATA(type, name) TYPE_DATA(resp, type, name)
@@ -120,9 +120,9 @@ struct response_descriptor resp_descriptors[] = {
 	RESPONSE_DATA(MSMCOMM_RESPONSE_GET_CHARGER_STATUS, get_charger_status),
 };
 
-const unsigned int resp_descriptors_count = sizeof(resp_descriptors) 
+const unsigned int resp_descriptors_count = sizeof(resp_descriptors)
 											/ sizeof(struct response_descriptor);
-const unsigned int group_descriptors_count = sizeof(group_descriptors) 
+const unsigned int group_descriptors_count = sizeof(group_descriptors)
 											/ sizeof(struct group_descriptor);
 
 int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t len)
@@ -131,35 +131,35 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 	struct msmcomm_message resp;
 
 	/* we can already report events to our user? */
-	if (ctx->event_cb == NULL) 
+	if (ctx->event_cb == NULL)
 		return 0;
 
 	/* ensure response len: response should be groupId + msgId + one byte data
 	 * as minimum*/
-	if (len < 3) 
+	if (len < 3)
 		return 0;
-	
+
 	resp.group_id = data[0];
 	resp.msg_id = data[1];
 	resp.payload = NULL;
-	
+
 	/* first we check if we have agroup which handle's this response or event */
 	for (n=0; n<group_descriptors_count; n++) {
 		/* is descriptor valid? */
 		if (group_descriptors[n].is_valid == NULL ||
 			group_descriptors[n].handle_data == NULL ||
-			group_descriptors[n].free == NULL || 
+			group_descriptors[n].free == NULL ||
 			group_descriptors[n].get_type == NULL)
-			continue; 
-		
+			continue;
+
 		if (group_descriptors[n].is_valid(&resp)) {
 			/* let our descriptor handle the left data */
 			group_descriptors[n].handle_data(&resp, data + 2, len - 2);
-			
-			ctx->event_cb(ctx, group_descriptors[n].get_type(&resp), &resp);
-			
+
+			ctx->event_cb(ctx->event_data, group_descriptors[n].get_type(&resp), &resp);
+
 			group_descriptors[n].free(&resp);
-			
+
 			return 1;
 		}
 	}
@@ -170,7 +170,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 			resp_descriptors[n].handle_data == NULL ||
 			resp_descriptors[n].free == NULL)
 			continue;
-		
+
 		if (resp_descriptors[n].is_valid(&resp)) {
 			/* let our descriptor handle the left data */
 			resp_descriptors[n].handle_data(&resp, data + 2, len - 2 - 2);
@@ -179,7 +179,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 			ctx->event_cb(ctx->event_data, resp_descriptors[n].type, &resp);
 
 			resp_descriptors[n].free(&resp);
-			
+
 			return 1;
 		}
 	}
