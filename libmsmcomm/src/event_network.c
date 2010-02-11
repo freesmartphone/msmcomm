@@ -144,7 +144,7 @@ void msmcomm_event_cm_ss_get_operator_name
 uint8_t msmcomm_event_cm_ss_get_rssi(struct msmcomm_message *msg)
 {
 	if (msg->payload == NULL)
-		return;
+		return 0x0;
 
 	return MESSAGE_CAST(msg, struct cm_ss_event)->rssi;
 }
@@ -152,7 +152,7 @@ uint8_t msmcomm_event_cm_ss_get_rssi(struct msmcomm_message *msg)
 uint8_t msmcomm_event_cm_ss_get_ecio(struct msmcomm_message *msg)
 {
 	if (msg->payload == NULL)
-		return;
+		return 0x0;
 
 	return MESSAGE_CAST(msg, struct cm_ss_event)->ecio;
 }

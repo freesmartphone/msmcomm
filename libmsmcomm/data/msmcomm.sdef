@@ -2,43 +2,43 @@
 # Call management
 #-------------------------------------------------------------------
 
-start call_status_event 1108
-[1] uint8_t call_id
-[2] uint8_t host_call_id
-[4-18] uint8_t caller_id
-[64] uint8_t caller_id_len
-[591] uint8_t cause_value0
-[596] uint8_t cause_value1
-[625] uint8_t cause_value2
-[626] uint8_t reject_type
-[627] uint8_t reject_value
+start call_status_event 1107
+[0] uint8_t call_id
+[1] uint8_t host_call_id
+[3-17] uint8_t caller_id
+[63] uint8_t caller_id_len
+[590] uint8_t cause_value0
+[595] uint8_t cause_value1
+[624] uint8_t cause_value2
+[625] uint8_t reject_type
+[626] uint8_t reject_value
 end
 
-start cm_call_resp 11
-[1] uint8_t ref_id
+start cm_call_resp 10
+[0] uint8_t ref_id
 end
 
-start answer_call_msg 9
-[1] uint8_t ref_id
-[5] uint8_t host_id
-[6] uint8_t call_nr
+start answer_call_msg 8
+[0] uint8_t ref_id
+[4] uint8_t host_id
+[5] uint8_t call_nr
 end
 
-start end_call_msg 62
-[1] uint8_t ref_id
-[5] uint8_t host_id
-[6] uint8_t call_nr
+start end_call_msg 61
+[0] uint8_t ref_id
+[4] uint8_t host_id
+[5] uint8_t call_nr
 end
 
 #-------------------------------------------------------------------
 # SIM
 #-------------------------------------------------------------------
-start get_sim_capabilities_resp 1935
+start get_sim_capabilities_resp 1934
 end
 
-start verify_pin_msg 15
-[1] uint8_t pin_type
-[6-13] uint8_t pin
+start verify_pin_msg 14
+[0] uint8_t pin_type
+[5-12] uint8_t pin
 end
 
 
@@ -46,22 +46,22 @@ end
 # Network
 #-------------------------------------------------------------------
 
-start cm_ss_event 678
+start cm_ss_event 676
 [0-7] uint8_t change_field
 [8] uint8_t new_value
-[16-18] uint8_t plmn
-[22] uint8_t operator_name_len
-[23-102] uint8_t operator_name
-[126] uint8_t rssi
-[128] uint8_t ecio
+[15-17] uint8_t plmn
+[21] uint8_t operator_name_len
+[22-101] uint8_t operator_name
+[125] uint8_t rssi
+[127] uint8_t ecio
 end
 
 #-------------------------------------------------------------------
 # System
 #-------------------------------------------------------------------
 
-start charger_status_event 14
-[6-7] uint16_t voltage
+start charger_status_event 13
+[5-6] uint16_t voltage
 end
 
 start radio_reset_ind_event 0
@@ -70,61 +70,61 @@ end
 start operator_mode_event 0
 end
 
-start power_state_event 13
-[5] uint8_t power_state
+start power_state_event 12
+[4] uint8_t power_state
 end
 
 start test_alive_event 0
 end
 
-start get_firmware_info_resp 144
-[5] uint8_t hci_version
-[9-21] uint8_t firmware_version
+start get_firmware_info_resp 143
+[4] uint8_t hci_version
+[8-20] uint8_t firmware_version
 end
 
-start get_imei_resp 22
-[5-21] uint8_t imei
+start get_imei_resp 21
+[4-20] uint8_t imei
 end
 
-start get_charger_status_resp 14
-[1] uint8_t ref_id
-[6-7] uint16_t voltage
+start get_charger_status_resp 13
+[0] uint8_t ref_id
+[5-6] uint16_t voltage
 end
 
-start charge_usb_resp 9
-[1] uint8_t ref_id
-[6-7] uint16_t voltage
+start charge_usb_resp 8
+[0] uint8_t ref_id
+[5-6] uint16_t voltage
 end
 
-start get_imei_msg 5
+start get_imei_msg 4
 end
 
-start change_operation_mode_msg 6
-[1] uint8_t ref_id
-[5] uint8_t operation_mode
+start change_operation_mode_msg 5
+[0] uint8_t ref_id
+[4] uint8_t operation_mode
 end
 
-start test_alive_msg 6
+start test_alive_msg 5
 end
 
-start get_firmware_msg 5
+start get_firmware_msg 4
 end
 
-start get_phone_state_info_msg 5
-[1] uint8_t ref_id
+start get_phone_state_info_msg 4
+[0] uint8_t ref_id
 end
 
-start set_audio_profile_msg 11
-[1] uint8_t ref_id
+start set_audio_profile_msg 10
+[0] uint8_t ref_id
 end
 
-start get_charger_status_msg 14
-[1] uint8_t ref_id
+start get_charger_status_msg 13
+[0] uint8_t ref_id
 end
 
-start charge_usb_msg 9
-[1] uint8_t ref_id
-[6-7] uint16_t voltage
+start charge_usb_msg 8
+[0] uint8_t ref_id
+[5-6] uint16_t voltage
 end
 
 
@@ -132,7 +132,7 @@ end
 # Audio
 #-------------------------------------------------------------------
 
-start sound_resp 12
+start sound_resp 11
 end
 
 #-------------------------------------------------------------------
@@ -169,5 +169,5 @@ end
 start xtra_set_data_resp 0
 end
 
-start get_location_priv_pref_msg 13
+start get_location_priv_pref_msg 12
 end

@@ -138,9 +138,14 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 	 * as minimum*/
 	if (len < 3)
 		return 0;
-
+	
+	/* NOTE: in some cases (for sim messages) there is also a subsystem id 
+	 * included in the message id. We assume that the is_valid handler
+	 * of the descritors gets this out of the msgId set in the response
+	 * structure.
+	 */
 	resp.group_id = data[0];
-	resp.msg_id = data[1];
+	resp.msg_id = data[1] | (data[2] << 8);
 	resp.payload = NULL;
 
 	/* first we check if we have agroup which handle's this response or event */
@@ -154,10 +159,10 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 
 		if (group_descriptors[n].is_valid(&resp)) {
 			/* let our descriptor handle the left data */
-			group_descriptors[n].handle_data(&resp, data + 2, len - 2);
-
-			ctx->event_cb(ctx->event_data, group_descriptors[n].get_type(&resp), &resp);
-
+			group_descriptors[n].handle_data(&resp, data + 3, len - 3);
+			
+			ctx->event_cb(ctx, group_descriptors[n].get_type(&resp), &resp);
+			
 			group_descriptors[n].free(&resp);
 
 			return 1;
@@ -173,7 +178,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 
 		if (resp_descriptors[n].is_valid(&resp)) {
 			/* let our descriptor handle the left data */
-			resp_descriptors[n].handle_data(&resp, data + 2, len - 2 - 2);
+			resp_descriptors[n].handle_data(&resp, data + 3, len - 2 - 3);
 
 			/* tell the user about the received event/response */
 			ctx->event_cb(ctx->event_data, resp_descriptors[n].type, &resp);
