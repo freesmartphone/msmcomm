@@ -21,7 +21,7 @@
 [CCode (cheader_filename = "msmcomm.h")]
 namespace Msmcomm
 {
-    [CCode (cname = "int", cprefix = "MSMCOMM_MESSAGE_CMD_", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MESSAGE_CMD_", cheader_filename = "msmcomm.h")]
     public enum CommandType
     {
         CHANGE_OPERATION_MODE,
@@ -39,7 +39,7 @@ namespace Msmcomm
         CHARGE_USB
     }
 
-    [CCode (cname = "int", cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
     public enum ResponseType
     {
         TEST_ALIVE,
@@ -58,7 +58,7 @@ namespace Msmcomm
         CHARGE_USB
     }
 
-    [CCode (cname = "int", cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
     public enum EventType
     {
         RESET_RADIO_IND,
@@ -120,7 +120,160 @@ namespace Msmcomm
         SIM_DEFAULT
     }
 
-    [CCode (cname = "int", cprefix = "MSMCOMM_OPERATION_MODE_", cheader_filename = "msmcomm.h")]
+    public string eventTypeToString( int t )
+    {
+        switch ( t )
+        {
+            // ResponseType
+            case ResponseType.TEST_ALIVE:
+            return "TEST_ALIVE";
+            case ResponseType.GET_FIRMWARE_INFO:
+			return "GET_FIRMWARE_INFO";
+            case ResponseType.GET_IMEI:
+			return "GET_IMEI";
+            case ResponseType.PDSM_PD_GET_POS:
+			return "PDSM_PD_GET_POS";
+            case ResponseType.PDSM_PD_END_SESSION:
+			return "PDSM_PD_END_SESSION";
+            case ResponseType.PA_SET_PARAM:
+			return "PA_SET_PARAM";
+            case ResponseType.LCS_AGENT_CLIENT_RSP:
+			return "LCS_AGENT_CLIENT_RSP";
+            case ResponseType.XTRA_SET_DATA:
+			return "XTRA_SET_DATA";
+            case ResponseType.GET_SIM_CAPABILITIES:
+			return "GET_SIM_CAPABILITIES";
+            case ResponseType.GET_VOICEMAIL_NR:
+			return "GET_VOICEMAIL_NR";
+            case ResponseType.SOUND:
+			return "SOUND";
+            case ResponseType.CM_CALL:
+			return "CM_CALL";
+            case ResponseType.GET_CHARGER_STATUS:
+			return "GET_CHARGER_STATUS";
+            case ResponseType.CHARGE_USB:
+            return "CHARGE_USB";
+            // EventType
+        	case EventType.RESET_RADIO_IND:
+			return "RESET_RADIO_IND";
+        	case EventType.CHARGER_STATUS:
+			return "CHARGER_STATUS";
+        	case EventType.OPERATION_MODE:
+			return "OPERATION_MODE";
+        	case EventType.CM_PH_INFO_AVAILABLE:
+			return "CM_PH_INFO_AVAILABLE";
+        	case EventType.POWER_STATE:
+			return "POWER_STATE";
+        	case EventType.CM_SS:
+			return "CM_SS";
+        	case EventType.PDSM_PD_DONE:
+			return "PDSM_PD_DONE";
+        	case EventType.PD_POSITION_DATA:
+			return "PD_POSITION_DATA";
+        	case EventType.PD_PARAMETER_CHANGE:
+			return "PD_PARAMETER_CHANGE";
+        	case EventType.PDSM_LCS:
+			return "PDSM_LCS";
+        	case EventType.PDSM_XTRA:
+			return "PDSM_XTRA";
+        	case EventType.CALL_STATUS:
+			return "CALL_STATUS";
+        	case EventType.CALL_INCOMMING:
+			return "CALL_INCOMMING";
+        	case EventType.CALL_ORIGINATION:
+			return "CALL_ORIGINATION";
+        	case EventType.CALL_CONNECT:
+			return "CALL_CONNECT";
+        	case EventType.CALL_END:
+			return "CALL_END";
+        	case EventType.SIM_INSERTED:
+			return "SIM_INSERTED";
+        	case EventType.SIM_PIN1_VERIFIED:
+			return "SIM_PIN1_VERIFIED";
+        	case EventType.SIM_PIN1_BLOCKED:
+			return "SIM_PIN1_BLOCKED";
+        	case EventType.SIM_PIN1_UNBLOCKED:
+			return "SIM_PIN1_UNBLOCKED";
+        	case EventType.SIM_PIN1_ENABLED:
+			return "SIM_PIN1_ENABLED";
+        	case EventType.SIM_PIN1_DISABLED:
+			return "SIM_PIN1_DISABLED";
+        	case EventType.SIM_PIN1_CHANGED:
+			return "SIM_PIN1_CHANGED";
+        	case EventType.SIM_PIN1_PERM_BLOCKED:
+			return "SIM_PIN1_PERM_BLOCKED";
+        	case EventType.SIM_PIN2_VERIFIED:
+			return "SIM_PIN2_VERIFIED";
+        	case EventType.SIM_PIN2_BLOCKED:
+			return "SIM_PIN2_BLOCKED";
+        	case EventType.SIM_PIN2_UNBLOCKED:
+			return "SIM_PIN2_UNBLOCKED";
+        	case EventType.SIM_PIN2_ENABLED:
+			return "SIM_PIN2_ENABLED";
+        	case EventType.SIM_PIN2_DISABLED:
+			return "SIM_PIN2_DISABLED";
+        	case EventType.SIM_PIN2_CHANGED:
+			return "SIM_PIN2_CHANGED";
+        	case EventType.SIM_PIN2_PERM_BLOCKED:
+			return "SIM_PIN2_PERM_BLOCKED";
+        	case EventType.SIM_REFRESH_RESET:
+			return "SIM_REFRESH_RESET";
+        	case EventType.SIM_REFRESH_INIT:
+			return "SIM_REFRESH_INIT";
+        	case EventType.SIM_REFRESH_INIT_FCN:
+			return "SIM_REFRESH_INIT_FCN";
+        	case EventType.SIM_REFRESH_FAILED:
+			return "SIM_REFRESH_FAILED";
+        	case EventType.SIM_FDN_ENABLE:
+			return "SIM_FDN_ENABLE";
+        	case EventType.SIM_FDN_DISABLE:
+			return "SIM_FDN_DISABLE";
+        	case EventType.SIM_ILLEGAL:
+			return "SIM_ILLEGAL";
+        	case EventType.SIM_REMOVED:
+			return "SIM_REMOVED";
+        	case EventType.SIM_NO_SIM_EVENT:
+			return "SIM_NO_SIM_EVENT";
+        	case EventType.SIM_NO_SIM:
+			return "SIM_NO_SIM";
+        	case EventType.SIM_DRIVER_ERROR:
+			return "SIM_DRIVER_ERROR";
+        	case EventType.SIM_INTERNAL_RESET:
+			return "SIM_INTERNAL_RESET";
+        	case EventType.SIM_OK_FOR_TERMINAL_PROFILE_DL:
+			return "SIM_OK_FOR_TERMINAL_PROFILE_DL";
+        	case EventType.SIM_NOT_OK_FOR_TERMINAL_PROFILE_DL:
+			return "SIM_NOT_OK_FOR_TERMINAL_PROFILE_DL";
+        	case EventType.SIM_INIT_COMPLETED_NO_PROV:
+			return "SIM_INIT_COMPLETED_NO_PROV";
+        	case EventType.SIM_MEMORY_WARNING:
+			return "SIM_MEMORY_WARNING";
+        	case EventType.SIM_SIM2_EVENT:
+			return "SIM_SIM2_EVENT";
+        	case EventType.SIM_REAL_RESET_FAILURE:
+			return "SIM_REAL_RESET_FAILURE";
+        	case EventType.SIM_CARD_ERROR:
+			return "SIM_CARD_ERROR";
+        	case EventType.SIM_NO_EVENT:
+			return "SIM_NO_EVENT";
+        	case EventType.SIM_GET_PERSO_NW_FAILURE:
+			return "SIM_GET_PERSO_NW_FAILURE";
+        	case EventType.SIM_GET_PERSO_NW_BLOCKED:
+			return "SIM_GET_PERSO_NW_BLOCKED";
+        	case EventType.SIM_REFRESH_APP_RESET:
+			return "SIM_REFRESH_APP_RESET";
+        	case EventType.SIM_REFRESH_3G_SESSION_RESET:
+			return "SIM_REFRESH_3G_SESSION_RESET";
+        	case EventType.SIM_APP_SELECTED:
+			return "SIM_APP_SELECTED";
+        	case EventType.SIM_DEFAULT:
+			return "SIM_DEFAULT";
+            default:
+			return "%d (unknown)".printf( t );
+        }
+    }
+
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_OPERATION_MODE_", cheader_filename = "msmcomm.h")]
     public enum OperationMode
     {
         RESET,
@@ -128,7 +281,7 @@ namespace Msmcomm
         OFFLINE
     }
 
-    [CCode (cname = "int", cprefix = "MSMCOMM_CHARGE_USB_", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_CHARGE_USB_", cheader_filename = "msmcomm.h")]
     public enum UsbChargeMode
     {
         MODE_250mA,
@@ -137,7 +290,7 @@ namespace Msmcomm
     }
 
     [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0)]
-    public delegate void EventHandlerCb(EventType event, Message? message);
+    public delegate void EventHandlerCb(int event, Message? message);
     [CCode (cname = "msmcomm_write_handler_cb", instance_pos = 0)]
     public delegate void WriteHandlerCb(void *data, int len);
     [CCode (cname = "msmcomm_read_handler_cb", instance_pos = 0)]
