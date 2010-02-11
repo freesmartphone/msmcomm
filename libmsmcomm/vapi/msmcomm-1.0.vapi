@@ -21,7 +21,7 @@
 [CCode (cheader_filename = "msmcomm.h")]
 namespace Msmcomm
 {
-    [CCode (cname = "int", cprefix = "MSMCOMM_MESSAGE_CMD", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", cprefix = "MSMCOMM_MESSAGE_CMD_", cheader_filename = "msmcomm.h")]
     public enum CommandType
     {
         CHANGE_OPERATION_MODE,
@@ -204,6 +204,14 @@ namespace Msmcomm
 
         [CCode (cname = "msmcomm_message_change_operation_mode_set_operation_mode")]
         public void setOperationMode(OperationMode oprtMode);
+    }
+
+    [CCode (cname = "struct msmcomm_message", free_function = "")]
+    [Compact]
+    public class TestAliveCmd : Message
+    {
+        [CCode (cname = "msmcomm_create_message")]
+        public TestAliveCmd(Context? context, CommandType t = CommandType.TEST_ALIVE);
     }
 
     public class VerifyPinCmd : Message
