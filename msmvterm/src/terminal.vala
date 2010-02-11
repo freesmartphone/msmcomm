@@ -28,6 +28,24 @@ const int BUFFER_SIZE = 8192;
 
 char[] buffer;
 
+public static Commands commands;
+public static List<string> completions;
+
+public static string? completion( string prefix, int state )
+{
+    if ( state == 0 )
+    {
+        var parts = Readline.line_buffer.split( " " );
+        if ( parts.length > 1 )
+        {
+            completions = null;
+            return null;
+        }
+        completions = commands.commandsWithPrefix( prefix );
+    }
+    return completions.nth_data( state );
+}
+
 //========================================================================//
 public class Terminal : Object
 //========================================================================//
@@ -82,7 +100,15 @@ public class Terminal : Object
         Readline.History.read( "%s/.msmvterm.history".printf( Environment.get_variable( "HOME" ) ) );
         Readline.History.max_entries = 512;
 
-        var commands = new Commands( ref context );
+        Readline.completion_entry_function = completion;
+        Readline.parse_and_bind( "tab: complete" );
+
+        Readline.completer_word_break_characters = " ";
+        Readline.basic_quote_characters = " ";
+        Readline.completer_word_break_characters = " ";
+        Readline.filename_quote_characters = " ";
+
+        commands = new Commands( ref context );
 
         while ( true )
         {

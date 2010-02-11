@@ -74,6 +74,19 @@ public class Commands
         map[cmdname] = new CommandHolder( func, help, syntax ?? cmdname, args );
     }
 
+    public List<string> commandsWithPrefix( string prefix = "" )
+    {
+        var list = new List<string>();
+        foreach ( var name in map.keys )
+        {
+            if ( name.has_prefix( prefix ) )
+            {
+                list.append( name );
+            }
+        }
+        return list;
+    }
+
     public void dispatch( string line )
     {
         var components = line.split( " " );
