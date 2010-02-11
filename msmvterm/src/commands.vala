@@ -118,6 +118,19 @@ public class Commands
 
     private void change_operation_mode( string[] params )
     {
+        var msg = new Msmcomm.ChangeOperationModeCmd( msm );
+
+        switch ( params[0] )
+        {
+            case "reset":
+                msg.setOperationMode( Msmcomm.OperationMode.RESET );
+                break;
+            default:
+                ERR( @"Unknown operation mode $(params[0])" );
+                return;
+                break;
+        }
+        msm.sendMessage( msg );
     }
 
     private void get_phone_state_info( string[] params )
@@ -126,6 +139,7 @@ public class Commands
 
     private void test_alive( string[] params )
     {
+        msm.sendMessage( new Msmcomm.TestAliveCmd( msm ) );
     }
 
     private void verify_pin( string[] params )

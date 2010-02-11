@@ -54,6 +54,7 @@ public class Terminal : Object
         stdout.printf( @"MSMVTERM: Connecting to $ip:$port...\n" );
 
         context = new Msmcomm.Context();
+
         transport = new FsoFramework.SocketTransport( "tcp", ip, port );
         transport.setDelegates( onTransportReadyToRead, onTransportHangup );
 
