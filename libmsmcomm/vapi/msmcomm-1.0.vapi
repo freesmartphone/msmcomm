@@ -195,12 +195,12 @@ namespace Msmcomm
      * Command Messages
      */
 
+    [CCode (cname = "struct msmcomm_message", free_function = "")]
+    [Compact]
     public class ChangeOperationModeCmd : Message
     {
-        public ChangeOperationModeCmd(Context? context)
-        {
-            base(context, CommandType.CHANGE_OPERATION_MODE);
-        }
+        [CCode (cname = "msmcomm_create_message")]
+        public ChangeOperationModeCmd(Context context, CommandType t = CommandType.CHANGE_OPERATION_MODE);
 
         [CCode (cname = "msmcomm_message_change_operation_mode_set_operation_mode")]
         public void setOperationMode(OperationMode oprtMode);
@@ -211,12 +211,13 @@ namespace Msmcomm
     public class TestAliveCmd : Message
     {
         [CCode (cname = "msmcomm_create_message")]
-        public TestAliveCmd(Context? context, CommandType t = CommandType.TEST_ALIVE);
+        public TestAliveCmd(Context context, CommandType t = CommandType.TEST_ALIVE);
     }
 
+    /*
     public class VerifyPinCmd : Message
     {
-        public VerifyPinCmd(Context? context)
+        public VerifyPinCmd(Context context)
         {
             base(context, CommandType.VERIFY_PIN);
         }
@@ -227,7 +228,7 @@ namespace Msmcomm
 
     public class ChargeUsbCmd : Message
     {
-        public ChargeUsbCmd(Context? context)
+        public ChargeUsbCmd(Context context)
         {
             base(context, CommandType.CHARGE_USB);
         }
@@ -238,7 +239,7 @@ namespace Msmcomm
 
     public class EndCallCmd : Message
     {
-        public EndCallCmd(Context? context)
+        public EndCallCmd(Context context)
         {
             base(context, CommandType.END_CALL);
         }
@@ -249,16 +250,15 @@ namespace Msmcomm
 
     public class AnswerCallCmd : Message
     {
-        public AnswerCallCmd(Context? context)
+        public AnswerCallCmd(Context context)
         {
             base(context, CommandType.ANSWER_CALL);
         }
 
-        /*
         [CCode (cname = "msmcomm_message_answer_call_set_call_number")]
         public void setCallNumber(uint8 call_nr);
-        */
     }
+    */
 
     /*
      * Response Messages
