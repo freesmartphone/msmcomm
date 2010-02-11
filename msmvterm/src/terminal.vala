@@ -155,9 +155,11 @@ public class Terminal : Object
         assert( bwritten == len );
     }
 
-    public void onMsmcommGotEvent( Msmcomm.EventType event, Msmcomm.Message? message )
+    public void onMsmcommGotEvent( int event, Msmcomm.Message? message )
     {
-        stdout.printf( "[EVENT]\n" );
+        var et = Msmcomm.eventTypeToString( event );
+        stdout.printf( @"\n[EVENT] $et\nMSMVTERM> " );
+        stdout.flush();
     }
 
     ~Terminal()

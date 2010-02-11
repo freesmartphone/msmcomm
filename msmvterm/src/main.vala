@@ -38,10 +38,9 @@ public int main( string[] args )
 
     var terminal = new Terminal();
 
-    stdout.printf( "MSMVTERM: Welcome.\n" );
     Idle.add( terminal.open );
     loop.run();
-    stdout.printf( "MSMVTERM: Goodbye.\n" );
+    stdout.printf( "\nGoodbye.\n" );
 
     return 0;
 }
