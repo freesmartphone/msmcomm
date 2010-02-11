@@ -55,17 +55,21 @@ public class Terminal : Object
 
         context = new Msmcomm.Context();
         transport = new FsoFramework.SocketTransport( "tcp", ip, port );
+        transport.setDelegates( onTransportReadyToRead, onTransportHangup );
 
-        if ( transport.open() )
-        {
-            stdout.printf( @"MSMVTERM: ONLINE\n" );
-            thread = GLib.Thread.create( cmdloop, true );
-        }
-        else
+        if ( !transport.open() )
         {
             stdout.printf( @"MSMVTERM: [ERR] Can't connect\n" );
             loop.quit();
+            return MAINLOOP_DONT_CALL_AGAIN;
         }
+
+        stdout.printf( @"MSMVTERM: ONLINE\n" );
+        context.registerEventHandler( onMsmcommGotEvent );
+        context.registerReadHandler( onMsmcommShouldRead );
+        context.registerWriteHandler( onMsmcommShouldWrite );
+        thread = GLib.Thread.create( cmdloop, true );
+
         return MAINLOOP_DONT_CALL_AGAIN;
     }
 
@@ -77,7 +81,7 @@ public class Terminal : Object
         Readline.History.read( "%s/.msmvterm.history".printf( Environment.get_variable( "HOME" ) ) );
         Readline.History.max_entries = 512;
 
-        var commands = new Commands( (owned) context );
+        var commands = new Commands( ref context );
 
         while ( true )
         {
@@ -98,8 +102,43 @@ public class Terminal : Object
         return null;
     }
 
+    //
+    // callbacks
+    //
+
+    public void onTransportReadyToRead( FsoFramework.Transport t )
+    {
+        var ok = context.readFromModem();
+        assert( ok );
+    }
+
+    public void onTransportHangup( FsoFramework.Transport t )
+    {
+        assert_not_reached();
+    }
+
+    public void onMsmcommShouldRead( void* data, int len )
+    {
+        var bread = transport.read( data, len );
+    }
+
+    public void onMsmcommShouldWrite( void* data, int len )
+    {
+        var bwritten = transport.write( data, len );
+        assert( bwritten == len );
+    }
+
+    public void onMsmcommGotEvent( Msmcomm.EventType event, Msmcomm.Message? message )
+    {
+        stdout.printf( "[EVENT]\n" );
+    }
+
     ~Terminal()
     {
+        if ( transport.isOpen() )
+        {
+            transport.close();
+        }
         Readline.History.write( "%s/.msmvterm.history".printf( Environment.get_variable( "HOME" ) ) );
         Readline.free_line_state();
         Readline.cleanup_after_signal();

@@ -50,12 +50,13 @@ public static void MSG( string msg )
 public class Commands
 {
     private Gee.HashMap<string,CommandHolder> map;
-    private Msmcomm.Context msm;
+    private unowned Msmcomm.Context msm;
 
-    public Commands( owned Msmcomm.Context context )
+    public Commands( ref Msmcomm.Context context )
     {
-        msm = (owned) context;
+        msm = context;
         map = new Gee.HashMap<string,CommandHolder>();
+
         register( "help", help, "Show all known commands with their syntax" );
         register( "quit", () => { loop.quit(); }, "Quit this program" );
         register( "get_imei", get_imei, "Receive IMEI" );
