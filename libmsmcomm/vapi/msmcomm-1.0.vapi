@@ -126,148 +126,148 @@ namespace Msmcomm
         {
             // ResponseType
             case ResponseType.TEST_ALIVE:
-            return "TEST_ALIVE";
+            return "RESPONSE_TEST_ALIVE";
             case ResponseType.GET_FIRMWARE_INFO:
-			return "GET_FIRMWARE_INFO";
+			return "RESPONSE_GET_FIRMWARE_INFO";
             case ResponseType.GET_IMEI:
-			return "GET_IMEI";
+			return "RESPONSE_GET_IMEI";
             case ResponseType.PDSM_PD_GET_POS:
-			return "PDSM_PD_GET_POS";
+			return "RESPONSE_PDSM_PD_GET_POS";
             case ResponseType.PDSM_PD_END_SESSION:
-			return "PDSM_PD_END_SESSION";
+			return "RESPONSE_PDSM_PD_END_SESSION";
             case ResponseType.PA_SET_PARAM:
-			return "PA_SET_PARAM";
+			return "RESPONSE_PA_SET_PARAM";
             case ResponseType.LCS_AGENT_CLIENT_RSP:
-			return "LCS_AGENT_CLIENT_RSP";
+			return "RESPONSE_LCS_AGENT_CLIENT_RSP";
             case ResponseType.XTRA_SET_DATA:
-			return "XTRA_SET_DATA";
+			return "RESPONSE_XTRA_SET_DATA";
             case ResponseType.GET_SIM_CAPABILITIES:
-			return "GET_SIM_CAPABILITIES";
+			return "RESPONSE_GET_SIM_CAPABILITIES";
             case ResponseType.GET_VOICEMAIL_NR:
-			return "GET_VOICEMAIL_NR";
+			return "RESPONSE_GET_VOICEMAIL_NR";
             case ResponseType.SOUND:
-			return "SOUND";
+			return "RESPONSE_SOUND";
             case ResponseType.CM_CALL:
-			return "CM_CALL";
+			return "RESPONSE_CM_CALL";
             case ResponseType.GET_CHARGER_STATUS:
-			return "GET_CHARGER_STATUS";
+			return "RESPONSE_GET_CHARGER_STATUS";
             case ResponseType.CHARGE_USB:
-            return "CHARGE_USB";
+            return "RESPONSE_CHARGE_USB";
             // EventType
         	case EventType.RESET_RADIO_IND:
-			return "RESET_RADIO_IND";
+			return "URC_RESET_RADIO_IND";
         	case EventType.CHARGER_STATUS:
-			return "CHARGER_STATUS";
+			return "URC_CHARGER_STATUS";
         	case EventType.OPERATION_MODE:
-			return "OPERATION_MODE";
+			return "URC_OPERATION_MODE";
         	case EventType.CM_PH_INFO_AVAILABLE:
-			return "CM_PH_INFO_AVAILABLE";
+			return "URC_CM_PH_INFO_AVAILABLE";
         	case EventType.POWER_STATE:
-			return "POWER_STATE";
+			return "URC_POWER_STATE";
         	case EventType.CM_SS:
-			return "CM_SS";
+			return "URC_CM_SS";
         	case EventType.PDSM_PD_DONE:
-			return "PDSM_PD_DONE";
+			return "URC_PDSM_PD_DONE";
         	case EventType.PD_POSITION_DATA:
-			return "PD_POSITION_DATA";
+			return "URC_PD_POSITION_DATA";
         	case EventType.PD_PARAMETER_CHANGE:
-			return "PD_PARAMETER_CHANGE";
+			return "URC_PD_PARAMETER_CHANGE";
         	case EventType.PDSM_LCS:
-			return "PDSM_LCS";
+			return "URC_PDSM_LCS";
         	case EventType.PDSM_XTRA:
-			return "PDSM_XTRA";
+			return "URC_PDSM_XTRA";
         	case EventType.CALL_STATUS:
-			return "CALL_STATUS";
+			return "URC_CALL_STATUS";
         	case EventType.CALL_INCOMMING:
-			return "CALL_INCOMMING";
+			return "URC_CALL_INCOMMING";
         	case EventType.CALL_ORIGINATION:
-			return "CALL_ORIGINATION";
+			return "URC_CALL_ORIGINATION";
         	case EventType.CALL_CONNECT:
-			return "CALL_CONNECT";
+			return "URC_CALL_CONNECT";
         	case EventType.CALL_END:
-			return "CALL_END";
+			return "URC_CALL_END";
         	case EventType.SIM_INSERTED:
-			return "SIM_INSERTED";
+			return "URC_SIM_INSERTED";
         	case EventType.SIM_PIN1_VERIFIED:
-			return "SIM_PIN1_VERIFIED";
+			return "URC_SIM_PIN1_VERIFIED";
         	case EventType.SIM_PIN1_BLOCKED:
-			return "SIM_PIN1_BLOCKED";
+			return "URC_SIM_PIN1_BLOCKED";
         	case EventType.SIM_PIN1_UNBLOCKED:
-			return "SIM_PIN1_UNBLOCKED";
+			return "URC_SIM_PIN1_UNBLOCKED";
         	case EventType.SIM_PIN1_ENABLED:
-			return "SIM_PIN1_ENABLED";
+			return "URC_SIM_PIN1_ENABLED";
         	case EventType.SIM_PIN1_DISABLED:
-			return "SIM_PIN1_DISABLED";
+			return "URC_SIM_PIN1_DISABLED";
         	case EventType.SIM_PIN1_CHANGED:
-			return "SIM_PIN1_CHANGED";
+			return "URC_SIM_PIN1_CHANGED";
         	case EventType.SIM_PIN1_PERM_BLOCKED:
-			return "SIM_PIN1_PERM_BLOCKED";
+			return "URC_SIM_PIN1_PERM_BLOCKED";
         	case EventType.SIM_PIN2_VERIFIED:
-			return "SIM_PIN2_VERIFIED";
+			return "URC_SIM_PIN2_VERIFIED";
         	case EventType.SIM_PIN2_BLOCKED:
-			return "SIM_PIN2_BLOCKED";
+			return "URC_SIM_PIN2_BLOCKED";
         	case EventType.SIM_PIN2_UNBLOCKED:
-			return "SIM_PIN2_UNBLOCKED";
+			return "URC_SIM_PIN2_UNBLOCKED";
         	case EventType.SIM_PIN2_ENABLED:
-			return "SIM_PIN2_ENABLED";
+			return "URC_SIM_PIN2_ENABLED";
         	case EventType.SIM_PIN2_DISABLED:
-			return "SIM_PIN2_DISABLED";
+			return "URC_SIM_PIN2_DISABLED";
         	case EventType.SIM_PIN2_CHANGED:
-			return "SIM_PIN2_CHANGED";
+			return "URC_SIM_PIN2_CHANGED";
         	case EventType.SIM_PIN2_PERM_BLOCKED:
-			return "SIM_PIN2_PERM_BLOCKED";
+			return "URC_SIM_PIN2_PERM_BLOCKED";
         	case EventType.SIM_REFRESH_RESET:
-			return "SIM_REFRESH_RESET";
+			return "URC_SIM_REFRESH_RESET";
         	case EventType.SIM_REFRESH_INIT:
-			return "SIM_REFRESH_INIT";
+			return "URC_SIM_REFRESH_INIT";
         	case EventType.SIM_REFRESH_INIT_FCN:
-			return "SIM_REFRESH_INIT_FCN";
+			return "URC_SIM_REFRESH_INIT_FCN";
         	case EventType.SIM_REFRESH_FAILED:
-			return "SIM_REFRESH_FAILED";
+			return "URC_SIM_REFRESH_FAILED";
         	case EventType.SIM_FDN_ENABLE:
-			return "SIM_FDN_ENABLE";
+			return "URC_SIM_FDN_ENABLE";
         	case EventType.SIM_FDN_DISABLE:
-			return "SIM_FDN_DISABLE";
+			return "URC_SIM_FDN_DISABLE";
         	case EventType.SIM_ILLEGAL:
-			return "SIM_ILLEGAL";
+			return "URC_SIM_ILLEGAL";
         	case EventType.SIM_REMOVED:
-			return "SIM_REMOVED";
+			return "URC_SIM_REMOVED";
         	case EventType.SIM_NO_SIM_EVENT:
-			return "SIM_NO_SIM_EVENT";
+			return "URC_SIM_NO_SIM_EVENT";
         	case EventType.SIM_NO_SIM:
-			return "SIM_NO_SIM";
+			return "URC_SIM_NO_SIM";
         	case EventType.SIM_DRIVER_ERROR:
-			return "SIM_DRIVER_ERROR";
+			return "URC_SIM_DRIVER_ERROR";
         	case EventType.SIM_INTERNAL_RESET:
-			return "SIM_INTERNAL_RESET";
+			return "URC_SIM_INTERNAL_RESET";
         	case EventType.SIM_OK_FOR_TERMINAL_PROFILE_DL:
-			return "SIM_OK_FOR_TERMINAL_PROFILE_DL";
+			return "URC_SIM_OK_FOR_TERMINAL_PROFILE_DL";
         	case EventType.SIM_NOT_OK_FOR_TERMINAL_PROFILE_DL:
-			return "SIM_NOT_OK_FOR_TERMINAL_PROFILE_DL";
+			return "URC_SIM_NOT_OK_FOR_TERMINAL_PROFILE_DL";
         	case EventType.SIM_INIT_COMPLETED_NO_PROV:
-			return "SIM_INIT_COMPLETED_NO_PROV";
+			return "URC_SIM_INIT_COMPLETED_NO_PROV";
         	case EventType.SIM_MEMORY_WARNING:
-			return "SIM_MEMORY_WARNING";
+			return "URC_SIM_MEMORY_WARNING";
         	case EventType.SIM_SIM2_EVENT:
-			return "SIM_SIM2_EVENT";
+			return "URC_SIM_SIM2_EVENT";
         	case EventType.SIM_REAL_RESET_FAILURE:
-			return "SIM_REAL_RESET_FAILURE";
+			return "URC_SIM_REAL_RESET_FAILURE";
         	case EventType.SIM_CARD_ERROR:
-			return "SIM_CARD_ERROR";
+			return "URC_SIM_CARD_ERROR";
         	case EventType.SIM_NO_EVENT:
-			return "SIM_NO_EVENT";
+			return "URC_SIM_NO_EVENT";
         	case EventType.SIM_GET_PERSO_NW_FAILURE:
-			return "SIM_GET_PERSO_NW_FAILURE";
+			return "URC_SIM_GET_PERSO_NW_FAILURE";
         	case EventType.SIM_GET_PERSO_NW_BLOCKED:
-			return "SIM_GET_PERSO_NW_BLOCKED";
+			return "URC_SIM_GET_PERSO_NW_BLOCKED";
         	case EventType.SIM_REFRESH_APP_RESET:
-			return "SIM_REFRESH_APP_RESET";
+			return "URC_SIM_REFRESH_APP_RESET";
         	case EventType.SIM_REFRESH_3G_SESSION_RESET:
-			return "SIM_REFRESH_3G_SESSION_RESET";
+			return "URC_SIM_REFRESH_3G_SESSION_RESET";
         	case EventType.SIM_APP_SELECTED:
-			return "SIM_APP_SELECTED";
+			return "URC_SIM_APP_SELECTED";
         	case EventType.SIM_DEFAULT:
-			return "SIM_DEFAULT";
+			return "URC_SIM_DEFAULT";
             default:
 			return "%d (unknown)".printf( t );
         }
@@ -334,8 +334,8 @@ namespace Msmcomm
        [CCode (cname = "msmcomm_message_get_size")]
        public int getSize();
 
-       //[CCode (cname = "msmcomm_message_get_type")]
-       //public MessageType getType();
+       [CCode (cname = "msmcomm_message_get_type")]
+       public int getType();
 
        [CCode (cname = "msmcomm_message_get_ref_id")]
        public uint8 getRefId();
@@ -344,150 +344,160 @@ namespace Msmcomm
        public void setRefId(uint8 refId);
     }
 
-    /*
-     * Command Messages
-     */
-
-    [CCode (cname = "struct msmcomm_message", free_function = "")]
-    [Compact]
-    public class ChangeOperationModeCmd : Message
+    namespace Command
     {
-        [CCode (cname = "msmcomm_create_message")]
-        public ChangeOperationModeCmd(Context context, CommandType t = CommandType.CHANGE_OPERATION_MODE);
-
-        [CCode (cname = "msmcomm_message_change_operation_mode_set_operation_mode")]
-        public void setOperationMode(OperationMode oprtMode);
-    }
-
-    [CCode (cname = "struct msmcomm_message", free_function = "")]
-    [Compact]
-    public class TestAliveCmd : Message
-    {
-        [CCode (cname = "msmcomm_create_message")]
-        public TestAliveCmd(Context context, CommandType t = CommandType.TEST_ALIVE);
-    }
-
-    /*
-    public class VerifyPinCmd : Message
-    {
-        public VerifyPinCmd(Context context)
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [Compact]
+        public class ChangeOperationMode : Message
         {
-            base(context, CommandType.VERIFY_PIN);
+            [CCode (cname = "msmcomm_create_message")]
+            public ChangeOperationMode(Context? context = null, CommandType t = CommandType.CHANGE_OPERATION_MODE);
+
+            [CCode (cname = "msmcomm_message_change_operation_mode_set_operation_mode")]
+            public void setOperationMode(OperationMode oprtMode);
         }
 
-        [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
-        public void setPin(string pin);
-    }
-
-    public class ChargeUsbCmd : Message
-    {
-        public ChargeUsbCmd(Context context)
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [Compact]
+        public class GetImei : Message
         {
-            base(context, CommandType.CHARGE_USB);
+            [CCode (cname = "msmcomm_create_message")]
+            public GetImei(Context? context = null, CommandType t = CommandType.GET_IMEI);
         }
 
-        [CCode (cname = "msmcomm_message_charge_usb_set_mode")]
-        public void setMode(UsbChargeMode mode);
-    }
-
-    public class EndCallCmd : Message
-    {
-        public EndCallCmd(Context context)
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [Compact]
+        public class TestAlive : Message
         {
-            base(context, CommandType.END_CALL);
+            [CCode (cname = "msmcomm_create_message")]
+            public TestAlive(Context? context = null, CommandType t = CommandType.TEST_ALIVE);
         }
 
-        [CCode (cname = "msmcomm_message_end_call_set_call_number")]
-        public void setCallNumber(uint8 call_nr);
-    }
-
-    public class AnswerCallCmd : Message
-    {
-        public AnswerCallCmd(Context context)
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class VerifyPin : Message
         {
-            base(context, CommandType.ANSWER_CALL);
+            [CCode (cname = "msmcomm_create_message")]
+            public VerifyPin(Context? context = null, CommandType t = CommandType.VERIFY_PIN);
+
+            [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
+            public void setPin(string pin);
         }
 
-        [CCode (cname = "msmcomm_message_answer_call_set_call_number")]
-        public void setCallNumber(uint8 call_nr);
-    }
-    */
-
-    /*
-     * Response Messages
-     */
-
-    public class GetFirmwareInfoResp : Message
-    {
-        [CCode (cname = "msmcomm_resp_get_firmware_info_get_info")]
-        public void getInfo(out string info);
-
-        [CCode (cname = "msmcomm_resp_get_firmware_info_get_hci_version")]
-        public uint8 getHciVersion();
-    }
-
-    public class GetImeiResp : Message
-    {
-        [CCode (cname = "msmcomm_resp_get_imei_get_imei")]
-        private void _getImei(string imei);
-
-        public string getImei()
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class ChargeUsb : Message
         {
-            string imei;
-            _getImei(imei);
-            return imei;
+            [CCode (cname = "msmcomm_create_message")]
+            public ChargeUsb(Context? context = null, CommandType t = CommandType.CHARGE_USB);
+
+            [CCode (cname = "msmcomm_message_charge_usb_set_mode")]
+            public void setMode(UsbChargeMode mode);
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class EndCall : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public EndCall(Context? context = null, CommandType t = CommandType.END_CALL);
+
+            [CCode (cname = "msmcomm_message_end_call_set_call_number")]
+            public void setCallNumber(uint8 call_nr);
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class AnswerCall : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public AnswerCall(Context? context = null, CommandType t = CommandType.ANSWER_CALL);
+
+            [CCode (cname = "msmcomm_message_answer_call_set_call_number")]
+            public void setCallNumber(uint8 call_nr);
         }
     }
 
-    public class ChargeUsbResp : Message
+    namespace Response
     {
-        [CCode (cname = "msmcomm_resp_charge_usb_get_voltage")]
-        public uint getVoltage();
-    }
-
-    /*
-     * Event Messages
-     */
-
-    public class PowerStateEvent : Message
-    {
-        [CCode (cname = "msmcomm_event_power_state_get_state")]
-        public uint8 getState();
-    }
-
-    public class ChargerStatusEvent : Message
-    {
-        [CCode (cname = "msmcomm_event_charger_status_get_voltage")]
-        public uint getVoltage();
-    }
-
-    public abstract class CallStatusEvent : Message
-    {
-        [CCode (cname = "msmcomm_event_call_status_get_caller_id")]
-        private void _getCallerId(string callerId);
-
-        public string getCallerId()
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class GetFirmwareInfo : Message
         {
-            string callerId;
-            _getCallerId(callerId);
-            return callerId;
+            [CCode (cname = "msmcomm_resp_get_firmware_info_get_info")]
+            public void getInfo(out string info);
+
+            [CCode (cname = "msmcomm_resp_get_firmware_info_get_hci_version")]
+            public uint8 getHciVersion();
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class GetImei : Message
+        {
+            [CCode (cname = "msmcomm_resp_get_imei_get_imei")]
+            private void _getImei(char[] imei);
+
+            public string getImei()
+            {
+                var imei = new char[17];
+                _getImei(imei);
+                // FIXME: Is this ok or do we have a leak now?
+                return ((string)imei).dup();
+            }
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class ChargeUsb : Message
+        {
+            [CCode (cname = "msmcomm_resp_charge_usb_get_voltage")]
+            public uint getVoltage();
         }
     }
 
-    public class CallIncomingEvent : CallStatusEvent
+    namespace Unsolicited
     {
-    }
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class PowerState : Message
+        {
+            [CCode (cname = "msmcomm_event_power_state_get_state")]
+            public uint8 getState();
+        }
 
-    public class CallConnectEvent : CallStatusEvent
-    {
-    }
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class ChargerStatus : Message
+        {
+            [CCode (cname = "msmcomm_event_charger_status_get_voltage")]
+            public uint getVoltage();
+        }
 
-    public class CallEndEvent : CallStatusEvent
-    {
-    }
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public abstract class CallStatus : Message
+        {
+            [CCode (cname = "msmcomm_event_call_status_get_caller_id")]
+            private void _getCallerId(string callerId);
 
-    public class CallOriginationEvent : CallStatusEvent
-    {
-    }
+            public string getCallerId()
+            {
+                string callerId;
+                _getCallerId(callerId);
+                return callerId;
+            }
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class CallIncoming : CallStatus
+        {
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class CallConnect : CallStatus
+        {
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class CallEnd : CallStatus
+        {
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class CallOrigination : CallStatus
+        {
+        }
+    } /* namespace Unsolicited */
 }
 
