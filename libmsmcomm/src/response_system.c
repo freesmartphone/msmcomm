@@ -1,4 +1,4 @@
-/* 
+/*
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
@@ -53,7 +53,7 @@ struct get_firmware_info_resp
 	uint8_t firmware_version[13];
 	uint8_t unknown2[122];
 } __attribute__ ((packed));
-#endif 
+#endif
 
 unsigned int resp_get_firmware_info_is_valid(struct msmcomm_message *msg)
 {
@@ -113,7 +113,6 @@ void resp_get_imei_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 void msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg, uint8_t *buffer, int len)
 {
 	int n;
-	uint8_t chr, *p;
 	struct get_imei_resp *resp;
 
 	/* we need a least a buffer with 17 chars */
@@ -121,11 +120,10 @@ void msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg, uint8_t *buffer
 		return;
 
 	resp = (struct get_imei_resp*) msg->payload;
-	p = buffer;
-	
+
 	/* imei consists of 17 bytes - each byte is one number of the imei */
 	for (n = 0; n < 17; n++) {
-		snprintf(&chr, 1, "%i", resp->imei[n]);
+		buffer[n] = 0x30 + resp->imei[n];
 	}
 }
 
@@ -189,7 +187,7 @@ void resp_charge_usb_handle_data(struct msmcomm_message *msg, uint8_t *data, uin
 {
 	if (len != sizeof(struct charge_usb_resp))
 		return;
-	
+
 	msg->payload = data;
 }
 
