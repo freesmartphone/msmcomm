@@ -368,11 +368,45 @@ namespace Msmcomm
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class ChargeUsb : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public ChargeUsb(Context? context = null, CommandType t = CommandType.CHARGE_USB);
+
+            [CCode (cname = "msmcomm_message_charge_usb_set_mode")]
+            public void setMode(UsbChargeMode mode);
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
         [Compact]
         public class GetImei : Message
         {
             [CCode (cname = "msmcomm_create_message")]
             public GetImei(Context? context = null, CommandType t = CommandType.GET_IMEI);
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [Compact]
+        public class GetChargerStatus : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public GetChargerStatus(Context? context = null, CommandType t = CommandType.GET_CHARGER_STATUS);
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [Compact]
+        public class GetFirmwareInfo : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public GetFirmwareInfo(Context? context = null, CommandType t = CommandType.GET_FIRMWARE_INFO);
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [Compact]
+        public class GetPhoneStateInfo : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public GetPhoneStateInfo(Context? context = null, CommandType t = CommandType.GET_PHONE_STATE_INFO);
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
@@ -390,17 +424,13 @@ namespace Msmcomm
             public VerifyPin(Context? context = null, CommandType t = CommandType.VERIFY_PIN);
 
             [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
-            public void setPin(string pin);
-        }
+            public void _setPin(string pin, uint length);
 
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
-        public class ChargeUsb : Message
-        {
-            [CCode (cname = "msmcomm_create_message")]
-            public ChargeUsb(Context? context = null, CommandType t = CommandType.CHARGE_USB);
-
-            [CCode (cname = "msmcomm_message_charge_usb_set_mode")]
-            public void setMode(UsbChargeMode mode);
+            public void setPin(string pin)
+            {
+                GLib.assert( pin.length <= 8 );
+                _setPin( pin, (uint)pin.length );
+            }
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
@@ -430,7 +460,14 @@ namespace Msmcomm
         public class GetFirmwareInfo : Message
         {
             [CCode (cname = "msmcomm_resp_get_firmware_info_get_info")]
-            public void getInfo(out string info);
+            public void _getInfo(char[] info);
+
+            public string getInfo()
+            {
+                var info = new char[100];
+                _getInfo( info );
+                return ((string)info).dup();
+            }
 
             [CCode (cname = "msmcomm_resp_get_firmware_info_get_hci_version")]
             public uint8 getHciVersion();
