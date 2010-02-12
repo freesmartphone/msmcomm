@@ -141,7 +141,8 @@ public class Terminal : Object
 
     public void onTransportHangup( FsoFramework.Transport t )
     {
-        assert_not_reached();
+        stdout.printf( "[HUP] Server has hangup." );
+        loop.quit();
     }
 
     public void onMsmcommShouldRead( void* data, int len )
@@ -158,7 +159,26 @@ public class Terminal : Object
     public void onMsmcommGotEvent( int event, Msmcomm.Message? message )
     {
         var et = Msmcomm.eventTypeToString( event );
-        stdout.printf( @"\n[EVENT] $et\nMSMVTERM> " );
+        var m = "ref %02x".printf( message.getRefId() );
+        stdout.printf( @"\n[MESSAGE] $et $m " );
+        var details = "";
+
+        switch ( event )
+        {
+            case Msmcomm.ResponseType.GET_IMEI:
+                unowned Msmcomm.Response.GetImei msg = (Msmcomm.Response.GetImei) message;
+                details = @"IMEI = $(msg.getImei())";
+                break;
+            case Msmcomm.ResponseType.GET_FIRMWARE_INFO:
+                // We want something like: var msg = message.safeCast<Msmcomm.Response.GetImei>( message );
+                unowned Msmcomm.Response.GetFirmwareInfo msg = (Msmcomm.Response.GetFirmwareInfo) message;
+                details = @"FIRMWARE = $(msg.getInfo())";
+                break;
+            default:
+                break;
+        }
+
+        stdout.printf( @"$details\nMSMVTERM> " );
         stdout.flush();
     }
 

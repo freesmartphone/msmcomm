@@ -66,7 +66,7 @@ public class Commands
         register( "test_alive", test_alive, "Test, if the modem is still responding to commands" );
         register( "verify_pin", verify_pin, "Send SIM PIN authentication code", "verify_pin <pin>" );
         register( "get_charger_status", get_charger_status, "Query current charging status" );
-        register( "charge_usb", charge_usb, "Set the usb charging mode:\n\tvoltage: 0=250mA, 1=500mA, 2=1A", "charge_usb <voltage>", 1 );
+        register( "charge_usb", charge_usb, "Set the usb charging mode:\n\tvoltage: 250mA, 500mA, 1A (warning!)", "charge_usb <250|500|1000>", 1 );
     }
 
     private void register( string cmdname, CmdFunc func, string help, string? syntax = null, uint args = 0 )
@@ -122,21 +122,31 @@ public class Commands
 
     private void get_imei( string[] params )
     {
-        ERR( "Not Yet Implemented" );
+        var msg = new Msmcomm.Command.GetImei();
+        msg.setRefId( 0x42 );
+        msm.sendMessage( msg );
     }
 
     private void get_firmware_info( string[] params )
     {
+        var msg = new Msmcomm.Command.GetFirmwareInfo();
+        msm.sendMessage( msg );
     }
 
     private void change_operation_mode( string[] params )
     {
-        var msg = new Msmcomm.ChangeOperationModeCmd( msm );
+        var msg = new Msmcomm.Command.ChangeOperationMode();
 
         switch ( params[0] )
         {
             case "reset":
                 msg.setOperationMode( Msmcomm.OperationMode.RESET );
+                break;
+            case "online":
+                msg.setOperationMode( Msmcomm.OperationMode.ONLINE );
+                break;
+            case "offline":
+                msg.setOperationMode( Msmcomm.OperationMode.OFFLINE );
                 break;
             default:
                 ERR( @"Unknown operation mode $(params[0])" );
@@ -148,23 +158,50 @@ public class Commands
 
     private void get_phone_state_info( string[] params )
     {
+        //var msg = new Msmcomm.Command.GetPhoneStateInfo();
+        //msg.sendMessage( msg );
+        ERR( "Not Yet Implemented" );
     }
 
     private void test_alive( string[] params )
     {
-        msm.sendMessage( new Msmcomm.TestAliveCmd( msm ) );
+        var msg = new Msmcomm.Command.TestAlive();
+        msg.setRefId( 0x42 );
+        msm.sendMessage( msg );
     }
 
     private void verify_pin( string[] params )
     {
+        var msg = new Msmcomm.Command.VerifyPin();
+        msg.setPin( params[0] );
+        msm.sendMessage( msg );
     }
 
     private void get_charger_status( string[] params )
     {
+        var msg = new Msmcomm.Command.GetChargerStatus();
+        msm.sendMessage( msg );
     }
 
     private void charge_usb( string[] params )
     {
+        var msg = new Msmcomm.Command.ChargeUsb();
+        switch ( params[0] )
+        {
+            case "250":
+                msg.setMode( Msmcomm.UsbChargeMode.MODE_250mA );
+                break;
+            case "500":
+                msg.setMode( Msmcomm.UsbChargeMode.MODE_500mA );
+                break;
+            case "1000":
+                msg.setMode( Msmcomm.UsbChargeMode.MODE_1A );
+                break;
+            default:
+                ERR( @"Unknown operation mode $(params[0])" );
+                return;
+                break;
+        }
+        msm.sendMessage( msg );
     }
-
 }
