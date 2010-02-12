@@ -18,6 +18,16 @@
  *
  **/
 
+/*
+ * Questions for morphis
+ *
+ * 1.) These messages have different sizes, right? What about the free functions?
+ * 2.) Can we rename the 'event' to 'urc'? URC stands for unsolicited response code and is more in line
+ * with the telephony taxonomy. If we call it 'event', it's unclear whether it's a solicited response or not.
+ * 3.) Is msm communication sync. or async. on the individual command level?
+ * 4.) If 'async', do we have sequence numbers to match reponses to requests?
+*/
+
 [CCode (cheader_filename = "msmcomm.h")]
 namespace Msmcomm
 {
