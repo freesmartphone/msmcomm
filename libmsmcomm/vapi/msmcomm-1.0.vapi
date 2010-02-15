@@ -76,7 +76,7 @@ namespace Msmcomm
         OPERATION_MODE,
         CM_PH_INFO_AVAILABLE,
         POWER_STATE,
-        CM_SS,
+        NETWORK_STATE_INFO,
         PDSM_PD_DONE,
         PD_POSITION_DATA,
         PD_PARAMETER_CHANGE,
@@ -305,6 +305,8 @@ namespace Msmcomm
     public delegate void WriteHandlerCb(void *data, int len);
     [CCode (cname = "msmcomm_read_handler_cb", instance_pos = 0)]
     public delegate void ReadHandlerCb(void *data, int len);
+    [CCode (cname = "msmcomm_network_state_info_changed_field_type_cb", instance_pos = 0)]
+    public delegate void ChangedFieldTypeCb(void *data, int type);
 
     [CCode (cname = "msmcomm_check_hci_version")]
     public bool checkHciVersion(uint version);
@@ -544,6 +546,47 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class CallOrigination : CallStatus
         {
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class NetworkStateInfo : Message
+        {
+            [CCde (cname = "msmcomm_event_network_state_info_get_change_field", free_function="")]
+            public uint getChangeField(); 
+
+            [CCode (cname = "msmcomm_event_network_state_info_get_new_value", free_function="")]
+            public uint8 getNewValue();
+
+            [CCode (cname = "msmcomm_event_network_state_info_trace_changes", free_function="")]
+            public void traceChanges(ChangedFieldTypeCb type_handler);
+
+            [CCode (cname = "msmcomm_event_network_state_info_get_operator_name", free_function="")]
+            private string _getOperatorName(string operatorName);
+
+            public string getOperatorName()
+            {
+                string operatorName;
+                _getOperatorName(operatorName);
+                return operatorName;
+            }
+
+            [CCode (cname = "msmcomm_event_network_state_info_get_rssi", free_function="")]
+            public uint16 getRssi();
+
+            [CCode (cname = "msmcomm_event_network_state_info_get_ecio", free_function="")]
+            public uint16 getEcio();
+
+            [CCode (cname = "msmcomm_event_network_state_info_get_service_domain", free_function="")]
+            public uint8 getServiceDomain();
+
+            [CCode (cname = "msmcomm_event_network_state_info_get_service_capability", free_function="")]
+            public uint8 getServiceCapability();
+
+            [CCode (cname = "msmcomm_event_network_state_info_get_gprs_attached", free_function="")]
+            public uint8 getGrpsAttached();
+
+            [CCode (cname = "msmcomm_event_network_state_info_get_roam", free_function="")]
+            public uint16 getRoam();
         }
     } /* namespace Unsolicited */
 }

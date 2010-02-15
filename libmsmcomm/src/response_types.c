@@ -75,7 +75,7 @@ EVENT_TYPE(pdsm_lcs)
 EVENT_TYPE(pdsm_xtra)
 */
 EVENT_TYPE(power_state)
-EVENT_TYPE(cm_ss)
+EVENT_TYPE(network_state_info)
 
 GROUP_TYPE(sim)
 GROUP_TYPE(call)
@@ -100,7 +100,7 @@ struct response_descriptor resp_descriptors[] = {
 	EVENT_DATA(MSMCOMM_EVENT_PDSM_XTRA, pdsm_xtra),
 	*/
 	EVENT_DATA(MSMCOMM_EVENT_POWER_STATE, power_state),
-	EVENT_DATA(MSMCOMM_EVENT_CM_SS, cm_ss),
+	EVENT_DATA(MSMCOMM_EVENT_NETWORK_STATE_INFO, network_state_info),
 
 	/* responses */
 	RESPONSE_DATA(MSMCOMM_RESPONSE_TEST_ALIVE, test_alive),
