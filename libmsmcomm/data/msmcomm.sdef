@@ -123,6 +123,8 @@ start change_operation_mode_msg 5
 end
 
 start test_alive_msg 5
+[0] uint8_t some_value0
+[4] uint8_t some_value1
 end
 
 start get_firmware_msg 4

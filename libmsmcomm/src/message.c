@@ -30,7 +30,7 @@ int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *ms
 	uint32_t len;
 
 	/* caculate size of our message (header + payload) */
-	len = 2;
+	len = 3;
 	if (msg->descriptor == NULL || msg->descriptor->get_size == NULL)
 		return 0;
 	len += msg->descriptor->get_size(msg);
@@ -46,7 +46,7 @@ int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *ms
 
 	data[0] = msg->group_id;
 	data[1] = msg->msg_id;
-	memcpy(&data[2], payload, len - 2);
+	memcpy(&data[3], payload, len - 3);
 	ctx->write_cb(ctx->write_data, data, len);
 
 	/* cleanup */

@@ -205,7 +205,9 @@ struct change_operation_mode_msg
 
 struct test_alive_msg
 {
-	uint8_t unknown0[5];
+	uint8_t some_value0;
+	uint8_t unknown0[3];
+	uint8_t some_value1;
 } __attribute__ ((packed));
 
 

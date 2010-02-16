@@ -83,9 +83,9 @@ void msg_test_alive_init(struct msmcomm_message *msg)
 	msg->msg_id = 0x1;
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct test_alive_msg);
-
-	MESSAGE_CAST(msg, struct test_alive_msg)->unknown0[1] = 0x5;
-	MESSAGE_CAST(msg, struct test_alive_msg)->unknown0[5] = 0x1;
+	
+	MESSAGE_CAST(msg, struct test_alive_msg)->some_value0 = 0x5;
+	MESSAGE_CAST(msg, struct test_alive_msg)->some_value1 = 0x1;
 }
 
 uint32_t msg_test_alive_get_size(struct msmcomm_message *msg)

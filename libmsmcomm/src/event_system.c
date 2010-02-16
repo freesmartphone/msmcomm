@@ -184,7 +184,7 @@ void event_power_state_free(struct msmcomm_message *msg)
 uint8_t msmcomm_event_power_state_get_state(struct msmcomm_message *msg)
 {
 	if (msg->payload == NULL) 
-		return;
+		return 0x0;
 		
 	return MESSAGE_CAST(msg, struct power_state_event)->power_state;	
 }
