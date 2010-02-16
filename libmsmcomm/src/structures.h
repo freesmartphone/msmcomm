@@ -25,7 +25,7 @@
 struct call_status_event
 {
 	uint8_t call_id;
-	uint8_t host_call_id;
+	uint8_t call_type;
 	uint8_t unknown0;
 	uint8_t caller_id[15];
 	uint8_t unknown1[45];
@@ -38,7 +38,9 @@ struct call_status_event
 	uint8_t cause_value2;
 	uint8_t reject_type;
 	uint8_t reject_value;
-	uint8_t unknown5[480];
+	uint8_t unknown5[306];
+	uint8_t is_tty;
+	uint8_t unknown6[173];
 } __attribute__ ((packed));
 
 
@@ -66,6 +68,18 @@ struct end_call_msg
 	uint8_t host_id;
 	uint8_t call_nr;
 	uint8_t unknown1[55];
+} __attribute__ ((packed));
+
+
+struct dial_call_msg
+{
+	uint8_t ref_id;
+	uint8_t unknown0[4];
+	uint8_t const_value;
+	uint8_t unknown1[99];
+	uint8_t caller_id[64];
+	uint8_t caller_id_len;
+	uint8_t unknown2[36];
 } __attribute__ ((packed));
 
 

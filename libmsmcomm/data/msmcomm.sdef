@@ -4,7 +4,7 @@
 
 start call_status_event 1107
 [0] uint8_t call_id
-[1] uint8_t host_call_id
+[1] uint8_t call_type
 [3-17] uint8_t caller_id
 [63] uint8_t caller_id_len
 [590] uint8_t cause_value0
@@ -12,6 +12,7 @@ start call_status_event 1107
 [624] uint8_t cause_value2
 [625] uint8_t reject_type
 [626] uint8_t reject_value
+[933] uint8_t is_tty
 end
 
 start cm_call_resp 10
@@ -28,6 +29,14 @@ start end_call_msg 61
 [0] uint8_t ref_id
 [4] uint8_t host_id
 [5] uint8_t call_nr
+end
+
+start dial_call_msg 206
+[0] uint8_t ref_id
+[5] uint8_t const_value
+[105-168] uint8_t caller_id
+[169] uint8_t caller_id_len
+# [172] and [204] still unknown
 end
 
 #-------------------------------------------------------------------

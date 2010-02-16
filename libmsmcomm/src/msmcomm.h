@@ -37,6 +37,7 @@
 #define MSMCOMM_MESSAGE_CMD_END_CALL							11
 #define MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS 					12
 #define MSMCOMM_MESSAGE_CMD_CHARGE_USB							13
+#define MSMCOMM_MESSAGE_CMD_DIAL_CALL							14
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE								101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO						102
@@ -241,6 +242,8 @@ void 			msmcomm_message_charge_usb_set_mode
 	(struct msmcomm_message *msg, unsigned int mode);
 void msmcomm_message_end_call_set_call_number
 	(struct msmcomm_message *msg, uint8_t call_nr);
+void msmcomm_message_dial_call_set_caller_id
+	(struct msmcomm_message *msg, uint8_t *caller_id, uint8_t len);
 
 void			msmcomm_resp_get_firmware_info_get_info
 	(struct msmcomm_message *msg, char *buffer, int len);

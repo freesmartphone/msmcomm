@@ -23,6 +23,48 @@
 extern void *talloc_msmc_ctx;
 
 /*
+ * MSMCOMM_MESSAGE_CMD_DIAL_CALL
+ */
+
+void msg_dial_call_init(struct msmcomm_message *msg)
+{
+	msg->group_id = 0x0;
+	msg->msg_id = 0x0;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct dial_call_msg);
+	
+	/* FIXME this value is set everytime to 0x4 */
+	MESSAGE_CAST(msg, struct dial_call_msg)->const_value = 0x4;
+}
+
+uint32_t msg_dial_call_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct dial_call_msg);
+}
+
+void msg_dial_call_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t* msg_dial_call_prepare_data(struct msmcomm_message *msg)
+{
+	MESSAGE_CAST(msg, struct dial_call_msg)->ref_id = msg->ref_id;
+	return msg->payload;
+}
+
+void msmcomm_message_dial_call_set_caller_id
+	(struct msmcomm_message *msg, uint8_t *caller_id, uint8_t len)
+{
+	if (len > sizeof((struct dial_call_msg*)0)->caller_id)
+		return;
+
+	/* copy caller id to payload structure */
+	memcpy(MESSAGE_CAST(msg, struct dial_call_msg)->caller_id,
+		   caller_id, len);
+}
+
+/*
  * MSMCOMM_MESSAGE_CMD_ANSWER_CALL
  */
  
@@ -59,6 +101,7 @@ void msg_answer_call_free(struct msmcomm_message *msg)
 
 uint8_t* msg_answer_call_prepare_data(struct msmcomm_message *msg)
 {
+	MESSAGE_CAST(msg, struct answer_call_msg)->ref_id = msg->ref_id;
 	return msg->payload;
 }
 
@@ -82,10 +125,6 @@ void msg_end_call_init(struct msmcomm_message *msg)
 	msg->msg_id = 0x2;
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct end_call_msg);
-
-	MESSAGE_CAST(msg, struct end_call_msg)->ref_id = 0x3d;
-	MESSAGE_CAST(msg, struct end_call_msg)->host_id = 0x1;
-	MESSAGE_CAST(msg, struct end_call_msg)->call_nr = 0x2;
 }
 
 uint32_t msg_end_call_get_size(struct msmcomm_message *msg)
@@ -100,6 +139,7 @@ void msg_end_call_free(struct msmcomm_message *msg)
 
 uint8_t* msg_end_call_prepare_data(struct msmcomm_message *msg)
 {
+	MESSAGE_CAST(msg, struct end_call_msg)->ref_id = msg->ref_id;
 	return msg->payload;
 }
 

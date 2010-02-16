@@ -46,7 +46,8 @@ namespace Msmcomm
         SET_AUDIO_PROFILE,
         END_CALL,
         GET_CHARGER_STATUS,
-        CHARGE_USB
+        CHARGE_USB,
+        DIAL_CALL
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -174,8 +175,8 @@ namespace Msmcomm
 			return "URC_CM_PH_INFO_AVAILABLE";
         	case EventType.POWER_STATE:
 			return "URC_POWER_STATE";
-        	case EventType.CM_SS:
-			return "URC_CM_SS";
+        	case EventType.NETWORK_STATE_INFO:
+			return "URC_NETWORK_STATE_INFO";
         	case EventType.PDSM_PD_DONE:
 			return "URC_PDSM_PD_DONE";
         	case EventType.PD_POSITION_DATA:
@@ -453,6 +454,16 @@ namespace Msmcomm
 
             [CCode (cname = "msmcomm_message_answer_call_set_call_number")]
             public void setCallNumber(uint8 call_nr);
+        }
+
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class DialCall : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public DialCall(Context? context = null, CommandType t = CommandType.DIAL_CALL);
+
+            [CCode (cname = "msmcomm_message_dial_call_set_caller_id")]
+            public void setCallerid(string caller_id);
         }
     }
 
