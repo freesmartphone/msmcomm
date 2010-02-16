@@ -58,7 +58,7 @@
 #define MSMCOMM_EVENT_OPERATION_MODE							206
 #define MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE						207
 #define MSMCOMM_EVENT_POWER_STATE								215
-#define MSMCOMM_EVENT_CM_SS										217
+#define MSMCOMM_EVENT_NETWORK_STATE_INFO						217
 
 /*
  * GPS events
@@ -144,30 +144,30 @@
 /*
  * CM SS changed field types
  */
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_INVALID								0
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_SID									1
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_NID									2
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_PACKET_ZONE							3
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_REGISTRATION_ZONE						4
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_BASESTATION_P_REV						5
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_SERVICE_DOMAIN							6
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_CONCURRENT_SERVICES_SUPPORTED			7
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_P_REV_IN_USE							8
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_SERVING_STATUS							9
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_SYSTEM_SERVICE_CAPABILITY				10
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_SYSTEM_MODE							11
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_ROAMING_STATUS							12
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_SYSTEM_ID								13
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_SERICE_INDICATOR						14
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_MOBILITY_MANAGEMENT					15
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_HDR									16
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_SIM_CARD_STATUS						17
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_PLMN									18
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_PS_DATA_SUSPEND_MASK					19
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_UZ										20
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_BCMS									21
-#define MSMCOMM_CM_SS_CHANGED_FIELD_TYPE_BASE_STATION_PARAMETERS_CHANGED		22
-#define MSMCOMM_CM_SS_CHANGED_FILED_TYPE_ORIGINATION_STATUS						23
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_INVALID								0
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_SID									1
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_NID									2
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_PACKET_ZONE							3
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_REGISTRATION_ZONE						4
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_BASESTATION_P_REV						5
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_SERVICE_DOMAIN							6
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_CONCURRENT_SERVICES_SUPPORTED			7
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_P_REV_IN_USE							8
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_SERVING_STATUS							9
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_SYSTEM_SERVICE_CAPABILITY				10
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_SYSTEM_MODE							11
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_ROAMING_STATUS							12
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_SYSTEM_ID								13
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_SERICE_INDICATOR						14
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_MOBILITY_MANAGEMENT					15
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_HDR									16
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_SIM_CARD_STATUS						17
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_PLMN									18
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_PS_DATA_SUSPEND_MASK					19
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_UZ										20
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_BCMS									21
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_BASE_STATION_PARAMETERS_CHANGED		22
+#define MSMCOMM_NETWORK_STATE_INFO_CHANGED_FILED_TYPE_ORIGINATION_STATUS						23
 
 struct msmcomm_context;
 struct msmcomm_message;
@@ -180,7 +180,7 @@ typedef int  (*msmcomm_read_handler_cb)
 	(void *user_data, uint8_t *data, uint32_t len);
 typedef void (*msmcomm_log_handler_cb) 
 	(void *user_data, char *buffer, unsigned int len);
-typedef void (*msmcomm_cm_ss_changed_field_type_handler) 
+typedef void (*msmcomm_network_state_info_changed_field_type_cb) 
 	(void *user_data, struct msmcomm_message *msg, int type);
 
 struct msmcomm_context
@@ -257,15 +257,28 @@ void 			msmcomm_event_call_status_get_caller_id
 	(struct msmcomm_message *msg, uint8_t *buffer, unsigned int len);
 unsigned int 	msmcomm_event_charger_status_get_voltage
 	(struct msmcomm_message *msg);
-uint32_t msmcomm_event_cm_ss_get_change_field
+
+uint32_t msmcomm_event_network_state_info_get_change_field
 	(struct msmcomm_message *msg);
-void msmcomm_event_cm_ss_get_plmn
+uint8_t msmcomm_event_network_state_info_get_new_value
+	(struct msmcomm_message *msg);
+void msmcomm_event_network_state_info_get_plmn
 	(struct msmcomm_message *msg, uint8_t *plmn);
-void msmcomm_event_cm_ss_get_operator_name
+void msmcomm_event_network_state_info_get_operator_name
 	(struct msmcomm_message *msg, int8_t *buffer, uint32_t len);
-uint8_t msmcomm_event_cm_ss_get_rssi
+uint16_t msmcomm_event_network_state_info_get_rssi
 	(struct msmcomm_message *msg);
-uint8_t msmcomm_event_cm_ss_get_ecio
+uint16_t msmcomm_event_network_state_info_get_ecio
+	(struct msmcomm_message *msg);
+void msmcomm_event_network_state_info_trace_changes
+	(struct msmcomm_message *msg, msmcomm_network_state_info_changed_field_type_cb type_handler, void *user_data);
+uint8_t msmcomm_event_network_state_info_get_service_domain
+	(struct msmcomm_message *msg);
+uint8_t msmcomm_event_network_state_info_get_service_capability
+	(struct msmcomm_message *msg);
+uint8_t msmcomm_event_network_state_info_get_gprs_attached
+	(struct msmcomm_message *msg);
+uint16_t msmcomm_event_network_state_info_get_roam
 	(struct msmcomm_message *msg);
 #endif
 
