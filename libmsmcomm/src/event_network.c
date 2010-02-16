@@ -132,7 +132,7 @@ void msmcomm_event_network_state_info_get_plmn(struct msmcomm_message *msg, uint
 void msmcomm_event_network_state_info_get_operator_name
 	(struct msmcomm_message *msg, int8_t *buffer, uint32_t len)
 {
-	if (msg->payload == NULL);
+	if (msg->payload == NULL)
 		return;
 
 	if (len < MESSAGE_CAST(msg, struct network_state_info_event)->operator_name_len)

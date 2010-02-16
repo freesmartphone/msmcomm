@@ -132,72 +132,79 @@ void resp_get_imei_free(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_GET_CHARGER_STATUS
+ * MSMCOMM_RESPONSE_CHARGER_STATUS
  */
 
-#if 0
-struct get_charger_status_resp
-{
-	uint8_t unknown0;
-	uint8_t ref_id;
-	uint8_t unknown1[4];
-	uint16_t voltage;
-	uint8_t unknown2[6];
-} __attribute__ ((packed));
-#endif
-
-unsigned int resp_get_charger_status_is_valid(struct msmcomm_message *msg)
+unsigned int resp_charger_status_is_valid(struct msmcomm_message *msg)
 {
 	return (msg->group_id == 0x1c) && (msg->msg_id == 0x16);
 }
 
-void resp_get_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void resp_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
-	if (len != sizeof(struct get_charger_status_resp))
+	if (len != sizeof(struct charger_status_msg))
 		return;
 
 	msg->payload = data;
 }
 
-void resp_get_charger_status_free(struct msmcomm_message *msg)
+void resp_charger_status_free(struct msmcomm_message *msg)
 {
 }
 
+unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg)
+{
+	switch(MESSAGE_CAST(msg, struct charger_status_msg)->mode) {
+	case 0x1:
+		return MSMCOMM_CHARGING_MODE_USB;
+	case 0x2: 
+		return MSMCOMM_CHARGING_MODE_INDUCTIVE;
+	}
+
+	return MSMCOMM_CHARGING_MODE_INDUCTIVE;
+}
+
+unsigned int msmcomm_resp_charger_status_get_voltage(struct msmcomm_message *msg)
+{
+	/* FIXME */
+	return MSMCOMM_CHARGING_VOLTAGE_MODE_500mA;
+}
 /*
  * MSMCOMM_RESPONSE_CARGE_USB
  */
 
-#if 0
-struct charge_usb_resp
-{
-	uint8_t unknown0;
-	uint8_t ref_id;
-	uint8_t unknown1[4];
-	uint16_t voltage;
-	uint8_t unknown2[2];
-} __attribute__ ((packed));
-#endif
-
-unsigned int resp_charge_usb_is_valid(struct msmcomm_message *msg)
+unsigned int resp_charging_is_valid(struct msmcomm_message *msg)
 {
 	return (msg->group_id == 0x1c) && (msg->msg_id == 0x14);
 }
 
-void resp_charge_usb_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void resp_charging_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
-	if (len != sizeof(struct charge_usb_resp))
+	if (len != sizeof(struct charging_msg))
 		return;
 
 	msg->payload = data;
 }
 
-void resp_charge_usb_free(struct msmcomm_message *msg)
+void resp_charging_free(struct msmcomm_message *msg)
 {
 }
 
-unsigned int msmcomm_resp_charge_usb_get_voltage(struct msmcomm_message *msg)
+unsigned int msmcomm_resp_charging_get_mode(struct msmcomm_message *msg)
+{
+	switch(MESSAGE_CAST(msg, struct charging_msg)->mode) {
+	case 0x1:
+		return MSMCOMM_CHARGING_MODE_USB;
+	case 0x2: 
+		return MSMCOMM_CHARGING_MODE_INDUCTIVE;
+	}
+
+	return MSMCOMM_CHARGING_MODE_INDUCTIVE;
+}
+
+unsigned int msmcomm_resp_charging_get_voltage(struct msmcomm_message *msg)
 {
 	/* FIXME */
-	return MSMCOMM_CHARGE_USB_MODE_500mA;
+	return MSMCOMM_CHARGING_VOLTAGE_MODE_500mA;
 }
 

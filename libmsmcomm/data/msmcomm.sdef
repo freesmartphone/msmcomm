@@ -104,16 +104,6 @@ start get_imei_resp 21
 [4-20] uint8_t imei
 end
 
-start get_charger_status_resp 13
-[0] uint8_t ref_id
-[5-6] uint16_t voltage
-end
-
-start charge_usb_resp 8
-[0] uint8_t ref_id
-[5-6] uint16_t voltage
-end
-
 start get_imei_msg 4
 end
 
@@ -138,13 +128,18 @@ start set_audio_profile_msg 10
 [0] uint8_t ref_id
 end
 
-start get_charger_status_msg 13
-[0] uint8_t ref_id
-end
-
-start charge_usb_msg 8
+start charger_status_msg 13
 [0] uint8_t ref_id
 [5-6] uint16_t voltage
+[8] uint8_t mode
+[12] uint8_t rc
+end
+
+start charging_msg 8
+[0] uint8_t ref_id
+[5] uint8_t mode
+[6-7] uint16_t voltage
+[8] uint8_t rc
 end
 
 

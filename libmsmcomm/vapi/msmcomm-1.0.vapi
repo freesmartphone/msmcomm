@@ -46,7 +46,7 @@ namespace Msmcomm
         SET_AUDIO_PROFILE,
         END_CALL,
         GET_CHARGER_STATUS,
-        CHARGE_USB,
+        CHARGING,
         DIAL_CALL
     }
 
@@ -65,8 +65,8 @@ namespace Msmcomm
         GET_VOICEMAIL_NR,
         SOUND,
         CM_CALL,
-        GET_CHARGER_STATUS,
-        CHARGE_USB
+        CHARGER_STATUS,
+        CHARGING
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
@@ -160,10 +160,10 @@ namespace Msmcomm
 			return "RESPONSE_SOUND";
             case ResponseType.CM_CALL:
 			return "RESPONSE_CM_CALL";
-            case ResponseType.GET_CHARGER_STATUS:
-			return "RESPONSE_GET_CHARGER_STATUS";
-            case ResponseType.CHARGE_USB:
-            return "RESPONSE_CHARGE_USB";
+            case ResponseType.CHARGER_STATUS:
+			return "RESPONSE_CHARGER_STATUS";
+            case ResponseType.CHARGING:
+            return "RESPONSE_CHARGING";
             // EventType
         	case EventType.RESET_RADIO_IND:
 			return "URC_RESET_RADIO_IND";
@@ -292,12 +292,19 @@ namespace Msmcomm
         OFFLINE
     }
 
-    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_CHARGE_USB_", cheader_filename = "msmcomm.h")]
-    public enum UsbChargeMode
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_CHARGING_VOLTAGE_", cheader_filename = "msmcomm.h")]
+    public enum UsbVoltageMode
     {
         MODE_250mA,
         MODE_500mA,
         MODE_1A
+    }
+
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_CHARGING_MODE_", cheader_filename = "msmcomm.h")]
+    public enum ChargingMode
+    {
+        USB,
+        INDUCTIVE
     }
 
     [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0)]
@@ -371,13 +378,16 @@ namespace Msmcomm
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
-        public class ChargeUsb : Message
+        public class Charging : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public ChargeUsb(Context? context = null, CommandType t = CommandType.CHARGE_USB);
+            public Charging(Context? context = null, CommandType t = CommandType.CHARGING);
 
-            [CCode (cname = "msmcomm_message_charge_usb_set_mode")]
-            public void setMode(UsbChargeMode mode);
+            [CCode (cname = "msmcomm_message_charging_set_voltage")]
+            public void setVoltage(UsbVoltageMode voltage);
+
+            [CCode (cname = "msmcomm_message_charging_set_mode")]
+            public void setMode(ChargingMode mode);
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
@@ -502,10 +512,22 @@ namespace Msmcomm
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
-        public class ChargeUsb : Message
+        public class Charging : Message
         {
-            [CCode (cname = "msmcomm_resp_charge_usb_get_voltage")]
+            [CCode (cname = "msmcomm_resp_charging_get_voltage")]
             public uint getVoltage();
+            
+            [CCode (cname = "msmcomm_resp_charging_get_mode")]
+            public uint getMode();
+        }
+
+        public class ChargerStatus : Message
+        {
+            [CCode (cname = "msmcomm_resp_charger_status_get_voltage")]
+            public uint getVoltage();
+
+            [CCode (cname = "msmcomm_resp_charger_status_get_mode")]
+            public uint getMode();
         }
     }
 

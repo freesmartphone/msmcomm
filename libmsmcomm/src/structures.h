@@ -171,24 +171,6 @@ struct get_imei_resp
 } __attribute__ ((packed));
 
 
-struct get_charger_status_resp
-{
-	uint8_t ref_id;
-	uint8_t unknown0[4];
-	uint16_t voltage;
-	uint8_t unknown1[7];
-} __attribute__ ((packed));
-
-
-struct charge_usb_resp
-{
-	uint8_t ref_id;
-	uint8_t unknown0[4];
-	uint16_t voltage;
-	uint8_t unknown1[2];
-} __attribute__ ((packed));
-
-
 struct get_imei_msg
 {
 	uint8_t unknown0[4];
@@ -231,19 +213,27 @@ struct set_audio_profile_msg
 } __attribute__ ((packed));
 
 
-struct get_charger_status_msg
-{
-	uint8_t ref_id;
-	uint8_t unknown0[12];
-} __attribute__ ((packed));
-
-
-struct charge_usb_msg
+struct charger_status_msg
 {
 	uint8_t ref_id;
 	uint8_t unknown0[4];
 	uint16_t voltage;
 	uint8_t unknown1[2];
+	uint8_t mode;
+	uint8_t unknown2[3];
+	uint8_t rc;
+} __attribute__ ((packed));
+
+
+struct charging_msg
+{
+	uint8_t ref_id;
+	uint8_t unknown0[4];
+	uint8_t mode;
+	uint16_t voltage;
+	uint8_t unknown1;
+	uint8_t rc;
+	uint8_t unknown2
 } __attribute__ ((packed));
 
 

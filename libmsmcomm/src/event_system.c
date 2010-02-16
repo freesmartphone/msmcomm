@@ -81,7 +81,7 @@ void event_charger_status_free(struct msmcomm_message *msg)
 unsigned int msmcomm_event_charger_status_get_voltage(struct msmcomm_message *msg)
 {
 	/* FIXME */
-	return MSMCOMM_CHARGE_USB_MODE_500mA;
+	return MSMCOMM_CHARGING_VOLTAGE_MODE_500mA;
 }
 
 /*

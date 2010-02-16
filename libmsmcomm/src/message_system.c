@@ -209,14 +209,12 @@ void msg_get_charger_status_init(struct msmcomm_message *msg)
 	msg->group_id = 0x1b;
 	msg->msg_id = 0x15;
 
-	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_charger_status_msg);
-
-	MESSAGE_CAST(msg, struct get_charger_status_msg)->ref_id = 0x0;
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct charger_status_msg);
 }
 
 uint32_t msg_get_charger_status_get_size(struct msmcomm_message *msg)
 {
-	return sizeof(struct get_charger_status_msg);
+	return sizeof(struct charger_status_msg);
 }
 
 void msg_get_charger_status_free(struct msmcomm_message *msg)
@@ -226,56 +224,76 @@ void msg_get_charger_status_free(struct msmcomm_message *msg)
 
 uint8_t* msg_get_charger_status_prepare_data(struct msmcomm_message *msg)
 {
+	MESSAGE_CAST(msg, struct charger_status_msg)->ref_id = msg->ref_id;
 	return msg->payload;
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_CHARGE_USB
+ * MSMCOMM_MESSAGE_CMD_CHARGING
  */
 
-void msg_charge_usb_init(struct msmcomm_message *msg)
+void msg_charging_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x1b;
 	msg->msg_id = 0x15;
 
-	msg->payload = talloc_zero(talloc_msmc_ctx, struct charge_usb_msg);
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct charging_msg);
 }
 
-uint32_t msg_charge_usb_get_size(struct msmcomm_message *msg)
+uint32_t msg_charging_get_size(struct msmcomm_message *msg)
 {
-	return sizeof(struct charge_usb_msg);
+	return sizeof(struct charging_msg);
 }
 
-void msg_charge_usb_free(struct msmcomm_message *msg)
+void msg_charging_free(struct msmcomm_message *msg)
 {
 	talloc_free(msg->payload);
 }
 
-uint8_t* msg_charge_usb_prepare_data(struct msmcomm_message *msg)
+uint8_t* msg_charging_prepare_data(struct msmcomm_message *msg)
 {
-	MESSAGE_CAST(msg, struct charge_usb_msg)->ref_id = msg->ref_id;
+	MESSAGE_CAST(msg, struct charging_msg)->ref_id = msg->ref_id;
 	return msg->payload;
 }
 
-void msmcomm_message_charge_usb_set_mode(struct msmcomm_message *msg, unsigned int mode)
+void msmcomm_message_charging_set_mode(struct msmcomm_message *msg, unsigned int mode)
 {
-	uint16_t voltage = 0;
-	switch(mode) {
-	case MSMCOMM_CHARGE_USB_MODE_250mA:
-		voltage = 250;
+	uint8_t new_mode;
+
+	switch (mode) {
+	case MSMCOMM_CHARGING_MODE_INDUCTIVE:
+		new_mode = 0x2;
 		break;
-	case MSMCOMM_CHARGE_USB_MODE_500mA:
-		voltage = 500;
+	case MSMCOMM_CHARGING_MODE_USB:
+		new_mode = 0x1;
 		break;
-	case MSMCOMM_CHARGE_USB_MODE_1A:
-		voltage = 1000;
+	default:
+		return;
+	}
+
+	MESSAGE_CAST(msg, struct charging_msg)->mode = new_mode;
+}
+
+void msmcomm_message_charging_set_voltage
+	(struct msmcomm_message *msg, unsigned int voltage)
+{
+	uint16_t new_voltage = 0;
+	switch(voltage) {
+	case MSMCOMM_CHARGING_VOLTAGE_MODE_250mA:
+		new_voltage = 250;
+		break;
+	case MSMCOMM_CHARGING_VOLTAGE_MODE_500mA:
+		new_voltage = 500;
+		break;
+	case MSMCOMM_CHARGING_VOLTAGE_MODE_1A:
+		new_voltage = 1000;
 		break;
 	default:
 		break;
 	}
 
 	/* little endian! */
-	MESSAGE_CAST(msg, struct charge_usb_msg)->voltage = 
-		((voltage & 0xff) << 8) | ((voltage & 0xff00) >> 4);
+	MESSAGE_CAST(msg, struct charging_msg)->voltage = 
+		((new_voltage & 0xff) << 8) | ((new_voltage & 0xff00) >> 4);
 }
 
