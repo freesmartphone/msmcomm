@@ -69,7 +69,7 @@ public class Commands
         register( "test_alive", test_alive, "Test, if the modem is still responding to commands" );
         register( "verify_pin", verify_pin, "Send SIM PIN authentication code", "verify_pin <pin>" );
         register( "get_charger_status", get_charger_status, "Query current charging status" );
-        register( "charge_usb", charge_usb, "Set the usb charging mode:\n\tvoltage: 250mA, 500mA, 1A (warning!)", "charge_usb <250|500|1000>", 1 );
+        register( "charging", charging, "Set charging mode:\n\tmode: usb, inductive\n\tvoltage: 250mA, 500mA, 1A (warning!)", "charge_usb <usb|inductive> <250|500|1000>", 2 );
     }
 
     private uint8 nextValidRefId()
@@ -196,26 +196,41 @@ public class Commands
         msm.sendMessage( msg );
     }
 
-    private void charge_usb( string[] params )
+    private void charging( string[] params )
     {
-        var msg = new Msmcomm.Command.ChargeUsb();
+        var msg = new Msmcomm.Command.Charging();
         msg.setRefId(nextValidRefId());
+
         switch ( params[0] )
         {
             case "250":
-                msg.setMode( Msmcomm.UsbChargeMode.MODE_250mA );
+                msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_250mA );
                 break;
             case "500":
-                msg.setMode( Msmcomm.UsbChargeMode.MODE_500mA );
+                msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_500mA );
                 break;
             case "1000":
-                msg.setMode( Msmcomm.UsbChargeMode.MODE_1A );
+                msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_1A );
                 break;
             default:
                 ERR( @"Unknown operation mode $(params[0])" );
                 return;
                 break;
         }
+
+        switch ( params[1] )
+        {
+            case "usb":
+                msg.setMode(Msmcomm.ChargingMode.USB);
+                break;
+            case "inductive":
+                msg.setMode(Msmcomm.ChargingMode.INDUCTIVE);
+                break;
+            default:
+                ERR( @"Unknown charging mode $(params[0])" );
+                return;
+        }
+
         msm.sendMessage( msg );
     }
 }
