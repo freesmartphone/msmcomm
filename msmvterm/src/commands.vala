@@ -51,11 +51,14 @@ public class Commands
 {
     private Gee.HashMap<string,CommandHolder> map;
     private unowned Msmcomm.Context msm;
+    private uint8 ref_id_counter;
 
     public Commands( ref Msmcomm.Context context )
     {
         msm = context;
         map = new Gee.HashMap<string,CommandHolder>();
+
+        ref_id_counter = 0;
 
         register( "help", help, "Show all known commands with their syntax" );
         register( "quit", () => { loop.quit(); }, "Quit this program" );
@@ -67,6 +70,12 @@ public class Commands
         register( "verify_pin", verify_pin, "Send SIM PIN authentication code", "verify_pin <pin>" );
         register( "get_charger_status", get_charger_status, "Query current charging status" );
         register( "charge_usb", charge_usb, "Set the usb charging mode:\n\tvoltage: 250mA, 500mA, 1A (warning!)", "charge_usb <250|500|1000>", 1 );
+    }
+
+    private uint8 nextValidRefId()
+    {
+        ref_id_counter += 1;
+        return ref_id_counter;
     }
 
     private void register( string cmdname, CmdFunc func, string help, string? syntax = null, uint args = 0 )
@@ -123,19 +132,21 @@ public class Commands
     private void get_imei( string[] params )
     {
         var msg = new Msmcomm.Command.GetImei();
-        msg.setRefId( 0x42 );
+        msg.setRefId(nextValidRefId());
         msm.sendMessage( msg );
     }
 
     private void get_firmware_info( string[] params )
     {
         var msg = new Msmcomm.Command.GetFirmwareInfo();
+        msg.setRefId(nextValidRefId());
         msm.sendMessage( msg );
     }
 
     private void change_operation_mode( string[] params )
     {
         var msg = new Msmcomm.Command.ChangeOperationMode();
+        msg.setRefId(nextValidRefId());
 
         switch ( params[0] )
         {
@@ -166,13 +177,14 @@ public class Commands
     private void test_alive( string[] params )
     {
         var msg = new Msmcomm.Command.TestAlive();
-        msg.setRefId( 0x42 );
+        msg.setRefId(nextValidRefId());
         msm.sendMessage( msg );
     }
 
     private void verify_pin( string[] params )
     {
         var msg = new Msmcomm.Command.VerifyPin();
+        msg.setRefId(nextValidRefId());
         msg.setPin( params[0] );
         msm.sendMessage( msg );
     }
@@ -180,12 +192,14 @@ public class Commands
     private void get_charger_status( string[] params )
     {
         var msg = new Msmcomm.Command.GetChargerStatus();
+        msg.setRefId(nextValidRefId());
         msm.sendMessage( msg );
     }
 
     private void charge_usb( string[] params )
     {
         var msg = new Msmcomm.Command.ChargeUsb();
+        msg.setRefId(nextValidRefId());
         switch ( params[0] )
         {
             case "250":
