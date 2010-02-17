@@ -45,6 +45,7 @@ MESSAGE_TYPE(set_audio_profile)
 MESSAGE_TYPE(end_call)
 MESSAGE_TYPE(dial_call)
 MESSAGE_TYPE(get_charger_status)
+MESSAGE_TYPE(charging)
 
 struct message_descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE,change_operation_mode),
@@ -59,6 +60,7 @@ struct message_descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_END_CALL, end_call),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_DIAL_CALL, dial_call),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS, get_charger_status),
+	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHARGING, charging),
 };
 
 unsigned int msg_descriptors_size = (unsigned int)(sizeof(msg_descriptors) / sizeof(struct message_descriptor));

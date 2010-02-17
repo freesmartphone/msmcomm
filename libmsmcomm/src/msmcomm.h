@@ -167,7 +167,7 @@
  * Charging voltages (only for USB mode)
  */
 #define MSMCOMM_CHARGING_VOLTAGE_MODE_250mA						1
-#define MSMCOMM_CHARGING_VOLTAGE_MODE_500mA	 					2
+#define MSMCOMM_CHARGING_VOLTAGE_MODE_500mA						2
 #define MSMCOMM_CHARGING_VOLTAGE_MODE_1A						3
 
 /*

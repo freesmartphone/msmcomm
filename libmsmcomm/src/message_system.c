@@ -235,7 +235,7 @@ uint8_t* msg_get_charger_status_prepare_data(struct msmcomm_message *msg)
 void msg_charging_init(struct msmcomm_message *msg)
 {
 	msg->group_id = 0x1b;
-	msg->msg_id = 0x15;
+	msg->msg_id = 0x13;
 
 	msg->payload = talloc_zero(talloc_msmc_ctx, struct charging_msg);
 }

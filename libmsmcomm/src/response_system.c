@@ -166,8 +166,16 @@ unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg)
 
 unsigned int msmcomm_resp_charger_status_get_voltage(struct msmcomm_message *msg)
 {
-	/* FIXME */
-	return MSMCOMM_CHARGING_VOLTAGE_MODE_500mA;
+	switch (MESSAGE_CAST(msg, struct charger_status_msg)->voltage) {
+	case 250:
+		return MSMCOMM_CHARGING_VOLTAGE_MODE_250mA;
+	case 500:
+		return MSMCOMM_CHARGING_VOLTAGE_MODE_500mA;
+	case 1000:
+		return MSMCOMM_CHARGING_VOLTAGE_MODE_1A;
+	}
+
+	return MSMCOMM_MESSAGE_INVALID;
 }
 /*
  * MSMCOMM_RESPONSE_CARGE_USB
@@ -204,7 +212,16 @@ unsigned int msmcomm_resp_charging_get_mode(struct msmcomm_message *msg)
 
 unsigned int msmcomm_resp_charging_get_voltage(struct msmcomm_message *msg)
 {
-	/* FIXME */
-	return MSMCOMM_CHARGING_VOLTAGE_MODE_500mA;
+	switch (MESSAGE_CAST(msg, struct charger_status_msg)->voltage) {
+	case 250:
+		return MSMCOMM_CHARGING_VOLTAGE_MODE_250mA;
+	case 500:
+		return MSMCOMM_CHARGING_VOLTAGE_MODE_500mA;
+	case 1000:
+		return MSMCOMM_CHARGING_VOLTAGE_MODE_1A;
+	}
+
+	return MSMCOMM_MESSAGE_INVALID;
+
 }
 
