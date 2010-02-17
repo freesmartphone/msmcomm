@@ -16,7 +16,9 @@ start call_status_event 1107
 end
 
 start cm_call_resp 10
-[0] uint8_t ref_id
+[0-3] uint32_t ref_id
+[4-5] uint16_t cmd_type
+[8-9] uint16_t error_code
 end
 
 start answer_call_msg 8

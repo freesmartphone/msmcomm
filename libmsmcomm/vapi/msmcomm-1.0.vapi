@@ -473,7 +473,7 @@ namespace Msmcomm
             public DialCall(Context? context = null, CommandType t = CommandType.DIAL_CALL);
 
             [CCode (cname = "msmcomm_message_dial_call_set_caller_id")]
-            public void setCallerid(string caller_id);
+            public void setCallerId(string caller_id);
         }
     }
 
@@ -529,6 +529,18 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_resp_charger_status_get_mode")]
             public uint getMode();
         }
+
+		public class Call : Message
+		{
+			[CCode (cname = "msmcomm_resp_cm_call_get_ref_id")]
+			public uint getRefId();
+
+			[CCode (cname = "msmcomm_resp_cm_call_get_cmd")]
+			public uint16 getCmd();
+
+			[CCode (cname = "msmcomm_resp_cm_call_get_error_code")]
+			public uint16 getErrorCode();
+		}
     }
 
     namespace Unsolicited

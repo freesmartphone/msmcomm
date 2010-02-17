@@ -59,7 +59,7 @@ RESPONSE_TYPE(xtra_set_data)
 */
 RESPONSE_TYPE(get_sim_capabilities)
 RESPONSE_TYPE(sound)
-RESPONSE_TYPE(call_response)
+RESPONSE_TYPE(cm_call)
 RESPONSE_TYPE(charging)
 RESPONSE_TYPE(charger_status)
 
@@ -115,7 +115,7 @@ struct response_descriptor resp_descriptors[] = {
 	*/
 	RESPONSE_DATA(MSMCOMM_RESPONSE_GET_SIM_CAPABILITIES, get_sim_capabilities),
 	RESPONSE_DATA(MSMCOMM_RESPONSE_SOUND, sound),
-//	RESPONSE_DATA(MSMCOMM_RESPONSE_CALL_RESPONSE, call_response),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_CM_CALL, cm_call),
 	RESPONSE_DATA(MSMCOMM_RESPONSE_CHARGING, charging),
 	RESPONSE_DATA(MSMCOMM_RESPONSE_CHARGER_STATUS, charger_status),
 };

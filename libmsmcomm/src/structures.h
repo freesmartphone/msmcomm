@@ -46,8 +46,12 @@ struct call_status_event
 
 struct cm_call_resp
 {
-	uint8_t ref_id;
-	uint8_t unknown0[9];
+	uint32_t ref_id;
+	uint8_t unknown0[3];
+	uint16_t cmd_type;
+	uint8_t unknown1[3];
+	uint16_t error_code;
+	uint8_t unknown2;
 } __attribute__ ((packed));
 
 

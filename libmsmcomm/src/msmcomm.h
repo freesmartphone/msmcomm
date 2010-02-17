@@ -285,6 +285,12 @@ unsigned int 	msmcomm_resp_charger_status_get_voltage
 unsigned int msmcomm_resp_charger_status_get_mode
 	(struct msmcomm_message *msg);
 
+/* Call responses ---------------------------------- */
+uint16_t msmcomm_resp_cm_call_get_error_code(struct msmcomm_message *msg);
+uint16_t msmcomm_resp_cm_call_get_cmd(struct msmcomm_message *msg);
+uint32_t msmcomm_resp_cm_call_get_ref_id(struct msmcomm_message *msg);
+
+
 /* System events ----------------------------------- */
 uint8_t 		msmcomm_event_power_state_get_state
 	(struct msmcomm_message *msg);

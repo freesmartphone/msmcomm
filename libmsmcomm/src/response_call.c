@@ -43,11 +43,20 @@ void resp_cm_call_free(struct msmcomm_message *msg)
 {
 }
 
-uint8_t msmcomm_message_cm_call_get_ref_id(struct msmcomm_message *msg)
+uint32_t msmcomm_resp_cm_call_get_ref_id(struct msmcomm_message *msg)
 {
-#if 0
-	MESSAGE_CAST(msg, struct cm_call_resp)->ref_id;
-#endif
-	return 0;
+	return MESSAGE_CAST(msg, struct cm_call_resp)->ref_id;
 }
+
+uint16_t msmcomm_resp_cm_call_get_cmd(struct msmcomm_message *msg)
+{
+	return MESSAGE_CAST(msg, struct cm_call_resp)->cmd_type;
+}
+
+uint16_t msmcomm_resp_cm_call_get_error_code(struct msmcomm_message *msg)
+{
+	return MESSAGE_CAST(msg, struct cm_call_resp)->error_code;
+}
+
+
 
