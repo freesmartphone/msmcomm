@@ -143,7 +143,7 @@ start charger_status_msg 13
 [12] uint8_t rc
 end
 
-start charging_msg 8
+start charging_msg 9
 [0-3] uint32_t ref_id
 [5] uint8_t mode
 [6-7] uint16_t voltage

@@ -136,7 +136,7 @@ with open(sys.argv[1]) as f:
       part['len'] = (end_offset - start_offset + 1) / byte_size[part['type']]
 
       object_parts.append(part)
-      last_end_offset = start_offset + part['len']
+      last_end_offset = start_offset + part['len'] * byte_size[part['type']]
 
     elif line.startswith('end') and in_object:
       if not last_end_offset == object_len:
