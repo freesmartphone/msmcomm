@@ -29,6 +29,7 @@ event_network.c \
 group_sim_event.c \
 group_call_event.c \
 group_gps_event.c \
+group_sups_event.c \
 msmcomm.h \
 $(NULL)
 

@@ -128,7 +128,26 @@ namespace Msmcomm
         SIM_REFRESH_APP_RESET,
         SIM_REFRESH_3G_SESSION_RESET,
         SIM_APP_SELECTED,
-        SIM_DEFAULT
+        SIM_DEFAULT,
+        SUPS_PROCESS_USS,
+        SUPS_PROCESS_USS_CONF,
+        SUPS_USS_RES,
+        SUPS_RELEASE_USS_IND,
+        SUPS_USS_NOTIFY_IND,
+        SUPS_USS_NOTIFY_RES,
+        SUPS_RELEASE,
+        SUPS_ABORT,
+        SUPS_ERASE,
+        SUPS_REGISTER,
+        SUPS_REGISTER_CONF,
+        SUPS_GET_PASSWORD_IN,
+        SUPS_GET_PASSWORD_RES,
+        SUPS_INTERROGATE,
+        SUPS_INTERROGATE_CONF,
+        SUPS_ACTIVATE,
+        SUPS_ACTIVATE_CONF,
+        SUPS_DEACTIVATE,
+        SUPS_DEACTIVATE_CONF
     }
 
     public string eventTypeToString( int t )
@@ -279,6 +298,44 @@ namespace Msmcomm
 			return "URC_SIM_APP_SELECTED";
         	case EventType.SIM_DEFAULT:
 			return "URC_SIM_DEFAULT";
+            case EventType.SUPS_PROCESS_USS:
+            return "SUPS_PROCESS_USS";
+            case EventType.SUPS_PROCESS_USS_CONF:
+            return "SUPS_PROCESS_USS_CONF";
+            case EventType.SUPS_USS_RES:
+            return "SUPS_USS_RES";
+            case EventType.SUPS_RELEASE_USS_IND:
+            return "SUPS_RELEASE_USS_IND";
+            case EventType.SUPS_USS_NOTIFY_IND:
+            return "SUPS_USS_NOTIFY_IND";
+            case EventType.SUPS_USS_NOTIFY_RES:
+            return "SUPS_USS_NOTIFY_RES";
+            case EventType.SUPS_RELEASE:
+            return "SUPS_RELEASE";
+            case EventType.SUPS_ABORT:
+            return "SUPS_ABORT";
+            case EventType.SUPS_ERASE:
+            return "SUPS_ERASE";
+            case EventType.SUPS_REGISTER:
+            return "SUPS_REGISTER";
+            case EventType.SUPS_REGISTER_CONF:
+            return "SUPS_REGISTER_CONF";
+            case EventType.SUPS_GET_PASSWORD_IN:
+            return "SUPS_GET_PASSWORD_IN";
+            case EventType.SUPS_GET_PASSWORD_RES:
+            return "SUPS_GET_PASSWORD_RES";
+            case EventType.SUPS_INTERROGATE:
+            return "SUPS_INTERROGATE";
+            case EventType.SUPS_INTERROGATE_CONF:
+            return "SUPS_INTERROGATE_CONF";
+            case EventType.SUPS_ACTIVATE:
+            return "SUPS_ACTIVATE";
+            case EventType.SUPS_ACTIVATE_CONF:
+            return "SUPS_ACTIVATE_CONF";
+            case EventType.SUPS_DEACTIVATE:
+            return "SUPS_DEACTIVATE";
+            case EventType.SUPS_DEACTIVATE_CONF:
+            return "SUPS_DEACTIVATE_CONF";
             default:
 			return "%d (unknown)".printf( t );
         }
@@ -473,7 +530,12 @@ namespace Msmcomm
             public DialCall(Context? context = null, CommandType t = CommandType.DIAL_CALL);
 
             [CCode (cname = "msmcomm_message_dial_call_set_caller_id")]
-            public void setCallerId(string caller_id);
+            private void _setCallerId(string callerId, uint length);
+
+            public void setCallerId(string caller_id)
+            {
+                _setCallerId(caller_id, (uint)caller_id.length);
+            }
         }
     }
 
@@ -521,6 +583,7 @@ namespace Msmcomm
             public uint getMode();
         }
 
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class ChargerStatus : Message
         {
             [CCode (cname = "msmcomm_resp_charger_status_get_voltage")]
@@ -529,7 +592,8 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_resp_charger_status_get_mode")]
             public uint getMode();
         }
-
+    
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
 		public class Call : Message
 		{
 			[CCode (cname = "msmcomm_resp_cm_call_get_ref_id")]

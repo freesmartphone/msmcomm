@@ -79,10 +79,12 @@ EVENT_TYPE(network_state_info)
 
 GROUP_TYPE(sim)
 GROUP_TYPE(call)
+GROUP_TYPE(sups)
 
 struct group_descriptor group_descriptors[] = {
 	GROUP_DATA(sim),
 	GROUP_DATA(call),
+	GROUP_DATA(sups),
 };
 
 
