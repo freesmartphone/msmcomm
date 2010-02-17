@@ -57,7 +57,7 @@ struct cm_call_resp
 
 struct answer_call_msg
 {
-	uint8_t ref_id;
+	uint32_t ref_id;
 	uint8_t unknown0[3];
 	uint8_t host_id;
 	uint8_t call_nr;
@@ -67,7 +67,7 @@ struct answer_call_msg
 
 struct end_call_msg
 {
-	uint8_t ref_id;
+	uint32_t ref_id;
 	uint8_t unknown0[3];
 	uint8_t host_id;
 	uint8_t call_nr;
@@ -77,13 +77,23 @@ struct end_call_msg
 
 struct dial_call_msg
 {
-	uint8_t ref_id;
+	uint32_t ref_id;
 	uint8_t unknown0[4];
 	uint8_t const_value;
 	uint8_t unknown1[99];
 	uint8_t caller_id[64];
 	uint8_t caller_id_len;
 	uint8_t unknown2[36];
+} __attribute__ ((packed));
+
+
+struct sups_event
+{
+} __attribute__ ((packed));
+
+
+struct sups_resp
+{
 } __attribute__ ((packed));
 
 
@@ -183,7 +193,7 @@ struct get_imei_msg
 
 struct change_operation_mode_msg
 {
-	uint8_t ref_id;
+	uint32_t ref_id;
 	uint8_t unknown0[3];
 	uint8_t operation_mode;
 } __attribute__ ((packed));
@@ -205,21 +215,21 @@ struct get_firmware_msg
 
 struct get_phone_state_info_msg
 {
-	uint8_t ref_id;
+	uint32_t ref_id;
 	uint8_t unknown0[3];
 } __attribute__ ((packed));
 
 
 struct set_audio_profile_msg
 {
-	uint8_t ref_id;
+	uint32_t ref_id;
 	uint8_t unknown0[9];
 } __attribute__ ((packed));
 
 
 struct charger_status_msg
 {
-	uint8_t ref_id;
+	uint32_t ref_id;
 	uint8_t unknown0[4];
 	uint16_t voltage;
 	uint8_t unknown1[2];
@@ -231,7 +241,7 @@ struct charger_status_msg
 
 struct charging_msg
 {
-	uint8_t ref_id;
+	uint32_t ref_id;
 	uint8_t unknown0[4];
 	uint8_t mode;
 	uint16_t voltage;

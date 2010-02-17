@@ -253,10 +253,10 @@ uint32_t		msmcomm_message_get_size
 	(struct msmcomm_message *msg);
 uint32_t		msmcomm_message_get_type
 	(struct msmcomm_message *msg);
-uint8_t 		msmcomm_message_get_ref_id
+uint32_t 		msmcomm_message_get_ref_id
 	(struct msmcomm_message *msg);
 void			msmcomm_message_set_ref_id
-	(struct msmcomm_message *msg, uint8_t ref_id);
+	(struct msmcomm_message *msg, uint32_t ref_id);
 
 /**
  * These are message/response/event specific operations which only should be

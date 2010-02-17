@@ -22,23 +22,29 @@ start cm_call_resp 10
 end
 
 start answer_call_msg 8
-[0] uint8_t ref_id
+[0-3] uint32_t ref_id
 [4] uint8_t host_id
 [5] uint8_t call_nr
 end
 
 start end_call_msg 61
-[0] uint8_t ref_id
+[0-3] uint32_t ref_id
 [4] uint8_t host_id
 [5] uint8_t call_nr
 end
 
 start dial_call_msg 206
-[0] uint8_t ref_id
+[0-3] uint32_t ref_id
 [5] uint8_t const_value
 [105-168] uint8_t caller_id
 [169] uint8_t caller_id_len
 # [172] and [204] still unknown
+end
+
+start sups_event 0
+end
+
+start sups_resp 0
 end
 
 #-------------------------------------------------------------------
@@ -110,7 +116,7 @@ start get_imei_msg 4
 end
 
 start change_operation_mode_msg 5
-[0] uint8_t ref_id
+[0-3] uint32_t ref_id
 [4] uint8_t operation_mode
 end
 
@@ -123,22 +129,22 @@ start get_firmware_msg 4
 end
 
 start get_phone_state_info_msg 4
-[0] uint8_t ref_id
+[0-3] uint32_t ref_id
 end
 
 start set_audio_profile_msg 10
-[0] uint8_t ref_id
+[0-3] uint32_t ref_id
 end
 
 start charger_status_msg 13
-[0] uint8_t ref_id
+[0-3] uint32_t ref_id
 [5-6] uint16_t voltage
 [8] uint8_t mode
 [12] uint8_t rc
 end
 
 start charging_msg 8
-[0] uint8_t ref_id
+[0-3] uint32_t ref_id
 [5] uint8_t mode
 [6-7] uint16_t voltage
 [8] uint8_t rc
