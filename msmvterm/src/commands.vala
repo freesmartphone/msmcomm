@@ -70,6 +70,9 @@ public class Commands
         register( "verify_pin", verify_pin, "Send SIM PIN authentication code", "verify_pin <pin>" );
         register( "get_charger_status", get_charger_status, "Query current charging status" );
         register( "charging", charging, "Set charging mode:\n\tmode: usb, inductive\n\tvoltage: 250mA, 500mA, 1A (warning!)", "charge_usb <usb|inductive> <250|500|1000>", 2 );
+        register( "dial_call", dial_call, "Dial out", "dial <number>", 1);
+        register( "answer_call", answer_call, "Answer an incomming call", "answer_call <call_nr>", 1);
+        register( "end_call", end_call, "End an active call", "end_call <call_nr>", 1);
     }
 
     private uint8 nextValidRefId()
@@ -162,7 +165,6 @@ public class Commands
             default:
                 ERR( @"Unknown operation mode $(params[0])" );
                 return;
-                break;
         }
         msm.sendMessage( msg );
     }
@@ -215,7 +217,6 @@ public class Commands
             default:
                 ERR( @"Unknown operation mode $(params[0])" );
                 return;
-                break;
         }
 
         switch ( params[1] )
@@ -232,5 +233,29 @@ public class Commands
         }
 
         msm.sendMessage( msg );
+    }
+
+    private void dial_call ( string[] params )
+    {
+        var msg = new Msmcomm.Command.DialCall();
+        msg.setRefId(nextValidRefId());
+        msg.setCallerId(params[0]);
+        msm.sendMessage ( msg );
+    }
+
+    private void answer_call ( string[] params )
+    {
+        var msg = new Msmcomm.Command.AnswerCall();
+        msg.setRefId(nextValidRefId());
+        //msg.setCallNumber(params[0].toInt());
+        msm.sendMessage(msg);
+    }
+
+    private void end_call ( string[] params )
+    {
+        var msg = new Msmcomm.Command.EndCall();
+        msg.setRefId(nextValidRefId());
+        //msg.setCallNumber(params[0].toInt());
+        msm.sendMessage(msg);
     }
 }

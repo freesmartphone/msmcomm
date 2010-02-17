@@ -174,6 +174,10 @@ public class Terminal : Object
                 unowned Msmcomm.Response.GetFirmwareInfo msg = (Msmcomm.Response.GetFirmwareInfo) message;
                 details = @"FIRMWARE = $(msg.getInfo())";
                 break;
+            case Msmcomm.ResponseType.CM_CALL:
+                unowned Msmcomm.Response.Call msg = (Msmcomm.Response.Call) message;
+                details = @"refId = $(msg.getRefId()) cmd = $(msg.getCmd()) err = $(msg.getErrorCode())";
+                break;
             default:
                 break;
         }
