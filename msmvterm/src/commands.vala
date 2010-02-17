@@ -69,7 +69,7 @@ public class Commands
         register( "test_alive", test_alive, "Test, if the modem is still responding to commands" );
         register( "verify_pin", verify_pin, "Send SIM PIN authentication code", "verify_pin <pin>" );
         register( "get_charger_status", get_charger_status, "Query current charging status" );
-        register( "charging", charging, "Set charging mode:\n\tmode: usb, inductive\n\tvoltage: 250mA, 500mA, 1A (warning!)", "charge_usb <usb|inductive> <250|500|1000>", 2 );
+        register( "charging", charging, "Set charging mode:\n\tmode: usb, inductive\n\tvoltage: 250mA, 500mA, 1A (warning!)", "charging <usb|inductive> <250|500|1000>", 2 );
         register( "dial_call", dial_call, "Dial out", "dial <number>", 1);
         register( "answer_call", answer_call, "Answer an incomming call", "answer_call <call_nr>", 1);
         register( "end_call", end_call, "End an active call", "end_call <call_nr>", 1);
@@ -205,24 +205,23 @@ public class Commands
 
         switch ( params[0] )
         {
-            case "250":
-                msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_250mA );
-                break;
-            case "500":
-                msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_500mA );
-                break;
-            case "1000":
-                msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_1A );
-                break;
-            default:
-                ERR( @"Unknown operation mode $(params[0])" );
-                return;
-        }
-
-        switch ( params[1] )
-        {
             case "usb":
                 msg.setMode(Msmcomm.ChargingMode.USB);
+                switch ( params[1] )
+                {
+                    case "250":
+                        msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_250mA );
+                        break;
+                    case "500":
+                        msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_500mA );
+                        break;
+                    case "1000":
+                        msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_1A );
+                        break;
+                    default:
+                        ERR( @"Unknown voltage $(params[1])" );
+                        return;
+                }
                 break;
             case "inductive":
                 msg.setMode(Msmcomm.ChargingMode.INDUCTIVE);

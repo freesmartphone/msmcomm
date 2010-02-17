@@ -178,6 +178,29 @@ public class Terminal : Object
                 unowned Msmcomm.Response.Call msg = (Msmcomm.Response.Call) message;
                 details = @"refId = $(msg.getRefId()) cmd = $(msg.getCmd()) err = $(msg.getErrorCode())";
                 break;
+            case Msmcomm.ResponseType.CHARGER_STATUS:
+                unowned Msmcomm.Response.ChargerStatus msg = (Msmcomm.Response.ChargerStatus) message;
+                string mode = "<unknown>", voltage = "<unknown>";
+            
+                if (msg.getMode() == Msmcomm.ChargingMode.USB)
+                    mode = "USB";
+                else if (msg.getMode() == Msmcomm.ChargingMode.INDUCTIVE)
+                    mode = "INDUCTIVE";
+
+                switch (msg.getVoltage()) {
+                case Msmcomm.UsbVoltageMode.MODE_250mA:
+                    voltage = "250mA";
+                    break;
+                case Msmcomm.UsbVoltageMode.MODE_500mA:
+                    voltage = "500mA";
+                    break;
+                case Msmcomm.UsbVoltageMode.MODE_1A:
+                    voltage = "1A";
+                    break;
+                }
+
+                details = @"mode = $(mode) voltage = $(voltage)";
+                break;
             default:
                 break;
         }
