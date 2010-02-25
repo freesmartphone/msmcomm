@@ -31,6 +31,9 @@ group_call_event.c \
 group_gps_event.c \
 group_sups_event.c \
 msmcomm.h \
+internal.h \
+linuxlist.h \
+structures.h \
 $(NULL)
 
 msmcommincludedir = $(includedir)/msmcomm-1.0
