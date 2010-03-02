@@ -26,9 +26,9 @@
 #include <fcntl.h>
 #include <getopt.h>
 
-
 #define DEFAULT_SCINIT			"/sys/devices/platform/twl4030_audio/scinit"
 #define DEFAULT_SCRUN			"/sys/devices/platform/twl4030_audio/scrun"
+#define DEFAULT_SCDEBUG			"/sys/devices/platform/twl4030_audio/scdebug"
 
 void print_help()
 {
@@ -38,7 +38,7 @@ void print_help()
 	printf(" -h --help print this help\n");
 }
 
-void load_script(char *script_filename)
+static void load_script(char *script_filename)
 {
 	int len;
 	char buffer[4096];
@@ -58,7 +58,7 @@ void load_script(char *script_filename)
 	close(fd);
 }
 
-void run_script(char *script_name)
+static void run_script(char *script_name)
 {
 	int fd = open(DEFAULT_SCRUN, O_WRONLY);
 	write(fd, script_name, strlen(script_name));
@@ -71,6 +71,8 @@ int main(int argc, char *argv[])
 	opterr = 0;
 	int option_index;
 	int chr;
+	int run = 0,
+		load = 0;
 	char script_name[255];
 	char script_filename[4096];
 
@@ -79,11 +81,13 @@ int main(int argc, char *argv[])
 
 	struct option opts[] = {
 		{ "help", no_argument, 0, 'h' },
+		{ "load", required_argument, 0, 'l' },
+		{ "run", required_argument, 0, 'r' },
 	};
 
 	while (1) {
 		option_index = 0;
-		chr = getopt_long(argc, argv, "s:l:h", opts, &option_index);
+		chr = getopt_long(argc, argv, "r:l:h", opts, &option_index);
 
 		if (chr == -1)
 			break;
@@ -91,17 +95,25 @@ int main(int argc, char *argv[])
 		switch (chr) {
 		case 'l':
 			snprintf(script_filename, 4096, "%s", optarg);
+			load = 1;
 			break;
-		case 's':
+		case 'r':
 			snprintf(script_name, 255, "%s", optarg);
+			run = 1;
 			break;
 		case 'h':
 			print_help();
-			break;
+			return 0;
 		default:
 			break;
 		}
 	}
+
+	if (load)
+		load_script(script_filename);
+
+	if (run)
+		run_script(script_name);
 
 	return 0;
 }
