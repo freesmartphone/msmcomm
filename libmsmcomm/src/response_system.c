@@ -44,17 +44,6 @@ void resp_test_alive_free(struct msmcomm_message *msg)
  * MSMCOMM_RESPONSE_GET_FIRMWARE_INFO
  */
 
-#if 0
-struct get_firmware_info_resp
-{
-	uint8_t unknown0[5];
-	uint8_t hci_version;
-	uint8_t unknown1[3];
-	uint8_t firmware_version[13];
-	uint8_t unknown2[122];
-} __attribute__ ((packed));
-#endif
-
 unsigned int resp_get_firmware_info_is_valid(struct msmcomm_message *msg)
 {
 	return (msg->group_id == 0x1c) && (msg->msg_id == 0xa);
@@ -86,14 +75,6 @@ void msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg, char *
 /*
  * MSMCOMM_RESPONSE_GET_IMEI
  */
-
-#if 0
-struct get_imei_resp
-{
-	uint8_t unknown[5];
-	uint8_t imei[17];
-} __attribute__ ((packed));
-#endif
 
 unsigned int resp_get_imei_is_valid(struct msmcomm_message *msg)
 {

@@ -24,24 +24,6 @@
  * MSMCOMM_EVENT_network_state_info
  */
 
-#if 0
-struct network_state_info_event
-{
-	uint8_t change_field[8];
-	uint8_t new_value;
-	uint8_t unknown1[7];
-	uint8_t plmn[3];
-	uint8_t unknown2[3];
-	uint8_t operator_name_len;
-	uint8_t operator_name[80];
-	uint8_t unknown3[23];
-	uint8_t rssi;
-	uint8_t unknown4;
-	uint8_t ecio;
-	uint8_t unknown10[549];
-} __attribute__ ((packed));
-#endif
-
 unsigned int event_network_state_info_is_valid(struct msmcomm_message *msg)
 {
 	/* event network_state_info seems to be have both msgId 0x0 and 0x1 */

@@ -26,12 +26,6 @@ extern void *talloc_msmc_ctx;
  * MSMCOMM_EVENT_RESET_RADIO_IND
  */
 
-#if 0
-struct reset_radio_ind_event
-{
-} __attribute__ ((packed));
-#endif
-
 unsigned int event_radio_reset_ind_is_valid(struct msmcomm_message *msg)
 {
 	return (msg->group_id == 0x1d) && (msg->msg_id == 0x0);
@@ -49,15 +43,6 @@ void event_radio_reset_ind_free(struct msmcomm_message *msg)
 /*
  * MSMCOMM_EVENT_CHARGER_STATUS
  */
-
-#if 0
-struct charger_status_event 
-{
-	uint8_t unknown0[6];
-	uint16_t voltage;
-	uint8_t unknown1[7];
-} __attribute__ ((packed));
-#endif
 
 unsigned int event_charger_status_is_valid(struct msmcomm_message *msg) 
 {
@@ -86,14 +71,6 @@ unsigned int msmcomm_event_charger_status_get_voltage(struct msmcomm_message *ms
 
 /*
  * MSMCOMM_EVENT_OPERATOR_MODE
- */
-
-#if 0
-struct operator_mode_event
-{
-	uint8_t unknown[15];
-} __attribute__ ((packed));
-#endif
 
 unsigned int event_operator_mode_is_valid(struct msmcomm_message *msg)
 {
@@ -118,10 +95,6 @@ void event_operator_mode_free(struct msmcomm_message *msg)
 /*
  * MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE
  */
-
-struct cm_ph_info_available_event
-{
-} __attribute__ ((packed));
 
 unsigned int event_cm_ph_info_available_is_valid(struct msmcomm_message *msg)
 {
@@ -149,15 +122,6 @@ void event_cm_ph_info_available_free(struct msmcomm_message *msg)
  * frame (type=Data, seq=04, ack=0a)
  * 04 01 00 0e 00 00 00 05 00 01 ff ff ff ff 00      ............... 
  */
-
-#if 0
-struct power_state_event
-{
-	uint8_t unknown0[5];
-	uint8_t power_state;
-	uint8_t unknown1[7];
-} __attribute__ ((packed));
-#endif
 
 unsigned int event_power_state_is_valid(struct msmcomm_message *msg)
 {

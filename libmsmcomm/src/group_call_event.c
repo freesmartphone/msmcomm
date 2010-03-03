@@ -26,28 +26,6 @@ extern void *talloc_msmc_ctx;
  * Call event group handler
  */
 
-#if 0
-struct call_status_event
-{
-	uint8_t unknown0;
-	uint8_t call_id;
-	uint8_t host_call_id;
-	uint8_t unknown1;
-	uint8_t caller_id[15];
-	uint8_t unknown2[50];
-	uint8_t caller_id_len;
-	uint8_t unknown3[521];
-	uint8_t cause_value0;
-	uint8_t unknown4[4];
-	uint8_t cause_value1;
-	uint8_t unknown5[29];
-	uint8_t cause_value2;
-	uint8_t reject_type;
-	uint8_t reject_value;
-	uint8_t unknown3[479];
-} __attribute__ ((packed));
-#endif 
-
 unsigned int group_call_is_valid(struct msmcomm_message *msg)
 {
 	return msg->group_id == 0x2;

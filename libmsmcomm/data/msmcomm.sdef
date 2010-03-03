@@ -82,6 +82,9 @@ start network_state_info_event 676
 [673] uint8_t modem_gsm_icon_ind
 end
 
+start cm_ph_info_available_event 0
+end
+
 #-------------------------------------------------------------------
 # System
 #-------------------------------------------------------------------
