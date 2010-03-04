@@ -56,6 +56,7 @@ void resp_get_firmware_info_handle_data(struct msmcomm_message *msg, uint8_t *da
 	}
 
 	msg->payload = data;
+	msg->ref_id = MESSAGE_CAST(msg, struct get_firmware_info_resp)->ref_id;
 }
 
 void resp_get_firmware_info_free(struct msmcomm_message *msg)
@@ -89,6 +90,7 @@ void resp_get_imei_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 	}
 
 	msg->payload = data;
+	msg->ref_id = MESSAGE_CAST(msg, struct get_imei_resp)->ref_id;
 }
 
 void msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg, uint8_t *buffer, int len)
@@ -127,6 +129,7 @@ void resp_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data,
 		return;
 
 	msg->payload = data;
+	msg->ref_id = MESSAGE_CAST(msg, struct charger_status_msg)->ref_id;
 }
 
 void resp_charger_status_free(struct msmcomm_message *msg)
@@ -173,6 +176,7 @@ void resp_charging_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 		return;
 
 	msg->payload = data;
+	msg->ref_id = MESSAGE_CAST(msg, struct charging_msg);
 }
 
 void resp_charging_free(struct msmcomm_message *msg)

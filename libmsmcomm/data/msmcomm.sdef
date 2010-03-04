@@ -107,11 +107,13 @@ start test_alive_event 0
 end
 
 start get_firmware_info_resp 143
+[0-3] uint32_t ref_id
 [4] uint8_t hci_version
 [8-20] uint8_t firmware_version
 end
 
 start get_imei_resp 21
+[0-3] uint32_t ref_id
 [4-20] uint8_t imei
 end
 
@@ -129,6 +131,7 @@ start test_alive_msg 5
 end
 
 start get_firmware_msg 4
+[0-3] uint32_t ref_id
 end
 
 start get_phone_state_info_msg 4
@@ -153,6 +156,8 @@ start charging_msg 9
 [8] uint8_t rc
 end
 
+start test_alive_resp 0
+end
 
 #-------------------------------------------------------------------
 # Audio

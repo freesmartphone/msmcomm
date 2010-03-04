@@ -127,6 +127,7 @@ void msg_get_firmware_info_free(struct msmcomm_message *msg)
 
 uint8_t* msg_get_firmware_info_prepare_data(struct msmcomm_message *msg)
 {
+	MESSAGE_CAST(msg, struct get_firmware_msg)->ref_id = msg->ref_id;
 	return msg->payload;
 }
 

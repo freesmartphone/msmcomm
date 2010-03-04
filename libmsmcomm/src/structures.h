@@ -133,6 +133,11 @@ struct network_state_info_event
 } __attribute__ ((packed));
 
 
+struct cm_ph_info_available_event
+{
+} __attribute__ ((packed));
+
+
 struct charger_status_event
 {
 	uint8_t unknown0[5];
@@ -166,17 +171,17 @@ struct test_alive_event
 
 struct get_firmware_info_resp
 {
-	uint8_t unknown0[4];
+	uint32_t ref_id;
 	uint8_t hci_version;
-	uint8_t unknown1[3];
+	uint8_t unknown0[3];
 	uint8_t firmware_version[13];
-	uint8_t unknown2[122];
+	uint8_t unknown1[122];
 } __attribute__ ((packed));
 
 
 struct get_imei_resp
 {
-	uint8_t unknown0[4];
+	uint32_t ref_id;
 	uint8_t imei[17];
 } __attribute__ ((packed));
 
@@ -204,7 +209,7 @@ struct test_alive_msg
 
 struct get_firmware_msg
 {
-	uint8_t unknown0[4];
+	uint32_t ref_id;
 } __attribute__ ((packed));
 
 
@@ -240,6 +245,11 @@ struct charging_msg
 	uint8_t mode;
 	uint16_t voltage;
 	uint8_t rc;
+} __attribute__ ((packed));
+
+
+struct test_alive_resp
+{
 } __attribute__ ((packed));
 
 

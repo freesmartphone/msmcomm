@@ -37,15 +37,11 @@ void resp_cm_call_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32
 		return;
 	
 	msg->payload = data;
+	msg->ref_id = MESSAGE_CAST(msg, struct cm_call_resp)->ref_id;
 }
 
 void resp_cm_call_free(struct msmcomm_message *msg)
 {
-}
-
-uint32_t msmcomm_resp_cm_call_get_ref_id(struct msmcomm_message *msg)
-{
-	return MESSAGE_CAST(msg, struct cm_call_resp)->ref_id;
 }
 
 uint16_t msmcomm_resp_cm_call_get_cmd(struct msmcomm_message *msg)
