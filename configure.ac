@@ -1,4 +1,4 @@
-AC_INIT([msmvterm], [0.1.0], [mlauer@vanille-media.de], [msmvterm])
+AC_INIT([msmcomm], [0.5.0], [morphis@gravedo.de], [msmcomm])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])
@@ -67,6 +67,15 @@ AC_SUBST(DEPS_LIBS)
 
 AC_CONFIG_FILES([
 	Makefile
+	msmcommd/Makefile
+	msmcommd/src/Makefile
+	msmcommd/tests/Makefile
+	libmsmcomm/Makefile
+	libmsmcomm/msmcomm-1.0.pc
+	libmsmcomm/src/Makefile
+	libmsmcomm/vapi/Makefile
+	msmvterm/Makefile
+	msmvterm/src/Makefile
 ])
 
 AC_OUTPUT

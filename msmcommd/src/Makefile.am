@@ -1,10 +1,11 @@
 NULL =
 
 AM_CFLAGS = \
--I$(top_srcdir)/include \
-$(NULL)
+	-I../include \
+	$(NULL)
 
-bin_PROGRAMS = msmcommd msmcterm
+bin_PROGRAMS = \
+	msmcommd
 
 msmcommd_SOURCES = msmcommd.c \
                    select.c \
@@ -18,6 +19,3 @@ msmcommd_SOURCES = msmcommd.c \
                    relay.c \
                    buffer.c \
 msmcommd_LDADD =
-
-msmcterm_SOURCES = msmcterm.c select.c timer.c log.c talloc.c talloc_ctx.c
-msmcterm_LDADD =

@@ -1,0 +1,16 @@
+NULL =
+
+SUBDIRS = \
+	msmcommd \
+	libmsmcomm \
+	msmvterm
+	$(NULL)
+	
+MAINTAINERCLEANFILES = aclocal.m4 compile config.guess config.sub \
+                       configure depcomp install-sh ltmain.sh     \
+                       Makefile.in missing config.h.in            \
+                       intltool-extract \
+                       intltool-merge \
+                       intltool-update \
+                       mkinstalldirs \
+                       $(NULL)

@@ -11,6 +11,7 @@
 .deps
 .libs
 missing
+compile
 depcomp
 Makefile
 aclocal.m4
