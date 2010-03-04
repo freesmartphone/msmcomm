@@ -156,8 +156,9 @@ public class Terminal : Object
         assert( bwritten == len );
     }
 
-    public void onMsmcommGotEvent( int event, Msmcomm.Message? message )
+    public void onMsmcommGotEvent( int event, Msmcomm.Message message )
     {
+        var size = message.size;
         var et = Msmcomm.eventTypeToString( event );
         var m = "ref %02x".printf( message.getRefId() );
         stdout.printf( @"\n[MESSAGE] $et $m " );
@@ -166,20 +167,20 @@ public class Terminal : Object
         switch ( event )
         {
             case Msmcomm.ResponseType.GET_IMEI:
-                unowned Msmcomm.Response.GetImei msg = (Msmcomm.Response.GetImei) message;
+                unowned Msmcomm.Reply.GetImei msg = (Msmcomm.Reply.GetImei) message;
                 details = @"IMEI = $(msg.getImei())";
                 break;
             case Msmcomm.ResponseType.GET_FIRMWARE_INFO:
-                // We want something like: var msg = message.safeCast<Msmcomm.Response.GetImei>( message );
-                unowned Msmcomm.Response.GetFirmwareInfo msg = (Msmcomm.Response.GetFirmwareInfo) message;
+                // We want something like: var msg = message.safeCast<Msmcomm.Reply.GetImei>( message );
+                unowned Msmcomm.Reply.GetFirmwareInfo msg = (Msmcomm.Reply.GetFirmwareInfo) message;
                 details = @"FIRMWARE = $(msg.getInfo())";
                 break;
             case Msmcomm.ResponseType.CM_CALL:
-                unowned Msmcomm.Response.Call msg = (Msmcomm.Response.Call) message;
+                unowned Msmcomm.Reply.Call msg = (Msmcomm.Reply.Call) message;
                 details = @"refId = $(msg.getRefId()) cmd = $(msg.getCmd()) err = $(msg.getErrorCode())";
                 break;
             case Msmcomm.ResponseType.CHARGER_STATUS:
-                unowned Msmcomm.Response.ChargerStatus msg = (Msmcomm.Response.ChargerStatus) message;
+                unowned Msmcomm.Reply.ChargerStatus msg = (Msmcomm.Reply.ChargerStatus) message;
                 string mode = "<unknown>", voltage = "<unknown>";
             
                 if (msg.getMode() == Msmcomm.ChargingMode.USB)

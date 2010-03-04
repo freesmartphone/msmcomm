@@ -18,15 +18,8 @@
  *
  **/
 
-/*
- * Questions for morphis
- *
- * 1.) These messages have different sizes, right? What about the free functions?
- * 2.) Can we rename the 'event' to 'urc'? URC stands for unsolicited response code and is more in line
- * with the telephony taxonomy. If we call it 'event', it's unclear whether it's a solicited response or not.
- * 3.) Is msm communication sync. or async. on the individual command level?
- * 4.) If 'async', do we have sequence numbers to match reponses to requests?
-*/
+// FIXME: Change 'EVENT' to 'URC' to match telephony taxonomy
+// FIXME: Map properties as such
 
 [CCode (cheader_filename = "msmcomm.h")]
 namespace Msmcomm
@@ -365,7 +358,7 @@ namespace Msmcomm
     }
 
     [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0)]
-    public delegate void EventHandlerCb(int event, Message? message);
+    public delegate void EventHandlerCb(int event, Message message);
     [CCode (cname = "msmcomm_write_handler_cb", instance_pos = 0)]
     public delegate void WriteHandlerCb(void *data, int len);
     [CCode (cname = "msmcomm_read_handler_cb", instance_pos = 0)]
@@ -376,9 +369,8 @@ namespace Msmcomm
     [CCode (cname = "msmcomm_check_hci_version")]
     public bool checkHciVersion(uint version);
 
-
-    [CCode (cname = "struct msmcomm_context", free_function = "msmcomm_shutdown")]
     [Compact]
+    [CCode (cname = "struct msmcomm_context", free_function = "msmcomm_shutdown")]
     public class Context
     {
         [CCode (cname = "msmcomm_new")]
@@ -400,30 +392,35 @@ namespace Msmcomm
         public void registerReadHandler(ReadHandlerCb readHandlerCb);
     }
 
-    [CCode (cname = "struct msmcomm_message", free_function = "msmcomm_free_message")]
     [Compact]
-    public class Message
-    {
-       [CCode (cname = "msmcomm_create_message")]
-       public Message(int type);
+    [CCode (cname = "struct msmcomm_message", free_function = "msmcomm_free_message")]
+    public abstract class Message
+    {      
+        [CCode (cname = "msmcomm_create_message")]
+        public Message(int type);
 
-       [CCode (cname = "msmcomm_message_get_size")]
-       public int getSize();
+        public int size {
+            [CCode (cname = "msmcomm_message_get_size")]
+            get;
+        }
 
-       [CCode (cname = "msmcomm_message_get_type")]
-       public int getType();
+        [CCode (cname = "msmcomm_message_get_size")]
+        public int getSize();
 
-       [CCode (cname = "msmcomm_message_get_ref_id")]
-       public uint8 getRefId();
+        [CCode (cname = "msmcomm_message_get_type")]
+        public int getType();
 
-       [CCode (cname = "msmcomm_message_set_ref_id")]
-       public void setRefId(uint8 refId);
+        [CCode (cname = "msmcomm_message_get_ref_id")]
+        public uint8 getRefId();
+
+        [CCode (cname = "msmcomm_message_set_ref_id")]
+        public void setRefId(uint8 refId);
     }
 
     namespace Command
     {
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
         [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class ChangeOperationMode : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -433,6 +430,7 @@ namespace Msmcomm
             public void setOperationMode(OperationMode oprtMode);
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class Charging : Message
         {
@@ -446,46 +444,47 @@ namespace Msmcomm
             public void setMode(ChargingMode mode);
         }
 
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
         [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class GetImei : Message
         {
             [CCode (cname = "msmcomm_create_message")]
             public GetImei(CommandType t = CommandType.GET_IMEI);
         }
 
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
         [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class GetChargerStatus : Message
         {
             [CCode (cname = "msmcomm_create_message")]
             public GetChargerStatus(CommandType t = CommandType.GET_CHARGER_STATUS);
         }
 
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
         [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class GetFirmwareInfo : Message
         {
             [CCode (cname = "msmcomm_create_message")]
             public GetFirmwareInfo(CommandType t = CommandType.GET_FIRMWARE_INFO);
         }
 
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
         [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class GetPhoneStateInfo : Message
         {
             [CCode (cname = "msmcomm_create_message")]
             public GetPhoneStateInfo(CommandType t = CommandType.GET_PHONE_STATE_INFO);
         }
 
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
         [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class TestAlive : Message
         {
             [CCode (cname = "msmcomm_create_message")]
             public TestAlive(CommandType t = CommandType.TEST_ALIVE);
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class VerifyPin : Message
         {
@@ -502,6 +501,7 @@ namespace Msmcomm
             }
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class EndCall : Message
         {
@@ -512,6 +512,7 @@ namespace Msmcomm
             public void setCallNumber(uint8 call_nr);
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class AnswerCall : Message
         {
@@ -522,6 +523,7 @@ namespace Msmcomm
             public void setCallNumber(uint8 call_nr);
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class DialCall : Message
         {
@@ -538,9 +540,10 @@ namespace Msmcomm
         }
     }
 
-    namespace Response
+    namespace Reply
     {
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [Compact]
+        [CCode (type_id = "MESSAGE", cname = "struct msmcomm_message", free_function = "")]
         public class GetFirmwareInfo : Message
         {
             [CCode (cname = "msmcomm_resp_get_firmware_info_get_info")]
@@ -557,6 +560,7 @@ namespace Msmcomm
             public uint8 getHciVersion();
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class GetImei : Message
         {
@@ -572,6 +576,7 @@ namespace Msmcomm
             }
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class Charging : Message
         {
@@ -582,6 +587,7 @@ namespace Msmcomm
             public uint getMode();
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class ChargerStatus : Message
         {
@@ -592,12 +598,10 @@ namespace Msmcomm
             public uint getMode();
         }
     
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
 		public class Call : Message
 		{
-			[CCode (cname = "msmcomm_resp_cm_call_get_ref_id")]
-			public uint getRefId();
-
 			[CCode (cname = "msmcomm_resp_cm_call_get_cmd")]
 			public uint16 getCmd();
 
@@ -608,6 +612,7 @@ namespace Msmcomm
 
     namespace Unsolicited
     {
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class PowerState : Message
         {
@@ -615,6 +620,7 @@ namespace Msmcomm
             public uint8 getState();
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class ChargerStatus : Message
         {
@@ -622,6 +628,7 @@ namespace Msmcomm
             public uint getVoltage();
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public abstract class CallStatus : Message
         {
@@ -646,26 +653,31 @@ namespace Msmcomm
 
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class CallIncoming : CallStatus
         {
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class CallConnect : CallStatus
         {
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class CallEnd : CallStatus
         {
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class CallOrigination : CallStatus
         {
         }
 
+        [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class NetworkStateInfo : Message
         {
