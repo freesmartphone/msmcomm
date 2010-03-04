@@ -141,12 +141,13 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 		{ "serial-port", required_argument, 0, 's' },
 		{ "network", required_argument, 0, 'n'},
 		{ "network-port", required_argument, 0, 'p'},
+		{ "relay", required_argument, 0, 'r' },
 		{ "help", no_argument, 0, 'h' },
 	};
 
 	while (1) {
 		option_index = 0;
-		chr = getopt_long(argc, argv, "s:n:p:hvt", opts, &option_index);
+		chr = getopt_long(argc, argv, "s:n:p:r:hvt", opts, &option_index);
 
 		if (chr == -1)
 			break;
@@ -177,6 +178,9 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 				exit(1);
 			case 't':
 				use_talloc_report = 1;
+				break;
+			case 'r':
+				snprintf(ctx->relay_addr, 30, "%s", optarg);
 				break;
 			case '?':
 				break;
@@ -236,6 +240,7 @@ int main(int argc, char *argv[])
 	ctx = talloc(NULL, struct msmc_context);
 	snprintf(ctx->serial_port, 30, MSMC_DEFAULT_SERIAL_PORT);
 	snprintf(ctx->network_port, 10, "4242");
+	snprintf(ctx->relay_addr, 30, "127.0.0.1");
 
 	/* command line option handling */
 	handle_options(ctx, argc, argv);

@@ -103,8 +103,12 @@ int init_relay_interface(struct msmc_context *ctx)
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(MSMC_DEFAULT_NETWORK_PORT);
+#if 0
 	addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK); /* FIXME currently we only listen on the
 													  loopback interface */ 
+#endif
+	/* use a user specific addr for the relay port */
+	addr.sin_addr.s_addr = inet_addr(ctx->relay_addr);
 
 	setsockopt(bfd->fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 	

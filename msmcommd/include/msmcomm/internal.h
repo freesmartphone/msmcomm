@@ -95,6 +95,7 @@ struct msmc_context
 	char				network_port[10];
 	char	    		serial_port[30];
 	char				network_addr[30];
+	char				relay_addr[30];
 	struct bsc_fd		fds[MSMC_FD_COUNT];
 
 	struct buffer		*rx_buf;
