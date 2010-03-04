@@ -71,6 +71,7 @@ unsigned int msmcomm_event_charger_status_get_voltage(struct msmcomm_message *ms
 
 /*
  * MSMCOMM_EVENT_OPERATOR_MODE
+ */
 
 unsigned int event_operator_mode_is_valid(struct msmcomm_message *msg)
 {
