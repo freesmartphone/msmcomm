@@ -38,7 +38,3 @@ void resp_sound_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t
 
 	msg->payload = data;
 }
-
-void resp_sound_free(struct msmcomm_message *msg)
-{
-}

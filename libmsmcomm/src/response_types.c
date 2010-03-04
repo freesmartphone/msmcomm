@@ -35,13 +35,11 @@
 #define TYPE_DATA(type, subtype, name) \
 	{	subtype, \
 		type##_##name##_is_valid, \
-		type##_##name##_handle_data, \
-		type##_##name##_free }
+		type##_##name##_handle_data}
 
 #define GROUP_DATA(name) \
 	{	group_##name##_is_valid, \
 		group_##name##_handle_data, \
-		group_##name##_free, \
 		group_##name##_get_type }
 
 #define EVENT_DATA(type, name) TYPE_DATA(event, type, name)
@@ -155,7 +153,6 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 		/* is descriptor valid? */
 		if (group_descriptors[n].is_valid == NULL ||
 			group_descriptors[n].handle_data == NULL ||
-			group_descriptors[n].free == NULL ||
 			group_descriptors[n].get_type == NULL)
 			continue;
 
@@ -165,8 +162,6 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 			
 			ctx->event_cb(ctx, group_descriptors[n].get_type(&resp), &resp);
 			
-			group_descriptors[n].free(&resp);
-
 			return 1;
 		}
 	}
@@ -174,8 +169,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 	/* find the right rsp descriptor */
 	for (n=0; n<resp_descriptors_count; n++) {
 		if (resp_descriptors[n].is_valid == NULL ||
-			resp_descriptors[n].handle_data == NULL ||
-			resp_descriptors[n].free == NULL)
+			resp_descriptors[n].handle_data == NULL)
 			continue;
 
 		if (resp_descriptors[n].is_valid(&resp)) {
@@ -184,8 +178,6 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 
 			/* tell the user about the received event/response */
 			ctx->event_cb(ctx->event_data, resp_descriptors[n].type, &resp);
-
-			resp_descriptors[n].free(&resp);
 
 			return 1;
 		}

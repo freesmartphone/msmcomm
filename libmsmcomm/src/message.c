@@ -44,9 +44,14 @@ int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *ms
 	data = talloc_size(talloc_msmc_ctx, sizeof(uint8_t) * len);
 	memset(data, 0, len);
 
+	/* store groupd id and message id in the packet buffer */
 	data[0] = msg->group_id;
 	data[1] = msg->msg_id;
+	
+	/* append payload to packet buffer */
 	memcpy(&data[3], payload, len - 3);
+	
+	/* forward data per callback so the user has to handle the real sending */
 	ctx->write_cb(ctx->write_data, data, len);
 
 	/* cleanup */
@@ -70,6 +75,7 @@ struct msmcomm_message* msmcomm_create_message(unsigned int type)
 	struct msmcomm_message *msg = talloc(talloc_msmc_ctx, struct
 										 msmcomm_message);
 
+	/* find the right message descriptor and init our message */
 	for (n=0; n < msg_descriptors_size; n++) {
 		if (msg_descriptors[n].type == type) {
 			if (msg_descriptors[n].init)

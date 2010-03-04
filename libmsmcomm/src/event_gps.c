@@ -36,10 +36,6 @@ void event_pdsm_pd_done_handle_data(struct msmcomm_message *msg, uint8_t *data, 
 	/* FIXME */
 }
 
-void event_pdsm_pd_done_free(struct msmcomm_message *msg)
-{
-}
-
 /*
  * MSMCOMM_EVENT_PD_POSITION_DATA
  */
@@ -53,10 +49,6 @@ unsigned int event_pd_position_data_is_valid(struct msmcomm_message *msg)
 void event_pd_position_data_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
 	/* FIXME */
-}
-
-void event_pd_position_data_free(struct msmcomm_message *msg)
-{
 }
 
 /*
@@ -74,10 +66,6 @@ void event_pd_parameter_change_handle_data(struct msmcomm_message *msg, uint8_t 
 	/* FIXME */
 }
 
-void event_pd_parameter_change_free(struct msmcomm_message *msg)
-{
-}
-
 /*
  * MSMCOMM_EVENT_PDSM_LCS
  */
@@ -93,10 +81,6 @@ void event_pdsm_lcs_handle_data(struct msmcomm_message *msg, uint8_t *data, uint
 	/* FIXME */
 }
 
-void event_pdsm_lcs_free(struct msmcomm_message *msg)
-{
-}
-
 /*
  * MSMCOMM_EVENT_PDSM_XTRA
  */
@@ -110,8 +94,4 @@ unsigned int event_pdsm_xtra_is_valid(struct msmcomm_message *msg)
 void event_pdsm_xtra_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
 	/* FIXME */
-}
-
-void event_pdsm_xtra_free(struct msmcomm_message *msg)
-{
 }

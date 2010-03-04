@@ -38,7 +38,3 @@ void resp_get_sim_capabilities_handle_data(struct msmcomm_message *msg, uint8_t 
 {
 	/* FIXME */
 }
-
-void resp_get_sim_capabilities_free(struct msmcomm_message *msg)
-{
-}

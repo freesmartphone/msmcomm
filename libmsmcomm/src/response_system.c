@@ -36,10 +36,6 @@ void resp_test_alive_handle_data(struct msmcomm_message *msg, uint8_t *data, uin
 	/* FIXME */
 }
 
-void resp_test_alive_free(struct msmcomm_message *msg)
-{
-}
-
 /*
  * MSMCOMM_RESPONSE_GET_FIRMWARE_INFO
  */
@@ -57,10 +53,6 @@ void resp_get_firmware_info_handle_data(struct msmcomm_message *msg, uint8_t *da
 
 	msg->payload = data;
 	msg->ref_id = MESSAGE_CAST(msg, struct get_firmware_info_resp)->ref_id;
-}
-
-void resp_get_firmware_info_free(struct msmcomm_message *msg)
-{
 }
 
 uint8_t msmcomm_resp_get_firmware_info_get_hci_version(struct msmcomm_message *msg)
@@ -110,10 +102,6 @@ void msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg, uint8_t *buffer
 	}
 }
 
-void resp_get_imei_free(struct msmcomm_message *msg)
-{
-}
-
 /*
  * MSMCOMM_RESPONSE_CHARGER_STATUS
  */
@@ -130,10 +118,6 @@ void resp_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data,
 
 	msg->payload = data;
 	msg->ref_id = MESSAGE_CAST(msg, struct charger_status_msg)->ref_id;
-}
-
-void resp_charger_status_free(struct msmcomm_message *msg)
-{
 }
 
 unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg)
@@ -179,10 +163,6 @@ void resp_charging_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 	msg->ref_id = MESSAGE_CAST(msg, struct charging_msg);
 }
 
-void resp_charging_free(struct msmcomm_message *msg)
-{
-}
-
 unsigned int msmcomm_resp_charging_get_mode(struct msmcomm_message *msg)
 {
 	switch(MESSAGE_CAST(msg, struct charging_msg)->mode) {
@@ -209,4 +189,3 @@ unsigned int msmcomm_resp_charging_get_voltage(struct msmcomm_message *msg)
 	return MSMCOMM_MESSAGE_INVALID;
 
 }
-

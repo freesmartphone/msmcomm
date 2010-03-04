@@ -181,8 +181,3 @@ uint16_t msmcomm_event_network_state_info_get_roam(struct msmcomm_message *msg)
 	return MESSAGE_CAST(msg, struct network_state_info_event)->roam[0] >> 8 |
 		   MESSAGE_CAST(msg, struct network_state_info_event)->roam[1];
 }
-
-void event_network_state_info_free(struct msmcomm_message *msg)
-{
-}
-

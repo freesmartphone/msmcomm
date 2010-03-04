@@ -53,14 +53,8 @@ void event_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data
 {
 	if (len != sizeof(struct charger_status_event))
 		return;
-
-	msg->payload = talloc(talloc_msmc_ctx, struct charger_status_event);
-	memcpy(msg->payload, data, len);
-}
-
-void event_charger_status_free(struct msmcomm_message *msg)
-{
-	talloc_free(msg->payload);
+		
+	msg->payload = data;
 }
 
 unsigned int msmcomm_event_charger_status_get_voltage(struct msmcomm_message *msg)
@@ -83,14 +77,7 @@ void event_operator_mode_handle_data(struct msmcomm_message *msg, uint8_t *data,
 	if (len != sizeof(struct operator_mode_event))
 		return;
 
-	msg->payload = talloc(talloc_msmc_ctx, struct operator_mode_event);
-	memcpy(msg->payload, data, len);
-}
-
-void event_operator_mode_free(struct msmcomm_message *msg)
-{
-	if (msg->payload != NULL)
-		talloc_free(msg->payload);
+	msg->payload = data;
 }
 
 /*
@@ -104,12 +91,6 @@ unsigned int event_cm_ph_info_available_is_valid(struct msmcomm_message *msg)
 
 void event_cm_ph_info_available_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
-}
-
-void event_cm_ph_info_available_free(struct msmcomm_message *msg)
-{
-	if (msg->payload != NULL)
-		talloc_free(msg->payload);
 }
 
 /*
@@ -131,19 +112,10 @@ unsigned int event_power_state_is_valid(struct msmcomm_message *msg)
 
 void event_power_state_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
-	if (len != sizeof(struct power_state_event)) {
-		/* FIXME logging! */
+	if (len != sizeof(struct power_state_event))
 		return;
-	}
 	
-	msg->payload = talloc_zero(talloc_msmc_ctx, struct power_state_event);
-	memcpy(msg->payload, data, len);
-}
-
-void event_power_state_free(struct msmcomm_message *msg)
-{
-	if (msg->payload != NULL)
-		talloc_free(msg->payload);
+	msg->payload = data;
 }
 
 uint8_t msmcomm_event_power_state_get_state(struct msmcomm_message *msg)
@@ -153,4 +125,3 @@ uint8_t msmcomm_event_power_state_get_state(struct msmcomm_message *msg)
 		
 	return MESSAGE_CAST(msg, struct power_state_event)->power_state;	
 }
-
