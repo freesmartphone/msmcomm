@@ -326,6 +326,9 @@ unsigned int 	msmcomm_event_charger_status_get_voltage
 /* Call events ------------------------------------- */
 void 			msmcomm_event_call_status_get_caller_id
 	(struct msmcomm_message *msg, uint8_t *buffer, unsigned int len);
+uint8_t msmcomm_event_call_status_get_reject_type(struct msmcomm_message *msg);
+uint8_t msmcomm_event_call_status_get_reject_value(struct msmcomm_message *msg);
+uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message *msg);
 
 /* Network events ---------------------------------- */
 uint32_t msmcomm_event_network_state_info_get_change_field

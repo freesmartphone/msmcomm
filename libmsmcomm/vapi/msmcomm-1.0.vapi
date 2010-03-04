@@ -635,6 +635,16 @@ namespace Msmcomm
                 _getCallerId(callerId);
                 return callerId;
             }
+
+            [CCode (cname = "msmcomm_event_call_status_get_call_id")]
+            public uint getCallId();
+
+            [CCode (cname = "msmcomm_event_call_status_get_reject_type")]
+            public uint getRejectType();
+
+            [CCode (cname = "msmcomm_event_call_status_get_reject_value")]
+            public uint getRejectValue();
+
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
