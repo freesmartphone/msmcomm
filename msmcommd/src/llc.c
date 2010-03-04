@@ -105,7 +105,6 @@ static int serial_port_setup(struct msmc_context *ctx)
 	mode.speed = HSUART_SPEED_115K;
 	mode.flags |= HSUART_MODE_PARITY_NONE;
 	mode.flags |= HSUART_MODE_FLOW_CTRL_HW;
-
 	ioctl(fd, HSUART_IOCTL_SET_UARTMODE, &mode);
 
 	/* we want flow control for the rx line */
@@ -119,6 +118,7 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	uint32_t len, tmp;
 	uint8_t *data;
 	uint16_t crc;
+	int rc;
 
 	if (!ctx || !fr) return;
 
@@ -163,7 +163,10 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	DEBUG_MSG("send frame to modem (seq=0x%x, ack=0x%x)", fr->seq, fr->ack);
 	hexdump(data, len);
 	
-	write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
+	rc = write(ctx->fds[MSMC_FD_SERIAL].fd, data, len);
+	if (rc == -EAGAIN) {
+		DEBUG_MSG("got EAGAIN !!!");
+	}
 
 	talloc_free(data);
 }
@@ -574,7 +577,7 @@ static void ack_timer_cb(void *data)
 	}
 
 	/* Reschedule ack timer as we are still waiting for the right acknowledge */
-	bsc_reschedule_timer(&ack_timer, 3, 0);
+	bsc_reschedule_timer(&ack_timer, 1, 0);
 }
 
 static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
@@ -586,7 +589,7 @@ static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
 	llist_add_tail(&fr->list, &ack_queue);
 
 	/* Reschedule timer cause we received a new frame */
-	bsc_reschedule_timer(&ack_timer, 3, 0);
+	bsc_reschedule_timer(&ack_timer, 1, 0);
 }
 
 static void handle_llc_outgoing_data(void *data)
