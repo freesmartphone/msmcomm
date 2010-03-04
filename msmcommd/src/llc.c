@@ -574,7 +574,7 @@ static void ack_timer_cb(void *data)
 	}
 
 	/* Reschedule ack timer as we are still waiting for the right acknowledge */
-	bsc_reschedule_timer(&ack_timer, 1, 0);
+	bsc_reschedule_timer(&ack_timer, 3, 0);
 }
 
 static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
@@ -586,7 +586,7 @@ static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
 	llist_add_tail(&fr->list, &ack_queue);
 
 	/* Reschedule timer cause we received a new frame */
-	bsc_reschedule_timer(&ack_timer, 1, 0);
+	bsc_reschedule_timer(&ack_timer, 3, 0);
 }
 
 static void handle_llc_outgoing_data(void *data)
