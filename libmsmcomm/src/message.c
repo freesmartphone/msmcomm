@@ -63,8 +63,7 @@ uint32_t msmcomm_message_get_size(struct msmcomm_message *msg)
 	return 0;
 }
 
-struct msmcomm_message* msmcomm_create_message(struct msmcomm_context *ctx,
-											   unsigned int type)
+struct msmcomm_message* msmcomm_create_message(unsigned int type)
 {
 	unsigned int found = 0;
 	int n;

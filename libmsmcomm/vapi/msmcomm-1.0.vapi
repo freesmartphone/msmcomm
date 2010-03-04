@@ -406,7 +406,7 @@ namespace Msmcomm
     public class Message
     {
        [CCode (cname = "msmcomm_create_message")]
-       public Message(Context? context, int type);
+       public Message(int type);
 
        [CCode (cname = "msmcomm_message_get_size")]
        public int getSize();
