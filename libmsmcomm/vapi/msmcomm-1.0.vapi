@@ -428,7 +428,7 @@ namespace Msmcomm
         public class ChangeOperationMode : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public ChangeOperationMode(Context? context = null, CommandType t = CommandType.CHANGE_OPERATION_MODE);
+            public ChangeOperationMode(CommandType t = CommandType.CHANGE_OPERATION_MODE);
 
             [CCode (cname = "msmcomm_message_change_operation_mode_set_operation_mode")]
             public void setOperationMode(OperationMode oprtMode);
@@ -438,7 +438,7 @@ namespace Msmcomm
         public class Charging : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public Charging(Context? context = null, CommandType t = CommandType.CHARGING);
+            public Charging(CommandType t = CommandType.CHARGING);
 
             [CCode (cname = "msmcomm_message_charging_set_voltage")]
             public void setVoltage(UsbVoltageMode voltage);
@@ -452,7 +452,7 @@ namespace Msmcomm
         public class GetImei : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public GetImei(Context? context = null, CommandType t = CommandType.GET_IMEI);
+            public GetImei(CommandType t = CommandType.GET_IMEI);
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
@@ -460,7 +460,7 @@ namespace Msmcomm
         public class GetChargerStatus : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public GetChargerStatus(Context? context = null, CommandType t = CommandType.GET_CHARGER_STATUS);
+            public GetChargerStatus(CommandType t = CommandType.GET_CHARGER_STATUS);
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
@@ -468,7 +468,7 @@ namespace Msmcomm
         public class GetFirmwareInfo : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public GetFirmwareInfo(Context? context = null, CommandType t = CommandType.GET_FIRMWARE_INFO);
+            public GetFirmwareInfo(CommandType t = CommandType.GET_FIRMWARE_INFO);
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
@@ -476,7 +476,7 @@ namespace Msmcomm
         public class GetPhoneStateInfo : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public GetPhoneStateInfo(Context? context = null, CommandType t = CommandType.GET_PHONE_STATE_INFO);
+            public GetPhoneStateInfo(CommandType t = CommandType.GET_PHONE_STATE_INFO);
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
@@ -484,14 +484,14 @@ namespace Msmcomm
         public class TestAlive : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public TestAlive(Context? context = null, CommandType t = CommandType.TEST_ALIVE);
+            public TestAlive(CommandType t = CommandType.TEST_ALIVE);
         }
 
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class VerifyPin : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public VerifyPin(Context? context = null, CommandType t = CommandType.VERIFY_PIN);
+            public VerifyPin(CommandType t = CommandType.VERIFY_PIN);
 
             [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
             public void _setPin(string pin, uint length);
@@ -507,7 +507,7 @@ namespace Msmcomm
         public class EndCall : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public EndCall(Context? context = null, CommandType t = CommandType.END_CALL);
+            public EndCall(CommandType t = CommandType.END_CALL);
 
             [CCode (cname = "msmcomm_message_end_call_set_call_number")]
             public void setCallNumber(uint8 call_nr);
@@ -517,7 +517,7 @@ namespace Msmcomm
         public class AnswerCall : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public AnswerCall(Context? context = null, CommandType t = CommandType.ANSWER_CALL);
+            public AnswerCall(CommandType t = CommandType.ANSWER_CALL);
 
             [CCode (cname = "msmcomm_message_answer_call_set_call_number")]
             public void setCallNumber(uint8 call_nr);
@@ -527,7 +527,7 @@ namespace Msmcomm
         public class DialCall : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public DialCall(Context? context = null, CommandType t = CommandType.DIAL_CALL);
+            public DialCall(CommandType t = CommandType.DIAL_CALL);
 
             [CCode (cname = "msmcomm_message_dial_call_set_caller_id")]
             private void _setCallerId(string callerId, uint length);
