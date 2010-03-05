@@ -136,7 +136,11 @@ public class Terminal : Object
     public void onTransportReadyToRead( FsoFramework.Transport t )
     {
         var ok = context.readFromModem();
-        assert( ok );
+        if (!ok)
+        {
+            stdout.printf( "[ERR] Can't read from modem" );
+            loop.quit();
+        }
     }
 
     public void onTransportHangup( FsoFramework.Transport t )
@@ -182,7 +186,7 @@ public class Terminal : Object
             case Msmcomm.ResponseType.CHARGER_STATUS:
                 unowned Msmcomm.Reply.ChargerStatus msg = (Msmcomm.Reply.ChargerStatus) message;
                 string mode = "<unknown>", voltage = "<unknown>";
-            
+
                 if (msg.getMode() == Msmcomm.ChargingMode.USB)
                     mode = "USB";
                 else if (msg.getMode() == Msmcomm.ChargingMode.INDUCTIVE)

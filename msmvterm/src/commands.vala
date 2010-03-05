@@ -128,7 +128,10 @@ public class Commands
         MSG( "This program supports the following commands:\n" );
         foreach ( var cmd in map.values )
         {
-            MSG( @"$(cmd.syntax): $(cmd.help)" );
+            var syntax = cmd.syntax;
+            while ( syntax.length < 50 )
+                syntax += " ";
+            MSG( @"$syntax: $(cmd.help)" );
         }
     }
 
