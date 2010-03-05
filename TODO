@@ -2,10 +2,9 @@ msmcommd:
 - implement daemon mode
 - logging: logfile, enable/disable
 - memory usage
-
-msmcterm:
-- rewrite in vala
+- connection hangup (0 bytes read)
 
 libmsmcomm:
-- add more messages
-- decrypt payload of messages
+
+msmvterm:
+
