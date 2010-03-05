@@ -102,11 +102,5 @@ struct descriptor
 
 int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t len);
 
-#define DESCRIPTOR_CAST(type, descriptor) \
-	(type == DESCRIPTOR_TYPE_MESSAGE ? (struct message_descriptor*)descriptor :  \
-		(type == DESCRIPTOR_TYPE_RESPONSE ? (struct response_descriptor*)descriptor : \
-			(type == DESCRIPTOR_TYPE_GROUP ? (struct group_descriptor*)descriptor : \
-			 NULL))) 
-
 #endif
 
