@@ -136,7 +136,11 @@ public class Terminal : Object
     public void onTransportReadyToRead( FsoFramework.Transport t )
     {
         var ok = context.readFromModem();
-        assert( ok );
+        if (!ok)
+        {
+            stdout.printf( "[ERR] Can't read from modem" );
+            loop.quit();
+        }
     }
 
     public void onTransportHangup( FsoFramework.Transport t )
@@ -160,7 +164,7 @@ public class Terminal : Object
     {
         var size = message.size;
         var et = Msmcomm.eventTypeToString( event );
-        var m = "ref %02x".printf( message.getRefId() );
+        var m = "ref %02x".printf( message.index );
         stdout.printf( @"\n[MESSAGE] $et $m " );
         var details = "";
 
@@ -177,27 +181,39 @@ public class Terminal : Object
                 break;
             case Msmcomm.ResponseType.CM_CALL:
                 unowned Msmcomm.Reply.Call msg = (Msmcomm.Reply.Call) message;
-                details = @"refId = $(msg.getRefId()) cmd = $(msg.getCmd()) err = $(msg.getErrorCode())";
+                details = @"refId = $(msg.index) cmd = $(msg.getCmd()) err = $(msg.getErrorCode())";
                 break;
             case Msmcomm.ResponseType.CHARGER_STATUS:
                 unowned Msmcomm.Reply.ChargerStatus msg = (Msmcomm.Reply.ChargerStatus) message;
                 string mode = "<unknown>", voltage = "<unknown>";
-            
-                if (msg.getMode() == Msmcomm.ChargingMode.USB)
-                    mode = "USB";
-                else if (msg.getMode() == Msmcomm.ChargingMode.INDUCTIVE)
-                    mode = "INDUCTIVE";
 
-                switch (msg.getVoltage()) {
-                case Msmcomm.UsbVoltageMode.MODE_250mA:
-                    voltage = "250mA";
-                    break;
-                case Msmcomm.UsbVoltageMode.MODE_500mA:
-                    voltage = "500mA";
-                    break;
-                case Msmcomm.UsbVoltageMode.MODE_1A:
-                    voltage = "1A";
-                    break;
+                switch ( msg.mode )
+                {
+                    case Msmcomm.ChargingMode.USB:
+                        mode = "USB";
+                        break;
+                    case Msmcomm.ChargingMode.INDUCTIVE:
+                        mode = "INDUCTIVE";
+                        break;
+                    default:
+                        mode = "UNKNOWN";
+                        break;
+                }
+
+                switch ( msg.voltage )
+                {
+                    case Msmcomm.UsbVoltageMode.MODE_250mA:
+                        voltage = "250mA";
+                        break;
+                    case Msmcomm.UsbVoltageMode.MODE_500mA:
+                        voltage = "500mA";
+                        break;
+                    case Msmcomm.UsbVoltageMode.MODE_1A:
+                        voltage = "1A";
+                        break;
+                    default:
+                        voltage = "UNKNOWN";
+                        break;
                 }
 
                 details = @"mode = $(mode) voltage = $(voltage)";

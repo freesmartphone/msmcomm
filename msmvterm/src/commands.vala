@@ -128,28 +128,31 @@ public class Commands
         MSG( "This program supports the following commands:\n" );
         foreach ( var cmd in map.values )
         {
-            MSG( @"$(cmd.syntax): $(cmd.help)" );
+            var syntax = cmd.syntax;
+            while ( syntax.length < 50 )
+                syntax += " ";
+            MSG( @"$syntax: $(cmd.help)" );
         }
     }
 
     private void get_imei( string[] params )
     {
         var msg = new Msmcomm.Command.GetImei();
-        msg.setRefId(nextValidRefId());
+        msg.index = nextValidRefId();
         msm.sendMessage( msg );
     }
 
     private void get_firmware_info( string[] params )
     {
         var msg = new Msmcomm.Command.GetFirmwareInfo();
-        msg.setRefId(nextValidRefId());
+        msg.index = nextValidRefId();
         msm.sendMessage( msg );
     }
 
     private void change_operation_mode( string[] params )
     {
         var msg = new Msmcomm.Command.ChangeOperationMode();
-        msg.setRefId(nextValidRefId());
+        msg.index = nextValidRefId();
 
         switch ( params[0] )
         {
@@ -179,14 +182,14 @@ public class Commands
     private void test_alive( string[] params )
     {
         var msg = new Msmcomm.Command.TestAlive();
-        msg.setRefId(nextValidRefId());
+        msg.index = nextValidRefId();
         msm.sendMessage( msg );
     }
 
     private void verify_pin( string[] params )
     {
         var msg = new Msmcomm.Command.VerifyPin();
-        msg.setRefId(nextValidRefId());
+        msg.index = nextValidRefId();
         msg.setPin( params[0] );
         msm.sendMessage( msg );
     }
@@ -194,29 +197,29 @@ public class Commands
     private void get_charger_status( string[] params )
     {
         var msg = new Msmcomm.Command.GetChargerStatus();
-        msg.setRefId(nextValidRefId());
+        msg.index = nextValidRefId();
         msm.sendMessage( msg );
     }
 
     private void charging( string[] params )
     {
         var msg = new Msmcomm.Command.Charging();
-        msg.setRefId(nextValidRefId());
+        msg.index = nextValidRefId();
 
         switch ( params[0] )
         {
             case "usb":
-                msg.setMode(Msmcomm.ChargingMode.USB);
+                msg.mode = Msmcomm.ChargingMode.USB;
                 switch ( params[1] )
                 {
                     case "250":
-                        msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_250mA );
+                        msg.voltage = Msmcomm.UsbVoltageMode.MODE_250mA;
                         break;
                     case "500":
-                        msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_500mA );
+                        msg.voltage = Msmcomm.UsbVoltageMode.MODE_500mA;
                         break;
                     case "1000":
-                        msg.setVoltage( Msmcomm.UsbVoltageMode.MODE_1A );
+                        msg.voltage = Msmcomm.UsbVoltageMode.MODE_1A;
                         break;
                     default:
                         ERR( @"Unknown voltage $(params[1])" );
@@ -224,7 +227,7 @@ public class Commands
                 }
                 break;
             case "inductive":
-                msg.setMode(Msmcomm.ChargingMode.INDUCTIVE);
+                msg.mode = Msmcomm.ChargingMode.INDUCTIVE;
                 break;
             default:
                 ERR( @"Unknown charging mode $(params[0])" );
@@ -237,7 +240,7 @@ public class Commands
     private void dial_call ( string[] params )
     {
         var msg = new Msmcomm.Command.DialCall();
-        msg.setRefId(nextValidRefId());
+        msg.index = nextValidRefId();
         msg.setCallerId(params[0]);
         msm.sendMessage ( msg );
     }
@@ -245,7 +248,7 @@ public class Commands
     private void answer_call ( string[] params )
     {
         var msg = new Msmcomm.Command.AnswerCall();
-        msg.setRefId(nextValidRefId());
+        msg.index = nextValidRefId();
         //msg.setCallNumber(params[0].toInt());
         msm.sendMessage(msg);
     }
@@ -253,7 +256,7 @@ public class Commands
     private void end_call ( string[] params )
     {
         var msg = new Msmcomm.Command.EndCall();
-        msg.setRefId(nextValidRefId());
+        msg.index = nextValidRefId();
         //msg.setCallNumber(params[0].toInt());
         msm.sendMessage(msg);
     }

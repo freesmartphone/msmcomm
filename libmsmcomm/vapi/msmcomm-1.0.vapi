@@ -404,17 +404,17 @@ namespace Msmcomm
             get;
         }
 
-        [CCode (cname = "msmcomm_message_get_size")]
-        public int getSize();
+        public int type {
+            [CCode (cname = "msmcomm_message_get_type")]
+            get;
+        }
 
-        [CCode (cname = "msmcomm_message_get_type")]
-        public int getType();
-
-        [CCode (cname = "msmcomm_message_get_ref_id")]
-        public uint8 getRefId();
-
-        [CCode (cname = "msmcomm_message_set_ref_id")]
-        public void setRefId(uint8 refId);
+        public uint8 index {
+            [CCode (cname = "msmcomm_message_get_ref_id")]
+            get;
+            [CCode (cname = "msmcomm_message_set_ref_id")]
+            set;
+        }
     }
 
     namespace Command
@@ -437,11 +437,15 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_create_message")]
             public Charging(CommandType t = CommandType.CHARGING);
 
-            [CCode (cname = "msmcomm_message_charging_set_voltage")]
-            public void setVoltage(UsbVoltageMode voltage);
+            public UsbVoltageMode voltage {
+                [CCode (cname = "msmcomm_message_charging_set_voltage")]
+                set;
+            }
 
-            [CCode (cname = "msmcomm_message_charging_set_mode")]
-            public void setMode(ChargingMode mode);
+            public ChargingMode mode {
+                [CCode (cname = "msmcomm_message_charging_set_mode")]
+                set;
+            }
         }
 
         [Compact]
@@ -580,22 +584,30 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class Charging : Message
         {
-            [CCode (cname = "msmcomm_resp_charging_get_voltage")]
-            public uint getVoltage();
-            
-            [CCode (cname = "msmcomm_resp_charging_get_mode")]
-            public uint getMode();
+            public UsbVoltageMode voltage {
+                [CCode (cname = "msmcomm_resp_charging_get_voltage")]
+                get;
+            }
+
+            public ChargingMode mode {
+                [CCode (cname = "msmcomm_resp_charging_get_mode")]
+                get;
+            }
         }
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class ChargerStatus : Message
         {
-            [CCode (cname = "msmcomm_resp_charger_status_get_voltage")]
-            public uint getVoltage();
+            public UsbVoltageMode voltage {
+                [CCode (cname = "msmcomm_resp_charger_status_get_voltage")]
+                get;
+            }
 
-            [CCode (cname = "msmcomm_resp_charger_status_get_mode")]
-            public uint getMode();
+            public ChargingMode mode {
+                [CCode (cname = "msmcomm_resp_charger_status_get_mode")]
+                get;
+            }
         }
     
         [Compact]
