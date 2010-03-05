@@ -247,8 +247,10 @@ void			msmcomm_register_log_handler
 /**
  * These are common operations which are valid for all kind of messages
  */
-struct			msmcomm_message* msmcomm_create_message
+struct msmcomm_message* msmcomm_create_message
 	(unsigned int type);
+struct msmcomm_message* msmcomm_message_make_copy
+	(struct msmcomm_message *msg);
 uint32_t		msmcomm_message_get_size
 	(struct msmcomm_message *msg);
 uint32_t		msmcomm_message_get_type

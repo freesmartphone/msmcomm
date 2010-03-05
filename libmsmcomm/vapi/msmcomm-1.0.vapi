@@ -393,7 +393,7 @@ namespace Msmcomm
     }
 
     [Compact]
-    [CCode (cname = "struct msmcomm_message", free_function = "msmcomm_free_message")]
+    [CCode (cname = "struct msmcomm_message", free_function = "msmcomm_free_message", copy_function = "msmcomm_message_make_copy")]
     public abstract class Message
     {      
         [CCode (cname = "msmcomm_create_message")]
