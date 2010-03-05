@@ -15,8 +15,8 @@ VALAC_ARGS = \
 	--save-temps \
 	--basedir $(top_srcdir)
 
-INCLUDES = \
-	-I$(top_srcdir) \
+AM_CFLAGS = \
+	-I$(top_srcdir)/libmsmcomm/src \
 	$(DEPS_CFLAGS) \
 	-include $(CONFIG_HEADER) \
 	$(NULL)
@@ -43,6 +43,7 @@ msmvterm_LDADD = \
 	$(LIBREADLINE) \
 	$(LIBHISTORY) \
 	$(DEPS_LIBS) \
+	../../libmsmcomm/src/libmsmcomm.la \
 	$(NULL)
 
 EXTRA_DIST = \
