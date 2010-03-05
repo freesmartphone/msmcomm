@@ -37,6 +37,11 @@ void resp_pdsm_pd_get_pos_handle_data(struct msmcomm_message *msg, uint8_t *data
 	/* FIXME */
 }
 
+uint32_t resp_pdsm_pd_get_pos_get_size(struct msmcomm_message *msg)
+{
+	return 0;
+}
+
 /*
  * MSMCOMM_RESPONSE_PDSM_PD_END_SESSION
  */
@@ -50,6 +55,11 @@ unsigned int resp_pdsm_pd_end_session_is_valid(struct msmcomm_message *msg)
 void resp_pdsm_pd_end_session_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
 	/* FIXME */
+}
+
+uint32_t resp_pdsm_pd_end_session_pos_get_size(struct msmcomm_message *msg)
+{
+	return 0;
 }
 
 /*
@@ -67,6 +77,11 @@ void resp_pa_set_param_handle_data(struct msmcomm_message *msg, uint8_t *data, u
 	/* FIXME */
 }
 
+uint32_t resp_pa_set_param_get_size(struct msmcomm_message *msg)
+{
+	return 0;
+}
+
 /*
  * MSMCOMM_RESPONSE_LCS_AGENT_CLIENT_RSP
  */
@@ -82,6 +97,11 @@ void resp_lcs_agent_client_rsp_handle_data(struct msmcomm_message *msg, uint8_t 
 	/* FIXME */
 }
 
+uint32_t resp_lcs_agent_client_rsp_get_size(struct msmcomm_message *msg)
+{
+	return 0;
+}
+
 /*
  * MSMCOMM_RESPONSE_XTRA_SET_DATA
  */
@@ -95,4 +115,9 @@ unsigned int resp_xtra_set_data_is_valid(struct msmcomm_message *msg)
 void resp_xtra_set_data_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
 	/* FIXME */
+}
+
+uint32_t resp_xtra_set_data_get_size(struct msmcomm_message *msg)
+{
+	return 0;
 }

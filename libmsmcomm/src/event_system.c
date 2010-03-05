@@ -36,8 +36,9 @@ void event_radio_reset_ind_handle_data(struct msmcomm_message *msg, uint8_t *dat
 	/* no data to handle */
 }
 
-void event_radio_reset_ind_free(struct msmcomm_message *msg)
+uint32_t event_radio_reset_ind_get_size(struct msmcomm_message *msg)
 {
+	return 0;
 }
 
 /*
@@ -63,6 +64,11 @@ unsigned int msmcomm_event_charger_status_get_voltage(struct msmcomm_message *ms
 	return MSMCOMM_CHARGING_VOLTAGE_MODE_500mA;
 }
 
+uint32_t event_charger_status_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct charger_status_event);
+}
+
 /*
  * MSMCOMM_EVENT_OPERATOR_MODE
  */
@@ -80,6 +86,11 @@ void event_operator_mode_handle_data(struct msmcomm_message *msg, uint8_t *data,
 	msg->payload = data;
 }
 
+uint32_t event_operator_mode_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct operator_mode_event);
+}
+
 /*
  * MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE
  */
@@ -91,6 +102,11 @@ unsigned int event_cm_ph_info_available_is_valid(struct msmcomm_message *msg)
 
 void event_cm_ph_info_available_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
+}
+
+uint32_t event_cm_ph_info_available_get_size(struct msmcomm_message *msg)
+{
+	return 0;
 }
 
 /*
@@ -124,4 +140,9 @@ uint8_t msmcomm_event_power_state_get_state(struct msmcomm_message *msg)
 		return 0x0;
 		
 	return MESSAGE_CAST(msg, struct power_state_event)->power_state;	
+}
+
+uint32_t event_power_state_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct power_state_event);
 }

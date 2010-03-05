@@ -28,10 +28,11 @@
 
 #define MESSAGE_DATA(type, name) \
 	{	type, \
-		msg_##name##_init, \
 		msg_##name##_get_size, \
+		msg_##name##_init, \
 		msg_##name##_free, \
-		msg_##name##_prepare_data }
+		msg_##name##_prepare_data, \
+		NULL, NULL, NULL }
 
 MESSAGE_TYPE(change_operation_mode)
 MESSAGE_TYPE(test_alive)
@@ -47,7 +48,7 @@ MESSAGE_TYPE(dial_call)
 MESSAGE_TYPE(get_charger_status)
 MESSAGE_TYPE(charging)
 
-struct message_descriptor msg_descriptors[] = {
+struct descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE,change_operation_mode),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_TEST_ALIVE, test_alive),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_IMEI, get_imei),
@@ -63,5 +64,5 @@ struct message_descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHARGING, charging),
 };
 
-unsigned int msg_descriptors_size = (unsigned int)(sizeof(msg_descriptors) / sizeof(struct message_descriptor));
+unsigned int msg_descriptors_size = (unsigned int)(sizeof(msg_descriptors) / sizeof(struct descriptor));
 

@@ -36,6 +36,11 @@ void resp_test_alive_handle_data(struct msmcomm_message *msg, uint8_t *data, uin
 	/* FIXME */
 }
 
+uint32_t resp_test_alive_get_size(struct msmcomm_message *msg)
+{
+	return 0;
+}
+
 /*
  * MSMCOMM_RESPONSE_GET_FIRMWARE_INFO
  */
@@ -53,6 +58,11 @@ void resp_get_firmware_info_handle_data(struct msmcomm_message *msg, uint8_t *da
 
 	msg->payload = data;
 	msg->ref_id = MESSAGE_CAST(msg, struct get_firmware_info_resp)->ref_id;
+}
+
+uint32_t resp_get_firmware_info_get_size(struct msmcomm_message *msg)
+{
+	return 0;
 }
 
 uint8_t msmcomm_resp_get_firmware_info_get_hci_version(struct msmcomm_message *msg)
@@ -83,6 +93,11 @@ void resp_get_imei_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 
 	msg->payload = data;
 	msg->ref_id = MESSAGE_CAST(msg, struct get_imei_resp)->ref_id;
+}
+
+uint32_t resp_get_imei_get_size(struct msmcomm_message *msg)
+{
+	return 0;
 }
 
 void msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg, uint8_t *buffer, int len)
@@ -118,6 +133,11 @@ void resp_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data,
 
 	msg->payload = data;
 	msg->ref_id = MESSAGE_CAST(msg, struct charger_status_msg)->ref_id;
+}
+
+uint32_t resp_charger_status_get_size(struct msmcomm_message *msg)
+{
+	return 0;
 }
 
 unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg)
@@ -161,6 +181,11 @@ void resp_charging_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 
 	msg->payload = data;
 	msg->ref_id = MESSAGE_CAST(msg, struct charging_msg);
+}
+
+uint32_t resp_charging_get_size(struct msmcomm_message *msg)
+{
+	return 0;
 }
 
 unsigned int msmcomm_resp_charging_get_mode(struct msmcomm_message *msg)

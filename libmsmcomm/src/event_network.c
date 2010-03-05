@@ -38,6 +38,11 @@ void event_network_state_info_handle_data(struct msmcomm_message *msg, uint8_t *
 	msg->payload = data;
 }
 
+uint32_t event_network_state_info_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct network_state_info_event);
+}
+
 uint32_t msmcomm_event_network_state_info_get_change_field(struct msmcomm_message *msg)
 {
 	if (msg->payload == NULL) 

@@ -23,8 +23,8 @@
 #define NEW_TYPE(type, name) \
 	extern unsigned int type##_##name##_is_valid(struct msmcomm_message *msg); \
 	extern void type##_##name##_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len); \
-	extern void type##_##name##_free(struct msmcomm_message *msg);
-
+	extern uint32_t type##_##name##_get_size(struct msmcomm_message *msg); 
+	
 #define RESPONSE_TYPE(name) NEW_TYPE(resp, name)
 #define EVENT_TYPE(name) NEW_TYPE(event, name)
 
@@ -34,12 +34,18 @@
 
 #define TYPE_DATA(type, subtype, name) \
 	{	subtype, \
+		type##_##name##_get_size, \
+		NULL, NULL, NULL, \ 
+		type##_##name##_handle_data, \
 		type##_##name##_is_valid, \
-		type##_##name##_handle_data}
+		NULL \
+		}
 
 #define GROUP_DATA(name) \
-	{	group_##name##_is_valid, \
+	{	MSMCOMM_MESSAGE_INVALID, \
+		NULL, NULL, NULL, NULL, \
 		group_##name##_handle_data, \
+		group_##name##_is_valid, \
 		group_##name##_get_type }
 
 #define EVENT_DATA(type, name) TYPE_DATA(event, type, name)
@@ -79,14 +85,14 @@ GROUP_TYPE(sim)
 GROUP_TYPE(call)
 GROUP_TYPE(sups)
 
-struct group_descriptor group_descriptors[] = {
+struct descriptor group_descriptors[] = {
 	GROUP_DATA(sim),
 	GROUP_DATA(call),
 	GROUP_DATA(sups),
 };
 
 
-struct response_descriptor resp_descriptors[] = {
+struct descriptor resp_descriptors[] = {
 	/* events */
 	EVENT_DATA(MSMCOMM_EVENT_RESET_RADIO_IND, radio_reset_ind),
 	EVENT_DATA(MSMCOMM_EVENT_CHARGER_STATUS, charger_status),
@@ -121,9 +127,9 @@ struct response_descriptor resp_descriptors[] = {
 };
 
 const unsigned int resp_descriptors_count = sizeof(resp_descriptors)
-											/ sizeof(struct response_descriptor);
+											/ sizeof(struct descriptor);
 const unsigned int group_descriptors_count = sizeof(group_descriptors)
-											/ sizeof(struct group_descriptor);
+											/ sizeof(struct descriptor);
 
 int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t len)
 {
@@ -147,7 +153,8 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 	resp.group_id = data[0];
 	resp.msg_id = data[1] | (data[2] << 8);
 	resp.payload = NULL;
-
+	resp.descriptor = NULL;
+	
 	/* first we check if we have agroup which handle's this response or event */
 	for (n=0; n<group_descriptors_count; n++) {
 		/* is descriptor valid? */
@@ -159,8 +166,13 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 		if (group_descriptors[n].is_valid(&resp)) {
 			/* let our descriptor handle the left data */
 			group_descriptors[n].handle_data(&resp, data + 3, len - 3);
+
+			/* save descriptor for later use */
+			resp.descriptor = &group_descriptors[n];
 			
-			ctx->event_cb(ctx, group_descriptors[n].get_type(&resp), &resp);
+			/* tell the user about the received event/response */
+			if (ctx->event_cb)
+				ctx->event_cb(ctx, group_descriptors[n].get_type(&resp), &resp);
 			
 			return 1;
 		}
@@ -176,8 +188,12 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 			/* let our descriptor handle the left data */
 			resp_descriptors[n].handle_data(&resp, data + 3, len - 2 - 3);
 
+			/* save descriptor for later use */
+			resp.descriptor = &resp_descriptors[n];
+
 			/* tell the user about the received event/response */
-			ctx->event_cb(ctx->event_data, resp_descriptors[n].type, &resp);
+			if (ctx->event_cb)
+				ctx->event_cb(ctx->event_data, resp_descriptors[n].type, &resp);
 
 			return 1;
 		}

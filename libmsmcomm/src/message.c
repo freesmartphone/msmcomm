@@ -21,7 +21,7 @@
 #include "internal.h"
 
 extern void *talloc_msmc_ctx;
-extern struct message_descriptor msg_descriptors[];
+extern struct descriptor msg_descriptors[];
 extern unsigned int msg_descriptors_size;
 
 int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *msg)
@@ -61,10 +61,9 @@ int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *ms
 }
 
 uint32_t msmcomm_message_get_size(struct msmcomm_message *msg)
-{
+{	
 	if (msg && msg->descriptor && msg->descriptor->get_size)
 		return msg->descriptor->get_size(msg);
-
 	return 0;
 }
 
@@ -75,12 +74,17 @@ struct msmcomm_message* msmcomm_create_message(unsigned int type)
 	struct msmcomm_message *msg = talloc(talloc_msmc_ctx, struct
 										 msmcomm_message);
 
+	/* default settings */
+	msg->descriptor = NULL;
+	msg->descriptor_type = DESCRIPTOR_TYPE_INVALID;
+
 	/* find the right message descriptor and init our message */
 	for (n=0; n < msg_descriptors_size; n++) {
 		if (msg_descriptors[n].type == type) {
 			if (msg_descriptors[n].init)
 				msg_descriptors[n].init(msg);
 
+			msg->descriptor_type = DESCRIPTOR_TYPE_MESSAGE;
 			msg->descriptor = &msg_descriptors[n];
 			found = 1;
 		}

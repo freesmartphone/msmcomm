@@ -38,3 +38,8 @@ void resp_sound_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t
 
 	msg->payload = data;
 }
+
+uint32_t resp_sound_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct sound_resp);
+}
