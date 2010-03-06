@@ -147,6 +147,38 @@ namespace Msmcomm
     {
         switch ( t )
         {
+            case 0:
+            return "INVALID";
+            // CommandType
+            case CommandType.CHANGE_OPERATION_MODE:
+            return "COMMAND_CHANGE_OPERATION_MODE";
+            case CommandType.GET_IMEI:
+            return "COMMAND_GET_IMEI";
+            case CommandType.GET_FIRMWARE_INFO:
+            return "COMMAND_GET_FIRMWARE_INFO";
+            case CommandType.TEST_ALIVE:
+            return "COMMAND_TEST_ALIVE";
+            case CommandType.GET_PHONE_STATE_INFO:
+            return "COMMAND_GET_PHONE_STATE_INFO";
+            case CommandType.VERIFY_PIN:
+            return "COMMAND_VERIFY_PIN";
+            case CommandType.GET_VOICEMAIL_NR:
+            return "COMMAND_GET_VOICEMAIL_NR";
+            case CommandType.GET_LOCATION_PRIV_PREF:
+            return "COMMAND_GET_LOCATION_PRIV_PREF";
+            case CommandType.ANSWER_CALL:
+            return "COMMAND_ANSWER_CALL";
+            case CommandType.SET_AUDIO_PROFILE:
+            return "COMMAND_SET_AUDIO_PROFILE";
+            case CommandType.END_CALL:
+            return "COMMAND_END_CALL";
+            case CommandType.GET_CHARGER_STATUS:
+            return "COMMAND_GET_CHARGER_STATUS";
+            case CommandType.CHARGING:
+            return "COMMAND_CHARGING";
+            case CommandType.DIAL_CALL:
+            return "COMMAND_DIAL_CALL";
+
             // ResponseType
             case ResponseType.TEST_ALIVE:
             return "RESPONSE_TEST_ALIVE";
@@ -176,6 +208,7 @@ namespace Msmcomm
 			return "RESPONSE_CHARGER_STATUS";
             case ResponseType.CHARGING:
             return "RESPONSE_CHARGING";
+
             // EventType
         	case EventType.RESET_RADIO_IND:
 			return "URC_RESET_RADIO_IND";
