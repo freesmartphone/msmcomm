@@ -34,6 +34,7 @@ const char *frame_type_names[] = {
 int use_serial_port = 1;
 extern int use_talloc_report;
 extern int enable_logging;
+int run_as_daemon = 0;
 
 void hexdump(const uint8_t *data, uint32_t len)
 {
@@ -152,11 +153,12 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 		{ "relay", required_argument, 0, 'r' },
 		{ "help", no_argument, 0, 'h' },
 		{ "log-target", required_argument, 0, 'l' },
+		{ "daemon", no_argument, 0, 'd' },
 	};
 
 	while (1) {
 		option_index = 0;
-		chr = getopt_long(argc, argv, "s:n:p:r:hvt", opts, &option_index);
+		chr = getopt_long(argc, argv, "s:n:p:r:hl:dvt", opts, &option_index);
 
 		if (chr == -1)
 			break;
@@ -196,6 +198,10 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 				if (strncmp(tmp, "file", 10) < 0) {
 					log_change_target(LOG_TARGET_FILE);
 				}
+				break;
+			case 'd':
+				run_as_daemon = 1;
+				break;
 			case '?':
 				break;
 			default:
@@ -228,6 +234,35 @@ static void base_timer_cb(void *data)
 	bsc_schedule_timer(&base_timer, 5, 0);
 }
 
+static void daemonize()
+{
+	pid_t pid, sid;
+	
+	/* fork off the parent process */
+	pid = fork();
+	if (pid < 0)
+		exit(1);
+		
+	/* change file mode mask */
+	unmask(0);
+	
+	/* create new sid for the child process */
+	sid = setsid();
+	if (sid < 0)
+		exit(1);
+		
+	/* change current work-directory */
+	/* FIXME check that the run-directory exists! */
+	if ((chdir("/var/run/msmcommd")) < 0)
+		exit(1);
+	
+	/* close std. file descriptors and log to file */
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
+	log_change_target(LOG_TARGET_FILE);
+}
+
 int main(int argc, char *argv[])
 {
 	int retval;
@@ -258,6 +293,10 @@ int main(int argc, char *argv[])
 
 	/* command line option handling */
 	handle_options(ctx, argc, argv);
+	
+	/* should we run as daemon? */
+	if (run_as_daemon)
+		daemonize();
 
 	/* react on options */
 	init_talloc_late();
