@@ -20,34 +20,52 @@
 
 #include <msmcomm/internal.h>
 
-const char *log_level_color[] = {
-	"",
-	"\033[1;31m",
-	"\033[1;33m",
+static const char log_file[] = "/var/log/msmcommd.log";
+static int enable_logging = 1;
+static int log_target = LOG_TARGET_STDERR;
+static FILE *log_output = NULL;
+
+const char *log_level_names[] = {
+	"DEBUG",
+	"ERROR",
+	"INFO"
 };
 
+void log_change_target(int new_target)
+{
+	if (log_target == new_target)
+		/* do nothing */
+		return;
+	
+	if (log_target == LOG_TARGET_FILE) {
+		fflush(log_output);
+		fclose(log_output);
+	}
+	
+	switch (new_target) {
+	case LOG_TARGET_FILE:
+		log_output = fopen(log_file, "w+");
+		break;
+	case LOG_TARGET_STDERR:
+		log_output = stderr;
+		break;
+	}
+}
 
 void log_message(char *file, uint32_t line, uint32_t level, const char *format, ...)
 {
 	va_list ap;
-	FILE *outfd = stderr;
-
-	va_start(ap, format);
-
-	/* color */
-	fprintf(outfd, "%s", log_level_color[level]);
-
 	char timestr[30];
 	time_t t;
+
+	va_start(ap, format);
+	fprintf(log_output, "[%s]", log_level_names[level]);
 	t = time(NULL);
 	strftime(&timestr[0], 30, "%F %H:%M:%S", localtime(&t));
-	fprintf(outfd, "[%s] ", timestr);
-
-	fprintf(outfd, "<%s:%d> ", file, line);
-	vfprintf(outfd, format, ap);
-	fprintf(outfd, "\033[0;m");
-	fprintf(outfd, "\n");
-
+	fprintf(log_output, "[%s] ", timestr);
+	fprintf(log_output, "<%s:%d> ", file, line);
+	vfprintf(log_output, format, ap);
+	fprintf(log_output, "\n");
 	va_end(ap);
-	fflush(outfd);
+	fflush(log_output);
 }

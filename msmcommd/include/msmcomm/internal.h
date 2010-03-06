@@ -140,6 +140,14 @@ struct relay_connection
 	struct msmc_context *ctx;
 };
 
+#define LOGL_DEBUG 		1
+#define LOGL_ERROR 		2
+#define LOGL_INFO 		3
+
+#define LOG_TARGET_STDERR 	0
+#define LOG_TARGET_FILE		1
+
+void log_change_target(int new_target);
 void log_message(char *file, uint32_t line, uint32_t level, const char *format, ...);
 unsigned short crc16_calc(const uint8_t *data, uint32_t len); 
 void hexdump(const uint8_t *data, uint32_t len);

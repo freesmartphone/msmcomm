@@ -33,6 +33,7 @@ const char *frame_type_names[] = {
 
 int use_serial_port = 1;
 extern int use_talloc_report;
+extern int enable_logging;
 
 void hexdump(const uint8_t *data, uint32_t len)
 {
@@ -107,6 +108,7 @@ static void do_print_help()
 	printf(" -t --talloc-report enable talloc memory report\n");
 	printf(" -r --relay <addr> specifiy the address on which msmcommd should" \
 		   " listen for incomming connections\n");
+	printf(" -l --log-target [stderr|file] define where log messags should appear (default: stderr)\n");
 	printf(" -h --help this help\n");
 }
 
@@ -138,6 +140,10 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 	int check_arg[2];
 	check_arg[0] = 0;
 	check_arg[1] = 0;
+	char tmp[10];
+	
+	/* specify our default log target */
+	log_change_target(LOG_TARGET_STDERR);
 
 	struct option opts[] = {
 		{ "serial-port", required_argument, 0, 's' },
@@ -145,6 +151,7 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 		{ "network-port", required_argument, 0, 'p'},
 		{ "relay", required_argument, 0, 'r' },
 		{ "help", no_argument, 0, 'h' },
+		{ "log-target", required_argument, 0, 'l' },
 	};
 
 	while (1) {
@@ -184,6 +191,11 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 			case 'r':
 				snprintf(ctx->relay_addr, 30, "%s", optarg);
 				break;
+			case 'l':
+				snprintf(tmp, 10, "%s", optarg);
+				if (strncmp(tmp, "file", 10) < 0) {
+					log_change_target(LOG_TARGET_FILE);
+				}
 			case '?':
 				break;
 			default:
