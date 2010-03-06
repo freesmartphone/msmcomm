@@ -100,11 +100,13 @@ static int update_all(struct msmc_context *ctx)
 static void do_print_help()
 {
 	printf("help: \n");
-	printf(" -s --serial-port the serial port which provides the modem link\n");
-	printf(" -n --network remote network adress to use instead of a serial port\n");
-	printf(" -p --network-port if you use a network connection instead of a " \
+	printf(" -s --serial-port <path> the serial port which provides the modem link\n");
+	printf(" -n --network <addr> remote network adress to use instead of a serial port\n");
+	printf(" -p --network-port <port> if you use a network connection instead of a " \
 		   "serial port than you can specify the port\n");
 	printf(" -t --talloc-report enable talloc memory report\n");
+	printf(" -r --relay <addr> specifiy the address on which msmcommd should" \
+		   " listen for incomming connections\n");
 	printf(" -h --help this help\n");
 }
 
