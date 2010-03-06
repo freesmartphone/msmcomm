@@ -448,6 +448,67 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_message_set_ref_id")]
             set;
         }
+
+        public string to_string()
+        {
+            var str = "[MSM] ref %02x len %d : %s".printf( index, size, Msmcomm.eventTypeToString( type ) );
+            var details = "";
+
+            switch ( type )
+            {
+                case Msmcomm.ResponseType.GET_IMEI:
+                    unowned Msmcomm.Reply.GetImei msg = (Msmcomm.Reply.GetImei) this;
+                    details = @"IMEI = $(msg.getImei())";
+                    break;
+                case Msmcomm.ResponseType.GET_FIRMWARE_INFO:
+                    unowned Msmcomm.Reply.GetFirmwareInfo msg = (Msmcomm.Reply.GetFirmwareInfo) this;
+                    details = @"FIRMWARE = $(msg.getInfo())";
+                    break;
+                case Msmcomm.ResponseType.CM_CALL:
+                    unowned Msmcomm.Reply.Call msg = (Msmcomm.Reply.Call) this;
+                    details = @"refId = $(msg.index) cmd = $(msg.getCmd()) err = $(msg.getErrorCode())";
+                    break;
+                case Msmcomm.ResponseType.CHARGER_STATUS:
+                    unowned Msmcomm.Reply.ChargerStatus msg = (Msmcomm.Reply.ChargerStatus) this;
+                    string mode = "<unknown>", voltage = "<unknown>";
+
+                    switch ( msg.mode )
+                    {
+                        case Msmcomm.ChargingMode.USB:
+                            mode = "USB";
+                            break;
+                        case Msmcomm.ChargingMode.INDUCTIVE:
+                            mode = "INDUCTIVE";
+                            break;
+                        default:
+                            mode = "UNKNOWN";
+                            break;
+                    }
+
+                    switch ( msg.voltage )
+                    {
+                        case Msmcomm.UsbVoltageMode.MODE_250mA:
+                            voltage = "250mA";
+                            break;
+                        case Msmcomm.UsbVoltageMode.MODE_500mA:
+                            voltage = "500mA";
+                            break;
+                        case Msmcomm.UsbVoltageMode.MODE_1A:
+                            voltage = "1A";
+                            break;
+                        default:
+                            voltage = "UNKNOWN";
+                            break;
+                    }
+
+                    details = @"mode = $(mode) voltage = $(voltage)";
+                    break;
+                default:
+                    break;
+            }
+
+            return @"$str [%s]".printf( details );
+        }
     }
 
     namespace Command
