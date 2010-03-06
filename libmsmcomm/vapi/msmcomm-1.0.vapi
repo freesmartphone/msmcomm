@@ -393,9 +393,9 @@ namespace Msmcomm
     }
 
     [Compact]
-    [CCode (cname = "struct msmcomm_message", free_function = "msmcomm_free_message", copy_function = "msmcomm_message_make_copy")]
+    [CCode (cname = "struct msmcomm_message", free_function = "", copy_function = "msmcomm_message_make_copy")]
     public abstract class Message
-    {      
+    {
         [CCode (cname = "msmcomm_create_message")]
         public Message(int type);
 
@@ -609,7 +609,7 @@ namespace Msmcomm
                 get;
             }
         }
-    
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
 		public class Call : Message
@@ -694,7 +694,7 @@ namespace Msmcomm
         public class NetworkStateInfo : Message
         {
             [CCode (cname = "msmcomm_event_network_state_info_get_change_field")]
-            public uint getChangeField(); 
+            public uint getChangeField();
 
             [CCode (cname = "msmcomm_event_network_state_info_get_new_value")]
             public uint8 getNewValue();
