@@ -162,67 +162,7 @@ public class Terminal : Object
 
     public void onMsmcommGotEvent( int event, Msmcomm.Message message )
     {
-        var size = message.size;
-        var et = Msmcomm.eventTypeToString( event );
-        var m = "ref %02x".printf( message.index );
-        stdout.printf( @"\n[MESSAGE] $et $m " );
-        var details = "";
-
-        switch ( event )
-        {
-            case Msmcomm.ResponseType.GET_IMEI:
-                unowned Msmcomm.Reply.GetImei msg = (Msmcomm.Reply.GetImei) message;
-                details = @"IMEI = $(msg.getImei())";
-                break;
-            case Msmcomm.ResponseType.GET_FIRMWARE_INFO:
-                // We want something like: var msg = message.safeCast<Msmcomm.Reply.GetImei>( message );
-                unowned Msmcomm.Reply.GetFirmwareInfo msg = (Msmcomm.Reply.GetFirmwareInfo) message;
-                details = @"FIRMWARE = $(msg.getInfo())";
-                break;
-            case Msmcomm.ResponseType.CM_CALL:
-                unowned Msmcomm.Reply.Call msg = (Msmcomm.Reply.Call) message;
-                details = @"refId = $(msg.index) cmd = $(msg.getCmd()) err = $(msg.getErrorCode())";
-                break;
-            case Msmcomm.ResponseType.CHARGER_STATUS:
-                unowned Msmcomm.Reply.ChargerStatus msg = (Msmcomm.Reply.ChargerStatus) message;
-                string mode = "<unknown>", voltage = "<unknown>";
-
-                switch ( msg.mode )
-                {
-                    case Msmcomm.ChargingMode.USB:
-                        mode = "USB";
-                        break;
-                    case Msmcomm.ChargingMode.INDUCTIVE:
-                        mode = "INDUCTIVE";
-                        break;
-                    default:
-                        mode = "UNKNOWN";
-                        break;
-                }
-
-                switch ( msg.voltage )
-                {
-                    case Msmcomm.UsbVoltageMode.MODE_250mA:
-                        voltage = "250mA";
-                        break;
-                    case Msmcomm.UsbVoltageMode.MODE_500mA:
-                        voltage = "500mA";
-                        break;
-                    case Msmcomm.UsbVoltageMode.MODE_1A:
-                        voltage = "1A";
-                        break;
-                    default:
-                        voltage = "UNKNOWN";
-                        break;
-                }
-
-                details = @"mode = $(mode) voltage = $(voltage)";
-                break;
-            default:
-                break;
-        }
-
-        stdout.printf( @"$details\nMSMVTERM> " );
+        stdout.printf( @"$message\nMSMVTERM> " );
         stdout.flush();
     }
 
