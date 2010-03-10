@@ -49,7 +49,7 @@ int test_copy_message()
 	msmcomm_message_set_ref_id(msg0, 0x42);
 	
 	struct msmcomm_message *msg1 = msmcomm_message_make_copy(msg0);
-
+	
 	COMPARE(msg0, !=, msg1);
 	COMPARE(msg0->ref_id, ==, msg1->ref_id);
 	COMPARE(sizeof(msg0->payload), ==, sizeof(msg1->payload));
@@ -59,6 +59,10 @@ int test_copy_message()
 	COMPARE(((struct change_operation_mode_msg*)msg0->payload)->operation_mode,
 			==,
 			((struct change_operation_mode_msg*)msg1->payload)->operation_mode);
+	COMPARE(msmcomm_message_get_type(msg1), ==,
+			MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE);
+	COMPARE(msmcomm_message_get_type(msg0), ==,
+			MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE);
 	
 	PASSED;
 }
