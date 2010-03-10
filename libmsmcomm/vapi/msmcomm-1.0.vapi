@@ -641,8 +641,10 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_create_message")]
             public EndCall(CommandType t = CommandType.END_CALL);
 
-            [CCode (cname = "msmcomm_message_end_call_set_call_number")]
-            public void setCallNumber(uint8 call_nr);
+            public uint8 id {
+                [CCode (cname = "msmcomm_message_end_call_set_call_number")]
+                set;
+            }
         }
 
         [Compact]
@@ -652,8 +654,10 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_create_message")]
             public AnswerCall(CommandType t = CommandType.ANSWER_CALL);
 
-            [CCode (cname = "msmcomm_message_answer_call_set_call_number")]
-            public void setCallNumber(uint8 call_nr);
+            public uint8 id {
+                [CCode (cname = "msmcomm_message_answer_call_set_call_number")]
+                set;
+            }
         }
 
         [Compact]
