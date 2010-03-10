@@ -237,7 +237,7 @@ public class Commands
         msm.sendMessage( msg );
     }
 
-    private void dial_call ( string[] params )
+    private void dial_call( string[] params )
     {
         var msg = new Msmcomm.Command.DialCall();
         msg.index = nextValidRefId();
@@ -245,19 +245,31 @@ public class Commands
         msm.sendMessage ( msg );
     }
 
-    private void answer_call ( string[] params )
+    private void answer_call( string[] params )
     {
         var msg = new Msmcomm.Command.AnswerCall();
         msg.index = nextValidRefId();
-        //msg.setCallNumber(params[0].toInt());
+        var id = params[0].to_int();
+        if ( id < 0 || id > 10 )
+        {
+            ERR( @"Invalid call index $(params[0]), must be 0 <= x <= 10 )" );
+            return;
+        }
+        //msg.id = (uint8)id;
         msm.sendMessage(msg);
     }
 
-    private void end_call ( string[] params )
+    private void end_call( string[] params )
     {
         var msg = new Msmcomm.Command.EndCall();
         msg.index = nextValidRefId();
-        //msg.setCallNumber(params[0].toInt());
+        var id = params[0].to_int();
+        if ( id < 0 || id > 10 )
+        {
+            ERR( @"Invalid call index $(params[0]), must be 0 <= x <= 10 )" );
+            return;
+        }
+        msg.id = (uint8)id;
         msm.sendMessage(msg);
     }
 }
