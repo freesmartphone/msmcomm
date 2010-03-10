@@ -55,6 +55,7 @@ int test_copy_message()
 	COMPARE(sizeof(msg0->payload), ==, sizeof(msg1->payload));
 	COMPARE(msg0->group_id, ==, msg1->group_id);
 	COMPARE(msg0->msg_id, ==, msg1->msg_id);
+	COMPARE(msg0->payload, !=, msg1->payload);
 	COMPARE(((struct change_operation_mode_msg*)msg0->payload)->operation_mode,
 			==,
 			((struct change_operation_mode_msg*)msg1->payload)->operation_mode);
