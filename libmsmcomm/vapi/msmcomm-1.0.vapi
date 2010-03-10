@@ -494,7 +494,7 @@ namespace Msmcomm
                     //var msg = (Msmcomm.Reply.GetImei) this.copy();
                     // this works
                     unowned Msmcomm.Reply.GetImei msg = (Msmcomm.Reply.GetImei) this;
-                    details = @"IMEI = $(msg.getImei())";
+                    details = @"IMEI = $(msg.imei)";
                     break;
                 case Msmcomm.ResponseType.GET_FIRMWARE_INFO:
                     //var msg = (Msmcomm.Reply.GetFirmwareInfo) this.copy();
@@ -701,20 +701,10 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class GetImei : Message
         {
-            [CCode (cname = "msmcomm_resp_get_imei_get_imei")]
-            public string getImei();
-
-            /*
-            private void _getImei(char[] imei);
-
-            public string getImei()
-            {
-                var imei = new char[17];
-                _getImei(imei);
-                // FIXME: Is this ok or do we have a leak now?
-                return ((string)imei).dup();
+            public string imei {
+                [CCode (cname = "msmcomm_resp_get_imei_get_imei")]
+                get;
             }
-            */
         }
 
         [Compact]
