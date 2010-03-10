@@ -499,7 +499,7 @@ namespace Msmcomm
                 case Msmcomm.ResponseType.GET_FIRMWARE_INFO:
                     //var msg = (Msmcomm.Reply.GetFirmwareInfo) this.copy();
                     unowned Msmcomm.Reply.GetFirmwareInfo msg = (Msmcomm.Reply.GetFirmwareInfo) this;
-                    details = @"FIRMWARE = $(msg.getInfo())";
+                    details = @"FIRMWARE = $(msg.info) | HCI = $(msg.hci)";
                     break;
                 case Msmcomm.ResponseType.CM_CALL:
                     //var msg = (Msmcomm.Reply.Call) this.copy();
@@ -683,18 +683,15 @@ namespace Msmcomm
         [CCode (type_id = "MESSAGE", cname = "struct msmcomm_message", free_function = "")]
         public class GetFirmwareInfo : Message
         {
-            [CCode (cname = "msmcomm_resp_get_firmware_info_get_info")]
-            public void _getInfo(char[] info);
-
-            public string getInfo()
-            {
-                var info = new char[100];
-                _getInfo( info );
-                return ((string)info).dup();
+            public string info {
+                [CCode (cname = "msmcomm_resp_get_firmware_info_get_info")]
+                get;
             }
 
-            [CCode (cname = "msmcomm_resp_get_firmware_info_get_hci_version")]
-            public uint8 getHciVersion();
+            public uint8 hci {
+                [CCode (cname = "msmcomm_resp_get_firmware_info_get_hci_version")]
+                get;
+            }
         }
 
         [Compact]

@@ -288,8 +288,8 @@ void			msmcomm_message_verify_pin_set_pin
 	(struct msmcomm_message *msg, uint8_t *pin, int len);
 
 /* System responses -------------------------------- */
-void			msmcomm_resp_get_firmware_info_get_info
-	(struct msmcomm_message *msg, char *buffer, int len);
+char*			msmcomm_resp_get_firmware_info_get_info
+	(struct msmcomm_message *msg);
 
 uint8_t 		msmcomm_resp_get_firmware_info_get_hci_version
 	(struct msmcomm_message *msg);

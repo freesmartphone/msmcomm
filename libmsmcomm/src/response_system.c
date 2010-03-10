@@ -22,6 +22,9 @@
 
 extern void *talloc_msmc_ctx;
 
+#define LIBMSMCOMM_RESP_IMEI_LEN             17
+#define LIBMSMCOMM_RESP_FIRMWARE_LEN         20
+
 /*
  * MSMCOMM_RESPONSE_TEST_ALIVE
  */
@@ -70,9 +73,13 @@ uint8_t msmcomm_resp_get_firmware_info_get_hci_version(struct msmcomm_message *m
 	return MESSAGE_CAST(msg, struct get_firmware_info_resp)->hci_version;
 }
 
-void msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg, char *buffer, int len)
+// caller needs to free the result
+char* msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg)
 {
-	snprintf(buffer, len, "%s", MESSAGE_CAST(msg, struct get_firmware_info_resp)->firmware_version);
+	void* result = malloc( LIBMSMCOMM_RESP_FIRMWARE_LEN );
+	memcpy( result, MESSAGE_CAST(msg, struct get_firmware_info_resp)->firmware_version, LIBMSMCOMM_RESP_FIRMWARE_LEN );
+	// firmware version data already contains the tailing 0
+	return result;
 }
 
 /*
@@ -100,8 +107,6 @@ uint32_t resp_get_imei_get_size(struct msmcomm_message *msg)
 	return 0;
 }
 
-#define MSMCOMM_RESP_IMEI_LEN 17
-
 /* caller needs to free the result */
 char* msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg)
 {
@@ -110,13 +115,13 @@ char* msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg)
 
 	resp = (struct get_imei_resp*) msg->payload;
 
-	char* result = malloc( MSMCOMM_RESP_IMEI_LEN+1 );
+	char* result = malloc( LIBMSMCOMM_RESP_IMEI_LEN+1 );
 
 	/* imei consists of 17 bytes - each byte is one number of the imei */
-	for (n = 0; n < MSMCOMM_RESP_IMEI_LEN; ++n) {
+	for (n = 0; n < LIBMSMCOMM_RESP_IMEI_LEN; ++n) {
 		result[n] = 0x30 + resp->imei[n];
 	}
-	result[MSMCOMM_RESP_IMEI_LEN] = 0;
+	result[LIBMSMCOMM_RESP_IMEI_LEN] = 0;
 	return result;
 }
 
