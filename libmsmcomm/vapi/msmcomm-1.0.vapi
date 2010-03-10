@@ -702,6 +702,9 @@ namespace Msmcomm
         public class GetImei : Message
         {
             [CCode (cname = "msmcomm_resp_get_imei_get_imei")]
+            public string getImei();
+
+            /*
             private void _getImei(char[] imei);
 
             public string getImei()
@@ -711,6 +714,7 @@ namespace Msmcomm
                 // FIXME: Is this ok or do we have a leak now?
                 return ((string)imei).dup();
             }
+            */
         }
 
         [Compact]

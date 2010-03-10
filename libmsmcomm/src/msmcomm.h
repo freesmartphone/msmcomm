@@ -1,4 +1,4 @@
-/* 
+/*
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
@@ -201,15 +201,15 @@
 struct msmcomm_context;
 struct msmcomm_message;
 
-typedef void (*msmcomm_event_handler_cb) 
+typedef void (*msmcomm_event_handler_cb)
 	(void *user_data, int event, struct msmcomm_message *message);
-typedef void (*msmcomm_write_handler_cb) 
+typedef void (*msmcomm_write_handler_cb)
 	(void *user_data, uint8_t *data, uint32_t len);
-typedef int  (*msmcomm_read_handler_cb)  
+typedef int  (*msmcomm_read_handler_cb)
 	(void *user_data, uint8_t *data, uint32_t len);
-typedef void (*msmcomm_log_handler_cb) 
+typedef void (*msmcomm_log_handler_cb)
 	(void *user_data, char *buffer, unsigned int len);
-typedef void (*msmcomm_network_state_info_changed_field_type_cb) 
+typedef void (*msmcomm_network_state_info_changed_field_type_cb)
 	(void *user_data, struct msmcomm_message *msg, int type);
 
 struct msmcomm_context
@@ -294,8 +294,8 @@ void			msmcomm_resp_get_firmware_info_get_info
 uint8_t 		msmcomm_resp_get_firmware_info_get_hci_version
 	(struct msmcomm_message *msg);
 
-void 			msmcomm_resp_get_imei_get_imei
-	(struct msmcomm_message *msg, uint8_t *buffer, int len);
+char* 			msmcomm_resp_get_imei_get_imei
+	(struct msmcomm_message *msg);
 
 unsigned int 	msmcomm_resp_charging_get_voltage
 	(struct msmcomm_message *msg);
