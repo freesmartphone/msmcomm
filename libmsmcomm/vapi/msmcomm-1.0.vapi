@@ -628,13 +628,9 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_create_message")]
             public VerifyPin(CommandType t = CommandType.VERIFY_PIN);
 
-            [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
-            public void _setPin(string pin, uint length);
-
-            public void setPin(string pin)
-            {
-                GLib.assert( pin.length <= 8 );
-                _setPin( pin, (uint)pin.length );
+            public string pin {
+                [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
+                set;
             }
         }
 

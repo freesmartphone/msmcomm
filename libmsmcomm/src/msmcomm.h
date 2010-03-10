@@ -285,7 +285,7 @@ void msmcomm_message_dial_call_set_caller_id
 
 /* SIM messages ------------------------------------ */
 void			msmcomm_message_verify_pin_set_pin
-	(struct msmcomm_message *msg, uint8_t *pin, int len);
+	(struct msmcomm_message *msg, const char* pin);
 
 /* System responses -------------------------------- */
 char*			msmcomm_resp_get_firmware_info_get_info

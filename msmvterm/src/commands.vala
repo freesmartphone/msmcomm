@@ -190,7 +190,7 @@ public class Commands
     {
         var msg = new Msmcomm.Command.VerifyPin();
         msg.index = nextValidRefId();
-        msg.setPin( params[0] );
+        msg.pin = params[0];
         msm.sendMessage( msg );
     }
 
