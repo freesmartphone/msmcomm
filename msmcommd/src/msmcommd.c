@@ -260,7 +260,7 @@ static void daemonize()
 		exit(1);
 		
 	/* change file mode mask */
-	unmask(0);
+	umask(0);
 	
 	/* create new sid for the child process */
 	sid = setsid();
