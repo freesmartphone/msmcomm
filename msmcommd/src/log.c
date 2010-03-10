@@ -1,4 +1,4 @@
-/* 
+/*
  * (c) 2009 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
@@ -22,7 +22,7 @@
 
 static const char log_file[] = "/var/log/msmcommd.log";
 static int enable_logging = 1;
-static int log_target = LOG_TARGET_STDERR;
+static int log_target = -1;
 static FILE *log_output = NULL;
 
 const char *log_level_names[] = {
@@ -33,15 +33,16 @@ const char *log_level_names[] = {
 
 void log_change_target(int new_target)
 {
+
 	if (log_target == new_target)
 		/* do nothing */
 		return;
-	
+
 	if (log_target == LOG_TARGET_FILE) {
 		fflush(log_output);
 		fclose(log_output);
 	}
-	
+
 	switch (new_target) {
 	case LOG_TARGET_FILE:
 		log_output = fopen(log_file, "w+");

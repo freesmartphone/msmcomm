@@ -50,7 +50,6 @@ void hexdump(const uint8_t *data, uint32_t len)
 
 	memset( ascii, 0, VALUES_PER_LINE + 1 );
 	count = 0;
-	offset = 0;
 
 	while (len--)
 	{
@@ -69,8 +68,14 @@ void hexdump(const uint8_t *data, uint32_t len)
 		}
 	}
 
-	if(count <= VALUES_PER_LINE)
-		printf("\n");
+	if ( count != 0 )
+	{
+		while ( count++ < VALUES_PER_LINE )
+		{
+			printf( "   " );
+		}
+		printf("      %s\n", ascii);
+	}
 }
 
 static int init_all(struct msmc_context *ctx)
@@ -158,7 +163,7 @@ static void handle_options(struct msmc_context *ctx, int argc, char *argv[])
 	check_arg[0] = 0;
 	check_arg[1] = 0;
 	char tmp[10];
-	
+
 	/* specify our default log target */
 	log_change_target(LOG_TARGET_STDERR);
 
@@ -253,25 +258,25 @@ static void base_timer_cb(void *data)
 static void daemonize()
 {
 	pid_t pid, sid;
-	
+
 	/* fork off the parent process */
 	pid = fork();
 	if (pid < 0)
 		exit(1);
-		
+
 	/* change file mode mask */
 	umask(0);
-	
+
 	/* create new sid for the child process */
 	sid = setsid();
 	if (sid < 0)
 		exit(1);
-		
+
 	/* change current work-directory */
 	/* FIXME check that the run-directory exists! */
 	if ((chdir("/var/run/msmcommd")) < 0)
 		exit(1);
-	
+
 	/* close std. file descriptors and log to file */
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
@@ -309,7 +314,7 @@ int main(int argc, char *argv[])
 
 	/* command line option handling */
 	handle_options(ctx, argc, argv);
-	
+
 	/* should we run as daemon? */
 	if (run_as_daemon)
 		daemonize();
