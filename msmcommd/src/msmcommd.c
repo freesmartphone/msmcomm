@@ -1,5 +1,5 @@
-/* 
- * (c) 2009 by Simon Busch <morphis@gravedo.de>
+/*
+ * (C) 2009-2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,24 +34,40 @@ const char *frame_type_names[] = {
 int use_serial_port = 1;
 extern int use_talloc_report;
 
+#define VALUES_PER_LINE 16
+
 void hexdump(const uint8_t *data, uint32_t len)
 {
-	const char *p;
+	char ascii[VALUES_PER_LINE + 1];
 	int count;
+	int offset;
+	uint8_t *p;
+	if (!data)
+		return;
+	p = data;
 
-	if (!data) return;
-
-	p = &data[0];
+	memset( ascii, 0, VALUES_PER_LINE + 1 );
 	count = 0;
-	while (len--) {
-		if (count == 10) {
-			printf("\n");
+	offset = 0;
+
+	while (len--)
+	{
+		uint8_t b = *p++;
+		printf("%02x ", b & 0xff);
+		if ( b > 32 && b < 128 )
+			ascii[count] = b;
+		else
+			ascii[count] = '.';
+		count++;
+
+		if (count == VALUES_PER_LINE) {
+			printf("      %s\n", ascii);
+			memset( ascii, 0, VALUES_PER_LINE + 1 );
 			count = 0;
 		}
-		printf("%02x ", *p++ & 0xff);
-		count++;
 	}
-	if(count <= 10)
+
+	if(count <= VALUES_PER_LINE)
 		printf("\n");
 }
 
@@ -222,7 +238,7 @@ int main(int argc, char *argv[])
 	struct msmc_context *ctx;
 	int option_index;
 
-	printf("msmcommd (c) 2009 by Simon Busch\n");
+	printf("msmcommd (C) 2009-2010 by Simon Busch\n");
 	printf("not ready for use ... just testing out how this damn protocol works\n");
 
 	init_talloc();
