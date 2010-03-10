@@ -30,5 +30,6 @@ msmc_forward
 stamp-h1
 .gitignore
 frame_test
+test_message
 .deps
 core

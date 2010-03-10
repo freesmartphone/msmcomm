@@ -1,6 +1,7 @@
 SUBDIRS = \
 	src \
-	vapi
+	vapi \
+	tests
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = msmcomm-1.0.pc
