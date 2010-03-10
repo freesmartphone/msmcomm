@@ -1,4 +1,4 @@
-/* 
+/*
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
@@ -52,11 +52,14 @@ uint8_t* msg_verify_pin_prepare_data(struct msmcomm_message *msg)
 	return msg->payload;
 }
 
-/* note: pin is passed as ascii chars! */
-void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, uint8_t *pin, int len)
+/* NOTE: PIN is passed as ascii chars! PIN is only allowed to be 4 or 8 chars */
+void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char* pin)
 {
+	int len = strlen( pin );
 	if (len != 4 && len != 8)
+	{
+		fprintf( stderr, "WARNING: PIN is neither 4 nor 8 characters long\n" );
 		return;
-
+	}
 	memcpy(MESSAGE_CAST(msg, struct verify_pin_msg)->pin, pin, len);
 }

@@ -1,6 +1,6 @@
-/**
+/*
  * (C) 2009-2010 by Simon Busch <morphis@gravedo.de>
- * All Rights Reserved
+ * (C) 2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- **/
+ */
 
+// FIXME: copy does not seem to work
 // FIXME: Change 'EVENT' to 'URC' to match telephony taxonomy
 // FIXME: Map properties as such
 
@@ -61,6 +62,35 @@ namespace Msmcomm
         CHARGER_STATUS,
         CHARGING
     }
+
+    /*
+    public T toResponse<T>()
+    {
+        switch ( response.type )
+        {
+            case ResponseType.TEST_ALIVE:
+                return (Msmcomm.Reply.TestAlive) this.copy();
+            case ResponseType.GET_FIRMWARE_INFO:
+                return (Msmcomm.Reply.GetFirmwareInfo) this.copy();
+            case ResponseType.GET_IMEI:
+                return (Msmcomm.Reply.GetImei) this.copy();
+            case ResponseType.PDSM_PD_GET_POS:
+
+            case ResponseType.PDSM_PD_END_SESSION:
+            case ResponseType.PA_SET_PARAM:
+            case ResponseType.LCS_AGENT_CLIENT_RSP:
+            case ResponseType.XTRA_SET_DATA:
+            case ResponseType.GET_SIM_CAPABILITIES:
+            case ResponseType.GET_VOICEMAIL_NR:
+            case ResponseType.SOUND:
+            case ResponseType.CM_CALL:
+            case ResponseType.CHARGER_STATUS:
+            case ResponseType.CHARGING:
+            default:
+            return null;
+        }
+    }
+    */
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
     public enum EventType
@@ -449,6 +479,9 @@ namespace Msmcomm
             set;
         }
 
+        [CCode (cname = "msmcomm_message_make_copy")]
+        public Message copy();
+
         public string to_string()
         {
             var str = "[MSM] ref %02x len %d : %s".printf( index, size, Msmcomm.eventTypeToString( type ) );
@@ -457,18 +490,24 @@ namespace Msmcomm
             switch ( type )
             {
                 case Msmcomm.ResponseType.GET_IMEI:
+                    // this is broken
+                    //var msg = (Msmcomm.Reply.GetImei) this.copy();
+                    // this works
                     unowned Msmcomm.Reply.GetImei msg = (Msmcomm.Reply.GetImei) this;
-                    details = @"IMEI = $(msg.getImei())";
+                    details = @"IMEI = $(msg.imei)";
                     break;
                 case Msmcomm.ResponseType.GET_FIRMWARE_INFO:
+                    //var msg = (Msmcomm.Reply.GetFirmwareInfo) this.copy();
                     unowned Msmcomm.Reply.GetFirmwareInfo msg = (Msmcomm.Reply.GetFirmwareInfo) this;
-                    details = @"FIRMWARE = $(msg.getInfo())";
+                    details = @"FIRMWARE = $(msg.info) | HCI = $(msg.hci)";
                     break;
                 case Msmcomm.ResponseType.CM_CALL:
+                    //var msg = (Msmcomm.Reply.Call) this.copy();
                     unowned Msmcomm.Reply.Call msg = (Msmcomm.Reply.Call) this;
                     details = @"refId = $(msg.index) cmd = $(msg.getCmd()) err = $(msg.getErrorCode())";
                     break;
                 case Msmcomm.ResponseType.CHARGER_STATUS:
+                    //var msg = (Msmcomm.Reply.ChargerStatus) this.copy();
                     unowned Msmcomm.Reply.ChargerStatus msg = (Msmcomm.Reply.ChargerStatus) this;
                     string mode = "<unknown>", voltage = "<unknown>";
 
@@ -589,13 +628,9 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_create_message")]
             public VerifyPin(CommandType t = CommandType.VERIFY_PIN);
 
-            [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
-            public void _setPin(string pin, uint length);
-
-            public void setPin(string pin)
-            {
-                GLib.assert( pin.length <= 8 );
-                _setPin( pin, (uint)pin.length );
+            public string pin {
+                [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
+                set;
             }
         }
 
@@ -644,33 +679,24 @@ namespace Msmcomm
         [CCode (type_id = "MESSAGE", cname = "struct msmcomm_message", free_function = "")]
         public class GetFirmwareInfo : Message
         {
-            [CCode (cname = "msmcomm_resp_get_firmware_info_get_info")]
-            public void _getInfo(char[] info);
-
-            public string getInfo()
-            {
-                var info = new char[100];
-                _getInfo( info );
-                return ((string)info).dup();
+            public string info {
+                [CCode (cname = "msmcomm_resp_get_firmware_info_get_info")]
+                get;
             }
 
-            [CCode (cname = "msmcomm_resp_get_firmware_info_get_hci_version")]
-            public uint8 getHciVersion();
+            public uint8 hci {
+                [CCode (cname = "msmcomm_resp_get_firmware_info_get_hci_version")]
+                get;
+            }
         }
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class GetImei : Message
         {
-            [CCode (cname = "msmcomm_resp_get_imei_get_imei")]
-            private void _getImei(char[] imei);
-
-            public string getImei()
-            {
-                var imei = new char[17];
-                _getImei(imei);
-                // FIXME: Is this ok or do we have a leak now?
-                return ((string)imei).dup();
+            public string imei {
+                [CCode (cname = "msmcomm_resp_get_imei_get_imei")]
+                get;
             }
         }
 

@@ -22,6 +22,9 @@
 
 extern void *talloc_msmc_ctx;
 
+#define LIBMSMCOMM_RESP_IMEI_LEN             17
+#define LIBMSMCOMM_RESP_FIRMWARE_LEN         20
+
 /*
  * MSMCOMM_RESPONSE_TEST_ALIVE
  */
@@ -70,9 +73,13 @@ uint8_t msmcomm_resp_get_firmware_info_get_hci_version(struct msmcomm_message *m
 	return MESSAGE_CAST(msg, struct get_firmware_info_resp)->hci_version;
 }
 
-void msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg, char *buffer, int len)
+// caller needs to free the result
+char* msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg)
 {
-	snprintf(buffer, len, "%s", MESSAGE_CAST(msg, struct get_firmware_info_resp)->firmware_version);
+	void* result = malloc( LIBMSMCOMM_RESP_FIRMWARE_LEN );
+	memcpy( result, MESSAGE_CAST(msg, struct get_firmware_info_resp)->firmware_version, LIBMSMCOMM_RESP_FIRMWARE_LEN );
+	// firmware version data already contains the tailing 0
+	return result;
 }
 
 /*
@@ -100,21 +107,22 @@ uint32_t resp_get_imei_get_size(struct msmcomm_message *msg)
 	return 0;
 }
 
-void msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg, uint8_t *buffer, int len)
+/* caller needs to free the result */
+char* msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg)
 {
 	int n;
 	struct get_imei_resp *resp;
 
-	/* we need a least a buffer with 17 chars */
-	if (len < 17)
-		return;
-
 	resp = (struct get_imei_resp*) msg->payload;
 
+	char* result = malloc( LIBMSMCOMM_RESP_IMEI_LEN+1 );
+
 	/* imei consists of 17 bytes - each byte is one number of the imei */
-	for (n = 0; n < 17; n++) {
-		buffer[n] = 0x30 + resp->imei[n];
+	for (n = 0; n < LIBMSMCOMM_RESP_IMEI_LEN; ++n) {
+		result[n] = 0x30 + resp->imei[n];
 	}
+	result[LIBMSMCOMM_RESP_IMEI_LEN] = 0;
+	return result;
 }
 
 /*
@@ -145,7 +153,7 @@ unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg)
 	switch(MESSAGE_CAST(msg, struct charger_status_msg)->mode) {
 	case 0x1:
 		return MSMCOMM_CHARGING_MODE_USB;
-	case 0x2: 
+	case 0x2:
 		return MSMCOMM_CHARGING_MODE_INDUCTIVE;
 	}
 
@@ -193,7 +201,7 @@ unsigned int msmcomm_resp_charging_get_mode(struct msmcomm_message *msg)
 	switch(MESSAGE_CAST(msg, struct charging_msg)->mode) {
 	case 0x1:
 		return MSMCOMM_CHARGING_MODE_USB;
-	case 0x2: 
+	case 0x2:
 		return MSMCOMM_CHARGING_MODE_INDUCTIVE;
 	}
 
