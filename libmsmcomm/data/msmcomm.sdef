@@ -38,7 +38,8 @@ start dial_call_msg 206
 [5] uint8_t const_value
 [105-168] uint8_t caller_id
 [169] uint8_t caller_id_len
-# [172] and [204] still unknown
+[172] uint8_t some_value_0
+[204] uint8_t some_value_1
 end
 
 start sups_event 0

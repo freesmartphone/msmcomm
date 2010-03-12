@@ -118,9 +118,14 @@ struct msmcomm_message* msmcomm_message_make_copy(struct msmcomm_message *msg)
 
 uint32_t msmcomm_message_get_type(struct msmcomm_message *msg)
 {
-	if (msg && msg->descriptor)
-		return msg->descriptor->type;
-
+	if (msg && msg->descriptor) {
+		if(msg->descriptor->type != MSMCOMM_MESSAGE_INVALID) {
+			return msg->descriptor->type;
+		}
+		else if (msg->descriptor->get_type != NULL) {
+			return msg->descriptor->get_type(msg);
+		}
+	}
 	return MSMCOMM_MESSAGE_INVALID;
 }
 

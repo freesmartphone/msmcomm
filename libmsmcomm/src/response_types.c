@@ -166,10 +166,10 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 		if (group_descriptors[n].is_valid(&resp)) {
 			/* let our descriptor handle the left data */
 			group_descriptors[n].handle_data(&resp, data + 3, len - 3);
-
+			
 			/* save descriptor for later use */
 			resp.descriptor = &group_descriptors[n];
-			
+
 			/* tell the user about the received event/response */
 			if (ctx->event_cb)
 				ctx->event_cb(ctx, group_descriptors[n].get_type(&resp), &resp);

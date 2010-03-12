@@ -35,6 +35,10 @@ void msg_dial_call_init(struct msmcomm_message *msg)
 	
 	/* FIXME this value is set everytime to 0x4 */
 	MESSAGE_CAST(msg, struct dial_call_msg)->const_value = 0x4;
+	
+	/* FIXME this two values are even still unknown */
+	MESSAGE_CAST(msg, struct dial_call_msg)->some_value_0 = 0x1;
+	MESSAGE_CAST(msg, struct dial_call_msg)->some_value_1 = 0xc;
 }
 
 uint32_t msg_dial_call_get_size(struct msmcomm_message *msg)
@@ -60,8 +64,7 @@ void msmcomm_message_dial_call_set_caller_id
 		return;
 
 	/* copy caller id to payload structure */
-	memcpy(MESSAGE_CAST(msg, struct dial_call_msg)->caller_id,
-		   caller_id, len);
+	memcpy(MESSAGE_CAST(msg, struct dial_call_msg)->caller_id, caller_id, len);
 }
 
 /*
