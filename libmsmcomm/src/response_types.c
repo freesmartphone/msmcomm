@@ -155,7 +155,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 	resp.payload = NULL;
 	resp.descriptor = NULL;
 	
-	/* first we check if we have agroup which handle's this response or event */
+	/* first we check if we have a group which handle's this response or event */
 	for (n=0; n<group_descriptors_count; n++) {
 		/* is descriptor valid? */
 		if (group_descriptors[n].is_valid == NULL ||
@@ -165,7 +165,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 
 		if (group_descriptors[n].is_valid(&resp)) {
 			/* let our descriptor handle the left data */
-			group_descriptors[n].handle_data(&resp, data + 3, len - 3);
+			group_descriptors[n].handle_data(&resp, data + 3, len - 2 - 3);
 			
 			/* save descriptor for later use */
 			resp.descriptor = &group_descriptors[n];

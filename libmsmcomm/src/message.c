@@ -101,16 +101,22 @@ struct msmcomm_message* msmcomm_create_message(unsigned int type)
 struct msmcomm_message* msmcomm_message_make_copy(struct msmcomm_message *msg)
 {
 	struct msmcomm_message *msg_copy;
+	int size = 0;
 	
 	/* copy message */
 	msg_copy = (struct msmcomm_message*) malloc(sizeof(struct msmcomm_message));
 	memcpy(msg_copy, msg, sizeof(struct msmcomm_message));
+	
+	msg_copy->descriptor = msg->descriptor;
 
-	/* we now allocate memory for the payload, as the memcpy above does not
-	   copy the content of the payload */
-	if (msg->payload != NULL) {
-		msg_copy->payload = malloc(sizeof(msg->payload));
-		memcpy(msg_copy->payload, msg->payload, sizeof(msg->payload));
+	/* copy payload only if we have a valid payload or we have a descriptor
+	 * with a valid get_size method */
+	if (msg->payload != NULL &&
+		msg->descriptor != NULL && 
+		msg->descriptor->get_size != NULL) {
+		size = msg->descriptor->get_size(msg);
+		msg_copy->payload = malloc(sizeof(uint8_t)*size);
+		memcpy(msg_copy->payload, msg->payload, size);
 	}
 
 	return msg_copy;

@@ -65,7 +65,7 @@ void resp_get_firmware_info_handle_data(struct msmcomm_message *msg, uint8_t *da
 
 uint32_t resp_get_firmware_info_get_size(struct msmcomm_message *msg)
 {
-	return 0;
+	return sizeof(struct get_firmware_info_resp);
 }
 
 uint8_t msmcomm_resp_get_firmware_info_get_hci_version(struct msmcomm_message *msg)
@@ -104,7 +104,7 @@ void resp_get_imei_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 
 uint32_t resp_get_imei_get_size(struct msmcomm_message *msg)
 {
-	return 0;
+	return sizeof(struct get_imei_resp);
 }
 
 /* caller needs to free the result */
@@ -145,7 +145,7 @@ void resp_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data,
 
 uint32_t resp_charger_status_get_size(struct msmcomm_message *msg)
 {
-	return 0;
+	return sizeof(struct charger_status_msg);
 }
 
 unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg)
@@ -193,7 +193,7 @@ void resp_charging_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 
 uint32_t resp_charging_get_size(struct msmcomm_message *msg)
 {
-	return 0;
+	return sizeof(struct charging_msg);
 }
 
 unsigned int msmcomm_resp_charging_get_mode(struct msmcomm_message *msg)

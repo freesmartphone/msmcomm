@@ -490,25 +490,19 @@ namespace Msmcomm
             switch ( type )
             {
                 case Msmcomm.ResponseType.GET_IMEI:
-                    // this is broken
-                    //var msg = (Msmcomm.Reply.GetImei) this.copy();
-                    // this works
-                    unowned Msmcomm.Reply.GetImei msg = (Msmcomm.Reply.GetImei) this;
+                    var msg = (Msmcomm.Reply.GetImei) this.copy();
                     details = @"IMEI = $(msg.imei)";
                     break;
                 case Msmcomm.ResponseType.GET_FIRMWARE_INFO:
-                    //var msg = (Msmcomm.Reply.GetFirmwareInfo) this.copy();
-                    unowned Msmcomm.Reply.GetFirmwareInfo msg = (Msmcomm.Reply.GetFirmwareInfo) this;
+                    var msg = (Msmcomm.Reply.GetFirmwareInfo) this.copy();
                     details = @"FIRMWARE = $(msg.info) | HCI = $(msg.hci)";
                     break;
                 case Msmcomm.ResponseType.CM_CALL:
-                    //var msg = (Msmcomm.Reply.Call) this.copy();
-                    unowned Msmcomm.Reply.Call msg = (Msmcomm.Reply.Call) this;
+                    var msg = (Msmcomm.Reply.Call) this.copy();
                     details = @"refId = $(msg.index) cmd = $(msg.getCmd()) err = $(msg.getErrorCode())";
                     break;
                 case Msmcomm.ResponseType.CHARGER_STATUS:
-                    //var msg = (Msmcomm.Reply.ChargerStatus) this.copy();
-                    unowned Msmcomm.Reply.ChargerStatus msg = (Msmcomm.Reply.ChargerStatus) this;
+                    var msg = (Msmcomm.Reply.ChargerStatus) this.copy();
                     string mode = "<unknown>", voltage = "<unknown>";
 
                     switch ( msg.mode )
