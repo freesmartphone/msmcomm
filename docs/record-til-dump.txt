@@ -1,0 +1,29 @@
+
+1. Login with novacom on your Palm Pre
+2. Mount root filesystem read-write
+    # mount -o remount,rw /
+3. Stop TelephonyInterfaceLayer
+    # initctl stop TelephonyInterfaceLayer
+4. Set loglevel for TelephonyInterfaceLayer to 'err'
+    # PmLogCtl set TIL.CCP err
+    # PmLogCtl set TIL.LOG err
+5. Start TelephonyInterfaceLayer again but now with strace attached!
+   (NOTE: If you are on a CDMA Pre you should start TelephonyInterfaceLayerCdma and not
+   TelephonyInterfaceLayerGsm)
+    # strace -o gsm.log -f -F -s 100000 -x /usr/bin/TelephonyInterfaceLayerGsm &
+6. Now do everything you want with your webOS device 
+7. If you are finished kill TelephonyInterfaceLayer
+    # killall TelephonyInterfaceLayerGsm
+8. Reset Loglevels 
+    # PmLogCtl set TIL.CCP debug
+    # PmLogCtl set TIL.LOG debug
+9. Restart TelephonyInterfaceLayer system service
+    # initctl start TelephonyInterfaceLayer
+10. Remount root filesystem read-only
+    # mount -o remount,ro /
+11. Copy gsm.log and /var/log/til.log to your local PC/Laptop/whatever
+12. Run strace-msm-parse.py script on the gsm.log
+    # strace-msm-parse.py gsm.log > gsm.parsed
+13. Open vim, split your view, display til.log and gsm.log beside and start with reverse
+    engineering!
+
