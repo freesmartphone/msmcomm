@@ -116,16 +116,15 @@ void msmcomm_event_network_state_info_get_plmn(struct msmcomm_message *msg, uint
 	plmn[2] = MESSAGE_CAST(msg, struct network_state_info_event)->plmn[2];
 }
 
-void msmcomm_event_network_state_info_get_operator_name
-	(struct msmcomm_message *msg, int8_t *buffer, uint32_t len)
+char* msmcomm_event_network_state_info_get_operator_name
+	(struct msmcomm_message *msg)
 {
+    char *buffer = malloc(sizeof(char) * MESSAGE_CAST(msg, struct network_state_info_event)->operator_name_len);
 	if (msg->payload == NULL)
 		return;
 
-	if (len < MESSAGE_CAST(msg, struct network_state_info_event)->operator_name_len)
-		return;
-
-	snprintf(buffer, len, "%s", MESSAGE_CAST(msg, struct network_state_info_event)->operator_name);
+	snprintf(buffer, 255, "%s", MESSAGE_CAST(msg, struct network_state_info_event)->operator_name);
+    return buffer;
 }
 
 uint16_t msmcomm_event_network_state_info_get_rssi(struct msmcomm_message *msg)

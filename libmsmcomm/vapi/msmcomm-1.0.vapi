@@ -536,6 +536,18 @@ namespace Msmcomm
 
                     details = @"mode = $(mode) voltage = $(voltage)";
                     break;
+                case Msmcomm.EventType.NETWORK_STATE_INFO:
+					var msg = (Msmcomm.Unsolicited.NetworkStateInfo) this.copy();
+					details = @"new_value = $(msg.new_value) ";
+					details += @"change_field = $(msg.change_field) ";
+					details += @"operator_name = $(msg.operator_name) ";
+					details += @"rssi = $(msg.rssi) ";
+					details += @"ecio = $(msg.ecio) ";
+					details += @"service_domain = $(msg.service_domain) ";
+					details += @"service_capabilitiy = $(msg.service_capabilitiy) ";
+					details += @"gprs_attached = $(msg.gprs_attached) ";
+					details += @"roam = $(msg.roam) ";
+					break;
                 default:
                     break;
             }
@@ -811,43 +823,54 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class NetworkStateInfo : Message
         {
-            [CCode (cname = "msmcomm_event_network_state_info_get_change_field")]
-            public uint getChangeField();
+			public uint change_field {
+				[CCode (cname = "msmcomm_event_network_state_info_get_change_field")]
+				get;
+			}
 
-            [CCode (cname = "msmcomm_event_network_state_info_get_new_value")]
-            public uint8 getNewValue();
+			public uint8 new_value {
+				[CCode (cname = "msmcomm_event_network_state_info_get_new_value")]
+				get;
+			}
 
             [CCode (cname = "msmcomm_event_network_state_info_trace_changes")]
             public void traceChanges(ChangedFieldTypeCb type_handler);
 
-            [CCode (cname = "msmcomm_event_network_state_info_get_operator_name")]
-            private string _getOperatorName(string operatorName);
+			public string operator_name {
+				[CCode (cname = "msmcomm_event_network_state_info_get_operator_name")]
+				get;
+			}
+           
+            public uint16 rssi { 
+				[CCode (cname = "msmcomm_event_network_state_info_get_rssi")]
+				get; 
+			}
 
-            public string getOperatorName()
-            {
-                string operatorName;
-                _getOperatorName(operatorName);
-                return operatorName;
-            }
-
-            [CCode (cname = "msmcomm_event_network_state_info_get_rssi")]
-            public uint16 getRssi();
-
-            [CCode (cname = "msmcomm_event_network_state_info_get_ecio")]
-            public uint16 getEcio();
-
-            [CCode (cname = "msmcomm_event_network_state_info_get_service_domain")]
-            public uint8 getServiceDomain();
-
-            [CCode (cname = "msmcomm_event_network_state_info_get_service_capability")]
-            public uint8 getServiceCapability();
-
-            [CCode (cname = "msmcomm_event_network_state_info_get_gprs_attached")]
-            public uint8 getGrpsAttached();
-
-            [CCode (cname = "msmcomm_event_network_state_info_get_roam")]
-            public uint16 getRoam();
-        }
+			public uint16 ecio {
+				[CCode (cname = "msmcomm_event_network_state_info_get_ecio")]
+				get;
+			}
+			
+			public uint8 service_domain {
+				[CCode (cname = "msmcomm_event_network_state_info_get_service_domain")]
+				get;
+			}
+			
+			public uint8 service_capabilitiy {
+				[CCode (cname = "msmcomm_event_network_state_info_get_service_capability")]
+				get;
+			}
+			
+			public uint8 gprs_attached {
+				[CCode (cname = "msmcomm_event_network_state_info_get_gprs_attached")]
+				get;
+			}
+			
+			public uint16 roam {
+				[CCode (cname = "msmcomm_event_network_state_info_get_roam")]
+				get;
+			}
+		}
     } /* namespace Unsolicited */
 }
 

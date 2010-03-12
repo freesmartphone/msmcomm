@@ -341,8 +341,8 @@ uint8_t msmcomm_event_network_state_info_get_new_value
 void msmcomm_event_network_state_info_get_plmn
 	(struct msmcomm_message *msg, uint8_t *plmn);
 
-void msmcomm_event_network_state_info_get_operator_name
-	(struct msmcomm_message *msg, int8_t *buffer, uint32_t len);
+char* msmcomm_event_network_state_info_get_operator_name
+	(struct msmcomm_message *msg);
 
 uint16_t msmcomm_event_network_state_info_get_rssi
 	(struct msmcomm_message *msg);
