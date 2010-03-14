@@ -107,24 +107,28 @@ void msmcomm_event_network_state_info_trace_changes
 	notify_type_handler((0x2 << 7), 0x0, MSMCOMM_NETWORK_STATE_INFO_CHANGED_FILED_TYPE_ORIGINATION_STATUS);
 }
 
-void msmcomm_event_network_state_info_get_plmn(struct msmcomm_message *msg, uint8_t *plmn)
+uint8_t* msmcomm_event_network_state_info_get_plmn(struct msmcomm_message *msg)
 {
+	uint8_t *tmp;
+
 	if (msg->payload == NULL)
-		return;
-	plmn[0] = MESSAGE_CAST(msg, struct network_state_info_event)->plmn[0];
-	plmn[1] = MESSAGE_CAST(msg, struct network_state_info_event)->plmn[1];
-	plmn[2] = MESSAGE_CAST(msg, struct network_state_info_event)->plmn[2];
+		return NULL;
+
+	tmp = malloc(sizeof(uint8_t) * MSMCOMM_DEFAULT_PLMN_LENGTH);
+	memcpy(tmp, MESSAGE_CAST(msg, struct network_state_info_event)->plmn, MSMCOMM_DEFAULT_PLMN_LENGTH);
+	return tmp;
 }
 
 char* msmcomm_event_network_state_info_get_operator_name
 	(struct msmcomm_message *msg)
 {
-    char *buffer = malloc(sizeof(char) * MESSAGE_CAST(msg, struct network_state_info_event)->operator_name_len);
 	if (msg->payload == NULL)
 		return;
 
+	char *buffer = malloc(sizeof(char) * MESSAGE_CAST(msg, struct network_state_info_event)->operator_name_len);
 	snprintf(buffer, 255, "%s", MESSAGE_CAST(msg, struct network_state_info_event)->operator_name);
-    return buffer;
+
+	return buffer;
 }
 
 uint16_t msmcomm_event_network_state_info_get_rssi(struct msmcomm_message *msg)
@@ -132,8 +136,7 @@ uint16_t msmcomm_event_network_state_info_get_rssi(struct msmcomm_message *msg)
 	if (msg->payload == NULL)
 		return 0x0;
 
-	return MESSAGE_CAST(msg, struct network_state_info_event)->rssi[0] << 8 | 
-		   MESSAGE_CAST(msg, struct network_state_info_event)->rssi[1];
+	return MESSAGE_CAST(msg, struct network_state_info_event)->rssi;
 }
 
 uint16_t msmcomm_event_network_state_info_get_ecio(struct msmcomm_message *msg)
@@ -141,8 +144,7 @@ uint16_t msmcomm_event_network_state_info_get_ecio(struct msmcomm_message *msg)
 	if (msg->payload == NULL)
 		return 0x0;
 
-	return MESSAGE_CAST(msg, struct network_state_info_event)->ecio[0] >> 8 |
-		   MESSAGE_CAST(msg, struct network_state_info_event)->ecio[1];
+	return MESSAGE_CAST(msg, struct network_state_info_event)->ecio;
 }
 
 uint8_t msmcomm_event_network_state_info_get_new_value(struct msmcomm_message *msg)
@@ -171,7 +173,7 @@ uint8_t msmcomm_event_network_state_info_get_service_capability(struct msmcomm_m
 
 uint8_t msmcomm_event_network_state_info_get_gprs_attached(struct msmcomm_message *msg)
 {
-	if (msg->payload, NULL)
+	if (msg->payload == NULL)
 		return 0x0;
 
 	return MESSAGE_CAST(msg, struct network_state_info_event)->gprs_attached;
@@ -182,6 +184,5 @@ uint16_t msmcomm_event_network_state_info_get_roam(struct msmcomm_message *msg)
 	if (msg->payload == NULL)
 		return 0x0;
 
-	return MESSAGE_CAST(msg, struct network_state_info_event)->roam[0] >> 8 |
-		   MESSAGE_CAST(msg, struct network_state_info_event)->roam[1];
+	return MESSAGE_CAST(msg, struct network_state_info_event)->roam;
 }

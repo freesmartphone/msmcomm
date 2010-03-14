@@ -119,7 +119,7 @@ struct network_state_info_event
 	uint8_t servce_domain;
 	uint8_t service_capability;
 	uint8_t gprs_attached;
-	uint8_t roam[2];
+	uint16_t roam;
 	uint8_t unknown0;
 	uint8_t plmn[3];
 	uint8_t unknown1[3];
@@ -128,12 +128,12 @@ struct network_state_info_event
 	uint8_t unknown2[3];
 	uint8_t hplmn_or_spdi;
 	uint8_t hplmn_length;
-	uint8_t hplmn[18];
-	uint8_t rssi[2];
-	uint8_t ecio[2];
-	uint8_t unknown3[546];
+	uint8_t unknown3[16];
+	uint16_t rssi;
+	uint16_t ecio;
+	uint8_t unknown4[546];
 	uint8_t modem_gsm_icon_ind;
-	uint8_t unknown4[2];
+	uint8_t unknown5[3];
 } __attribute__ ((packed));
 
 
