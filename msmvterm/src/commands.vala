@@ -67,7 +67,7 @@ public class Commands
         register( "change_operation_mode", change_operation_mode, "Change operation mode", "change_operation_mode <reset|online|offline>", 1 );
         register( "get_phone_state_info", get_phone_state_info, "Query current phone state" );
         register( "test_alive", test_alive, "Test, if the modem is still responding to commands" );
-        register( "verify_pin", verify_pin, "Send SIM PIN authentication code", "verify_pin <pin>" );
+        register( "verify_pin", verify_pin, "Send SIM PIN authentication code", "verify_pin <pin>", 1 );
         register( "get_charger_status", get_charger_status, "Query current charging status" );
         register( "charging", charging, "Set charging mode:\n\tmode: usb, inductive\n\tvoltage: 250mA, 500mA, 1A (warning!)", "charging <usb|inductive> <250|500|1000>", 2 );
         register( "dial_call", dial_call, "Dial out", "dial <number>", 1);
