@@ -63,35 +63,6 @@ namespace Msmcomm
         CHARGING
     }
 
-    /*
-    public T toResponse<T>()
-    {
-        switch ( response.type )
-        {
-            case ResponseType.TEST_ALIVE:
-                return (Msmcomm.Reply.TestAlive) this.copy();
-            case ResponseType.GET_FIRMWARE_INFO:
-                return (Msmcomm.Reply.GetFirmwareInfo) this.copy();
-            case ResponseType.GET_IMEI:
-                return (Msmcomm.Reply.GetImei) this.copy();
-            case ResponseType.PDSM_PD_GET_POS:
-
-            case ResponseType.PDSM_PD_END_SESSION:
-            case ResponseType.PA_SET_PARAM:
-            case ResponseType.LCS_AGENT_CLIENT_RSP:
-            case ResponseType.XTRA_SET_DATA:
-            case ResponseType.GET_SIM_CAPABILITIES:
-            case ResponseType.GET_VOICEMAIL_NR:
-            case ResponseType.SOUND:
-            case ResponseType.CM_CALL:
-            case ResponseType.CHARGER_STATUS:
-            case ResponseType.CHARGING:
-            default:
-            return null;
-        }
-    }
-    */
-
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
     public enum EventType
     {
@@ -691,7 +662,7 @@ namespace Msmcomm
     namespace Reply
     {
         [Compact]
-        [CCode (type_id = "MESSAGE", cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
         public class GetFirmwareInfo : Message
         {
             public string info {
@@ -703,6 +674,12 @@ namespace Msmcomm
                 [CCode (cname = "msmcomm_resp_get_firmware_info_get_hci_version")]
                 get;
             }
+        }
+
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        public class TestAlive : Message
+        {
         }
 
         [Compact]
@@ -845,32 +822,32 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_event_network_state_info_get_operator_name")]
 				get;
 			}
-           
-            public uint16 rssi { 
+
+            public uint16 rssi {
 				[CCode (cname = "msmcomm_event_network_state_info_get_rssi")]
-				get; 
+				get;
 			}
 
 			public uint16 ecio {
 				[CCode (cname = "msmcomm_event_network_state_info_get_ecio")]
 				get;
 			}
-			
+
 			public uint8 service_domain {
 				[CCode (cname = "msmcomm_event_network_state_info_get_service_domain")]
 				get;
 			}
-			
+
 			public uint8 service_capabilitiy {
 				[CCode (cname = "msmcomm_event_network_state_info_get_service_capability")]
 				get;
 			}
-			
+
 			public uint8 gprs_attached {
 				[CCode (cname = "msmcomm_event_network_state_info_get_gprs_attached")]
 				get;
 			}
-			
+
 			public uint16 roam {
 				[CCode (cname = "msmcomm_event_network_state_info_get_roam")]
 				get;
