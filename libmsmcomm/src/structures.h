@@ -87,7 +87,7 @@ struct dial_call_msg
 } __attribute__ ((packed));
 
 
-struct sups_event
+struct cm_sups_event
 {
 } __attribute__ ((packed));
 

@@ -71,11 +71,20 @@ uint8_t msmcomm_event_call_get_call_type(struct msmcomm_message *msg)
 	return MESSAGE_CAST(msg, struct call_status_event)->call_type;
 }
 
-void msmcomm_event_call_status_get_caller_id
-	(struct msmcomm_message *msg, uint8_t *buffer, unsigned int len) 
+char* msmcomm_event_call_status_get_caller_id
+	(struct msmcomm_message *msg) 
 {
-	snprintf(buffer, len, "%s", 
+	char *tmp;
+	int len;
+
+	if (msg->payload == NULL)
+		return NULL;
+
+	len = MESSAGE_CAST(msg, struct call_status_event)->caller_id_len;
+	tmp = (char*)malloc(len);
+	snprintf(tmp, len, "%s", 
 			 MESSAGE_CAST(msg, struct call_status_event)->caller_id);
+	return tmp;
 }
 
 uint8_t msmcomm_event_call_status_get_reject_type(struct msmcomm_message *msg)

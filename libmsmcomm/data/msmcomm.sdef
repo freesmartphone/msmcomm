@@ -42,7 +42,7 @@ start dial_call_msg 206
 [204] uint8_t some_value_1
 end
 
-start sups_event 0
+start cm_sups_event 0
 end
 
 start sups_resp 0

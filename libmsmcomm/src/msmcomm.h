@@ -322,16 +322,11 @@ uint16_t msmcomm_resp_cm_call_get_cmd(struct msmcomm_message *msg);
 /* System events ----------------------------------- */
 uint8_t 		msmcomm_event_power_state_get_state
 	(struct msmcomm_message *msg);
-
-void 			msmcomm_event_call_status_get_caller_id
-	(struct msmcomm_message *msg, uint8_t *buffer, unsigned int len);
-
 unsigned int 	msmcomm_event_charger_status_get_voltage
 	(struct msmcomm_message *msg);
 
 /* Call events ------------------------------------- */
-void 			msmcomm_event_call_status_get_caller_id
-	(struct msmcomm_message *msg, uint8_t *buffer, unsigned int len);
+char* msmcomm_event_call_status_get_caller_id(struct msmcomm_message *msg);
 uint8_t msmcomm_event_call_status_get_reject_type(struct msmcomm_message *msg);
 uint8_t msmcomm_event_call_status_get_reject_value(struct msmcomm_message *msg);
 uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message *msg);
