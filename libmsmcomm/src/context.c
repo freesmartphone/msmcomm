@@ -75,11 +75,24 @@ void msmcomm_register_read_handler
 	ctx->read_data = data;
 }
 
+void msmcomm_register_error_handler
+	(struct msmcomm_context *ctx, msmcomm_error_handler_cb error_handler, void *data)
+{
+	ctx->error_cb = error_handler;
+	ctx->error_data = data;
+}
+
 void msmcomm_register_log_handler
 	(struct msmcomm_context *ctx, msmcomm_log_handler_cb log_handler, void *data)
 {
 	ctx->log_cb = log_handler;
 	ctx->log_data = data;
+}
+
+void report_error(struct msmcomm_context *ctx, int error, void *data)
+{
+	if (ctx->error_cb)
+		ctx->error_cb(ctx->error_data, error, data);
 }
 
 int msmcomm_shutdown(struct msmcomm_context *ctx)

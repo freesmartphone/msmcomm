@@ -101,6 +101,8 @@ struct descriptor
 };
 
 int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t len);
+void report_error(struct msmcomm_context *ctx, int error, void *data);
+
 
 #endif
 

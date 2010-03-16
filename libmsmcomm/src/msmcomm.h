@@ -203,6 +203,13 @@
  */
 #define MSMCOMM_DEFAULT_PLMN_LENGTH 														3
 
+/*
+ * Error codes
+ */
+#define MSMCOMM_ERROR_GROUPID_NOT_SUPPORTED													1
+#define MSMCOMM_ERROR_MSGID_NOT_SUPPORTED													2
+#define MSMCOMM_ERROR_INVALID_PAYLOAD_LENGTH												3
+
 struct msmcomm_context;
 struct msmcomm_message;
 
@@ -214,6 +221,8 @@ typedef int  (*msmcomm_read_handler_cb)
 	(void *user_data, uint8_t *data, uint32_t len);
 typedef void (*msmcomm_log_handler_cb)
 	(void *user_data, char *buffer, unsigned int len);
+typedef void (*msmcomm_error_handler_cb)
+	(void *user_data, int error, void *data);
 typedef void (*msmcomm_network_state_info_changed_field_type_cb)
 	(void *user_data, struct msmcomm_message *msg, int type);
 
@@ -223,10 +232,12 @@ struct msmcomm_context
 	msmcomm_write_handler_cb write_cb;
 	msmcomm_read_handler_cb read_cb;
 	msmcomm_log_handler_cb log_cb;
+	msmcomm_error_handler_cb error_cb;
 
 	void *event_data;
 	void *write_data;
 	void *read_data;
+	void *error_data;
 	void *log_data;
 };
 
@@ -246,6 +257,8 @@ void			msmcomm_register_write_handler
 	(struct msmcomm_context *ctx, msmcomm_write_handler_cb write_handler, void *data);
 void			msmcomm_register_read_handler
 	(struct msmcomm_context *ctx, msmcomm_read_handler_cb read_handler, void *data);
+void			msmcomm_register_error_handler
+	(struct msmcomm_context *ctx, msmcomm_error_handler_cb error_handler, void *data);
 void			msmcomm_register_log_handler
 	(struct msmcomm_context *ctx, msmcomm_log_handler_cb log_handler, void *data);
 
