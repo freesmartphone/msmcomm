@@ -428,6 +428,8 @@ namespace Msmcomm
     public delegate void ReadHandlerCb(void *data, int len);
     [CCode (cname = "msmcomm_network_state_info_changed_field_type_cb", instance_pos = 0)]
     public delegate void ChangedFieldTypeCb(void *data, int type);
+    [CCode (cname = "msmcomm_error_handler_cb", instance_pos = 0)]
+    public delegate void ErrorHandlerCb(int error, void *data);
 
     [CCode (cname = "msmcomm_check_hci_version")]
     public bool checkHciVersion(uint version);
@@ -453,6 +455,9 @@ namespace Msmcomm
 
         [CCode (cname = "msmcomm_register_read_handler")]
         public void registerReadHandler(ReadHandlerCb readHandlerCb);
+
+        [CCode (cname = "msmcomm_register_error_handler")]
+        public void registerErrorHandler(ErrorHandlerCb errorHandlerCb);
     }
 
     [Compact]
