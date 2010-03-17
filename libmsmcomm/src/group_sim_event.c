@@ -142,6 +142,7 @@ unsigned int group_sim_get_type(struct msmcomm_message *msg)
 	case 135:
 	case 136:
 	case 137:
+	case 138:
 		return MSMCOMM_EVENT_SIM_DEFAULT;
 	default:
 		break;
