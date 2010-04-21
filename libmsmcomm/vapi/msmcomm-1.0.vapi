@@ -391,22 +391,22 @@ namespace Msmcomm
         INDUCTIVE
     }
 
-    [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0)]
+    [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void EventHandlerCb(int event, Message message);
-    [CCode (cname = "msmcomm_write_handler_cb", instance_pos = 0)]
+    [CCode (cname = "msmcomm_write_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void WriteHandlerCb(void *data, int len);
-    [CCode (cname = "msmcomm_read_handler_cb", instance_pos = 0)]
+    [CCode (cname = "msmcomm_read_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void ReadHandlerCb(void *data, int len);
-    [CCode (cname = "msmcomm_network_state_info_changed_field_type_cb", instance_pos = 0)]
+    [CCode (cname = "msmcomm_network_state_info_changed_field_type_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void ChangedFieldTypeCb(void *data, int type);
-    [CCode (cname = "msmcomm_error_handler_cb", instance_pos = 0)]
+    [CCode (cname = "msmcomm_error_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void ErrorHandlerCb(int error, void *data);
 
-    [CCode (cname = "msmcomm_check_hci_version")]
+    [CCode (cname = "msmcomm_check_hci_version", cheader_filename = "msmcomm.h")]
     public bool checkHciVersion(uint version);
 
     [Compact]
-    [CCode (cname = "struct msmcomm_context", free_function = "msmcomm_shutdown")]
+    [CCode (cname = "struct msmcomm_context", free_function = "msmcomm_shutdown", cheader_filename = "msmcomm.h")]
     public class Context
     {
         [CCode (cname = "msmcomm_new")]
@@ -432,7 +432,7 @@ namespace Msmcomm
     }
 
     [Compact]
-    [CCode (cname = "struct msmcomm_message", free_function = "", copy_function = "msmcomm_message_make_copy")]
+    [CCode (cname = "struct msmcomm_message", free_function = "", copy_function = "msmcomm_message_make_copy", cheader_filename = "msmcomm.h")]
     public abstract class Message
     {
         [CCode (cname = "msmcomm_create_message")]
@@ -535,7 +535,7 @@ namespace Msmcomm
     namespace Command
     {
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class ChangeOperationMode : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -546,7 +546,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class Charging : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -564,7 +564,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class GetImei : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -572,7 +572,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class GetChargerStatus : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -580,7 +580,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class GetFirmwareInfo : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -588,7 +588,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class GetPhoneStateInfo : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -596,7 +596,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class TestAlive : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -604,7 +604,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class VerifyPin : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -617,7 +617,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class EndCall : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -630,7 +630,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class AnswerCall : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -643,7 +643,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class DialCall : Message
         {
             [CCode (cname = "msmcomm_create_message")]
@@ -662,7 +662,7 @@ namespace Msmcomm
     namespace Reply
     {
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class GetFirmwareInfo : Message
         {
             public string info {
@@ -677,13 +677,13 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class TestAlive : Message
         {
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class GetImei : Message
         {
             public string imei {
@@ -693,7 +693,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class Charging : Message
         {
             public UsbVoltageMode voltage {
@@ -708,7 +708,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class ChargerStatus : Message
         {
             public UsbVoltageMode voltage {
@@ -723,7 +723,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
 		public class Call : Message
 		{
 			[CCode (cname = "msmcomm_resp_cm_call_get_cmd")]
@@ -737,7 +737,7 @@ namespace Msmcomm
     namespace Unsolicited
     {
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class PowerState : Message
         {
             [CCode (cname = "msmcomm_event_power_state_get_state")]
@@ -745,7 +745,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class ChargerStatus : Message
         {
             [CCode (cname = "msmcomm_event_charger_status_get_voltage")]
@@ -753,7 +753,7 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public abstract class CallStatus : Message
         {
             [CCode (cname = "msmcomm_event_call_status_get_caller_id")]
@@ -778,31 +778,31 @@ namespace Msmcomm
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class CallIncoming : CallStatus
         {
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class CallConnect : CallStatus
         {
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class CallEnd : CallStatus
         {
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class CallOrigination : CallStatus
         {
         }
 
         [Compact]
-        [CCode (cname = "struct msmcomm_message", free_function = "")]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class NetworkStateInfo : Message
         {
 			public uint change_field {
