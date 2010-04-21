@@ -428,8 +428,9 @@ static void link_control(struct msmc_context *ctx, struct frame *fr)
 				/* acknowledge this frame */
 				ack_frame(ctx, fr);
 
-				DEBUG_MSG("receive date from modem (seq=0x%x, ack=0x%x)",
+				DEBUG_MSG("receive data from modem (seq=0x%x, ack=0x%x)",
 						  fr->seq, fr->ack);
+				DEBUG_MSG("payload is:");
 				hexdump(fr->payload, fr->payload_len);
 
 				/* we have new data for our registered data handlers */
@@ -513,10 +514,10 @@ static void handle_llc_incomming_data(struct bsc_fd *bfd)
 	uint8_t len, success = 0, n = 0;
 
 	ssize_t size = read(bfd->fd, buffer, sizeof(buffer));
-	if (size < 0)
+	if (size <= 0) {
+		/* FIXME shutdown !!! */
 		return;
-
-	DEBUG_MSG("got %i bytes from modem", size);
+	}
 
 	/* put everything into our rx buffer */
 	buffer_put(ctx->rx_buf, buffer, size);
