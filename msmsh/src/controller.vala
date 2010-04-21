@@ -74,6 +74,18 @@ public class Controller {
 		}
 	}
 	
+	public void onLoadPacketDump(string path) {
+		try {
+			var reader = new PacketDumpReader();
+			reader.readFromFile(path);
+			CurrentSession.registerPacketDump("foobar", reader.CurrentDump);
+			stdout.printf(@"INFO: Read $(reader.CurrentDump.Packets.size) packets from dump '$(path)'\n");
+		}
+		catch (PacketDumpReaderError err) {
+			stdout.printf(@"ERROR: could not load dump from file '$(path)'\n");
+		}
+	}
+	
 	public void resetSession() {
 		if (CurrentSession != null) {
 			CurrentSession.cleanup();

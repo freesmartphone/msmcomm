@@ -63,6 +63,7 @@ public class Commands
         register("help", help, "List all available commands");
         register("load_structures", load_structures, "Load structure definitions from file", "load_structures <path>", 1);
         register("list_structures", list_structures, "List all available structures", "list_structures [domain]");
+        register("load_dump", load_dump, "Load a packet dump from file", "load_dump <path>", 1);
     }
 
     private void register( string cmdname, CmdFunc func, string help, string? syntax = null, uint args = 0 )
@@ -130,6 +131,10 @@ public class Commands
 			_controller.onListStructuresWithDomain(params[0]);
 		else _controller.onListStructures();
     }
+    
+	private void load_dump(string[] params) {
+		_controller.onLoadPacketDump(params[0]);
+	}
 }
 
 } // namespace

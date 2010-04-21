@@ -101,7 +101,6 @@ public class Shell : Object
 				string line;
 				while((line = inStream.read_line(null, null)) != null) {
 					if (!line.has_prefix("#") || line.length != 0) {
-						Readline.History.add(line);
 						commands.dispatch(line);
 					}
 				}
