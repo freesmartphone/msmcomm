@@ -1,0 +1,72 @@
+The Msmcomm protocol 
+===============================================================================
+
+1. General
+The 'msmcomm protocol' is a protocol used by Palm on  their webOS devices. At 
+the time I am writing this line all known webOS devices (Pre / Pre Plus, Pixi 
+/ Pixi Plus) used this protocol to communicate with the internal MSM modem 
+made by qualcomm. 
+As I heard from one of the developers working at Palm in kernel team the 
+whole protocol is auto-generated with some tools from qualcomm. The Palm
+developers only define which messages they need and implements the protocol
+on modem and application side.
+In webOS the TelephonyInterfaceLayer is responsible for all communication with
+the build-in modem. It has a internal modular structure (written in C++) to 
+support more than one modem type.
+There is one implementation for GSM and one for CDMA phones of the 
+TelephonyInterfaceLayer (called TelephonyInterfaceLayerCdma and 
+TelephonyInterfaceLayerGsm).
+The TelephonyInterfaceLayer runs internally more than one threads to support 
+communication with the modem one the one side and communication with the 
+userland of an ipc mechanism on the other side. Internally the 
+TelephonyInterfaceLayer communicates over a simple protocol between both 
+threads. For example 'tel.dial +491021142412' is used as string message
+between both threads to instatiate a call to the given phone number.
+
+2. Overview
+The msmcomm protocol consists of to components: The link layer and the upper 
+layer. The link layer is nearly the same as used in HCI within the Bluetooth
+protocol stack (see hci_uart_spec.pdf). It uses the same mechanism to establish
+a link between the modem and the application side. 
+The implementation of the link layer protocol is done within the msmcommd daemon. 
+The msmcommd daemon connects over a high speed uart to the modem and offers a 
+network communication port to accept data from various clients. These clients
+the libmsmcomm lib to do most of the communication with the modem.
+The libmsmcomm lib provides an abstraction layer for the upper layer protocol 
+of the msmcomm protocol stack. It hides the implementation of the real messages
+from the user and gives him only some methods to create and modify the messages.
+It even support handling of incomming messages and reports the user about all
+incomming events and responses. It does only the handling of the internal 
+protocol parts and no higher stuff like handling the response of a former send
+messages. 
+
+3. Link Layer
+The link layer protocol uses some stuff from HDLC and from HCI. A frame looks 
+like this: 0xfa 0x50 0x4a ... 0x4e 0x10 0x7e
+The ... means there are more data bytes which are irrelevant for the link layer
+part of the protocol. 
+The following gives you an overview about the functionallity of the bytes used
+by the link layer part of the protocl:
+[0]: should be an adress (is everytime the same byte 0xfa, only some cases are 
+     known where this byte has another value)
+[1]: The upper four bit identify the type of the frame. There are six different
+     packet types.
+     0x1: Sync
+     0x2: Sync Response
+     0x3: Config
+     0x4: Config Response
+     0x5: Acknowledge
+     0x6: Data
+     The first four frame types are used to establish the link layer. The last 
+     two type are used to send messags from modem to application side and vice
+     versa. The description of the first four types are described within the 
+     HCI specification (see hci_uart_spec.pdf). The document also describes how
+     this four types are used to establish the link. Even the document describes
+     the using of the last two types for sending real data.
+[2]: The upper four bytes are the sequence number of the frame and the lower four
+     bytes are the acknowledge number. Take a look at the hci spec to see how the
+     are used within the link layer.
+[n-3]: First byte of the crc16 checksum
+[n-2]: Second byte of the crc16 checksum
+[n-1]: always 0x7e to indicate the end of a frame
+
