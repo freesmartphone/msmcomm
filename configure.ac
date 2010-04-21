@@ -59,7 +59,7 @@ PKG_CHECK_MODULES(DEPS,
   gobject-2.0 >= $GLIB_REQUIRED
   gthread-2.0 >= $GLIB_REQUIRED
   gee-1.0 >= $GEE_REQUIRED
-  fsotransport-2.0 >= $FSOT_REQUIRED)
+  fsotransport-2.0 >= $FSOT_REQUIRED
   gio-2.0 >= $GLIB_REQUIRED)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
