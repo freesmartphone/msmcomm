@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <structures domain="call">
-	<structure name="call_status_event" length=1107>
-		<field name="call_id" start=0 type="uint8_t"/>
-		<field name="call_type" start=1 type="uint8_t"/>
-		<field name="caller_id" start=3 end=17 type="uint8_t"/>
-		<field name="caller_id_len" start=63 type="uint8_t"/>
-		<field name="cause_value0" start=590 type="uint8_t"/>
-		<field name="cause_value1" start=595 type="uint8_t"/>
-		<field name="cause_value2" start=624 type="uint8_t"/>
-		<field name="reject_type" start=625 type="uint8_t"/>
-		<field name="reject_value" start=624 type="uint8_t"/>
-		<field name="is_tty" start=933 type="uint8_t"/>
+	<structure name="call_status_event" length="1107">
+		<field name="call_id" start="0" type="uint8_t"/>
+		<field name="call_type" start="1" type="uint8_t"/>
+		<field name="caller_id" start="3" end="17" type="uint8_t"/>
+		<field name="caller_id_len" start="63" type="uint8_t"/>
+		<field name="cause_value0" start="590" type="uint8_t"/>
+		<field name="cause_value1" start="595" type="uint8_t"/>
+		<field name="cause_value2" start="624" type="uint8_t"/>
+		<field name="reject_type" start="625" type="uint8_t"/>
+		<field name="reject_value" start="624" type="uint8_t"/>
+		<field name="is_tty" start="933" type="uint8_t"/>
 	</structure>
-	<structure name="cm_call_resp" length=10>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
-		<field name="cmd_type" start=4 end=5 type="uint16_t"/>
-		<field name="error_code" start=8 end=9 type="uint16_t"/>
+	<structure name="cm_call_resp" length="10">
+		<field name="ref_id" start="0 "end="3" type="uint32_t"/>
+		<field name="cmd_type" start="4" end="5" type="uint16_t"/>
+		<field name="error_code" start="8" end="9" type="uint16_t"/>
 	</structure>
-	<structure name="answer_call_msg" length=8>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
-		<field name="host_id" start=4 type="uint8_t"/>
-		<field name="call_nr" start=5 type="uint8_t"/>
+	<structure name="answer_call_msg" length="8">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="host_id" start="4" type="uint8_t"/>
+		<field name="call_nr" start="5" type="uint8_t"/>
 	</structure>
-	<structure name="end_call_msg" length=61>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
-		<field name="host_id" start=4 type="uint8_t"/>
-		<field name="call_nr" start=5 type="uint8_t"/>
+	<structure name="end_call_msg" length="61">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="host_id" start="4" type="uint8_t"/>
+		<field name="call_nr" start="5" type="uint8_t"/>
 	</structure>
-	<structure name="dial_call_msg" length=206>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
-		<field name="const_value" start=5 type="uint8_t"/>
-		<field name="caller_id" start=105 end=168 type="uint8_t"/>
-		<field name="caller_id_len" start=169 type="uint8_t"/>
-		<field name="some_value_0" start=172 type="uint8_t"/>
-		<field name="some_value_1" start=204 type="uint8_t"/>
+	<structure name="dial_call_msg" length="206">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="const_value" start="5" type="uint8_t"/>
+		<field name="caller_id" start="105" end="168" type="uint8_t"/>
+		<field name="caller_id_len" start="169" type="uint8_t"/>
+		<field name="some_value_0" start="172" type="uint8_t"/>
+		<field name="some_value_1" start="204" type="uint8_t"/>
 	</structure>
-	<structure name="cm_sups_event" length=0>
+	<structure name="cm_sups_event" length="0">
 	</structure>
-	<structure name="sups_resp" length=0>
+	<structure name="sups_resp" length="0">
 	</structure>
 </structures>

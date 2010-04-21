@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <structures domain="system">
-	<structure name="network_state_info_event" length=677>
-		<field name="change_field" start=0 end=7 type="uint8_t"/>
-		<field name="new_value" start=8 type="uint8_t"/>
-		<field name="servce_domain" start=9 type="uint8_t"/>
-		<field name="service_capability" start=10 type="uint8_t"/>
-		<field name="gprs_attached" start=11 type="uint8_t"/>
-		<field name="roam" start=12 end=13 type="uint16_t"/>
-		<field name="plmn" start=15 end=17 type="uint8_t"/>
-		<field name="operator_name_len" start=21 type="uint8_t"/>
-		<field name="operator_name" start=22 end=101 type="uint8_t"/>
-		<field name="hplmn_or_spdi" start=105 type="uint8_t"/>
-		<field name="hplmn_length" start=106 type="uint8_t"/>
-		<field name="rssi" start=123 end=124 type="uint16_t"/>
-		<field name="ecio" start=125 end=126 type="uint16_t"/>
-		<field name="modem_gsm_icon_ind" start=673 type="uint8_t"/>
+	<structure name="network_state_info_event" length="677">
+		<field name="change_field" start="0" end="7" type="uint8_t"/>
+		<field name="new_value" start="8" type="uint8_t"/>
+		<field name="servce_domain" start="9" type="uint8_t"/>
+		<field name="service_capability" start="10" type="uint8_t"/>
+		<field name="gprs_attached" start="11" type="uint8_t"/>
+		<field name="roam" start="12" end="13" type="uint16_t"/>
+		<field name="plmn" start="15" end="17" type="uint8_t"/>
+		<field name="operator_name_len" start="21" type="uint8_t"/>
+		<field name="operator_name" start="22" end="101" type="uint8_t"/>
+		<field name="hplmn_or_spdi" start="105" type="uint8_t"/>
+		<field name="hplmn_length" start="106" type="uint8_t"/>
+		<field name="rssi" start="123" end="124" type="uint16_t"/>
+		<field name="ecio" start="125" end="126" type="uint16_t"/>
+		<field name="modem_gsm_icon_ind" start="673" type="uint8_t"/>
 	</structure>
-	<structure name="cm_ph_info_available_event" length=0>
+	<structure name="cm_ph_info_available_event" length="0">
 	</structure>
-	<structure name="charger_status_event" length=13>
-		<field name="voltage" start=5 end=6 type="uint16_t"/>
+	<structure name="charger_status_event" length="13">
+		<field name="voltage" start="5" end="6" type="uint16_t"/>
 	</structure>
-	<structure name="radio_reset_ind_event" length=0>
+	<structure name="radio_reset_ind_event" length="0">
 	</structure>
-	<structure name="operator_mode_event" length=0>
+	<structure name="operator_mode_event" length="0">
 	</structure>
-	<structure name="power_state_event" length=12>
-		<field name="power_state" start=4 type="uint8_t"/>
+	<structure name="power_state_event" length="12">
+		<field name="power_state" start="4" type="uint8_t"/>
 	</structure>
-	<structure name="test_alive_event" length=0>
+	<structure name="test_alive_event" length="0">
 	</structure>
-	<structure name="get_firmware_info_resp" length=143>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
-		<field name="hci_version" start=4 type="uint8_t"/>
-		<field name="firmware_version" start=8 end=20 type="uint8_t"/>
+	<structure name="get_firmware_info_resp" length="143">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="hci_version" start="4" type="uint8_t"/>
+		<field name="firmware_version" start="8" end="20" type="uint8_t"/>
 	</structure>
-	<structure name="get_imei_resp" length=21>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
-		<field name="imei" start=4 end=20 type="uint8_t"/>
+	<structure name="get_imei_resp" length="21">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="imei" start="4" end="20" type="uint8_t"/>
 	</structure>
-	<structure name="get_imei_msg" length=4>
+	<structure name="get_imei_msg" length="4">
 	</structure>
-	<structure name="change_operation_mode_msg" length=5>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
-		<field name="operation_mode" start=4 type="uint8_t"/>
+	<structure name="change_operation_mode_msg" length="5">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="operation_mode" start="4" type="uint8_t"/>
 	</structure>
-	<structure name="test_alive_msg" length=5>
-		<field name="some_value0" start=0 type="uint8_t"/>
-		<field name="some_value1" start=4 type="uint8_t"/>
+	<structure name="test_alive_msg" length="5">
+		<field name="some_value0" start="0" type="uint8_t"/>
+		<field name="some_value1" start="4" type="uint8_t"/>
 	</structure>
-	<structure name="get_firmware_msg" length=4>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
+	<structure name="get_firmware_msg" length="4">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
 	</structure>
-	<structure name="get_phone_state_info_msg" length=4>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
+	<structure name="get_phone_state_info_msg" length="4">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
 	</structure>
-	<structure name="charger_status_msg" length=13>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
-		<field name="voltage" start=5 end=6 type="uint16_t"/>
-		<field name="mode" start=8 type="uint8_t"/>
-		<field name="rc" start=12 type="uint8_t"/>
+	<structure name="charger_status_msg" length="13">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="voltage" start="5" end="6" type="uint16_t"/>
+		<field name="mode" start="8" type="uint8_t"/>
+		<field name="rc" start="12" type="uint8_t"/>
 	</structure>
-	<structure name="charging_msg" length=9>
-		<field name="ref_id" start=0 end=3 type="uint32_t"/>
-		<field name="mode" start=5 type="uint8_t"/>
-		<field name="voltage" start=6 end=7 type="uint16_t"/>
-		<field name="rc" start=8 type="uint8_t"/>
+	<structure name="charging_msg" length="9">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="mode" start="5" type="uint8_t"/>
+		<field name="voltage" start="6" end="7" type="uint16_t"/>
+		<field name="rc" start="8" type="uint8_t"/>
 	</structure>
-	<structure name="test_alive_resp" length=0>
+	<structure name="test_alive_resp" length="0">
 	</structure>
 </structures>
