@@ -60,6 +60,7 @@ PKG_CHECK_MODULES(DEPS,
   gthread-2.0 >= $GLIB_REQUIRED
   gee-1.0 >= $GEE_REQUIRED
   fsotransport-2.0 >= $FSOT_REQUIRED)
+  gio-2.0 >= $GLIB_REQUIRED)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 
@@ -73,6 +74,8 @@ AC_CONFIG_FILES([
 	libmsmcomm/src/Makefile
 	libmsmcomm/vapi/Makefile
 	libmsmcomm/tests/Makefile
+	msmsh/Makefile
+	msmsh/src/Makefile
 	msmvterm/Makefile
 	msmvterm/src/Makefile
 ])

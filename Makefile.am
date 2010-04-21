@@ -3,7 +3,8 @@ NULL =
 SUBDIRS = \
 	msmcommd \
 	libmsmcomm \
-	msmvterm
+	msmsh \
+	msmvterm \
 	$(NULL)
 	
 MAINTAINERCLEANFILES = aclocal.m4 compile config.guess config.sub \
