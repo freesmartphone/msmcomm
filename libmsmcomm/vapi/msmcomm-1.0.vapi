@@ -405,6 +405,9 @@ namespace Msmcomm
     [CCode (cname = "msmcomm_check_hci_version", cheader_filename = "msmcomm.h")]
     public bool checkHciVersion(uint version);
 
+    [CCode (cname = "msmcomm_launch_daemon", cheader_filename = "msmcomm.h")]
+    public bool launchDaemon(string[] args); 
+
     [Compact]
     [CCode (cname = "struct msmcomm_context", free_function = "msmcomm_shutdown", cheader_filename = "msmcomm.h")]
     public class Context

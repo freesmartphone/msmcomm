@@ -241,7 +241,7 @@ struct msmcomm_context
 	void *log_data;
 };
 
-int				msmcomm_launch_daemon();
+int				msmcomm_launch_daemon(char *argv[]);
 
 int				msmcomm_init
 	(struct msmcomm_context *ctx);
