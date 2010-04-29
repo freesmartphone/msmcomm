@@ -19,28 +19,21 @@
  *
  **/
 
-using GLib;
-
-public MainLoop loop;
-
-public static void SIGINT_handler( int signum )
-{
-    Posix.signal( signum, null ); // restore original signal handler
-    loop.quit();
-    Readline.free_line_state();
-    Readline.cleanup_after_signal();
-}
 
 public int main( string[] args )
 {
-    loop = new MainLoop( null, false );
-    Posix.signal( Posix.SIGINT, SIGINT_handler );
+	Gtk.init(ref args);
+	
+	try {
+		var ctrl = new Msmcomm.Controller();
+		ctrl.setup();
+		ctrl.launch();
+	}
+	catch (Msmcomm.ControllerError err) {
+		stdout.printf(err.message);
+	}
 
-    var shell = new Msmcomm.Shell();
+	Gtk.main();
 
-    Idle.add(shell.setup);
-    loop.run();
-    stdout.printf( "\nGoodbye.\n" );
-
-    return 0;
+	return 0;
 }

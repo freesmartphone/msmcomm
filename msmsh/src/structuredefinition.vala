@@ -1,5 +1,5 @@
 /**
- * This file is part of msmvterm.
+ * This file is part of msmsh.
  *
  * (C) 2010 Simon Busch <morphis@gravedo.de>
  *
@@ -36,7 +36,7 @@ public enum FieldType {
 	INT32,
 }
 
-public FieldType stringToFieldType(string val) {
+public FieldType string_to_field_type(string val) {
 	switch (val) {
 		case "uint8_t":
 			return FieldType.UINT8;
@@ -55,20 +55,20 @@ public FieldType stringToFieldType(string val) {
 	return FieldType.INVALID;
 }
 
-public class Field {
-	public string Name { get; set; }
-	public FieldType Type { get; set; }
-	public int OffsetStart { get; set; }
-	public int OffsetEnd { get; set; }
+public class StructureField {
+	public string name { get; set; }
+	public FieldType f_type { get; set; }
+	public int offset_start { get; set; }
+	public int offset_end { get; set; }
 }
 
 public class StructureDefinition {
-	public string Name { get; set; }
-	public int Length { get; set; }
-	public Gee.ArrayList<Field> Fields { get; set; }
+	public string name { get; set; }
+	public int length { get; set; }
+	public Gee.ArrayList<StructureField> fields { get; set; }
 	
 	public StructureDefinition() {
-		Fields = new Gee.ArrayList<Field>();
+		fields = new Gee.ArrayList<StructureField>();
 	}
 }
 
@@ -79,13 +79,13 @@ public class StructureDefinitionReader : Object
 	private StructureDefinition _currentStructureDef;
 	private bool _inStructure = false;
 	
-	public Gee.ArrayList<StructureDefinition> Structures { get; set; }
-	public string DomainName { get; set; default = "<unknown>"; }
+	public Gee.ArrayList<StructureDefinition> structures { get; set; }
+	public string domain_name { get; set; default = "<unknown>"; }
 
 
 	construct {
 		_context = new GLib.MarkupParseContext(_parser, 0, this, destroy); 
-		Structures = new Gee.ArrayList<StructureDefinition>();
+		structures = new Gee.ArrayList<StructureDefinition>();
 		_currentStructureDef = null;
 	}
 
@@ -129,25 +129,25 @@ public class StructureDefinitionReader : Object
 
 	private void beginStructure(string name, int length) {
 		_currentStructureDef = new StructureDefinition();
-		_currentStructureDef.Name = name;
-		_currentStructureDef.Length = length;
+		_currentStructureDef.name = name;
+		_currentStructureDef.length = length;
 		_inStructure = true;
 	}
 
 	private void addField(string name, int start, int end, FieldType type) {
 		if (_currentStructureDef != null) {
-			var field = new Field();
-			field.Name = name;
-			field.OffsetStart = start;
-			field.OffsetEnd = end;
-			field.Type = type;
-			_currentStructureDef.Fields.add(field);
+			var field = new StructureField();
+			field.name = name;
+			field.offset_start = start;
+			field.offset_end = end;
+			field.f_type = type;
+			_currentStructureDef.fields.add(field);
 		}
 	}
 
 	private void endStructure() {
 		if (_currentStructureDef != null) {
-			Structures.add(_currentStructureDef);
+			structures.add(_currentStructureDef);
 			_currentStructureDef = null;
 		}
 		_inStructure = false;
@@ -172,7 +172,7 @@ public class StructureDefinitionReader : Object
 		
 		switch (elementName) {
 			case "structures":
-				DomainName = getAttrValue("domain", attrNames, attrValues);
+				domain_name = getAttrValue("domain", attrNames, attrValues);
 				break;
 			case "structure":
 				name = getAttrValue("name", attrNames, attrValues);
@@ -194,7 +194,7 @@ public class StructureDefinitionReader : Object
 				if (offsetEnd == "") offsetEnd = "0";
 				
 				addField(name, offsetStart.to_int(), offsetEnd.to_int(), 
-						 stringToFieldType(typeName));
+						 string_to_field_type(typeName));
 				break;
 			default:
 				break;
@@ -219,7 +219,7 @@ public class StructureDefinitionReader : Object
 
 public class StructureDefinitionWriter {
 	public Gee.ArrayList<StructureDefinition> Structures { get; set; }
-	public string DomainName { get; set; default = "<unknown>"; }
+	public string domain_name { get; set; default = "<unknown>"; }
 	
 	public void write(string path) {
 		try {
@@ -228,10 +228,10 @@ public class StructureDefinitionWriter {
 			if (file.query_exists(null)) {
 				var dataStream = new DataOutputStream(fileStream);
 				dataStream.put_string("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n", null);
-				dataStream.put_string(@"<structures domain=\"$(DomainName)\">\n", null);
+				dataStream.put_string(@"<structures domain=\"$(domain_name)\">\n", null);
 				
 				foreach (var structure in Structures) {
-					dataStream.put_string(@"\t<structure name=\"$(structure.Name)\" length=\"$(structure.Length)\"", null);
+					dataStream.put_string(@"\t<structure name=\"$(structure.name)\" length=\"$(structure.length)\"", null);
 					
 					dataStream.put_string(@"\t</structure>", null);
 				}

@@ -1,5 +1,5 @@
 /**
- * This file is part of msmvterm.
+ * This file is part of msmsh.
  *
  * (C) 2010 Simon Busch <morphis@gravedo.de>
  *
@@ -19,28 +19,11 @@
  *
  **/
 
-using Gee;
-
 namespace Msmcomm {
 
 public class Session {
-	public HashMap<string, ArrayList<StructureDefinition>> Domains { get; private set; }
-	public PacketDump Dump { get; private set; }
-	
-	public Session() {
-		Domains = new HashMap<string, ArrayList<StructureDefinition>>();
-	}
-	
-	public void registerStructures(string domainName, ArrayList<StructureDefinition> definitions) {
-		Domains.set(domainName, definitions);
-	}
-	
-	public void registerPacketDump(string name, PacketDump dump) {
-		Dump = dump;
-	}
-	
-	public void cleanup() {
-	}
+
 }
 
-} // namespace
+}
+

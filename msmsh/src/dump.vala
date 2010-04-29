@@ -1,5 +1,5 @@
 /**
- * This file is part of msmvterm.
+ * This file is part of msmsh.
  *
  * (C) 2010 Simon Busch <morphis@gravedo.de>
  *
@@ -24,52 +24,47 @@ using GLib;
 
 namespace Msmcomm {
 
-public enum PacketType {
+public enum FlowDirection {
 	INVALID,
-	READ,
-	WRITE,
+	IN,
+	OUT,
 }
 
-public class Packet {
-	public uint8[] Data { get; set; }
-	public uint32 Size { get; set; }
-	public PacketType Type { get; set; }
+public class RawDataBuffer {
+	public uint8[] data { get; set; }
+	public uint32 size { get; set; }
+	public FlowDirection direction { get; set; }
 }
 
-public PacketType byteToPacketType(uint8 byte) {
+public FlowDirection byte_to_flow_direction(uint8 byte) {
 	switch (byte) {
 		case 1:
-			return PacketType.READ;
+			return FlowDirection.IN;
 		case 2:
-			return PacketType.WRITE;
+			return FlowDirection.OUT;
 	}
-	return PacketType.INVALID;
+	return FlowDirection.INVALID;
 }
 
-public class PacketDump {
-	public int FormatRevision { get; set; default = 0; }
-	public ArrayList<Packet> Packets { get; set; }
-	
-	public PacketDump() {
-		Packets = new ArrayList<Packet>();
-	}
-}
-
-public errordomain PacketDumpReaderError {
+public errordomain DumpReaderError {
 	UNKNOWN_FILE_FORMAT,
 	COULD_NOT_LOAD_FILE,
 }
 
-public class PacketDumpReader {
+public class DumpReader {
 	private uint32 _currentPosition = 0;
-	public PacketDump CurrentDump { get; set; }
+	public ArrayList<RawDataBuffer> current_buffers { get; private set; }
+
+	public DumpReader() {
+		current_buffers = new ArrayList<RawDataBuffer>();
+	}
 	
-	public void readFromFile(string path) throws PacketDumpReaderError {
+	public void readFromFile(string path) throws DumpReaderError {
 		try {
 			var file = File.new_for_path(path);
 			
 			if (!file.query_exists(null)) {
-				throw new PacketDumpReaderError.COULD_NOT_LOAD_FILE(@"Could not find file '$(path)'");
+				throw new DumpReaderError.COULD_NOT_LOAD_FILE(@"Could not find file '$(path)'");
 			}
 			
 			var fileStream = file.read(null);
@@ -83,38 +78,38 @@ public class PacketDumpReader {
 			var signature = dataStream.read_uint32(null);
 			_currentPosition += 4;
 			if (signature != 0xdeadbeef)
-				throw new PacketDumpReaderError.UNKNOWN_FILE_FORMAT(@"Format of file '$(path)' is unknown");
-				
-			CurrentDump = new PacketDump();
-			CurrentDump.FormatRevision = dataStream.read_byte(null);
+				throw new DumpReaderError.UNKNOWN_FILE_FORMAT(@"Format of file '$(path)' is unknown");
+
+			// Ignore next byte for now ..
+			dataStream.read_byte(null);
 			_currentPosition += 1;
 			
 			while (_currentPosition < fileSize) {
 				// Ensure we can read next header completly
-				if (fileSize - _currentPosition < 5)
-					break;
+				//if (fileSize - _currentPosition < 5)
+					//break;
 					
 				// Read packet header
-				var packet = new Packet();
-				packet.Type = byteToPacketType(dataStream.read_byte(null));
-				packet.Size = dataStream.read_uint32(null);
+				var buffer = new RawDataBuffer();
+				buffer.direction =  byte_to_flow_direction(dataStream.read_byte(null));
+				buffer.size = dataStream.read_uint32(null);
 				_currentPosition += 5;
 					
 				// Read packet data
-				if (fileSize - _currentPosition >= packet.Size) {
-					packet.Data = new uint8[packet.Size];
-					dataStream.read(packet.Data, packet.Size, null);
-					_currentPosition += packet.Size;
-					CurrentDump.Packets.add(packet);
+				if (fileSize - _currentPosition >= buffer.size && 
+					buffer.size > 0) {
+					buffer.data = new uint8[buffer.size];
+					dataStream.read(buffer.data, buffer.size, null);
+					_currentPosition += buffer.size;
+					current_buffers.add(buffer);
 				}
 			}
-			
 		}
-		catch(PacketDumpReaderError err) {
+		catch(DumpReaderError err) {
 			throw err;
 		}
 		catch(GLib.Error err) {
-			throw new PacketDumpReaderError.COULD_NOT_LOAD_FILE(@"Could not load dump file '$(path)'");
+			throw new DumpReaderError.COULD_NOT_LOAD_FILE(@"Could not load dump file '$(path)'");
 		}
 	}
 }

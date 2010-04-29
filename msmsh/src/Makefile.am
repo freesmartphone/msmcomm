@@ -6,9 +6,10 @@ VALAC_ARGS = \
 	--pkg glib-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
-	--pkg readline \
+	--pkg gtk+-2.0 \
 	--pkg config \
 	--thread \
+	-g \
 	--save-temps \
 	--basedir $(top_srcdir)
 
@@ -23,13 +24,13 @@ sbin_PROGRAMS = msmsh
 
 msmsh_VALASOURCES = \
 	main.vala \
-	shell.vala \
-	logger.vala \
-	commands.vala \
-	session.vala \
 	controller.vala \
 	structuredefinition.vala \
 	dump.vala \
+	tvbuf.vala \
+	dissector.vala \
+	packetlist.vala \
+	packetdefinition.vala \
 	$(NULL)
 
 msmsh_SOURCES = \
