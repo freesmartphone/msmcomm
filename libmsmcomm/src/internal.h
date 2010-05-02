@@ -213,5 +213,8 @@ unsigned int network_plmn_to_value(const uint8_t *plmn);
               name, \
               has_submsg_id)
 
+uint16_t crc16_calc(const uint8_t *data, uint32_t len);
+
+
 #endif
 
