@@ -19,10 +19,24 @@
  *
  **/
 
+using Gee;
+
 namespace Msmcomm {
 
-public class Session {
+public class Session : GLib.Object {
+	public Configuration configuration { get; set; }
+	public ArrayList<PacketDefinition> definitions { get; set; }
+	public ArrayList<StructureDefinition> structures { get; set; }
 
+	construct {
+		configuration = new Configuration();
+		definitions = new ArrayList<PacketDefinition>();
+		structures = new ArrayList<StructureDefinition>();
+	}
+
+	public void appendStructureDefinitions(ArrayList<StructureDefinition> structdefs) {
+		structures.insert_all(structures.size, structdefs);
+	}
 }
 
 }

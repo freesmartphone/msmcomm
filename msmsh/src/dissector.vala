@@ -126,10 +126,6 @@ public interface IResult : GLib.Object {
 	public abstract string append_to_title { get; }
 }
 
-public interface IDissector : GLib.Object {
-	public abstract IResult? run(RawDataBuffer buffer);
-}
-
 public class Frame : IResult, GLib.Object {
 	public uint8 addr { get; set; }
 	public FrameType fr_type { get; set; default = FrameType.NULL; }
@@ -180,8 +176,8 @@ public class Message : IResult, GLib.Object {
 	}
 }
 
-public class LinkLayerDissector : IDissector, GLib.Object {
-	public IResult? run(RawDataBuffer buffer) {
+public class LinkLayerDissector : GLib.Object {
+	public Frame? run(RawDataBuffer buffer) {
 		Tvbuff tvb = new Tvbuff(buffer);
 		uint8 seq_ack;
 		uint8[] crc;
@@ -261,8 +257,8 @@ public class LinkLayerDissector : IDissector, GLib.Object {
 	}
 }
 
-public class StructureDefinitionDissector : IDissector, GLib.Object {
-	public IResult? run(RawDataBuffer buffer) {
+public class StructureDefinitionDissector : GLib.Object {
+	public Message? run(RawDataBuffer? buffer) {
 		var msg = new Message();
 
 		// FIXME
@@ -271,23 +267,25 @@ public class StructureDefinitionDissector : IDissector, GLib.Object {
 	}
 }
 
+public class Packet {
+	public Frame frame { get; set; }
+	public Message message { get; set; }
+}
+
 public class DissectorWorker {
-	private ArrayList<IDissector> _dissectors;
+	private LinkLayerDissector linkLayerDissector;
+	private StructureDefinitionDissector structureDefinitionDissector;
 
 	public DissectorWorker() {
-		_dissectors = new ArrayList<IDissector>();
-		_dissectors.add(new LinkLayerDissector());
-		_dissectors.add(new StructureDefinitionDissector());
+		linkLayerDissector = new LinkLayerDissector();
+		structureDefinitionDissector = new StructureDefinitionDissector();
 	}
 
-	public Gee.ArrayList<IResult> run(RawDataBuffer buffer) {
-		var results = new Gee.ArrayList<IResult>();
-		foreach (var dissector in _dissectors) {
-			IResult result = dissector.run(buffer);
-			if (result != null) 
-				results.add(result);
-		}
-		return results;
+	public Packet run(RawDataBuffer buffer) {
+		var p = new Packet();
+		p.frame = linkLayerDissector.run(buffer);
+		p.message = structureDefinitionDissector.run(null);
+		return p;
 	}
 }
 

@@ -34,58 +34,25 @@ public errordomain ControllerError {
 
 public class Controller : GLib.Object {
 	private PacketlistView _packetListView;
-	private GLib.KeyFile _config;
-	private Gee.ArrayList<PacketDefinition> _definitions;
-	private Gee.ArrayList<StructureDefinition> _structures;
-
+	private Session current_session;
+	
 	construct {
-		_structures = new Gee.ArrayList<StructureDefinition>();
 	}
 
 	public void setup() throws ControllerError {
 		string home_path = Environment.get_variable("HOME");
-		string config_path = @"$(home_path)/.msmsh_config";
-		string structures_path = "";
-		string packetdefinitions_path = "";
 		
-		
-		try {
-			_config = new GLib.KeyFile();
-			
-			_config.load_from_file(config_path, GLib.KeyFileFlags.NONE);
-		
-			if (!_config.has_group("global") || !_config.has_key("global", "structures_path")) {
-				string msg = @"ERROR: Could not load structures path from config file";
-				throw new ControllerError.NO_STRUCTURES_PATH_FOUND(msg);
-			}
-
-			structures_path = _config.get_string("global", "structures_path");
-			loadStructureDefinitions(structures_path);
-
-			if (!_config.has_group("global") || !_config.has_key("global", "packetdef_path")) {
-				string msg = @"ERROR: Could not load packet definitions path from config file";
-				throw new ControllerError.NO_PACKET_DEFINITION_PATH_FOUND(msg);
-			}
-
-			packetdefinitions_path = _config.get_string("global", "packetdef_path");
-			loadPacketDefinitions(packetdefinitions_path);
-		}
-		catch (ControllerError err) {
-			throw err;
-		}
-		catch (GLib.Error err) {
-			string msg = @"Could not load configuration from '$(config_path)'";
-			throw new ControllerError.ERROR_WHILE_READ_CONFIGURATION(msg);
-		}
+		current_session = new Session();
+		current_session.configuration.loadFromFile(home_path);
 	}
 
-	private void loadStructureDefinitions(string path) throws ControllerError {
+	private void loadStructureDefinitionsIntoSession(Session session, string path) throws ControllerError {
 		try {
 			var directory = File.new_for_path(path);
 			var enumerator = directory.enumerate_children(FILE_ATTRIBUTE_STANDARD_NAME, 0, null);
 			FileInfo fileInfo;
 			while ((fileInfo = enumerator.next_file(null)) != null) {
-				loadStructureDefintion(@"$(path)/$(fileInfo.get_name())");
+				session.appendStructureDefinitions(loadStructureDefintion(@"$(path)/$(fileInfo.get_name())"));
 			}
 		}
 		catch (Error err) {
@@ -94,22 +61,25 @@ public class Controller : GLib.Object {
 		}
 	}
 
-	private void loadStructureDefintion(string path) throws ControllerError {
+	private Gee.ArrayList<StructureDefinition> loadStructureDefintion(string path) throws ControllerError {
 		try {
 			var reader = new StructureDefinitionReader();
 			reader.readFromFile(path);
-			_structures.insert_all(_structures.size, reader.structures);
 			stdout.printf(@"Read $(reader.structures.size) structures for domain '$(reader.domain_name)'\n");
+
+			return reader.structures;
 		}
 		catch (StructureDefinitionError err) {
 			stdout.printf(@"Could not read structure definitions from '$(path)'\n");
 		}
+
+		return null;
 	}
 
 	private void loadPacketDefinitions(string path) throws ControllerError {
 		try {
 			var reader = new PacketDefinitionReader();
-			_definitions = reader.read_from_file(path);
+			current_session.definitions = reader.read_from_file(path);
 		}
 		catch (PacketDefinitionError err) {
 			stdout.printf(@"Could not read packet definitions from '$(path)'\n");
@@ -134,14 +104,20 @@ public class Controller : GLib.Object {
 		}
 	}
 
-	private void displayDump(Gee.ArrayList<RawDataBuffer> data_buffers) {
+	private void displayDump(Gee.ArrayList<RawDataBuffer> buffers) {
 		_packetListView.clearPacketList();
 		
+		var packets = new Gee.ArrayList<Packet>();
 		var worker = new DissectorWorker();
-		foreach (RawDataBuffer buffer in data_buffers) {
-			Gee.ArrayList<IResult> results = worker.run(buffer);
-			_packetListView.append_packet_with_results(results);
+		Packet p;
+
+		foreach (var buffer in buffers) {
+			p = worker.run(buffer);
+			if (p != null)
+				packets.add(p);
 		}
+
+		_packetListView.append_packets(packets);
 	}
 
 	public void onQuit() {

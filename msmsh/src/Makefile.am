@@ -31,6 +31,8 @@ msmsh_VALASOURCES = \
 	dissector.vala \
 	packetlist.vala \
 	packetdefinition.vala \
+	configuration.vala \
+	session.vala \
 	$(NULL)
 
 msmsh_SOURCES = \
