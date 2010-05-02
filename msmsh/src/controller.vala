@@ -34,7 +34,7 @@ public errordomain ControllerError {
 
 public class Controller : GLib.Object {
 	private PacketlistView _packetListView;
-	private Session current_session;
+	private Session currentSession;
 	
 	construct {
 	}
@@ -42,8 +42,8 @@ public class Controller : GLib.Object {
 	public void setup() throws ControllerError {
 		string home_path = Environment.get_variable("HOME");
 		
-		current_session = new Session();
-		current_session.configuration.loadFromFile(home_path);
+		currentSession = new Session();
+		currentSession.configuration.loadFromFile(home_path);
 	}
 
 	private void loadStructureDefinitionsIntoSession(Session session, string path) throws ControllerError {
@@ -79,7 +79,7 @@ public class Controller : GLib.Object {
 	private void loadPacketDefinitions(string path) throws ControllerError {
 		try {
 			var reader = new PacketDefinitionReader();
-			current_session.definitions = reader.read_from_file(path);
+			currentSession.definitions = reader.read_from_file(path);
 		}
 		catch (PacketDefinitionError err) {
 			stdout.printf(@"Could not read packet definitions from '$(path)'\n");
@@ -108,7 +108,7 @@ public class Controller : GLib.Object {
 		_packetListView.clearPacketList();
 		
 		var packets = new Gee.ArrayList<Packet>();
-		var worker = new DissectorWorker();
+		var worker = new DissectorWorker(currentSession);
 		Packet p;
 
 		foreach (var buffer in buffers) {

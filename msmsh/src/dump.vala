@@ -32,7 +32,7 @@ public enum FlowDirection {
 
 public class RawDataBuffer {
 	public uint8[] data { get; set; }
-	public uint32 size { get; set; }
+	public uint size { get; set; }
 	public FlowDirection direction { get; set; }
 }
 

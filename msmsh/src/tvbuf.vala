@@ -36,11 +36,15 @@ public class Tvbuff {
 		return result;
 	}
 
-	public uint8[] read_range_uint8(uint start, uint end) throws TvbuffError {
-		uint8[] buf = new uint8[end-start];
 
-		for (uint n=start; n<end; n++)
-			buf[n-start] = _buffer.data[n];
+	public uint8[] read_range_uint8(uint start, uint len) throws TvbuffError {
+		stdout.printf(@"read_range_uint8: start=$(start) len=$(len)\n");
+
+		uint8[] buf = new uint8[len];
+		for (uint n=start; n<start+len; n++) {
+			buf[n] = _buffer.data[n];
+		}
+
 		
 		return buf;
 	}

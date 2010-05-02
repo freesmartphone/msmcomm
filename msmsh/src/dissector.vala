@@ -126,12 +126,12 @@ public interface IResult : GLib.Object {
 	public abstract string append_to_title { get; }
 }
 
-public class Frame : IResult, GLib.Object {
+public class FrameInfo : IResult, GLib.Object {
 	public uint8 addr { get; set; }
 	public FrameType fr_type { get; set; default = FrameType.NULL; }
 	public uint8 seq { get; set; }
 	public uint8 ack { get; set; }
-	public uint8[] payload { get; set; }
+	public RawDataBuffer payload { get; set; }
 	public bool is_valid { get; set; default = true; }
 	public bool is_complete { get; set; default = true; }
 	public FsAction fs_action { get; set; default = FsAction.READ; }
@@ -162,7 +162,7 @@ public class Frame : IResult, GLib.Object {
 	}
 }
 
-public class Message : IResult, GLib.Object {
+public class MessageInfo : IResult, GLib.Object {
 	public string append_to_title {
 		get {
 			return @"MessageType=FIXME";
@@ -177,114 +177,67 @@ public class Message : IResult, GLib.Object {
 }
 
 public class LinkLayerDissector : GLib.Object {
-	public Frame? run(RawDataBuffer buffer) {
-		Tvbuff tvb = new Tvbuff(buffer);
-		uint8 seq_ack;
-		uint8[] crc;
-		uint8[] payload;
+	private Session session;
 
-		var fr = new Frame();
-
-		fr.fs_action = byte_to_fs_action(buffer.direction);
-
-		// check if length is a valid frame length
-		if (tvb.length < 5)
-			return null;
-
-		// do we have a valid frame?
-		uint32 end = 0;
-		for (uint32 n=tvb.length-1; n>0; n--) {
-			uint8 byte = tvb.read_uint8(n);
-			if (byte == 0x7e) {
-				end = n;
-				break;
-			}
-		}
-
-		if (end <= 0) {
-			fr.is_complete = false;
-		}
+	public LinkLayerDissector(Session session) {
+		this.session = session;
+	}
+	
+	public FrameInfo? run(RawDataBuffer buffer) {
+		var fri = new FrameInfo();
 		
-		// extract basic information from buffer
-		fr.addr = tvb.read_uint8(0);
-		fr.fr_type = byte_to_frame_type(tvb.read_uint8(1) >> 4);
-		seq_ack = tvb.read_uint8(2);
-		fr.seq = (seq_ack & 0xf0) >> 4;
-		fr.ack = (seq_ack & 0x0f);
+		fri.fs_action = byte_to_fs_action(buffer.direction);
 
-		// FIXME crc check
-
-		return fr;
-	}
-
-	private bool checkPayload(uint8[] payload) {
-		// FIXME
-		return false;
-	}
-
-	private uint8[] decodePayload(uint8[] payload) {
-		uint real_size = 0;
-		uint8 byte = 0x0, next_byte = 0x0;
-		uint8[] decoded_payload = new uint8[payload.length];
-		uint8[] result = null;
-
-		for (int n = 0; n < payload.length; n++) {
-			byte = payload[n];
-			if (n < payload.length - 1) {
-				next_byte = payload[n+1];
-				if (byte == 0x7d) {
-					switch (next_byte) {
-					case 0x5e:
-						decoded_payload[n] = 0x7e;
-						n++;
-						break;
-					case 0x5d:
-						decoded_payload[n] = 0x7d;
-						n++;
-						break;
-					}
-				}
-			}
-			else {
-				decoded_payload[n] = byte;
-			}
-			real_size++;
+		var fr = new LowLevel.Frame.new_from_buffer(buffer.data, buffer.size);
+		if (fr != null) {
+			fri.ack = fr.ack;
+			fri.seq = fr.seq;
+			fri.addr = fr.addr;
+			fri.fr_type = byte_to_frame_type(fr.type);
+			fri.is_valid = fr.is_valid == 1 ? true : false;
+			fri.payload = new RawDataBuffer();
+			fri.payload.data = fr.payload;
+			fri.payload.size = fr.payload_size;
 		}
 
-		result = new uint8[real_size];
-		GLib.Memory.copy(result, decoded_payload, real_size);
-		return result;
+		return fri;
 	}
 }
 
 public class StructureDefinitionDissector : GLib.Object {
-	public Message? run(RawDataBuffer? buffer) {
-		var msg = new Message();
+	private Session session;
 
-		// FIXME
+	public StructureDefinitionDissector(Session session) {
+		this.session = session;
+	}
+	
+	public MessageInfo? run(RawDataBuffer? buffer) {
+		var msg = new MessageInfo();
+
+		
 
 		return msg;
 	}
 }
 
 public class Packet {
-	public Frame frame { get; set; }
-	public Message message { get; set; }
+	public FrameInfo frame { get; set; }
+	public MessageInfo message { get; set; }
 }
 
 public class DissectorWorker {
 	private LinkLayerDissector linkLayerDissector;
 	private StructureDefinitionDissector structureDefinitionDissector;
 
-	public DissectorWorker() {
-		linkLayerDissector = new LinkLayerDissector();
-		structureDefinitionDissector = new StructureDefinitionDissector();
+	public DissectorWorker(Session session) {
+		linkLayerDissector = new LinkLayerDissector(session);
+		structureDefinitionDissector = new StructureDefinitionDissector(session);
 	}
 
 	public Packet run(RawDataBuffer buffer) {
 		var p = new Packet();
 		p.frame = linkLayerDissector.run(buffer);
-		p.message = structureDefinitionDissector.run(null);
+		p.message = structureDefinitionDissector.run(p.frame.payload);
 		return p;
 	}
 }

@@ -2,12 +2,14 @@ NULL =
 
 VALAC_ARGS = \
 	--vapidir ../vapi \
+	--vapidir $(top_srcdir)/libmsmcomm/vapi \
 	--pkg posix \
 	--pkg glib-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
 	--pkg gtk+-2.0 \
 	--pkg config \
+	--pkg msmcomm-1.0 \
 	--thread \
 	-g \
 	--save-temps \
@@ -15,6 +17,7 @@ VALAC_ARGS = \
 
 AM_CFLAGS = \
 	$(DEPS_CFLAGS) \
+	-I$(top_srcdir)/libmsmcomm/src \
 	-include $(CONFIG_HEADER) \
 	$(NULL)
 
@@ -44,13 +47,13 @@ msmsh_SOURCES = \
 	touch $@
 
 msmsh_LDADD = \
-	$(LIBREADLINE) \
-	$(LIBHISTORY) \
 	$(DEPS_LIBS) \
+	../../libmsmcomm/src/libmsmcomm.la \
 	$(NULL)
 
 EXTRA_DIST = \
 	MAINTAINERS \
+	util.c \
 	$(msmsh_VALASOURCES) \
 	$(BUILT_SOURCES) \
 	$(NULL)

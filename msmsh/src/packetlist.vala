@@ -63,7 +63,6 @@ public class PacketlistView : GLib.Object {
 	private RightLabel label_ack;
 	private RightLabel label_seq;
 	private RightLabel label_read_write;
-	private RightLabel label_is_complete;
 	private RightLabel label_is_valid;
 	private TextView packetDumpView;
 
@@ -128,14 +127,10 @@ public class PacketlistView : GLib.Object {
 		label_is_valid = new RightLabel();
 		table.attach(new LeftLabel("Is Valid:"), 0, 1, 3, 4, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
 		table.attach(label_is_valid, 1, 2, 3, 4, AttachOptions.EXPAND|AttachOptions.FILL, AttachOptions.FILL, 0, 0);
-		
-		label_is_complete = new RightLabel();
-		table.attach(new LeftLabel("Is Complete:"), 0, 1, 4, 5, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
-		table.attach(label_is_complete, 1, 2, 4, 5, AttachOptions.EXPAND|AttachOptions.FILL, AttachOptions.FILL, 0, 0);
-		
+
 		label_read_write = new RightLabel();
-		table.attach(new LeftLabel("Read/Write:"), 0, 1, 6, 7, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
-		table.attach(label_read_write, 1, 2, 6, 7, AttachOptions.EXPAND|AttachOptions.FILL, AttachOptions.FILL, 0, 0);
+		table.attach(new LeftLabel("Read/Write:"), 0, 1, 4, 5, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
+		table.attach(label_read_write, 1, 2, 4, 5, AttachOptions.EXPAND|AttachOptions.FILL, AttachOptions.FILL, 0, 0);
 
 		scroll = new ScrolledWindow(null, null);
 		scroll.set_policy(PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
@@ -153,12 +148,94 @@ public class PacketlistView : GLib.Object {
 		
 		packetDumpView = new Gtk.TextView();
 		packetDumpView.editable = false;
+
+		Pango.FontDescription font = Pango.FontDescription.from_string("Terminus 10");
+		packetDumpView.modify_font(font);
+		
 		scroll = new Gtk.ScrolledWindow(null, null);
 		scroll.set_policy (Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
 		scroll.add(packetDumpView);
 		vbox.pack_start(scroll, true, true, 0);
 	}
 
+	private void showPacketPayload(RawDataBuffer buffer) {
+		string line = "", ascii = "", text = "";
+		uint pos = 0, count = 0, offset = 0;
+		uint8 byte;
+
+		for (int n = (int)buffer.size-1; n >= 0; n--) {
+			byte = buffer.data[pos];
+			pos++;
+			count++;
+
+			if (line.length > 0)
+				line += " ";
+
+			line += "%02x".printf(byte);
+			
+			if (byte > 32 && byte < 128)
+				ascii += "%c".printf(byte);
+			else
+				ascii += ".";
+			
+			if (count >= 16) {
+				text += "%08u %s %s\n".printf(offset, line, ascii);
+				line = "";
+				ascii = "";
+				offset += count;
+				count = 0;
+			}
+		}
+
+		if (count != 0) {
+			while (count++ < 16) {
+				line += "   ";
+			}
+			text += "%08u %s %s\n".printf(offset, line, ascii);
+		}
+		packetDumpView.buffer.text = text;
+	}
+
+/*
+void hexdump(const uint8_t *data, uint32_t len)
+{
+	char ascii[VALUES_PER_LINE + 1];
+	int count;
+	int offset;
+	uint8_t *p;
+	if (!data)
+		return;
+	p = data;
+
+	memset( ascii, 0, VALUES_PER_LINE + 1 );
+	count = 0;
+
+	while (len--)
+	{
+		uint8_t b = *p++;
+		printf("%02x ", b & 0xff);
+		if ( b > 32 && b < 128 )
+			ascii[count] = b;
+		else
+			ascii[count] = '.';
+		count++;
+
+		if (count == VALUES_PER_LINE) {
+			printf("      %s\n", ascii);
+			memset( ascii, 0, VALUES_PER_LINE + 1 );
+			count = 0;
+		}
+	}
+
+	if ( count != 0 )
+	{
+		while ( count++ < VALUES_PER_LINE )
+		{
+			printf( "   " );
+		}
+		printf("      %s\n", ascii);
+	}
+}*/
 
 	private Packet? getCurrentPacket() {
 		Gtk.TreePath p;
@@ -192,11 +269,9 @@ public class PacketlistView : GLib.Object {
 			label_is_valid.set_text("true");
 		else 
 			label_is_valid.set_text("false");
-		if (packet.frame.is_complete)
-			label_is_complete.set_text("true");
-		else 
-			label_is_complete.set_text("false");
 		label_read_write.set_text(fs_action_to_string(packet.frame.fs_action));
+
+		showPacketPayload(packet.frame.payload);
 	}
 
 	private void onOpenClicked() {
