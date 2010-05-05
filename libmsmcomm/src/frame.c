@@ -79,7 +79,7 @@ struct msmcomm_frame * msmcomm_frame_new_from_buffer(uint8_t *buffer, uint32_t l
 		len = p - start;
 
 		/* copy data for decoding */
-		tmp = calloc(sizeof(uint8_t), len);
+		tmp = (uint8_t*)alloca(sizeof(uint8_t) * len);
 		memcpy(tmp, buffer, len);
 		fr->payload = tmp;
 		fr->payload_len = len;
@@ -105,7 +105,7 @@ struct msmcomm_frame * msmcomm_frame_new_from_buffer(uint8_t *buffer, uint32_t l
 		if (len > 5) {
 			fr->payload = (uint8_t*)malloc(sizeof(uint8_t) * (tmp_len - 3));
 			memcpy(fr->payload, &tmp[3], tmp_len - 3);
-			fr->payload_len = tmp_len - 3;
+			fr->payload_len = tmp_len - 6;
 		}
 	}
 
@@ -180,7 +180,7 @@ void msmcomm_frame_encode(struct msmcomm_frame *fr)
 	if (!fr || fr->payload_len == 0) 
 		return;
 
-	uint8_t *encoded_data = (uint8_t*)calloc(fr->payload_len, sizeof(uint8_t));
+	uint8_t *encoded_data = (uint8_t*)alloca(fr->payload_len * sizeof(uint8_t));
 	uint8_t *p = encoded_data;
 	uint8_t *data = fr->payload;
 	uint32_t encoded_data_len = fr->payload_len;
@@ -212,7 +212,7 @@ void msmcomm_frame_decode(struct msmcomm_frame *fr)
 	if (!fr || fr->payload_len == 0) 
 		return;
 	
-	uint8_t *decoded_data = calloc(fr->payload_len, sizeof(uint8_t));
+	uint8_t *decoded_data = (uint8_t*)alloca(fr->payload_len * sizeof(uint8_t));
 	uint8_t *p = decoded_data;
 	uint8_t *data = fr->payload;
 	uint8_t *tmp = 0;
