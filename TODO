@@ -1,10 +1,8 @@
 msmcommd:
-- implement daemon mode
-- logging: logfile, enable/disable
-- memory usage
 - connection hangup (0 bytes read)
 
 libmsmcomm:
+- restart/shutdown daemon
 
 msmvterm:
 
