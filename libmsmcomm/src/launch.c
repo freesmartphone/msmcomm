@@ -22,6 +22,9 @@
 
 #define BUF_MAX			200
 
+pid_t _daemon_pid = 0;
+int _daemon_launched = 0;
+
 static const char * bin_paths[] = {
 	"/usr/bin",
 	"/usr/local/bin",
@@ -30,17 +33,16 @@ static const char * bin_paths[] = {
 	NULL
 };
 
-int msmcomm_is_daemon_running() {
-	pid_t pid;
-	// FIXME
-	return 0;
-}
-
-int msmcomm_launch_daemon(char *argv[]) {
+int msmcomm_launch_daemon(const char *workdir, char *argv[]) {
 	int n = 0, fd;
-	char *basepath = NULL;
+	const char *basepath = NULL;
 	char buf[BUF_MAX];
 	pid_t pid, sid;
+	struct stat st;
+	
+	/* we don't support launched the daemon twice */
+	if (_daemon_launched)
+		return -1;
 
 	/* try to find the msmcommd executable */
 	while (1) {
@@ -57,7 +59,6 @@ int msmcomm_launch_daemon(char *argv[]) {
 		n++;
 	}
 
-	/* we have found the right path for msmcommd? */
 	if (!basepath)
 		return -1;
 	
@@ -65,8 +66,13 @@ int msmcomm_launch_daemon(char *argv[]) {
 	pid = fork();
 	if (pid < 0) 
 		return -1;
-	if (pid > 0) 
+	if (pid > 0) {
+		_daemon_launched = 1;
+		/* we are the parent process and have to remember the pid of our child
+		 * process for later use */
+		_daemon_pid = pid;
 		return 1;
+	}
 
 	umask(0);
 
@@ -75,9 +81,10 @@ int msmcomm_launch_daemon(char *argv[]) {
 	if (sid < 0) 
 		exit(1);
 
-	/* create working directory */
-	mkdir("/var/run/msmcommd", 0644);
-	if (chdir("/var/run/msmcommd") < 0) 
+	/* create and change to working directory */
+	if (stat(workdir, &st) < 0)
+	    mkdir(workdir, 0644);
+	if (chdir(workdir) < 0) 
 		exit(1);
 
 	/* close unnecessary file descriptors */
@@ -85,14 +92,46 @@ int msmcomm_launch_daemon(char *argv[]) {
 	close(fileno(stdout));
 	close(fileno(stderr));
 
+    /* launch msmcomm daemon */
 	snprintf(buf, BUF_MAX, "%s/msmcommd", basepath);
 	if (execvp(buf, argv) == -1)
 		/* something went terrible wrong! */
 		exit(1);
 }
 
+int msmcomm_is_daemon_running() {
+	pid_t sid;
+	
+	if (!_daemon_launched)
+		return 0;
+	
+	/* to check if the process is running we try to get the session id of the
+	 * process. The getsid() then told us if the process is running or not */
+	sid = getsid(_daemon_pid);
+	if(sid < 0) {
+		switch (errno) {
+		case EPERM:
+			break;
+		case ESRCH:
+			return 0;
+		}
+	}
+	
+	return 1;
+}
+
 int msmcomm_shutdown_daemon() {
-	// FIXME
-	return 0;
+	int res;
+	
+	if (!_daemon_launched)
+		return 0;
+		
+	res = kill(_daemon_pid, SIGKILL);
+	if (res < 0) 
+		return 0;
+		
+	_daemon_launched = 0;
+	
+	return 1;
 }
 

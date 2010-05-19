@@ -470,7 +470,13 @@ namespace Msmcomm
     public bool checkHciVersion(uint version);
 
     [CCode (cname = "msmcomm_launch_daemon", cheader_filename = "msmcomm.h")]
-    public bool launchDaemon(string[] args); 
+    public bool launchDaemon(string workdir, string[] args); 
+    
+    [CCode (cname = "msmcomm_is_daemon_running", cheader_filename = "msmcomm.h")]
+    public bool isDaemonRunning();
+    
+    [CCode (cname = "msmcomm_shutdown_daemon", cheader_filename = "msmcomm.h")]
+    public bool shutdownDaemon();
 
     [Compact]
     [CCode (cname = "struct msmcomm_context", free_function = "msmcomm_shutdown", cheader_filename = "msmcomm.h")]
