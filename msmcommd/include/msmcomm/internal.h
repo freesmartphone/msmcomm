@@ -52,6 +52,8 @@
 
 #define DEBUG
 
+#define BUF_SIZE 256
+
 #define NEW(type, count) (type*) malloc(sizeof(type) * count)
 
 #define MSMC_DEFAULT_SERIAL_BAUDRATE	B115200
@@ -92,10 +94,10 @@
 struct msmc_context
 {
 	/* Options, flags etc. */
-	char				network_port[10];
-	char	    		serial_port[30];
-	char				network_addr[30];
-	char				relay_addr[30];
+	char				network_port[BUF_SIZE];
+	char	    		serial_port[BUF_SIZE];
+	char				network_addr[BUF_SIZE];
+	char				relay_addr[BUF_SIZE];
 	struct bsc_fd		fds[MSMC_FD_COUNT];
 
 	struct buffer		*rx_buf;
@@ -174,6 +176,24 @@ void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t l
 
 int init_relay_interface(struct msmc_context *ctx);
 void shutdown_relay_interface(struct msmc_context *ctx);
+
+enum source_type {
+	SOURCE_TYPE_NONE,
+	SOURCE_TYPE_NETWORK,
+	SOURCE_TYPE_SERIAL,
+};
+
+struct config 
+{
+	enum source_type source_type;
+	char serial_path[BUF_SIZE];
+	char network_addr[BUF_SIZE];
+	char network_port[5];
+	int log_target;
+	char log_destination[BUF_SIZE];
+};
+
+struct config *config_load(const char *filename);
 
 #endif
 

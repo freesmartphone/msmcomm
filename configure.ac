@@ -69,6 +69,7 @@ AC_SUBST(DEPS_LIBS)
 AC_CONFIG_FILES([
 	Makefile
 	msmcommd/Makefile
+	msmcommd/conf/Makefile
 	msmcommd/src/Makefile
 	msmcommd/tests/Makefile
 	libmsmcomm/Makefile

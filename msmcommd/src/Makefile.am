@@ -18,4 +18,5 @@ msmcommd_SOURCES = msmcommd.c \
                    talloc_ctx.c \
                    relay.c \
                    buffer.c \
+				   config.c \
 msmcommd_LDADD =

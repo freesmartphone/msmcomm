@@ -1,4 +1,4 @@
-SUBDIRS = src tests
+SUBDIRS = conf src tests
 
 EXTRA_DIST = \
 MAINTAINERS
