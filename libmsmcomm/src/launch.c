@@ -33,7 +33,7 @@ static const char * bin_paths[] = {
 	NULL
 };
 
-int msmcomm_launch_daemon(const char *workdir, char *argv[]) {
+int msmcomm_launch_daemon(const char *workdir, char *argv[], int argc) {
 	int n = 0, fd;
 	const char *basepath = NULL;
 	char buf[BUF_MAX];
