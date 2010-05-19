@@ -92,7 +92,7 @@ int msmcomm_launch_daemon(const char *workdir, char *argv[]) {
 	close(fileno(stdout));
 	close(fileno(stderr));
 
-    /* launch msmcomm daemon */
+	/* launch msmcomm daemon */
 	snprintf(buf, BUF_MAX, "%s/msmcommd", basepath);
 	if (execvp(buf, argv) == -1)
 		/* something went terrible wrong! */
@@ -100,6 +100,9 @@ int msmcomm_launch_daemon(const char *workdir, char *argv[]) {
 }
 
 int msmcomm_is_daemon_running() {
+	/* NOTE: We are only checking if the daemon was launched by ourself! If 
+	 * anyone else launched the daemon and we don't this will always return 
+	 * false as result! */
 	pid_t sid;
 	
 	if (!_daemon_launched)
