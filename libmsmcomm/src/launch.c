@@ -33,7 +33,7 @@ static const char * bin_paths[] = {
 	NULL
 };
 
-int msmcomm_launch_daemon(const char *workdir, char *argv[], int argc) {
+int msmcomm_launch_daemon(const char *workdir) {
 	int n = 0, fd;
 	const char *basepath = NULL;
 	char buf[BUF_MAX];
@@ -94,7 +94,7 @@ int msmcomm_launch_daemon(const char *workdir, char *argv[], int argc) {
 
 	/* launch msmcomm daemon */
 	snprintf(buf, BUF_MAX, "%s/msmcommd", basepath);
-	if (execvp(buf, argv) == -1)
+	if (execvp(buf, NULL) == -1)
 		/* something went terrible wrong! */
 		exit(1);
 }
