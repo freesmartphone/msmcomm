@@ -24,9 +24,8 @@ ltmain.sh
 missing
 .deps
 Makefile
-msmcommd
-msmcterm
-msmc_forward
+msmcommd/src/msmcommd
+msmsh/src/msmsh
 stamp-h1
 .gitignore
 frame_test
