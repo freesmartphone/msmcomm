@@ -150,6 +150,8 @@ struct relay_connection
 #define LOG_TARGET_FILE		1
 
 void log_change_target(int new_target);
+void log_target_close();
+void log_change_destination(char *destination);
 void log_message(char *file, uint32_t line, uint32_t level, const char *format, ...);
 unsigned short crc16_calc(const uint8_t *data, uint32_t len); 
 void hexdump(const uint8_t *data, uint32_t len);

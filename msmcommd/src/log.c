@@ -20,8 +20,8 @@
 
 #include <msmcomm/internal.h>
 
-static const char log_file[] = "/var/log/msmcommd.log";
-static int enable_logging = 1;
+#define LOG_FILE_SIZE 256
+static char log_file[LOG_FILE_SIZE] = "/tmp/msmcommd.log";
 static int log_target = -1;
 static FILE *log_output = NULL;
 
@@ -31,18 +31,21 @@ const char *log_level_names[] = {
 	"INFO"
 };
 
+void log_close_target()
+{
+	if (log_output != NULL)
+		fflush(log_output);
+	
+	switch(log_target)
+	{
+	case LOG_TARGET_FILE:
+		fclose(log_output);
+		break;
+	}
+}
+
 void log_change_target(int new_target)
 {
-
-	if (log_target == new_target)
-		/* do nothing */
-		return;
-
-	if (log_target == LOG_TARGET_FILE) {
-		fflush(log_output);
-		fclose(log_output);
-	}
-
 	switch (new_target) {
 	case LOG_TARGET_FILE:
 		log_output = fopen(log_file, "w+");
@@ -51,6 +54,18 @@ void log_change_target(int new_target)
 		log_output = stderr;
 		break;
 	}
+	
+	log_target = new_target;
+}
+
+void log_change_destination(char *destination)
+{
+	if (destination == NULL) 
+		return;
+	
+	log_close_target();
+	strncpy(log_file, destination, LOG_FILE_SIZE);
+	log_change_target(log_target);
 }
 
 void log_message(char *file, uint32_t line, uint32_t level, const char *format, ...)
@@ -70,3 +85,4 @@ void log_message(char *file, uint32_t line, uint32_t level, const char *format, 
 	va_end(ap);
 	fflush(log_output);
 }
+

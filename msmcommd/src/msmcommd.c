@@ -54,7 +54,7 @@ void hexdump(const uint8_t *data, uint32_t len)
 	while (len--)
 	{
 		uint8_t b = *p++;
-		printf("%02x ", b & 0xff);
+		INFO_MSG("%02x ", b & 0xff);
 		if ( b > 32 && b < 128 )
 			ascii[count] = b;
 		else
@@ -62,7 +62,7 @@ void hexdump(const uint8_t *data, uint32_t len)
 		count++;
 
 		if (count == VALUES_PER_LINE) {
-			printf("      %s\n", ascii);
+			INFO_MSG("      %s", ascii);
 			memset( ascii, 0, VALUES_PER_LINE + 1 );
 			count = 0;
 		}
@@ -72,9 +72,9 @@ void hexdump(const uint8_t *data, uint32_t len)
 	{
 		while ( count++ < VALUES_PER_LINE )
 		{
-			printf( "   " );
+			INFO_MSG( "   " );
 		}
-		printf("      %s\n", ascii);
+		INFO_MSG("      %s", ascii);
 	}
 }
 
@@ -122,7 +122,7 @@ static int update_all(struct msmc_context *ctx)
 
 static void signal_handler(int signal)
 {
-	fprintf(stdout, "signal %u received\n", signal);
+	INFO_MSG("signal %u received", signal);
 
 	switch (signal) {
 		case SIGINT:
@@ -142,19 +142,19 @@ static void signal_handler(int signal)
 
 static void print_configuration(struct msmc_context *ctx)
 {
-	printf("configuration:\n");
+	INFO_MSG("configuration:");
 #ifdef DEBUG
-	printf("...mode: debug\n");
+	INFO_MSG("...mode: debug");
 #else
-	printf("...mode: normal\n");
+	INFO_MSG("...mode: normal");
 #endif
 	if (use_serial_port) {
-		printf("...serial port: %s\n", ctx->serial_port);
+		INFO_MSG("...serial port: %s", ctx->serial_port);
 	}
 	else {
-		printf("...network port: %s:%s\n", ctx->network_addr, ctx->network_port);
+		INFO_MSG("...network port: %s:%s", ctx->network_addr, ctx->network_port);
 	}
-	printf("...network relay port: %i\n", MSMC_DEFAULT_NETWORK_PORT);
+	INFO_MSG("...network relay port: %i", MSMC_DEFAULT_NETWORK_PORT);
 }
 
 struct timer_list base_timer;
@@ -172,9 +172,32 @@ int main(int argc, char *argv[])
 	struct config *cf = NULL;
 	
 	log_change_target(LOG_TARGET_STDERR);
+	
+	/* default configuration */
+	ctx = talloc(NULL, struct msmc_context);
+	snprintf(ctx->serial_port, BUF_SIZE, MSMC_DEFAULT_SERIAL_PORT);
+	snprintf(ctx->network_port, BUF_SIZE, "4242");
+	snprintf(ctx->relay_addr, BUF_SIZE, "127.0.0.1");
+	
+	cf = config_load("/etc/msmcommd.conf");
+	if (cf == NULL) {
+		ERROR_MSG("ERROR: could not parse the configuration file at /etc/msmcommd.conf");
+		ERROR_MSG("INFO: using default configuration values");
+	}
+	else {
+		if (cf->source_type == SOURCE_TYPE_SERIAL) {
+			use_serial_port = 1;
+			snprintf(ctx->serial_port, BUF_SIZE, cf->serial_path);
+		}
+		else if (cf->source_type == SOURCE_TYPE_NETWORK) {
+			use_serial_port = 0;
+			snprintf(ctx->network_addr, BUF_SIZE, cf->network_addr);
+			snprintf(ctx->network_port, BUF_SIZE, cf->network_port);
+		}
+	}
 
-	printf("msmcommd (C) 2009-2010 by Simon Busch\n");
-	printf("not ready for use ... just testing out how this damn protocol works\n");
+	INFO_MSG("msmcommd (C) 2009-2010 by Simon Busch");
+	INFO_MSG("not ready for use ... just testing out how this damn protocol works");
 
 	init_talloc();
 
@@ -189,28 +212,7 @@ int main(int argc, char *argv[])
 	base_timer.cb = base_timer_cb;
 	bsc_schedule_timer(&base_timer, 5, 0);
 
-	/* default configuration */
-	ctx = talloc(NULL, struct msmc_context);
-	snprintf(ctx->serial_port, BUF_SIZE, MSMC_DEFAULT_SERIAL_PORT);
-	snprintf(ctx->network_port, BUF_SIZE, "4242");
-	snprintf(ctx->relay_addr, BUF_SIZE, "127.0.0.1");
 	
-	cf = config_load("/etc/msmcommd.conf");
-	if (cf == NULL) {
-		fprintf(stderr, "ERROR: could not parse the configuration file at /etc/msmcommd.conf\n");
-		fprintf(stderr, "INFO: using default configuration values\n");
-	}
-	else {
-		if (cf->source_type == SOURCE_TYPE_SERIAL) {
-			use_serial_port = 1;
-			snprintf(ctx->serial_port, BUF_SIZE, cf->serial_path);
-		}
-		else if (cf->source_type == SOURCE_TYPE_NETWORK) {
-			use_serial_port = 0;
-			snprintf(ctx->network_addr, BUF_SIZE, cf->network_addr);
-			snprintf(ctx->network_port, BUF_SIZE, cf->network_port);
-		}
-	}
 	
 	/* react on options */
 	init_talloc_late();
@@ -229,6 +231,8 @@ int main(int argc, char *argv[])
 
 	shutdown_all(ctx);
 	talloc_free(ctx);
+	
+	log_close_target();
 
 	exit(0);
 }

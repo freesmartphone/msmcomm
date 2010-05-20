@@ -77,10 +77,17 @@ struct config *config_load(const char *filename)
 			strncpy(source_path, path, BUF_SIZE);
 		}
 		else if (strcasecmp(tok, "log_target") == 0) {
-			/* FIXME */
+			char *target = strsep(&p, " \t");
+			if (strcasecmp(target, "file") == 0) 
+				log_change_target(LOG_TARGET_FILE);
+			else if(strcasecmp(target, "stderr") == 0)
+				log_change_target(LOG_TARGET_STDERR);
 		}
 		else if (strcasecmp(tok, "log_destination") == 0) {
-			/* FIXME */
+			char *destination = strsep(&p, " \t");
+			printf("destination = %s\n", destination);
+			fflush(stdout);
+			log_change_destination(destination);
 		}
 		else {
 			/* ignore everything else */
