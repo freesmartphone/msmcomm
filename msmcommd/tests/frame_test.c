@@ -113,5 +113,7 @@ int main(int argc, char **argv)
 	test_decode_frame_data();
 
 	test_memleaks();
+	
+	return 0;
 }
 

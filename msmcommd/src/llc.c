@@ -613,12 +613,13 @@ static void handle_llc_outgoing_data(void *data)
 	is_tx_timer = 0;
 }
 
-static void _llc_cb(struct bsc_fd *bfd, uint32_t flags)
+static int _llc_cb(struct bsc_fd *bfd, uint32_t flags)
 {
 	if (flags & BSC_FD_READ)
 		handle_llc_incomming_data(bfd);
 /*	if (flags & BSC_FD_WRITE) 
 		handle_llc_outgoing_data(bfd); */
+	return 0;
 }
 
 void register_llc_data_handler (struct msmc_context *ctx, msmc_data_handler_cb_t cb)

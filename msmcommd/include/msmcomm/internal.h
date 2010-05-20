@@ -154,7 +154,7 @@ void log_target_close();
 void log_change_destination(char *destination);
 void log_message(char *file, uint32_t line, uint32_t level, const char *format, ...);
 unsigned short crc16_calc(const uint8_t *data, uint32_t len); 
-void hexdump(const uint8_t *data, uint32_t len);
+void hexdump(uint8_t *data, uint32_t len);
 
 #ifdef DEBUG
 #define DEBUG_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_DEBUG, fmt, ## args)
@@ -166,6 +166,7 @@ void hexdump(const uint8_t *data, uint32_t len);
 #define INFO_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_INFO, fmt, ## args)
 
 void init_talloc(void);
+void init_talloc_late(void);
 
 void init_frame(struct frame *fr, uint32_t type);
 void encode_frame(struct frame *fr);

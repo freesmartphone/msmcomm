@@ -22,7 +22,7 @@
 
 #define VALUES_PER_LINE 16
 
-void hexdump(const uint8_t *data, uint32_t len)
+void hexdump(uint8_t *data, uint32_t len)
 {
 	char ascii[VALUES_PER_LINE + 1];
 	int count;

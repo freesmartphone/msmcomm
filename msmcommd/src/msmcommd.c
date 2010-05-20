@@ -144,12 +144,12 @@ int main(int argc, char *argv[])
 	else {
 		if (cf->source_type == SOURCE_TYPE_SERIAL) {
 			use_serial_port = 1;
-			snprintf(ctx->serial_port, BUF_SIZE, cf->serial_path);
+			strncpy(ctx->serial_port, cf->serial_path, BUF_SIZE);
 		}
 		else if (cf->source_type == SOURCE_TYPE_NETWORK) {
 			use_serial_port = 0;
-			snprintf(ctx->network_addr, BUF_SIZE, cf->network_addr);
-			snprintf(ctx->network_port, BUF_SIZE, cf->network_port);
+			strncpy(ctx->network_addr, cf->network_addr, BUF_SIZE);
+			strncpy(ctx->network_port, cf->network_port, BUF_SIZE);
 		}
 	}
 
