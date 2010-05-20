@@ -83,7 +83,7 @@ int msmcomm_launch_daemon(const char *workdir) {
 
 	/* create and change to working directory */
 	if (stat(workdir, &st) < 0)
-	    mkdir(workdir, 0644);
+	    mkdir(workdir, 0770);
 	if (chdir(workdir) < 0) 
 		exit(1);
 
