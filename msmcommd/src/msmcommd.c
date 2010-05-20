@@ -36,48 +36,6 @@ extern int use_talloc_report;
 extern int enable_logging;
 int run_as_daemon = 0;
 
-#define VALUES_PER_LINE 16
-
-void hexdump(const uint8_t *data, uint32_t len)
-{
-	char ascii[VALUES_PER_LINE + 1];
-	int count;
-	int offset;
-	uint8_t *p;
-	if (!data)
-		return;
-	p = data;
-
-	memset( ascii, 0, VALUES_PER_LINE + 1 );
-	count = 0;
-
-	while (len--)
-	{
-		uint8_t b = *p++;
-		INFO_MSG("%02x ", b & 0xff);
-		if ( b > 32 && b < 128 )
-			ascii[count] = b;
-		else
-			ascii[count] = '.';
-		count++;
-
-		if (count == VALUES_PER_LINE) {
-			INFO_MSG("      %s", ascii);
-			memset( ascii, 0, VALUES_PER_LINE + 1 );
-			count = 0;
-		}
-	}
-
-	if ( count != 0 )
-	{
-		while ( count++ < VALUES_PER_LINE )
-		{
-			INFO_MSG( "   " );
-		}
-		INFO_MSG("      %s", ascii);
-	}
-}
-
 static int init_all(struct msmc_context *ctx)
 {
 	if (!ctx || strlen(ctx->serial_port) == 0) return;

@@ -8,6 +8,7 @@ bin_PROGRAMS = \
 	msmcommd
 
 msmcommd_SOURCES = msmcommd.c \
+                   util.c \
                    select.c \
                    timer.c \
                    crc16.c \
@@ -18,5 +19,5 @@ msmcommd_SOURCES = msmcommd.c \
                    talloc_ctx.c \
                    relay.c \
                    buffer.c \
-				   config.c \
+                   config.c \
 msmcommd_LDADD =
