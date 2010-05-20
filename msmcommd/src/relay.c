@@ -126,7 +126,7 @@ int init_relay_interface(struct msmc_context *ctx)
 
 	ret = bsc_register_fd(bfd);
 	if (ret < 0) {
-		perror("could not register fd");
+		ERROR_MSG("could not register fd");
 		return ret;
 	}
 

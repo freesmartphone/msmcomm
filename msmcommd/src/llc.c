@@ -24,9 +24,6 @@ extern const char *frame_type_names[];
 extern void *talloc_llc_ctx;
 extern int use_serial_port;
 
-#define ENTER DEBUG_MSG("+%s", __FUNCTION__)
-#define LEAVE DEBUG_MSG("-%s", __FUNCTION__)
-
 LLIST_HEAD(data_handlers);
 LLIST_HEAD(tx_queue);
 LLIST_HEAD(ack_queue);
@@ -476,10 +473,6 @@ static void handle_frame(struct msmc_context *ctx, uint8_t *data, uint32_t len)
 	crc = crc16_calc(tmp, tmp_len);
 	if (crc != crc_result)
 	{
-		DEBUG_MSG("CRC ERROR !!!");
-		DEBUG_MSG("len = %i", tmp_len);
-		DEBUG_MSG("fr_crc = 0x%x", fr_crc);
-		DEBUG_MSG("crc = 0x%x", crc);
 		hexdump(tmp, tmp_len);
 		return;
 	}
