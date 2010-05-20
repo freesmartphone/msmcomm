@@ -24,6 +24,7 @@
 static char log_file[LOG_FILE_SIZE] = "/tmp/msmcommd.log";
 static int log_target = -1;
 static FILE *log_output = NULL;
+int append_newline = 1;
 
 const char *log_level_names[] = {
 	"DEBUG",
@@ -81,7 +82,8 @@ void log_message(char *file, uint32_t line, uint32_t level, const char *format, 
 	fprintf(log_output, "[%s] ", timestr);
 	fprintf(log_output, "<%s:%d> ", file, line);
 	vfprintf(log_output, format, ap);
-	fprintf(log_output, "\n");
+	if (append_newline)
+		fprintf(log_output, "\n");
 	va_end(ap);
 	fflush(log_output);
 }
