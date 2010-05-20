@@ -85,8 +85,6 @@ struct config *config_load(const char *filename)
 		}
 		else if (strcasecmp(tok, "log_destination") == 0) {
 			char *destination = strsep(&p, " \t");
-			printf("destination = %s\n", destination);
-			fflush(stdout);
 			log_change_destination(destination);
 		}
 		else {
