@@ -81,25 +81,24 @@ void hexdump(const uint8_t *data, uint32_t len)
 static int init_all(struct msmc_context *ctx)
 {
 	if (!ctx || strlen(ctx->serial_port) == 0) return;
-
-	/* serial and network components */
-	if (init_llc(ctx) < 0) {
+	
+	if (init_relay_interface(ctx) < 0) {
 		talloc_free(ctx);
 		exit(1);
 	}
 
-	if (init_relay_interface(ctx) < 0) {
-		shutdown_llc(ctx);
+	if (init_llc(ctx) < 0) {
+		shutdown_relay_interface(ctx);
+		talloc_free(ctx);
 		exit(1);
 	}
-
 }
 
 static void shutdown_all(struct msmc_context *ctx)
 {
 	shutdown_llc(ctx);
 	shutdown_relay_interface(ctx);
-
+	
 	/* free context */
 	if (ctx)
 		talloc_free(ctx);
@@ -212,8 +211,6 @@ int main(int argc, char *argv[])
 	base_timer.cb = base_timer_cb;
 	bsc_schedule_timer(&base_timer, 5, 0);
 
-	
-	
 	/* react on options */
 	init_talloc_late();
 
