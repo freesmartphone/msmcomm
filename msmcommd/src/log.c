@@ -69,6 +69,15 @@ void log_change_destination(char *destination)
 	log_change_target(log_target);
 }
 
+void log_small_message(const char *format, ...)
+{
+	va_list ap;
+	va_start(ap, format);
+	vfprintf(log_output, format, ap);
+	va_end(ap);
+	fflush(log_output);
+}
+
 void log_message(char *file, uint32_t line, uint32_t level, const char *format, ...)
 {
 	va_list ap;

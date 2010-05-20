@@ -35,13 +35,11 @@ void hexdump(uint8_t *data, uint32_t len)
 
 	memset( ascii, 0, VALUES_PER_LINE + 1 );
 	count = 0;
-	
-	append_newline = 0;
 
 	while (len--)
 	{
 		uint8_t b = *p++;
-		INFO_MSG("%02x ", b & 0xff);
+		log_small_message("%02x ", b & 0xff);
 		if ( b > 32 && b < 128 )
 			ascii[count] = b;
 		else
@@ -49,7 +47,7 @@ void hexdump(uint8_t *data, uint32_t len)
 		count++;
 
 		if (count == VALUES_PER_LINE) {
-			INFO_MSG("      %s\n", ascii);
+			log_small_message("      %s\n", ascii);
 			memset( ascii, 0, VALUES_PER_LINE + 1 );
 			count = 0;
 		}
@@ -59,10 +57,8 @@ void hexdump(uint8_t *data, uint32_t len)
 	{
 		while ( count++ < VALUES_PER_LINE )
 		{
-			INFO_MSG( "   " );
+			log_small_message( "   " );
 		}
-		INFO_MSG("      %s\n", ascii);
+		log_small_message("      %s\n", ascii);
 	}
-	
-	append_newline = 1;
 }
