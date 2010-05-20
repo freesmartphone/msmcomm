@@ -109,9 +109,9 @@ static void print_configuration(struct msmc_context *ctx)
 		INFO_MSG("...serial port: %s", ctx->serial_port);
 	}
 	else {
-		INFO_MSG("...network port: %s:%s", ctx->network_addr, ctx->network_port);
+		INFO_MSG("...network: %s:%s", ctx->network_addr, ctx->network_port);
 	}
-	INFO_MSG("...network relay port: %i", MSMC_DEFAULT_NETWORK_PORT);
+	INFO_MSG("...network relay: %s:%s", ctx->relay_addr, ctx->relay_port);
 }
 
 struct timer_list base_timer;
@@ -133,8 +133,9 @@ int main(int argc, char *argv[])
 	/* default configuration */
 	ctx = talloc(NULL, struct msmc_context);
 	snprintf(ctx->serial_port, BUF_SIZE, MSMC_DEFAULT_SERIAL_PORT);
-	snprintf(ctx->network_port, BUF_SIZE, "4242");
+	snprintf(ctx->network_port, 5, "4242");
 	snprintf(ctx->relay_addr, BUF_SIZE, "127.0.0.1");
+	snprintf(ctx->relay_port, 5, "3030");
 	
 	cf = config_load("/etc/msmcommd.conf");
 	if (cf == NULL) {
@@ -144,12 +145,25 @@ int main(int argc, char *argv[])
 	else {
 		if (cf->source_type == SOURCE_TYPE_SERIAL) {
 			use_serial_port = 1;
-			strncpy(ctx->serial_port, cf->serial_path, BUF_SIZE);
+			if (strlen(cf->serial_path) > 0) {
+				strncpy(ctx->serial_port, cf->serial_path, BUF_SIZE);
+			}
 		}
 		else if (cf->source_type == SOURCE_TYPE_NETWORK) {
 			use_serial_port = 0;
-			strncpy(ctx->network_addr, cf->network_addr, BUF_SIZE);
-			strncpy(ctx->network_port, cf->network_port, BUF_SIZE);
+			if (strlen(cf->network_addr) > 0) {
+				strncpy(ctx->network_addr, cf->network_addr, BUF_SIZE);
+			}
+			if (strlen(cf->network_port) > 0) {
+				strncpy(ctx->network_port, cf->network_port, BUF_SIZE);
+			}
+		}
+		
+		if (strlen(cf->relay_addr) > 0) {
+			strncpy(ctx->relay_addr, cf->relay_addr, BUF_SIZE);
+		}
+		if (strlen(cf->relay_port) > 0) {
+			strncpy(ctx->relay_port, cf->relay_port, BUF_SIZE);
 		}
 	}
 

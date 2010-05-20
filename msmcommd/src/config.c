@@ -76,6 +76,12 @@ struct config *config_load(const char *filename)
 			char *path = strsep(&p, " \t");
 			strncpy(source_path, path, BUF_SIZE);
 		}
+		else if (strcasecmp(tok, "relay_addr") == 0) {
+			char *addr = strsep(&p, " \t");
+			tok = strsep(&addr, ":");
+			strncpy(cf->relay_addr, addr, strlen(addr));
+			strncpy(cf->relay_addr, addr + strlen(tok) + 1, 5);
+		}
 		else if (strcasecmp(tok, "log_target") == 0) {
 			char *target = strsep(&p, " \t");
 			if (strcasecmp(target, "file") == 0) 

@@ -94,10 +94,11 @@
 struct msmc_context
 {
 	/* Options, flags etc. */
-	char				network_port[BUF_SIZE];
+	char				network_port[5];
 	char	    		serial_port[BUF_SIZE];
 	char				network_addr[BUF_SIZE];
 	char				relay_addr[BUF_SIZE];
+	char 				relay_port[5];
 	struct bsc_fd		fds[MSMC_FD_COUNT];
 
 	struct buffer		*rx_buf;
@@ -192,6 +193,8 @@ struct config
 	char serial_path[BUF_SIZE];
 	char network_addr[BUF_SIZE];
 	char network_port[5];
+	char relay_addr[BUF_SIZE];
+	char relay_port[5];
 	int log_target;
 	char log_destination[BUF_SIZE];
 };
