@@ -1,7 +1,13 @@
 NULL =
+EXTRA_CFLAGS = 
+
+if WANT_DEBUG
+EXTRA_CFLAGS += -g
+endif
 
 AM_CFLAGS = \
 	-I../include \
+	$(EXTRA_CFLAGS)
 	$(NULL)
 
 bin_PROGRAMS = \
