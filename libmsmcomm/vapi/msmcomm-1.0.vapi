@@ -79,14 +79,6 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_frame_is_valid")]
             get;
         }
-
-        [CCode (cname = "msmcomm_frame_encode")]
-        public void encode();
-
-        [CCode (cname = "msmcomm_frame_decode")]
-        public void decode();
-
-
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MESSAGE_CMD_", cheader_filename = "msmcomm.h")]

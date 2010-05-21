@@ -138,6 +138,9 @@ public class PacketDefinitionReader : Object {
 				if (line.length == 0) 
 					continue;
 				
+				if (line.has_prefix("#"))
+					continue;
+				
 				string[] tokens = line.split(" ");
 				if (tokens.length != 3) {
 					string msg = @"More than three tokens in line $(n)";

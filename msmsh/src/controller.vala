@@ -44,6 +44,11 @@ public class Controller : GLib.Object {
 		
 		currentSession = new Session();
 		currentSession.configuration.loadFromFile(home_path);
+		string path = currentSession.configuration.stringValue("global", "structures_path", "");
+		loadStructureDefinitionsIntoSession(currentSession, path);
+
+		path = currentSession.configuration.stringValue("global", "packetdef_path", "");
+		loadPacketDefinitionsIntoSession(currentSession, path);
 	}
 
 	private void loadStructureDefinitionsIntoSession(Session session, string path) throws ControllerError {
@@ -76,10 +81,10 @@ public class Controller : GLib.Object {
 		return null;
 	}
 
-	private void loadPacketDefinitions(string path) throws ControllerError {
+	private void loadPacketDefinitionsIntoSession(Session session, string path) throws ControllerError {
 		try {
 			var reader = new PacketDefinitionReader();
-			currentSession.definitions = reader.read_from_file(path);
+			session.definitions = reader.read_from_file(path);
 		}
 		catch (PacketDefinitionError err) {
 			stdout.printf(@"Could not read packet definitions from '$(path)'\n");

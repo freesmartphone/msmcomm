@@ -41,6 +41,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <arpa/inet.h>
+#include <string.h>
 
 #include "talloc.h"
 #include "linuxlist.h"

@@ -163,9 +163,22 @@ public class FrameInfo : IResult, GLib.Object {
 }
 
 public class MessageInfo : IResult, GLib.Object {
+	public uint8 group_id { get; set; }
+	public uint8 msg_id { get; set; }
+	public string name { get; set; }
+	public Gee.HashMap<string, string> fields;
+	private string _tmp;
+
+	construct {
+		fields = new Gee.HashMap<string,string>();
+		name = "";
+		_tmp = "";
+	}
+	
 	public string append_to_title {
 		get {
-			return @"MessageType=FIXME";
+			_tmp = @"$(name)";
+			return _tmp;
 		}
 	}
 
@@ -207,16 +220,79 @@ public class LinkLayerDissector : GLib.Object {
 public class StructureDefinitionDissector : GLib.Object {
 	private Session session;
 
+	construct {
+	}
+	
 	public StructureDefinitionDissector(Session session) {
 		this.session = session;
 	}
 	
 	public MessageInfo? run(RawDataBuffer? buffer) {
 		var msg = new MessageInfo();
+		var tvb = new Tvbuff(buffer);
+		string structure_name = "";
+		StructureDefinition sdef = null;
+		uint len = 0, val = 0;
 
+		// First we need to find out which kind of message we have
+		msg.group_id = tvb.read_uint8(0);
+		msg.msg_id = tvb.read_uint8(1);
+
+		foreach (var def in session.definitions) {
+			if (msg.group_id == def.group_id &&
+				msg.msg_id == def.msg_id) {
+				structure_name = def.structure_name;
+				break;
+			}
+		}
+
+		// Found the right structure definition
+		foreach (var structure in session.structures) {
+			if (structure.name == structure_name) {
+				sdef = structure;
+				msg.name = sdef.name;
+				break;
+			}
+		}
+
+		// Assign field definitions to buffer
+		if (sdef != null) {
+			// Check length (-2 cause the group id and msg id are not included 
+			// in the structure)
+			if (sdef.length != buffer.size - 2)
+				return msg;
+
+			foreach (var field in sdef.fields) {
+				if (field.offset_end == 0)
+					len = 1;
+				else len = field.offset_end - field.offset_start + 1;
+
+				var buf = tvb.read_range_uint8(field.offset_start, len);
+				var tmp = convertBinaryToString(buf);
+				string hex = "";
+				foreach (uint8 byte in buf) {
+					hex += "0x%02x ".printf(byte);
+				}
+				msg.fields[field.name] = "%s %s".printf(hex, tmp);
+			}
+		}
 		
-
 		return msg;
+	}
+
+	private string convertBinaryToString(uint8[] buffer) {
+		string result = "";
+
+		foreach (uint8 byte in buffer) {
+			if (byte > 32 && byte < 128) {
+				result += "%c".printf(byte);
+			}
+			else { 
+				result += ".";
+			}
+		}
+		
+		return result;
 	}
 }
 
@@ -237,7 +313,8 @@ public class DissectorWorker {
 	public Packet run(RawDataBuffer buffer) {
 		var p = new Packet();
 		p.frame = linkLayerDissector.run(buffer);
-		p.message = structureDefinitionDissector.run(p.frame.payload);
+		if (p.frame.fr_type == FrameType.DATA)
+			p.message = structureDefinitionDissector.run(p.frame.payload);
 		return p;
 	}
 }

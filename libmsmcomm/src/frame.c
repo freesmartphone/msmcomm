@@ -54,7 +54,7 @@ void msmcomm_frame_free(struct msmcomm_frame *fr)
 
 struct msmcomm_frame * msmcomm_frame_new_from_buffer(uint8_t *buffer, uint32_t length) 
 {
-	uint8_t *p, *start, *end, *tmp;
+	uint8_t *p, *start, *end, *tmp, *data;
 	uint8_t found = 0;
 	int len, tmp_len;
 	struct msmcomm_frame *fr = NULL;
@@ -77,36 +77,32 @@ struct msmcomm_frame * msmcomm_frame_new_from_buffer(uint8_t *buffer, uint32_t l
 	if (found) {
 		fr = msmcomm_frame_new();
 		len = p - start;
+		tmp_len = len;
 
-		/* copy data for decoding */
-		tmp = (uint8_t*)alloca(sizeof(uint8_t) * len);
-		memcpy(tmp, buffer, len);
-		fr->payload = tmp;
-		fr->payload_len = len;
-
-		/* decode frame */
-		msmcomm_frame_decode(fr);
-		tmp_len = fr->payload_len;
+		/* decode data */
+		tmp = msmcomm_decode_data(&buffer, &tmp_len);
 	
 		/* the last two bytes are the crc checksum, check them! */
 		fr_crc = (tmp[len-2] << 8) | tmp[len-1];
-		crc = crc16_calc(tmp, tmp_len);
+		crc = crc16_calc(tmp, len);
 		if (crc != crc_result)
 			fr->is_valid = 0;
 		else fr->is_valid = 1;
 
-		/* parse frame data */
-		fr->address = tmp[0];
-		fr->type = tmp[1] >> 4;
-		fr->seq  = tmp[2] >> 4;
-		fr->ack  = tmp[2] & 0xf;
+		/* copy frame data */
+		fr->address = buffer[0];
+		fr->type = buffer[1] >> 4;
+		fr->seq  = buffer[2] >> 4;
+		fr->ack  = buffer[2] & 0xf;
 		fr->payload = NULL;
 		fr->payload_len = 0;
 		if (len > 5) {
-			fr->payload = (uint8_t*)malloc(sizeof(uint8_t) * (tmp_len - 3));
-			memcpy(fr->payload, &tmp[3], tmp_len - 3);
+			fr->payload = (uint8_t*)malloc(sizeof(uint8_t)*tmp_len - 6);
+			memcpy(fr->payload, &tmp[3], tmp_len - 6);
 			fr->payload_len = tmp_len - 6;
 		}
+
+		free(tmp);
 	}
 
 	return fr;
@@ -209,10 +205,10 @@ void msmcomm_frame_encode(struct msmcomm_frame *fr)
 
 void msmcomm_frame_decode(struct msmcomm_frame *fr)
 {
-	if (!fr || fr->payload_len == 0) 
+	if (!fr || fr->payload_len == 0 || fr->payload == NULL) 
 		return;
 	
-	uint8_t *decoded_data = (uint8_t*)alloca(fr->payload_len * sizeof(uint8_t));
+	uint8_t *decoded_data = (uint8_t*)malloc(fr->payload_len * sizeof(uint8_t));
 	uint8_t *p = decoded_data;
 	uint8_t *data = fr->payload;
 	uint8_t *tmp = 0;
@@ -238,9 +234,36 @@ void msmcomm_frame_decode(struct msmcomm_frame *fr)
 			p++; data++;
 		}
  	}
-
+	printf("len = %i, sizeof(fr->payload) = %i decoded_data_len = %i\n", fr->payload_len, sizeof(fr->payload), decoded_data_len);
 	fr->payload = (uint8_t*)realloc(fr->payload, sizeof(uint8_t) * decoded_data_len);
 	memcpy(fr->payload, decoded_data, decoded_data_len);
 	fr->payload_len = decoded_data_len;
+
+	free(decoded_data);
+}
+
+uint8_t * msmcomm_decode_data(uint8_t **data, unsigned int *len)
+{
+	uint8_t *output = (uint8_t*)malloc(*len * sizeof(uint8_t));
+	uint8_t *p = *data, *q = NULL, *r = output;
+	unsigned int n = *len;
+	
+	while (n--) {
+		if (*p == 0x7d) {
+			q = p + 1;
+			if (*q && (*q == 0x5d || *q == 0x5e)) {
+				p += 2;
+				*r++ = 0x70 | (*q & 0xf);
+				len--;
+			}
+		}
+		else {
+			*r++ = *p;
+			p++;
+		}
+	}
+	
+	output = (uint8_t*)realloc(output,  *len * sizeof(uint8_t));
+	return output;
 }
 

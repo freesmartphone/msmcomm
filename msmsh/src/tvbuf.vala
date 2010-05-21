@@ -42,7 +42,7 @@ public class Tvbuff {
 
 		uint8[] buf = new uint8[len];
 		for (uint n=start; n<start+len; n++) {
-			buf[n] = _buffer.data[n];
+			buf += _buffer.data[n];
 		}
 
 		

@@ -64,6 +64,9 @@ public class PacketlistView : GLib.Object {
 	private RightLabel label_seq;
 	private RightLabel label_read_write;
 	private RightLabel label_is_valid;
+	private RightLabel label_message_name;
+	private RightLabel label_group_id;
+	private RightLabel label_msg_id;
 	private TextView packetDumpView;
 
 	construct {
@@ -132,6 +135,18 @@ public class PacketlistView : GLib.Object {
 		table.attach(new LeftLabel("Read/Write:"), 0, 1, 4, 5, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
 		table.attach(label_read_write, 1, 2, 4, 5, AttachOptions.EXPAND|AttachOptions.FILL, AttachOptions.FILL, 0, 0);
 
+		label_message_name = new RightLabel();
+		table.attach(new LeftLabel("Message name:"), 0, 1, 6, 7, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
+		table.attach(label_message_name, 1, 2, 6, 7, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
+
+		label_group_id = new RightLabel();
+		table.attach(new LeftLabel("Group Id:"), 0, 1, 8, 9, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
+		table.attach(label_group_id, 1, 2, 8, 9, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
+		
+		label_msg_id = new RightLabel();
+		table.attach(new LeftLabel("Message Id:"), 0, 1, 10, 11, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
+		table.attach(label_msg_id, 1, 2, 10, 11, AttachOptions.FILL, AttachOptions.FILL, 0, 0);
+		
 		scroll = new ScrolledWindow(null, null);
 		scroll.set_policy(PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
 		scroll.set_shadow_type(ShadowType.IN);
@@ -196,47 +211,6 @@ public class PacketlistView : GLib.Object {
 		packetDumpView.buffer.text = text;
 	}
 
-/*
-void hexdump(const uint8_t *data, uint32_t len)
-{
-	char ascii[VALUES_PER_LINE + 1];
-	int count;
-	int offset;
-	uint8_t *p;
-	if (!data)
-		return;
-	p = data;
-
-	memset( ascii, 0, VALUES_PER_LINE + 1 );
-	count = 0;
-
-	while (len--)
-	{
-		uint8_t b = *p++;
-		printf("%02x ", b & 0xff);
-		if ( b > 32 && b < 128 )
-			ascii[count] = b;
-		else
-			ascii[count] = '.';
-		count++;
-
-		if (count == VALUES_PER_LINE) {
-			printf("      %s\n", ascii);
-			memset( ascii, 0, VALUES_PER_LINE + 1 );
-			count = 0;
-		}
-	}
-
-	if ( count != 0 )
-	{
-		while ( count++ < VALUES_PER_LINE )
-		{
-			printf( "   " );
-		}
-		printf("      %s\n", ascii);
-	}
-}*/
-
 	private Packet? getCurrentPacket() {
 		Gtk.TreePath p;
 		Gtk.TreeIter iter;
@@ -271,6 +245,37 @@ void hexdump(const uint8_t *data, uint32_t len)
 			label_is_valid.set_text("false");
 		label_read_write.set_text(fs_action_to_string(packet.frame.fs_action));
 
+		label_group_id.set_text("");
+		label_msg_id.set_text("");
+		label_message_name.set_text("");
+		if (packet.message != null) {
+			label_group_id.set_text("0x%02x".printf(packet.message.group_id));
+			label_msg_id.set_text("0x%02x".printf(packet.message.msg_id));
+			label_message_name.set_text(packet.message.name);
+		}
+		
+		structuresInfoModel.clear();
+		if (packet.message != null && packet.message.fields != null) {
+			foreach (string key in packet.message.fields.keys) {
+				Gtk.TreeIter iter;
+				structuresInfoModel.append(out iter);
+				structuresInfoModel.set(iter, 0, key);
+				structuresInfoModel.set(iter, 1, packet.message.fields[key]);
+			}
+		}
+		
+		
+		/*
+		
+		property_model.clear();
+                foreach (var k in d.get_property_keys()) {
+                        TreeIter iter;
+                        property_model.append (out iter);
+                        property_model.set(iter, 0, k);
+                        var v = d.get_property(k);
+                        property_model.set(iter, 1, v == null ? "n/a" : v);
+                }*/
+
 		showPacketPayload(packet.frame.payload);
 	}
 
@@ -299,7 +304,11 @@ void hexdump(const uint8_t *data, uint32_t len)
 		foreach (var p in packets) {
 			type = frame_type_to_string(p.frame.fr_type);
 			read_write = fs_action_to_string(p.frame.fs_action);
-			description = @"[$(read_write)] '$(type)', <FIXME>";
+			description = @"[$(read_write)] $(type):";
+			if (p.message != null) {
+				description += p.message.append_to_title;
+			}
+			description += "";
 
 			packetListModel.append(out iter);
 
