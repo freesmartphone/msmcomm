@@ -1,2 +1,2 @@
 #!/bin/sh
-tools/generate_structs.py data/msmcomm.sdef > src/structures.h
+tools/generate_structs.py specs/msmcomm.sdef > src/structures.h
