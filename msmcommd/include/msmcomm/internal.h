@@ -42,6 +42,8 @@
 #include <signal.h>
 #include <fcntl.h>
 
+#include <assert.h>
+
 #include <arpa/inet.h>
 
 #include <msmcomm/select.h>
@@ -121,9 +123,16 @@ struct msmc_data_handler
 	msmc_data_handler_cb_t	cb;
 };
 
+struct tx_item
+{
+	struct llist_head list;
+	struct frame *frame;
+	unsigned int attempts;
+};
+
 struct frame
 {
-    struct llist_head list;
+	struct llist_head list;
 	uint8_t address;
 	uint8_t	 type;
 	uint8_t unknown;

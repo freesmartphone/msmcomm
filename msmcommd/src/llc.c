@@ -110,6 +110,31 @@ static int serial_port_setup(struct msmc_context *ctx)
 	return fd;
 }
 
+static void enqueue_frame_async(struct frame *fr)
+{
+	struct tx_item *ti;
+
+	if (fr == NULL)
+		return;
+
+	ti = (struct tx_item*)malloc(sizeof(struct tx_item));
+	if (ti == NULL) {
+		ERROR_MSG("Could not allocate memory. No more memory available?");
+		return;
+	}
+
+	/* add tx item to tx queue for sending */
+	ti->frame = fr;
+	ti->attempts = 0;
+	llist_add_tail(&ti->list, &tx_queue);
+
+	/* start tx timer if it is not already running */
+	if (!is_tx_timer) {
+		is_tx_timer = 1;
+		bsc_schedule_timer(&tx_timer, 0, 50);
+	}
+}
+
 void send_frame(struct msmc_context *ctx, struct frame *fr)
 {
 	uint32_t len, tmp;
@@ -166,6 +191,15 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	}
 
 	talloc_free(data);
+}
+
+static void tx_item_try_send(struct msmc_context *ctx, struct tx_item *ti)
+{
+	assert(ti != NULL);
+	assert(ti->frame != NULL);
+
+	send_frame(ctx, ti->frame);
+	ti->attempts++;
 }
 
 static struct timer_list sync_timer;
@@ -338,7 +372,7 @@ static uint8_t is_valid_ack(uint8_t a, uint8_t b, uint8_t c)
 
 static void process_rcvd_ack(struct msmc_context *ctx, const uint8_t ack)
 {
-	struct frame *fr, *tmp;
+	struct tx_item *ti, *tmp;
 	uint32_t count;
 	
 	count = llist_count(&ack_queue);
@@ -350,22 +384,22 @@ static void process_rcvd_ack(struct msmc_context *ctx, const uint8_t ack)
 	if (llist_count(&ack_queue) > MSMC_LLC_WINDOW_SIZE) {
 		/* resend and remove them from ack_queue */
 		count = 0;
-		llist_for_each_entry_safe(fr, tmp, &ack_queue, list) {
+		llist_for_each_entry_safe(ti, tmp, &ack_queue, list) {
 			if (count == MSMC_LLC_WINDOW_SIZE)
 				break;
 
-			llist_del(&fr->list);
-			send_frame(ctx, fr);
+			llist_del(&ti->list);
+			tx_item_try_send(ctx, ti);
 			count++;
 		}
 	}
 
 	/* check which frames are acknowledged with this ack */
-	llist_for_each_entry_safe(fr, tmp, &ack_queue, list) {
-		if (!is_valid_ack(ctx->last_ack, fr->seq, ack)) {
+	llist_for_each_entry_safe(ti, tmp, &ack_queue, list) {
+		if (!is_valid_ack(ctx->last_ack, ti->frame->seq, ack)) {
 			break;
 		}
-		llist_del(&fr->list);
+		llist_del(&ti->list);
 	}
 
 	if (llist_empty(&ack_queue)) {
@@ -486,7 +520,7 @@ static void handle_frame(struct msmc_context *ctx, uint8_t *data, uint32_t len)
 	fr->payload_len = 0;
 	if (len > 5) {
 		fr->payload = &tmp[3];
-		fr->payload_len = tmp_len - 3;
+		fr->payload_len = tmp_len - 5;
 	}
 
 	/* delegate frame handling corresponding to the frame type */
@@ -549,6 +583,9 @@ void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t l
 	memcpy(fr->payload, data, len);
 	fr->payload_len = len;
 
+	enqueue_frame_async(fr);
+	
+#if 0
 	llist_add_tail(&fr->list, &tx_queue);
 
 	/* start tx_queue timer */
@@ -556,31 +593,32 @@ void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t l
 		is_tx_timer = 1;
 		bsc_schedule_timer(&tx_timer, 0, 50);
 	}
+#endif
 }
 
 static void ack_timer_cb(void *data)
 {
 	struct msmc_context *ctx = (struct msmc_context*) data;
-	struct frame *fr, *tmp;
+	struct tx_item *ti, *tmp;
 
 	/* ack timer event occured, so one or more frames are not acknowledged
 	 * in time, so we have to resend this frames */
-	llist_for_each_entry_safe(fr, tmp, &ack_queue, list) {
+	llist_for_each_entry_safe(ti, tmp, &ack_queue, list) {
 		/* remove frame from ack_queue, send_frame will add it again later */
-		send_frame(ctx, fr);
+		tx_item_try_send(ctx, ti);
 	}
 
 	/* Reschedule ack timer as we are still waiting for the right acknowledge */
 	bsc_reschedule_timer(&ack_timer, 1, 0);
 }
 
-static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
+static void add_ack_timer(struct msmc_context *ctx, struct tx_item *ti)
 {
 	/* FIXME inlude check if ack_queue length is greater than the current window 
 	 * size? */
 
 	/* Save frame for resending if transmission goes wrong */
-	llist_add_tail(&fr->list, &ack_queue);
+	llist_add_tail(&ti->list, &ack_queue);
 
 	/* Reschedule timer cause we received a new frame */
 	bsc_reschedule_timer(&ack_timer, 1, 0);
@@ -589,18 +627,19 @@ static void add_ack_timer(struct msmc_context *ctx, struct frame *fr)
 static void handle_llc_outgoing_data(void *data)
 {
 	struct msmc_context *ctx = data;
-	struct frame *fr, *tmp;
+	struct tx_item *ti, *tmp;
+	int res = 0;
 	
-	llist_for_each_entry_safe(fr, tmp, &tx_queue, list) {	
+	llist_for_each_entry_safe(ti, tmp, &tx_queue, list) {
 		/* prepare frame with correct seq and ack */
-		fr->seq = next_sequence_nr(ctx);
-		fr->ack = ctx->next_ack;
+		ti->frame->seq = next_sequence_nr(ctx);
+		ti->frame->ack = ctx->next_ack;
 
-		send_frame(ctx, fr);
+		tx_item_try_send(ctx, ti);
 		
 		/* remove from tx queue and start ack timer */
-		llist_del_init(&fr->list);
-		add_ack_timer(ctx, fr);
+		llist_del_init(&ti->list);
+		add_ack_timer(ctx, ti);
 	}
 
 	is_tx_timer = 0;
@@ -610,8 +649,6 @@ static int _llc_cb(struct bsc_fd *bfd, uint32_t flags)
 {
 	if (flags & BSC_FD_READ)
 		handle_llc_incomming_data(bfd);
-/*	if (flags & BSC_FD_WRITE) 
-		handle_llc_outgoing_data(bfd); */
 	return 0;
 }
 
