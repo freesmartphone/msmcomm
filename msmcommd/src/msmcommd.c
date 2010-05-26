@@ -38,7 +38,7 @@ int run_as_daemon = 0;
 
 static int init_all(struct msmc_context *ctx)
 {
-	if (!ctx || strlen(ctx->serial_port) == 0) return;
+	if (!ctx) return;
 	
 	if (init_relay_interface(ctx) < 0) {
 		talloc_free(ctx);
