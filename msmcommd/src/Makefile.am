@@ -13,7 +13,7 @@ AM_CFLAGS = \
 bin_PROGRAMS = \
 	msmcommd
 
-msmcommd_SOURCES = msmcommd.c \
+msmcommd_SOURCES = main.c \
                    util.c \
                    select.c \
                    timer.c \
