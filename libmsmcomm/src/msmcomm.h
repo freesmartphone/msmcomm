@@ -323,6 +323,7 @@ uint8_t msmcomm_event_call_status_get_reject_value(struct msmcomm_message *msg);
 uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message *msg);
 
 /* Network events ---------------------------------- */
+unsigned int msmcomm_event_network_state_info_is_only_rssi_update(struct msmcomm_message *msg);
 uint32_t msmcomm_event_network_state_info_get_change_field(struct msmcomm_message *msg);
 uint8_t msmcomm_event_network_state_info_get_new_value(struct msmcomm_message *msg);
 uint8_t* msmcomm_event_network_state_info_get_plmn(struct msmcomm_message *msg);

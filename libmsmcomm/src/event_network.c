@@ -43,6 +43,11 @@ uint32_t event_network_state_info_get_size(struct msmcomm_message *msg)
 	return sizeof(struct network_state_info_event);
 }
 
+unsigned int msmcomm_event_network_state_info_is_only_rssi_update(struct msmcomm_message *msg)
+{
+	return (msg->msg_id == 0x1);
+}
+
 uint32_t msmcomm_event_network_state_info_get_change_field(struct msmcomm_message *msg)
 {
 	if (msg->payload == NULL) 

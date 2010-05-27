@@ -898,6 +898,10 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class NetworkStateInfo : Message
         {
+			public bool is_only_is_update {
+				[CCode (cname = "msmcomm_event_network_state_info_is_only_rssi_update")]
+				get;
+			}
 			public uint change_field {
 				[CCode (cname = "msmcomm_event_network_state_info_get_change_field")]
 				get;
