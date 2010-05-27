@@ -40,48 +40,22 @@ frame_type_names = (
   'Data',
 )
 
-groups = {
-  '0x0' : { 
-    'name': 'call',
-    'type': 'command',
-    'messages': {
-      '0x1' : 'answerCall',
-      '0x0' : 'dialCall',
-      '0x2': 'endCall',
-    },
-  },
-  '0x1' : {
-    'name': 'call',
-    'type': 'response',
-    'messages': {
-      '0x1': 'cm_call',
-    },
-  },
-  '0x2' : {
-    'name': 'call',
-    'type': 'event',
-    'messages': {
-      '0x0': 'call_origination',
-      '0x3': 'call_end',
-      '0x5': 'call_incomming',
-      '0x6': 'call_connect',
-    },
-  },
-  '0x3' : {
-    'name': 'system',
-    'type': 'command',
-    'messages': {
-      '0x0': 'change_operation_mode',
-    }
-  },
-  '0x1b' : {
-    'name' : 'system',
-    'type' : 'command',
-    'messages': {
-      '0x1': 'test_alive',
-    },
-  },
-}
+packet_types = {}
+
+def load_packet_types(filename):
+  with open(filename) as f:
+    for line in f.readlines():
+      if line.startswith('#'):
+        continue
+      parts = line.split(' ')
+      if len(parts) != 3 and len(parts) != 2:
+        continue
+      if parts[0] not in packet_types.keys():
+        packet_types[parts[0]] = []
+      if len(parts) == 3:
+        packet_types[parts[0]].append({'id': parts[1], 'name': parts[2]})
+      else:
+        packet_types[parts[0]] = parts[1]
 
 p = patterns['stefan']
 
@@ -303,12 +277,15 @@ class FHLogger(FHBase):
 
   def identify(self, groupId, msgId):
     id = "0x%x" % groupId
-    if id in groups:
-      group = groups[id]
-      id = "0x%x" % msgId
-      if id in group['messages']:
-        messages = group['messages']
-        print "TYPE: %s NAME: %s" % (group['type'], messages[id])
+    if id in packet_types:
+      group = packet_types[id]
+      if isinstance(group, list): 
+        for msg in group:
+          if msg['id'] == "0x%x" % msgId:
+            print "TYPE: %s" % msg['name']
+            break
+      else:
+        print "TYPE: %s" % group
       
    
 
@@ -384,12 +361,14 @@ class Packetizer(object):
     self.output.append(packet)
     return packet[0:-3]
 
-for line in file(sys.argv[1]):
-  line = line.rstrip('\n')
-  if not line or line[0] == ' ':
-    continue
-  debug( line )
-  pid, rest = line.split(None, 1)
-  pid = PIDs.setdefault(int(pid), PID())
-  pid.handle(rest)
+if __name__ == "__main__":
+  load_packet_types(sys.argv[2])
+  for line in file(sys.argv[1]):
+    line = line.rstrip('\n')
+    if not line or line[0] == ' ':
+      continue
+    debug( line )
+    pid, rest = line.split(None, 1)
+    pid = PIDs.setdefault(int(pid), PID())
+    pid.handle(rest)
 
