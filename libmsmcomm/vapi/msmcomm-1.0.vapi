@@ -197,7 +197,14 @@ namespace Msmcomm
         SUPS_ACTIVATE,
         SUPS_ACTIVATE_CONF,
         SUPS_DEACTIVATE,
-        SUPS_DEACTIVATE_CONF
+        SUPS_DEACTIVATE_CONF,
+        SMS_WMS_CFG_MESSAGE_LIST,
+        SMS_WMS_CFG_GW_DOMAIN_PREF,
+        SMS_WMS_CFG_EVENT_ROUTES,
+        SMS_WMS_CFG_MEMORY_STATUS,
+        SMS_WMS_CFG_MEMORY_STATUS_SET,
+        SMS_WMS_CFG_GW_READY,
+        SMS_WMS_READ_TEMPLATE,
     }
 
     public string eventTypeToString( int t )
@@ -419,6 +426,20 @@ namespace Msmcomm
             return "SUPS_DEACTIVATE";
             case EventType.SUPS_DEACTIVATE_CONF:
             return "SUPS_DEACTIVATE_CONF";
+			case EventType.SMS_WMS_CFG_MESSAGE_LIST:
+			return "SMS_WMS_CFG_MESSAGE_LIST";
+			case EventType.SMS_WMS_CFG_GW_DOMAIN_PREF:
+			return "SMS_WMS_CFG_GW_DOMAIN_PREF";
+			case EventType.SMS_WMS_CFG_EVENT_ROUTES:
+			return "SMS_WMS_CFG_EVENT_ROUTES";
+			case EventType.SMS_WMS_CFG_MEMORY_STATUS:
+			return "SMS_WMS_CFG_MEMORY_STATUS";
+			case EventType.SMS_WMS_CFG_MEMORY_STATUS_SET:
+			return "SMS_WMS_CFG_MEMORY_STATUS_SET";
+			case EventType.SMS_WMS_CFG_GW_READY:
+			return "SMS_WMS_CFG_GW_READY";
+			case EventType.SMS_WMS_READ_TEMPLATE:
+			return "SMS_WMS_READ_TEMPLATE";
             default:
 			return "%d (unknown)".printf( t );
         }
@@ -588,6 +609,13 @@ namespace Msmcomm
 					details += @"service_capabilitiy = $(msg.service_capabilitiy) ";
 					details += @"gprs_attached = $(msg.gprs_attached) ";
 					details += @"roam = $(msg.roam) ";
+					break;
+				case Msmcomm.EventType.SMS_WMS_READ_TEMPLATE:
+					var msg = (Msmcomm.Unsolicited.SMS.WmsReadTemplate) this.copy();
+					details = @"digit_mode = $(msg.digit_mode)";
+					details += @"number_mode = $(msg.number_mode)";
+					details += @"number_type = $(msg.number_type)";
+					details += @"number_plan = $(msg.number_plan)";
 					break;
                 default:
                     break;
@@ -918,6 +946,34 @@ namespace Msmcomm
 				get;
 			}
 		}
+
+		namespace SMS
+		{
+			[Compact]
+			[CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+			public class WmsReadTemplate : Message
+			{
+				public uint8 digit_mode {
+					[CCode (cname = "msmcomm_event_sms_wms_read_template_get_digit_mode")]
+					get;
+				}
+
+				public uint8 number_mode {
+					[CCode (cname = "msmcomm_event_sms_wms_read_template_get_number_mode")]
+					get;
+				}
+
+				public uint8 number_type {
+					[CCode (cname = "msmcomm_event_sms_wms_read_template_get_number_type")]
+					get;
+				}
+
+				public uint8 number_plan {
+					[CCode (cname = "msmcomm_event_sms_wms_read_template_get_number_plan")]
+					get;
+				}
+			}
+		} /* namespace SMS */
     } /* namespace Unsolicited */
 }
 
