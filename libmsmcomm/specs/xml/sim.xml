@@ -8,6 +8,18 @@
 			<field name="pin" start="5" end="12" type="uint8_t"/>
 		</structure>
 		<structure name="sms_wms_read_template_event" length="2083">
+			<field name="digit_mode" start="224" type="uint8_t">
+				<certainty:guess attr="start"/>
+			</field>
+			<field name="number_mode" start="225" type="uint8_t">
+				<certainty:guess attr="start"/>
+			</field>
+			<field name="number_type" start="226" type="uint8_t"/>
+			<field name="number_plan" start="227" type="uint8_t"/>
+			<field name="scaddr_len" start="228" type="uint8_t"/>
+			<field name="scaddr" start="229" end="274" type="uint8_t">
+				<certainty:guess attr="end"/>
+			</field>
 		</structure>
 	</structures>
 </namespace:sim>

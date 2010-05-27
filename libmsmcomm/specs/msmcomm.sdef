@@ -59,6 +59,12 @@ start verify_pin_msg 14
 end
 
 start sms_wms_read_template_event 2083
+[224] uint8_t digit_mode
+[225] uint8_t number_mode
+[226] uint8_t number_type
+[227] uint8_t number_plan
+[228] uint8_t scaddr_len
+[229-274] uint8_t scaddr
 end
 
 #-------------------------------------------------------------------
@@ -81,9 +87,6 @@ start network_state_info_event 677
 [673] uint8_t modem_gsm_icon_ind
 end
 
-start cm_ph_info_available_event 0
-end
-
 #-------------------------------------------------------------------
 # SYSTEM
 #-------------------------------------------------------------------
@@ -94,17 +97,13 @@ start charger_status_event 13
 [5-6] uint16_t voltage
 end
 
-start radio_reset_ind_event 0
+start radio_reset_ind_event 76
 end
 
-start operator_mode_event 0
+start cm_ph_resp 12
 end
 
-start power_state_event 12
-[4] uint8_t power_state
-end
-
-start test_alive_event 0
+start cm_ph_event 4101
 end
 
 start get_firmware_info_resp 143

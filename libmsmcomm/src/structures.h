@@ -114,7 +114,14 @@ struct verify_pin_msg
 
 struct sms_wms_read_template_event
 {
-	uint8_t unknown0[2083];
+	uint8_t unknown0[224];
+	uint8_t digit_mode;
+	uint8_t number_mode;
+	uint8_t number_type;
+	uint8_t number_plan;
+	uint8_t scaddr_len;
+	uint8_t scaddr[46];
+	uint8_t unknown1[1808];
 } __attribute__ ((packed));
 
 
@@ -148,11 +155,6 @@ struct cm_ph_info_available_event
 } __attribute__ ((packed));
 
 
-struct cm_ph_info_available_event
-{
-} __attribute__ ((packed));
-
-
 struct charger_status_event
 {
 	uint8_t unknown0[5];
@@ -163,24 +165,19 @@ struct charger_status_event
 
 struct radio_reset_ind_event
 {
+	uint8_t unknown0[76];
 } __attribute__ ((packed));
 
 
-struct operator_mode_event
+struct cm_ph_resp
 {
+	uint8_t unknown0[12];
 } __attribute__ ((packed));
 
 
-struct power_state_event
+struct cm_ph_event
 {
-	uint8_t unknown0[4];
-	uint8_t power_state;
-	uint8_t unknown1[7];
-} __attribute__ ((packed));
-
-
-struct test_alive_event
-{
+	uint8_t unknown0[4101];
 } __attribute__ ((packed));
 
 
