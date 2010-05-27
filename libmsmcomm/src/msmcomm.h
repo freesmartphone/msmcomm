@@ -41,6 +41,7 @@
 #define MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS					22
 #define MSMCOMM_MESSAGE_CMD_CHARGING							23
 #define MSMCOMM_MESSAGE_CMD_DIAL_CALL							24
+#define MSMCOMM_MESSAGE_CMD_SET_SYSTEM_TIME 					25
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE								101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO						102
@@ -57,6 +58,7 @@
 #define MSMCOMM_RESPONSE_CHARGER_STATUS							114
 #define MSMCOMM_RESPONSE_CHARGING								115
 #define MSMCOMM_RESPONSE_CM_PH									116
+#define MSMCOMM_RESPONSE_SET_SYSTEM_TIME 						117
 
 #define MSMCOMM_EVENT_RESET_RADIO_IND							201
 #define MSMCOMM_EVENT_CHARGER_STATUS							202
@@ -306,6 +308,7 @@ unsigned int msmcomm_resp_charging_get_voltage(struct msmcomm_message *msg);
 unsigned int msmcomm_resp_charging_get_mode(struct msmcomm_message *msg);
 unsigned int msmcomm_resp_charger_status_get_voltage(struct msmcomm_message *msg);
 unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg);
+void msmcomm_message_set_system_time_set(struct msmcomm_message *msg, uint16_t year, uint16_t month, uint16_t day, uint16_t hours, uint16_t minutes, uint16_t seconds, int32_t timezone_offset);
 
 /* Call responses ---------------------------------- */
 uint16_t msmcomm_resp_cm_call_get_error_code(struct msmcomm_message *msg);

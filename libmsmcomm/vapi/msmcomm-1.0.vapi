@@ -97,7 +97,8 @@ namespace Msmcomm
         END_CALL,
         GET_CHARGER_STATUS,
         CHARGING,
-        DIAL_CALL
+        DIAL_CALL,
+        SET_SYSTEM_TIME
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -118,6 +119,7 @@ namespace Msmcomm
         CHARGER_STATUS,
         CHARGING,
         CM_PH,
+        SET_SYSTEM_TIME,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
@@ -242,6 +244,8 @@ namespace Msmcomm
             return "COMMAND_CHARGING";
             case CommandType.DIAL_CALL:
             return "COMMAND_DIAL_CALL";
+			case CommandType.SET_SYSTEM_TIME:
+			return "COMMAND_SET_SYSTEM_TIME";
 
             // ResponseType
             case ResponseType.TEST_ALIVE:
@@ -274,6 +278,8 @@ namespace Msmcomm
             return "RESPONSE_CHARGING";
             case ResponseType.CM_PH:
             return "RESPONSE_CM_PH";
+			case ResponseType.SET_SYSTEM_TIME:
+			return "RESPONSE_SET_SYSTEM_TIME";
 
             // EventType
         	case EventType.RESET_RADIO_IND:
@@ -750,6 +756,17 @@ namespace Msmcomm
                 _setCallerId(caller_id, (uint)caller_id.length);
             }
         }
+
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class SetSystemTime : Message
+		{
+			[CCode (cname = "msmcomm_create_message")]
+            public SetSystemTime(CommandType t = CommandType.SET_SYSTEM_TIME);
+
+			[CCode (cname = "msmcomm_message_set_system_time_set")]
+			public void setData(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset);
+		}
     }
 
     namespace Reply

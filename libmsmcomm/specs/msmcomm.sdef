@@ -155,6 +155,24 @@ end
 start test_alive_resp 0
 end
 
+start set_system_time_msg 26
+[0-3] uint32_t ref_id
+[4-5] uint16_t year
+[6-7] uint16_t month
+[8-9] uint16_t day
+[10-11] uint16_t hour
+[12-13] uint16_t minutes
+[14-15] uint16_t seconds
+[18-21] int32_t timezone_offset
+[22] uint8_t value0
+[24] uint8_t static0
+end
+
+start set_system_time_resp 6
+[0-3] uint32_t ref_id
+[4] uint8_t static0
+end
+
 #-------------------------------------------------------------------
 # AUDIO
 #-------------------------------------------------------------------

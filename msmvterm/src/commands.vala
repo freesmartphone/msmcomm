@@ -73,6 +73,7 @@ public class Commands
         register( "dial_call", dial_call, "Dial out", "dial <number>", 1);
         register( "answer_call", answer_call, "Answer an incomming call", "answer_call <call_nr>", 1);
         register( "end_call", end_call, "End an active call", "end_call <call_nr>", 1);
+        register( "set_system_time", set_system_time, "Set system time for modem","set_system_time <year> <month> <day> <hour> <minutes> <seconds> <timezone_offset>", 7);
     }
 
     private uint8 nextValidRefId()
@@ -270,6 +271,14 @@ public class Commands
             return;
         }
         msg.id = (uint8)id;
+        msm.sendMessage(msg);
+    }
+
+    private void set_system_time( string[] params )
+    {
+        var msg = new Msmcomm.Command.SetSystemTime();
+        msg.index = nextValidRefId();
+        msg.setData(params[0].to_int(), params[1].to_int(), params[2].to_int(), params[3].to_int(), params[4].to_int(), params[5].to_int(), params[6].to_int());
         msm.sendMessage(msg);
     }
 }

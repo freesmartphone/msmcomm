@@ -298,3 +298,45 @@ void msmcomm_message_charging_set_voltage
 		((new_voltage & 0xff) << 8) | ((new_voltage & 0xff00) >> 4);
 }
 
+/*
+ * MSMCOMM_MESSAGE_CMD_SET_SYSTEM_TIME
+ */
+void msg_set_system_time_init(struct msmcomm_message *msg)
+{
+	msg->group_id = 0x1b;
+	msg->msg_id = 0xe;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct set_system_time_msg);
+}
+
+uint32_t msg_set_system_time_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct set_system_time_msg);
+}
+
+void msg_set_system_time_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t* msg_set_system_time_prepare_data(struct msmcomm_message *msg)
+{
+	MESSAGE_CAST(msg, struct set_system_time_msg)->ref_id = msg->ref_id;
+	MESSAGE_CAST(msg, struct set_system_time_msg)->static0 = 0x3;
+	return msg->payload;
+}
+
+void msmcomm_message_set_system_time_set(struct msmcomm_message *msg,
+										 uint16_t year, uint16_t month,
+										 uint16_t day, uint16_t hour,
+										 uint16_t minutes, uint16_t seconds,
+										 int32_t timezone_offset)
+{
+	MESSAGE_CAST(msg, struct set_system_time_msg)->year = year;
+	MESSAGE_CAST(msg, struct set_system_time_msg)->month = month;
+	MESSAGE_CAST(msg, struct set_system_time_msg)->day = day;
+	MESSAGE_CAST(msg, struct set_system_time_msg)->hour = hour;
+	MESSAGE_CAST(msg, struct set_system_time_msg)->minutes = minutes;
+	MESSAGE_CAST(msg, struct set_system_time_msg)->seconds = seconds;
+	MESSAGE_CAST(msg, struct set_system_time_msg)->timezone_offset = timezone_offset;
+}
