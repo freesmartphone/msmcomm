@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<structures domain="audio">
-	<structure name="set_audio_profile_msg" length="10">
-		<field name="ref_id" start="0" end="3" type="uint32_t"/>
-	</structure>
-	<structure name="sound_resp" length="11">
-	</structure>
-</structures>
+<namespace:audio>
+	<structures>
+		<structure name="set_audio_profile_msg" length="10">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+		<structure name="sound_resp" length="11">
+		</structure>
+	</structures>
+</namespace:audio>

@@ -1,7 +1,6 @@
 #-------------------------------------------------------------------
-# Call management
+# CALL
 #-------------------------------------------------------------------
-
 start call_status_event 1107
 [0] uint8_t call_id
 [1] uint8_t call_type
@@ -59,11 +58,12 @@ start verify_pin_msg 14
 [5-12] uint8_t pin
 end
 
+start sms_wms_read_template_event 2083
+end
 
 #-------------------------------------------------------------------
-# Network
+# NETWORK
 #-------------------------------------------------------------------
-
 start network_state_info_event 677
 [0-7] uint8_t change_field
 [8] uint8_t new_value
@@ -76,7 +76,6 @@ start network_state_info_event 677
 [22-101] uint8_t operator_name
 [105] uint8_t hplmn_or_spdi
 [106] uint8_t hplmn_length
-# FIXME [107-124] uint8_t hplmn
 [123-124] uint16_t rssi
 [125-126] uint16_t ecio
 [673] uint8_t modem_gsm_icon_ind
@@ -86,8 +85,10 @@ start cm_ph_info_available_event 0
 end
 
 #-------------------------------------------------------------------
-# System
+# SYSTEM
 #-------------------------------------------------------------------
+start cm_ph_info_available_event 0
+end
 
 start charger_status_event 13
 [5-6] uint16_t voltage
@@ -138,10 +139,6 @@ start get_phone_state_info_msg 4
 [0-3] uint32_t ref_id
 end
 
-start set_audio_profile_msg 10
-[0-3] uint32_t ref_id
-end
-
 start charger_status_msg 13
 [0-3] uint32_t ref_id
 [5-6] uint16_t voltage
@@ -160,8 +157,11 @@ start test_alive_resp 0
 end
 
 #-------------------------------------------------------------------
-# Audio
+# AUDIO
 #-------------------------------------------------------------------
+start set_audio_profile_msg 10
+[0-3] uint32_t ref_id
+end
 
 start sound_resp 11
 end
@@ -169,7 +169,6 @@ end
 #-------------------------------------------------------------------
 # GPS
 #-------------------------------------------------------------------
-
 start pdsm_pd_done_event 0
 end
 
@@ -202,3 +201,4 @@ end
 
 start get_location_priv_pref_msg 12
 end
+

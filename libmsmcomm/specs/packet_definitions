@@ -1,8 +1,15 @@
+0x0 0x0 dial_call_msg
+0x0 0x1 answer_call_msg
+0x0 0x2 end_call_msg
 0x1 0x1 cm_call_resp
 0x3 0x0 change_operation_mode_msg
 0x3 0x5 get_phone_state_info_msg
+0x4 0x1 cm_ph_rsp
+0x5 0x0 operator_mode_event
+0x5 0xe cm_ph_info_available_event
 0x8 0x1 network_state_info_event
 0x8 0x0 network_state_info_event
+0xf 0xe verify_pin_msg
 0x10 0x1 get_sim_capabilities_resp
 0x1b 0x15 charger_status_msg
 0x1b 0x13 charging_msg
@@ -14,19 +21,17 @@
 0x1c 0x14 charging_resp
 0x1c 0x2 test_alive_resp
 0x1c 0x16 charger_status_msg
+0x1d 0x0 radio_reset_ind_event
+0x1d 0x1 charger_status_event
 0x1e 0x0 set_audio_profile_msg
 0x1f 0x1 sound_resp
+0xb cm_sups_event
+0x11 sim_event
 
-#verify_pin_msg
-#cm_ph_info_available_event
-#charger_status_event
-#radio_reset_ind_event
-#operator_mode_event
+
+
 #power_state_event
 #test_alive_event
-# 0x2 call_status_event
-#answer_call_msg
-#end_call_msg
-#dial_call_msg
+#call_status_event
 #cm_sups_event
 #sups_resp

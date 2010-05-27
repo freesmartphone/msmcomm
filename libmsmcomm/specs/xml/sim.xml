@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<structures domain="sim">
-	<structure name="get_sim_capabilities_resp" length="1934">
-	</structure>
-	<structure name="verify_pin_msg" length="14">
-		<field name="pin_type" start="0" type="uint8_t"/>
-		<field name="pin" start="5" end="12" type="uint8_t"/>
-	</structure>
-</structures>
+<namespace:sim>
+	<structures>
+		<structure name="get_sim_capabilities_resp" length="1934">
+		</structure>
+		<structure name="verify_pin_msg" length="14">
+			<field name="pin_type" start="0" type="uint8_t"/>
+			<field name="pin" start="5" end="12" type="uint8_t"/>
+		</structure>
+		<structure name="sms_wms_read_template_event" length="2083">
+		</structure>
+	</structures>
+</namespace:sim>
 

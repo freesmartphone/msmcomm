@@ -112,6 +112,12 @@ struct verify_pin_msg
 } __attribute__ ((packed));
 
 
+struct sms_wms_read_template_event
+{
+	uint8_t unknown0[2083];
+} __attribute__ ((packed));
+
+
 struct network_state_info_event
 {
 	uint8_t change_field[8];
@@ -134,6 +140,11 @@ struct network_state_info_event
 	uint8_t unknown4[546];
 	uint8_t modem_gsm_icon_ind;
 	uint8_t unknown5[3];
+} __attribute__ ((packed));
+
+
+struct cm_ph_info_available_event
+{
 } __attribute__ ((packed));
 
 
@@ -223,13 +234,6 @@ struct get_phone_state_info_msg
 } __attribute__ ((packed));
 
 
-struct set_audio_profile_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0[6];
-} __attribute__ ((packed));
-
-
 struct charger_status_msg
 {
 	uint32_t ref_id;
@@ -254,6 +258,13 @@ struct charging_msg
 
 struct test_alive_resp
 {
+} __attribute__ ((packed));
+
+
+struct set_audio_profile_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[6];
 } __attribute__ ((packed));
 
 

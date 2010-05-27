@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<structures domain="network">
-	<structure name="network_state_info_event" length="677">
-		<field name="change_field" start="0" end="7" type="uint8_t"/>
-		<field name="new_value" start="8" type="uint8_t"/>
-		<field name="servce_domain" start="9" type="uint8_t"/>
-		<field name="service_capability" start="10" type="uint8_t"/>
-		<field name="gprs_attached" start="11" type="uint8_t"/>
-		<field name="roam" start="12" end="13" type="uint16_t"/>
-		<field name="plmn" start="15" end="17" type="uint8_t"/>
-		<field name="operator_name_len" start="21" type="uint8_t"/>
-		<field name="operator_name" start="22" end="101" type="uint8_t"/>
-		<field name="hplmn_or_spdi" start="105" type="uint8_t"/>
-		<field name="hplmn_length" start="106" type="uint8_t"/>
-		<field name="rssi" start="123" end="124" type="uint16_t"/>
-		<field name="ecio" start="125" end="126" type="uint16_t"/>
-		<field name="modem_gsm_icon_ind" start="673" type="uint8_t"/>
-	</structure>
-	<structure name="cm_ph_info_available_event" length="0">
-	</structure>
-</structures>
+<namespace:network>
+	<structures>
+		<structure name="network_state_info_event" length="677">
+			<field name="change_field" start="0" end="7" type="uint8_t"/>
+			<field name="new_value" start="8" type="uint8_t"/>
+			<field name="servce_domain" start="9" type="uint8_t"/>
+			<field name="service_capability" start="10" type="uint8_t"/>
+			<field name="gprs_attached" start="11" type="uint8_t"/>
+			<field name="roam" start="12" end="13" type="uint16_t"/>
+			<field name="plmn" start="15" end="17" type="uint8_t"/>
+			<field name="operator_name_len" start="21" type="uint8_t"/>
+			<field name="operator_name" start="22" end="101" type="uint8_t"/>
+			<field name="hplmn_or_spdi" start="105" type="uint8_t"/>
+			<field name="hplmn_length" start="106" type="uint8_t"/>
+			<field name="rssi" start="123" end="124" type="uint16_t"/>
+			<field name="ecio" start="125" end="126" type="uint16_t"/>
+			<field name="modem_gsm_icon_ind" start="673" type="uint8_t"/>
+		</structure>
+		<structure name="cm_ph_info_available_event" length="0">
+		</structure>
+	</structures>
+</namespace:network>
 
