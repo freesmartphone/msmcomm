@@ -62,6 +62,9 @@
 #define DESCRIPTOR_TYPE_RESPONSE	2
 #define DESCRIPTOR_TYPE_GROUP		3
 
+#define SUBSYSTEM_ID(msg) ((msg->msg_id & 0xf0) >> 8)
+#define MSG_ID(msg) (msg->msg_id & 0xf)
+
 struct msmcomm_message
 {
 	uint8_t group_id;

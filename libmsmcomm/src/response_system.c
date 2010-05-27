@@ -222,3 +222,25 @@ unsigned int msmcomm_resp_charging_get_voltage(struct msmcomm_message *msg)
 	return MSMCOMM_MESSAGE_INVALID;
 
 }
+
+/*
+ * MSMCOMM_RESPONSE_CM_PH
+ */
+
+unsigned int resp_cm_ph_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x4) && (msg->msg_id == 0x1);
+}
+
+void resp_cm_ph_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	if (len != sizeof(struct cm_ph_resp))
+		return;
+
+	msg->payload = data;
+}
+
+uint32_t resp_cm_ph_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct cm_ph_resp);
+}

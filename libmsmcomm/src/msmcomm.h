@@ -24,20 +24,23 @@
 #include <stdint.h>
 
 #define MSMCOMM_MESSAGE_INVALID									0
-#define MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE				1
-#define MSMCOMM_MESSAGE_CMD_GET_IMEI							2
-#define MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO					3
-#define MSMCOMM_MESSAGE_CMD_TEST_ALIVE							4
-#define MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO				5
-#define MSMCOMM_MESSAGE_CMD_VERIFY_PIN							6
-#define MSMCOMM_MESSAGE_CMD_GET_VOICEMAIL_NR					7
-#define MSMCOMM_MESSAGE_CMD_GET_LOCATION_PRIV_PREF				8
-#define MSMCOMM_MESSAGE_CMD_ANSWER_CALL							9
-#define MSMCOMM_MESSAGE_CMD_SET_AUDIO_PROFILE					10
-#define MSMCOMM_MESSAGE_CMD_END_CALL							11
-#define MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS					12
-#define MSMCOMM_MESSAGE_CMD_CHARGING							13
-#define MSMCOMM_MESSAGE_CMD_DIAL_CALL							14
+#define MSMCOMM_MESSAGE_NOT_USED 								1
+
+
+#define MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE				10
+#define MSMCOMM_MESSAGE_CMD_GET_IMEI							12
+#define MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO					13
+#define MSMCOMM_MESSAGE_CMD_TEST_ALIVE							14
+#define MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO				15
+#define MSMCOMM_MESSAGE_CMD_VERIFY_PIN							16
+#define MSMCOMM_MESSAGE_CMD_GET_VOICEMAIL_NR					17
+#define MSMCOMM_MESSAGE_CMD_GET_LOCATION_PRIV_PREF				18
+#define MSMCOMM_MESSAGE_CMD_ANSWER_CALL							19
+#define MSMCOMM_MESSAGE_CMD_SET_AUDIO_PROFILE					20
+#define MSMCOMM_MESSAGE_CMD_END_CALL							21
+#define MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS					22
+#define MSMCOMM_MESSAGE_CMD_CHARGING							23
+#define MSMCOMM_MESSAGE_CMD_DIAL_CALL							24
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE								101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO						102
@@ -53,12 +56,12 @@
 #define MSMCOMM_RESPONSE_CM_CALL 								113
 #define MSMCOMM_RESPONSE_CHARGER_STATUS							114
 #define MSMCOMM_RESPONSE_CHARGING								115
+#define MSMCOMM_RESPONSE_CM_PH									116
 
 #define MSMCOMM_EVENT_RESET_RADIO_IND							201
 #define MSMCOMM_EVENT_CHARGER_STATUS							202
 #define MSMCOMM_EVENT_OPERATION_MODE							206
 #define MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE						207
-#define MSMCOMM_EVENT_POWER_STATE								215
 #define MSMCOMM_EVENT_NETWORK_STATE_INFO						217
 
 /*
@@ -148,6 +151,18 @@
 #define MSMCOMM_EVENT_SUPS_DEACTIVATE_CONF						281
 
 /*
+ * SMS Events
+ */
+#define MSMCOMM_EVENT_SMS_WMS_CFG_MESSAGE_LIST 					282
+#define MSMCOMM_EVENT_SMS_WMS_CFG_GW_DOMAIN_PREF				283
+#define MSMCOMM_EVENT_SMS_WMS_CFG_EVENT_ROUTES					284
+#define MSMCOMM_EVENT_SMS_WMS_CFG_MEMORY_STATUS					285
+#define MSMCOMM_EVENT_SMS_WMS_CFG_MEMORY_STATUS_SET				286
+#define MSMCOMM_EVENT_SMS_WMS_CFG_GW_READY 						287
+
+#define MSMCOMM_EVENT_SMS_WMS_READ_TEMPLATE						288
+
+/*
  * Operation modes
  */
 #define MSMCOMM_OPERATION_MODE_RESET							0
@@ -213,18 +228,12 @@
 struct msmcomm_context;
 struct msmcomm_message;
 
-typedef void (*msmcomm_event_handler_cb)
-	(void *user_data, int event, struct msmcomm_message *message);
-typedef void (*msmcomm_write_handler_cb)
-	(void *user_data, uint8_t *data, uint32_t len);
-typedef int  (*msmcomm_read_handler_cb)
-	(void *user_data, uint8_t *data, uint32_t len);
-typedef void (*msmcomm_log_handler_cb)
-	(void *user_data, char *buffer, unsigned int len);
-typedef void (*msmcomm_error_handler_cb)
-	(void *user_data, int error, void *data);
-typedef void (*msmcomm_network_state_info_changed_field_type_cb)
-	(void *user_data, struct msmcomm_message *msg, int type);
+typedef void (*msmcomm_event_handler_cb)(void *user_data, int event, struct msmcomm_message *message);
+typedef void (*msmcomm_write_handler_cb)(void *user_data, uint8_t *data, uint32_t len);
+typedef int  (*msmcomm_read_handler_cb)(void *user_data, uint8_t *data, uint32_t len);
+typedef void (*msmcomm_log_handler_cb)(void *user_data, char *buffer, unsigned int len);
+typedef void (*msmcomm_error_handler_cb)(void *user_data, int error, void *data);
+typedef void (*msmcomm_network_state_info_changed_field_type_cb)(void *user_data, struct msmcomm_message *msg, int type);
 
 struct msmcomm_context
 {
@@ -245,42 +254,26 @@ int msmcomm_launch_daemon(const char *workdir);
 int msmcomm_is_daemon_running();
 int msmcomm_shutdown_daemon();
 
-int				msmcomm_init
-	(struct msmcomm_context *ctx);
-int				msmcomm_shutdown
-	(struct msmcomm_context *ctx);
-int				msmcomm_read_from_modem
-	(struct msmcomm_context *ctx);
-int				msmcomm_send_message
-	(struct msmcomm_context *ctx, struct msmcomm_message *msg);
-unsigned int 	msmcomm_check_hci_version
-	(unsigned int hci_version);
-void			msmcomm_register_event_handler
-	(struct msmcomm_context *ctx, msmcomm_event_handler_cb event_handler, void *data);
-void			msmcomm_register_write_handler
-	(struct msmcomm_context *ctx, msmcomm_write_handler_cb write_handler, void *data);
-void			msmcomm_register_read_handler
-	(struct msmcomm_context *ctx, msmcomm_read_handler_cb read_handler, void *data);
-void			msmcomm_register_error_handler
-	(struct msmcomm_context *ctx, msmcomm_error_handler_cb error_handler, void *data);
-void			msmcomm_register_log_handler
-	(struct msmcomm_context *ctx, msmcomm_log_handler_cb log_handler, void *data);
+int msmcomm_init(struct msmcomm_context *ctx);
+int msmcomm_shutdown(struct msmcomm_context *ctx);
+int msmcomm_read_from_modem(struct msmcomm_context *ctx);
+int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *msg);
+unsigned int msmcomm_check_hci_version(unsigned int hci_version);
+void msmcomm_register_event_handler(struct msmcomm_context *ctx, msmcomm_event_handler_cb event_handler, void *data);
+void msmcomm_register_write_handler(struct msmcomm_context *ctx, msmcomm_write_handler_cb write_handler, void *data);
+void msmcomm_register_read_handler(struct msmcomm_context *ctx, msmcomm_read_handler_cb read_handler, void *data);
+void msmcomm_register_error_handler(struct msmcomm_context *ctx, msmcomm_error_handler_cb error_handler, void *data);
+void msmcomm_register_log_handler(struct msmcomm_context *ctx, msmcomm_log_handler_cb log_handler, void *data);
 
 /**
  * These are common operations which are valid for all kind of messages
  */
-struct msmcomm_message* msmcomm_create_message
-	(unsigned int type);
-struct msmcomm_message* msmcomm_message_make_copy
-	(struct msmcomm_message *msg);
-uint32_t		msmcomm_message_get_size
-	(struct msmcomm_message *msg);
-uint32_t		msmcomm_message_get_type
-	(struct msmcomm_message *msg);
-uint32_t 		msmcomm_message_get_ref_id
-	(struct msmcomm_message *msg);
-void			msmcomm_message_set_ref_id
-	(struct msmcomm_message *msg, uint32_t ref_id);
+struct msmcomm_message* msmcomm_create_message(unsigned int type);
+struct msmcomm_message* msmcomm_message_make_copy(struct msmcomm_message *msg);
+uint32_t msmcomm_message_get_size(struct msmcomm_message *msg);
+uint32_t msmcomm_message_get_type(struct msmcomm_message *msg);
+uint32_t msmcomm_message_get_ref_id(struct msmcomm_message *msg);
+void msmcomm_message_set_ref_id(struct msmcomm_message *msg, uint32_t ref_id);
 
 /**
  * These are message/response/event specific operations which only should be
@@ -288,48 +281,31 @@ void			msmcomm_message_set_ref_id
  */
 
 /* System messages --------------------------------- */
-void msmcomm_message_change_operation_mode_set_operation_mode
-	(struct msmcomm_message *msg, uint8_t operation_mode);
+void msmcomm_message_change_operation_mode_set_operation_mode(struct msmcomm_message *msg, uint8_t operation_mode);
+void msmcomm_message_charging_set_voltage(struct msmcomm_message *msg, unsigned int voltage);
 
-void msmcomm_message_charging_set_voltage
-	(struct msmcomm_message *msg, unsigned int voltage);
-
-void msmcomm_message_charging_set_mode
-	(struct msmcomm_message *msg, unsigned int mode);
+void msmcomm_message_charging_set_mode(struct msmcomm_message *msg, unsigned int mode);
 
 
 /* Call messages ------------------------------------ */
-void msmcomm_message_end_call_set_call_number
-	(struct msmcomm_message *msg, uint8_t call_nr);
-
-void msmcomm_message_dial_call_set_caller_id
-	(struct msmcomm_message *msg, uint8_t *caller_id, uint8_t len);
+void msmcomm_message_end_call_set_call_number(struct msmcomm_message *msg, uint8_t call_nr);
+void msmcomm_message_dial_call_set_caller_id(struct msmcomm_message *msg, uint8_t *caller_id, uint8_t len);
 
 /* SIM messages ------------------------------------ */
-void			msmcomm_message_verify_pin_set_pin
-	(struct msmcomm_message *msg, const char* pin);
+void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char* pin);
+uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg);
+uint8_t msmcomm_event_sms_wms_read_template_get_number_mode(struct msmcomm_message *msg);
+uint8_t msmcomm_event_sms_wms_read_template_get_number_type(struct msmcomm_message *msg);
+uint8_t msmcomm_event_sms_wms_read_template_get_number_plan(struct msmcomm_message *msg);
 
 /* System responses -------------------------------- */
-char*			msmcomm_resp_get_firmware_info_get_info
-	(struct msmcomm_message *msg);
-
-uint8_t 		msmcomm_resp_get_firmware_info_get_hci_version
-	(struct msmcomm_message *msg);
-
-char* 			msmcomm_resp_get_imei_get_imei
-	(struct msmcomm_message *msg);
-
-unsigned int 	msmcomm_resp_charging_get_voltage
-	(struct msmcomm_message *msg);
-
-unsigned int msmcomm_resp_charging_get_mode
-	(struct msmcomm_message *msg);
-
-unsigned int 	msmcomm_resp_charger_status_get_voltage
-	(struct msmcomm_message *msg);
-
-unsigned int msmcomm_resp_charger_status_get_mode
-	(struct msmcomm_message *msg);
+char* msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg);
+uint8_t msmcomm_resp_get_firmware_info_get_hci_version(struct msmcomm_message *msg);
+char* msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg);
+unsigned int msmcomm_resp_charging_get_voltage(struct msmcomm_message *msg);
+unsigned int msmcomm_resp_charging_get_mode(struct msmcomm_message *msg);
+unsigned int msmcomm_resp_charger_status_get_voltage(struct msmcomm_message *msg);
+unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg);
 
 /* Call responses ---------------------------------- */
 uint16_t msmcomm_resp_cm_call_get_error_code(struct msmcomm_message *msg);
@@ -337,10 +313,8 @@ uint16_t msmcomm_resp_cm_call_get_cmd(struct msmcomm_message *msg);
 
 
 /* System events ----------------------------------- */
-uint8_t 		msmcomm_event_power_state_get_state
-	(struct msmcomm_message *msg);
-unsigned int 	msmcomm_event_charger_status_get_voltage
-	(struct msmcomm_message *msg);
+uint8_t msmcomm_event_power_state_get_state(struct msmcomm_message *msg);
+unsigned int msmcomm_event_charger_status_get_voltage(struct msmcomm_message *msg);
 
 /* Call events ------------------------------------- */
 char* msmcomm_event_call_status_get_caller_id(struct msmcomm_message *msg);
@@ -349,38 +323,17 @@ uint8_t msmcomm_event_call_status_get_reject_value(struct msmcomm_message *msg);
 uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message *msg);
 
 /* Network events ---------------------------------- */
-uint32_t msmcomm_event_network_state_info_get_change_field
-	(struct msmcomm_message *msg);
-
-uint8_t msmcomm_event_network_state_info_get_new_value
-	(struct msmcomm_message *msg);
-
-uint8_t* msmcomm_event_network_state_info_get_plmn
-	(struct msmcomm_message *msg);
-
-char* msmcomm_event_network_state_info_get_operator_name
-	(struct msmcomm_message *msg);
-
-uint16_t msmcomm_event_network_state_info_get_rssi
-	(struct msmcomm_message *msg);
-
-uint16_t msmcomm_event_network_state_info_get_ecio
-	(struct msmcomm_message *msg);
-
-void msmcomm_event_network_state_info_trace_changes
-	(struct msmcomm_message *msg, msmcomm_network_state_info_changed_field_type_cb type_handler, void *user_data);
-
-uint8_t msmcomm_event_network_state_info_get_service_domain
-	(struct msmcomm_message *msg);
-
-uint8_t msmcomm_event_network_state_info_get_service_capability
-	(struct msmcomm_message *msg);
-
-uint8_t msmcomm_event_network_state_info_get_gprs_attached
-	(struct msmcomm_message *msg);
-
-uint16_t msmcomm_event_network_state_info_get_roam
-	(struct msmcomm_message *msg);
+uint32_t msmcomm_event_network_state_info_get_change_field(struct msmcomm_message *msg);
+uint8_t msmcomm_event_network_state_info_get_new_value(struct msmcomm_message *msg);
+uint8_t* msmcomm_event_network_state_info_get_plmn(struct msmcomm_message *msg);
+char* msmcomm_event_network_state_info_get_operator_name(struct msmcomm_message *msg);
+uint16_t msmcomm_event_network_state_info_get_rssi(struct msmcomm_message *msg);
+uint16_t msmcomm_event_network_state_info_get_ecio(struct msmcomm_message *msg);
+void msmcomm_event_network_state_info_trace_changes(struct msmcomm_message *msg, msmcomm_network_state_info_changed_field_type_cb type_handler, void *user_data);
+uint8_t msmcomm_event_network_state_info_get_service_domain(struct msmcomm_message *msg);
+uint8_t msmcomm_event_network_state_info_get_service_capability(struct msmcomm_message *msg);
+uint8_t msmcomm_event_network_state_info_get_gprs_attached(struct msmcomm_message *msg);
+uint16_t msmcomm_event_network_state_info_get_roam(struct msmcomm_message *msg);
 
 /* 
  * Frame handling

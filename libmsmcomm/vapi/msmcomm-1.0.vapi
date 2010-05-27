@@ -116,7 +116,8 @@ namespace Msmcomm
         SOUND,
         CM_CALL,
         CHARGER_STATUS,
-        CHARGING
+        CHARGING,
+        CM_PH,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
@@ -126,7 +127,6 @@ namespace Msmcomm
         CHARGER_STATUS,
         OPERATION_MODE,
         CM_PH_INFO_AVAILABLE,
-        POWER_STATE,
         NETWORK_STATE_INFO,
         PDSM_PD_DONE,
         PD_POSITION_DATA,
@@ -265,6 +265,8 @@ namespace Msmcomm
 			return "RESPONSE_CHARGER_STATUS";
             case ResponseType.CHARGING:
             return "RESPONSE_CHARGING";
+            case ResponseType.CM_PH:
+            return "RESPONSE_CM_PH";
 
             // EventType
         	case EventType.RESET_RADIO_IND:
@@ -275,8 +277,6 @@ namespace Msmcomm
 			return "URC_OPERATION_MODE";
         	case EventType.CM_PH_INFO_AVAILABLE:
 			return "URC_CM_PH_INFO_AVAILABLE";
-        	case EventType.POWER_STATE:
-			return "URC_POWER_STATE";
         	case EventType.NETWORK_STATE_INFO:
 			return "URC_NETWORK_STATE_INFO";
         	case EventType.PDSM_PD_DONE:

@@ -52,12 +52,14 @@ unsigned int event_radio_reset_ind_is_valid(struct msmcomm_message *msg)
 
 void event_radio_reset_ind_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
-	/* no data to handle */
+	if (len != sizeof(struct radio_reset_ind_event))
+		return;
+	msg->payload = data;
 }
 
 uint32_t event_radio_reset_ind_get_size(struct msmcomm_message *msg)
 {
-	return 0;
+	return sizeof(struct radio_reset_ind_event);
 }
 
 /*
@@ -91,15 +93,24 @@ uint32_t event_charger_status_get_size(struct msmcomm_message *msg)
 /*
  * MSMCOMM_EVENT_OPERATOR_MODE
  */
+ 
+/*
+handleRadioData groupId = 0x5, msgId = 0x0 
+handleRadioData HCI_SUBSYS_CM_PH_EVT with msgId 0x0 mNetworkSelModePref 0 
+handleRadioData HCI_CM_PH_OPRT_MODE_EVT = 5, powerState = 3 network Selection Mode 0 
+handleRadioData HCI_CM_PH_OPRT_MODE_EVT line = 255, als_Allowed = 0 
+handleRadioData Alsline = 255, alsSim = 0 
+handleRadioData Received HCI_SYS_OPRT_MODE_ONLINE 
+*/
 
 unsigned int event_operator_mode_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x4) && (msg->msg_id == 0x1);
+	return (msg->group_id == 0x5) && (msg->msg_id == 0x0);
 }
 
 void event_operator_mode_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
-	if (len != sizeof(struct operator_mode_event))
+	if (len != sizeof(struct cm_ph_event))
 		return;
 
 	msg->payload = data;
@@ -107,7 +118,7 @@ void event_operator_mode_handle_data(struct msmcomm_message *msg, uint8_t *data,
 
 uint32_t event_operator_mode_get_size(struct msmcomm_message *msg)
 {
-	return sizeof(struct operator_mode_event);
+	return sizeof(struct cm_ph_event);
 }
 
 /*
@@ -121,47 +132,13 @@ unsigned int event_cm_ph_info_available_is_valid(struct msmcomm_message *msg)
 
 void event_cm_ph_info_available_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
 {
+	if (len != sizeof(struct cm_ph_event))
+		return;
+
+	msg->payload = data;
 }
 
 uint32_t event_cm_ph_info_available_get_size(struct msmcomm_message *msg)
 {
-	return 0;
-}
-
-/*
- * MSMCOMM_EVENT_POWER_STATE
- */
-
-/*
- * [NFY] tel.flightmodenotification disabled
- * notifyPowerState
- * PACKET: dir=read fd=11 fn='/dev/modemuart' len=18/0x12
- * frame (type=Data, seq=04, ack=0a)
- * 04 01 00 0e 00 00 00 05 00 01 ff ff ff ff 00      ............... 
- */
-
-unsigned int event_power_state_is_valid(struct msmcomm_message *msg)
-{
-	return (msg->group_id == 0x4) && (msg->msg_id == 0x1);
-}
-
-void event_power_state_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
-{
-	if (len != sizeof(struct power_state_event))
-		return;
-	
-	msg->payload = data;
-}
-
-uint8_t msmcomm_event_power_state_get_state(struct msmcomm_message *msg)
-{
-	if (msg->payload == NULL) 
-		return 0x0;
-		
-	return MESSAGE_CAST(msg, struct power_state_event)->power_state;	
-}
-
-uint32_t event_power_state_get_size(struct msmcomm_message *msg)
-{
-	return sizeof(struct power_state_event);
+	return sizeof(struct cm_ph_event);
 }

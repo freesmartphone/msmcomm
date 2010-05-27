@@ -66,6 +66,7 @@ RESPONSE_TYPE(sound)
 RESPONSE_TYPE(cm_call)
 RESPONSE_TYPE(charging)
 RESPONSE_TYPE(charger_status)
+RESPONSE_TYPE(cm_ph)
 
 EVENT_TYPE(radio_reset_ind)
 EVENT_TYPE(charger_status)
@@ -105,7 +106,7 @@ struct descriptor resp_descriptors[] = {
 	EVENT_DATA(MSMCOMM_EVENT_PDSM_LCS, pdsm_lcs),
 	EVENT_DATA(MSMCOMM_EVENT_PDSM_XTRA, pdsm_xtra),
 	*/
-	EVENT_DATA(MSMCOMM_EVENT_POWER_STATE, power_state),
+	//EVENT_DATA(MSMCOMM_EVENT_POWER_STATE, power_state),
 	EVENT_DATA(MSMCOMM_EVENT_NETWORK_STATE_INFO, network_state_info),
 
 	/* responses */
@@ -165,7 +166,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 
 		if (group_descriptors[n].is_valid(&resp)) {
 			/* let our descriptor handle the left data */
-			group_descriptors[n].handle_data(&resp, data + 3, len - 2 - 3);
+			group_descriptors[n].handle_data(&resp, data + 3, len - 3);
 			
 			/* save descriptor for later use */
 			resp.descriptor = &group_descriptors[n];
@@ -186,7 +187,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 
 		if (resp_descriptors[n].is_valid(&resp)) {
 			/* let our descriptor handle the left data */
-			resp_descriptors[n].handle_data(&resp, data + 3, len - 2 - 3);
+			resp_descriptors[n].handle_data(&resp, data + 3, len - 3);
 
 			/* save descriptor for later use */
 			resp.descriptor = &resp_descriptors[n];

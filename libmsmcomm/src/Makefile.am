@@ -27,10 +27,12 @@ response_gps.c \
 response_audio.c \
 event_system.c \
 event_network.c \
+event_sms.c \
 group_sim_event.c \
 group_call_event.c \
 group_gps_event.c \
 group_sups_event.c \
+group_sms_event.c \
 msmcomm.h \
 internal.h \
 linuxlist.h \
