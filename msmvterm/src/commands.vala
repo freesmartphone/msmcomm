@@ -303,7 +303,13 @@ public class Commands
 		var msg = new Msmcomm.Command.ReadSimbook();
 		msg.index = nextValidRefId();
 
-		msg.record_id = (uint16)params[0].to_int();
+		var record_id = (uint16)params[0].to_int();
+		if (record_id <= 0) {
+			ERR( @"Please set a proper record id for this command." );
+			return;
+		}
+
+		msg.record_id = record_id;
 		msm.sendMessage(msg);
 	}
 
