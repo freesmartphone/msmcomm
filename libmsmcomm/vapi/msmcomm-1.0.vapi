@@ -102,6 +102,7 @@ namespace Msmcomm
         RSSI_STATUS,
         READ_SIMBOOK,
         GET_NETWORKLIST,
+        SET_MODE_PREFERENCE,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -258,6 +259,8 @@ namespace Msmcomm
 			return "COMMAND_READ_SIMBOOK";
 			case CommandType.GET_NETWORKLIST:
 			return "COMMAND_GET_NETWORKLIST";
+			case CommandType.SET_MODE_PREFERENCE:
+			return "COMMAND_SET_MODE_PREFERENCE";
 
             // ResponseType
             case ResponseType.TEST_ALIVE:
@@ -543,6 +546,32 @@ namespace Msmcomm
 				break;
 			case ResultType.READ_SIMBOOK_INVALID_RECORD_ID:
 				result = "RESULT_READ_SIMBOOK_INVALID_RECORD_ID";
+				break;
+		}
+		return result;
+	}
+
+	[CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_NETWORK_MODE_", cheader_filename = "msmcomm.h")]
+	public enum NetworkMode
+	{
+		AUTOMATIC,
+		GSM,
+		UMTS,
+	}
+
+	public string networkModeToString(NetworkMode type)
+	{
+		var result = "<unknown>";
+		switch (type)
+		{
+			case NetworkMode.AUTOMATIC:
+				result = "NETWORK_MODE_AUTOMATIC";
+				break;
+			case NetworkMode.GSM:
+				result = "NETWORK_MODE_GSM";
+				break;
+			case NetworkMode.UMTS:
+				result = "NETWORK_MODE_UMTS";
 				break;
 		}
 		return result;
@@ -912,6 +941,19 @@ namespace Msmcomm
 		{
 			[CCode (cname = "msmcomm_create_message")]
             public GetNetworkList(CommandType t = CommandType.GET_NETWORKLIST);
+		}
+
+		[Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class SetModePreference : Message
+		{
+			[CCode (cname = "msmcomm_create_message")]
+            public SetModePreference(CommandType t = CommandType.SET_MODE_PREFERENCE);
+
+			public NetworkMode mode {
+				[CCode (cname = "msmcomm_message_set_mode_preference_status_set_mode")]
+				set;
+			}
 		}
     }
 

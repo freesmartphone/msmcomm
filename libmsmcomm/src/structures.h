@@ -232,8 +232,8 @@ struct radio_reset_ind_event
 struct cm_ph_resp
 {
 	uint32_t ref_id;
-	uint8_t result;
 	uint8_t unknown0[7];
+	uint8_t result;
 } __attribute__ ((packed));
 
 
@@ -357,6 +357,24 @@ struct rssi_status_resp
 {
 	uint32_t ref_id;
 	uint8_t unknown0[4];
+} __attribute__ ((packed));
+
+
+struct set_mode_preference_msg
+{
+	uint32_t ref_id;
+	uint8_t mode;
+	uint8_t unknown0[5];
+	uint8_t value0;
+	uint8_t unknown1[3];
+	uint8_t value1;
+	uint8_t unknown2[5];
+	uint8_t value2;
+	uint8_t unknown3;
+	uint8_t value3;
+	uint8_t value4;
+	uint8_t value5;
+	uint8_t unknown4[4];
 } __attribute__ ((packed));
 
 

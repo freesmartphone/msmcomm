@@ -15,7 +15,7 @@
 				<description>
 				Maybe this field contains a result code as response to various messages. Meaning
 				of the different values is current unknown. Possible values for this field are:
-				- 10: seen as response to get_networklist_msg
+				- 26: seen as response to get_networklist_msg/set_mode_preference_msg in offline mode
 				</description>
 			</field>
 		</structure>
@@ -107,6 +107,16 @@
 			We don't know the meaning of the last four bytes.
 			</description>
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+		<structure name="set_mode_preference_msg" length="29">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="mode" start="4" type="uint8_t"/>
+			<field name="value0" start="10" type="uint8_t"/>
+			<field name="value1" start="14" type="uint8_t"/>
+			<field name="value2" start="20" type="uint8_t"/>
+			<field name="value3" start="22" type="uint8_t"/>
+			<field name="value4" start="23" type="uint8_t"/>
+			<field name="value5" start="24" type="uint8_t"/>
 		</structure>
 	</structures>
 </namespace:system>

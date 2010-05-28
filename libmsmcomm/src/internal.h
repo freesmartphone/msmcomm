@@ -53,7 +53,10 @@
 	char buffer[4096]; \
 	snprintf(buffer, 4096, fmt, ## args); \
 	ctx->log_cb(ctx->log_data, buffer, 4096); \
-} 
+}
+
+#define DEBUG(msg, ...)
+#define INFO(msg, ...)
 
 #define MESSAGE_CAST(message, type) ((type*)message->payload)
 

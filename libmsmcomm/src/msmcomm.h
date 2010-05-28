@@ -45,6 +45,7 @@
 #define MSMCOMM_MESSAGE_CMD_RSSI_STATUS							26
 #define MSMCOMM_MESSAGE_CMD_READ_SIMBOOK						27
 #define MSMCOMM_MESSAGE_CMD_GET_NETWORKLIST						28
+#define MSMCOMM_MESSAGE_CMD_SET_MODE_PREFERENCE 				29
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE								101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO						102
@@ -250,6 +251,13 @@
 #define MSMCOMM_ENCODING_TYPE_ASCII 														2
 #define MSMCOMM_ENCODING_TYPE_BUCS2															3
 
+/*
+ * Network modes
+ */
+#define MSMCOMM_NETWORK_MODE_AUTOMATIC														1
+#define MSMCOMM_NETWORK_MODE_GSM 															2
+#define MSMCOMM_NETWORK_MODE_UMTS 															3
+
 struct msmcomm_context;
 struct msmcomm_message;
 
@@ -311,6 +319,8 @@ void msmcomm_message_change_operation_mode_set_operation_mode(struct msmcomm_mes
 void msmcomm_message_charging_set_voltage(struct msmcomm_message *msg, unsigned int voltage);
 
 void msmcomm_message_charging_set_mode(struct msmcomm_message *msg, unsigned int mode);
+
+void msmcomm_message_set_mode_preference_status_set_mode(struct msmcomm_message *msg, unsigned int mode);
 
 
 /* Call messages ------------------------------------ */

@@ -51,6 +51,7 @@ MESSAGE_TYPE(set_system_time)
 MESSAGE_TYPE(rssi_status)
 MESSAGE_TYPE(read_simbook)
 MESSAGE_TYPE(get_networklist)
+MESSAGE_TYPE(set_mode_preference)
 
 struct descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE,change_operation_mode),
@@ -70,6 +71,7 @@ struct descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_RSSI_STATUS, rssi_status),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_READ_SIMBOOK, read_simbook),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_NETWORKLIST, get_networklist),
+	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_MODE_PREFERENCE, set_mode_preference),
 };
 
 unsigned int msg_descriptors_size = (unsigned int)(sizeof(msg_descriptors) / sizeof(struct descriptor));

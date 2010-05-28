@@ -77,6 +77,7 @@ public class Commands
 		register( "rssi_status", rssi_status, "Enable/disable rssi status updates", "rssi_status <0|1>", 1 );
 		register( "read_simbook", read_simbook, "Read entries from sim book", "read_simbook <record id>", 1 );
 		register( "get_networklist", get_networklist, "Request a list with all available networks");
+		register( "set_mode_preference", set_mode_preference, "Set the prefered mode for the network (Automatic, GSM, UMTS)", "set_mode_preference <auto|gsm|umts>", 1 );
 	}
 
     private uint8 nextValidRefId()
@@ -312,4 +313,28 @@ public class Commands
 		msg.index = nextValidRefId();
 		msm.sendMessage(msg);
 	}
+
+	private void set_mode_preference( string[] params )
+    {
+        var msg = new Msmcomm.Command.SetModePreference();
+        msg.index = nextValidRefId();
+
+        switch ( params[0] )
+        {
+            case "auto":
+                msg.mode = Msmcomm.NetworkMode.AUTOMATIC;
+                break;
+            case "gsm":
+                msg.mode = Msmcomm.NetworkMode.GSM;
+                break;
+            case "umts":
+                msg.mode = Msmcomm.NetworkMode.UMTS;
+                break;
+            default:
+                ERR( @"Unknown network mode $(params[0])" );
+                return;
+        }
+        
+        msm.sendMessage( msg );
+    }
 }
