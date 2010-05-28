@@ -239,6 +239,17 @@ void resp_cm_ph_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t
 
 	msg->payload = data;
 	msg->ref_id = MESSAGE_CAST(msg, struct cm_ph_resp)->ref_id;
+
+	/* set message result code to the one we got with the response */
+	switch (MESSAGE_CAST(msg, struct cm_ph_resp))
+	{
+		case 0x0:
+			msg->result = MSMCOMM_RESULT_OK;
+			break;
+		case 0x1a:
+			msg->result = MSMCOMM_RESULT_ERROR;
+			break;
+	}
 }
 
 uint32_t resp_cm_ph_get_size(struct msmcomm_message *msg)
