@@ -164,6 +164,7 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 	resp.msg_id = data[1] | (data[2] << 8);
 	resp.payload = NULL;
 	resp.descriptor = NULL;
+	resp.result = MSMCOMM_RESULT_OK;
 	
 	/* first we check if we have a group which handle's this response or event */
 	for (n=0; n<group_descriptors_count; n++) {

@@ -242,7 +242,7 @@
 #define MSMCOMM_RESULT_OK 																	2
 /* NOTE: Every result code > MSMCOMM_RESULT_ERROR should be an error! */
 #define MSMCOMM_RESULT_ERROR																10
-#define MSMCOMM_RESULT_READ_SIMBOOK_INVLAID_RECORD_ID										MSMCOMM_RESULT_ERROR + 1
+#define MSMCOMM_RESULT_READ_SIMBOOK_INVALID_RECORD_ID										MSMCOMM_RESULT_ERROR + 1
 
 /*
  * Encoding types

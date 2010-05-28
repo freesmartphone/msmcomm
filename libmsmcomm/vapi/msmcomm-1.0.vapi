@@ -650,7 +650,7 @@ namespace Msmcomm
             set;
         }
 
-        public uint result {
+        public ResultType result {
 			[CCode (cname = "msmcomm_message_get_result")]
 			get;
 		}
@@ -660,7 +660,7 @@ namespace Msmcomm
 
         public string to_string()
         {
-            var str = "[MSM] ref %02x len %d : %s".printf( index, size, Msmcomm.eventTypeToString( type ) );
+            var str = "[MSM] rc %s ref %02x len %d : %s".printf( resultTypeToString(result), index, size, Msmcomm.eventTypeToString( type ) );
             var details = "";
 
             switch ( type )

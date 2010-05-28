@@ -241,7 +241,7 @@ void resp_cm_ph_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t
 	msg->ref_id = MESSAGE_CAST(msg, struct cm_ph_resp)->ref_id;
 
 	/* set message result code to the one we got with the response */
-	switch (MESSAGE_CAST(msg, struct cm_ph_resp))
+	switch (MESSAGE_CAST(msg, struct cm_ph_resp)->result)
 	{
 		case 0x0:
 			msg->result = MSMCOMM_RESULT_OK;
