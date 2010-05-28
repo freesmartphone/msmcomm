@@ -73,6 +73,7 @@ struct msmcomm_message
 	uint32_t descriptor_type;
 	struct descriptor *descriptor;
 	void *payload;
+	unsigned int success;
 };
 
 typedef void (*msmcomm_message_init_t)(struct msmcomm_message *msg);

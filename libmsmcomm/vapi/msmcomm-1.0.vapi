@@ -101,6 +101,7 @@ namespace Msmcomm
         SET_SYSTEM_TIME,
         RSSI_STATUS,
         READ_SIMBOOK,
+        GET_NETWORKLIST,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -254,6 +255,8 @@ namespace Msmcomm
 			return "COMMAND_RSSI_STATUS";
 			case CommandType.READ_SIMBOOK:
 			return "COMMAND_READ_SIMBOOK";
+			case CommandType.GET_NETWORKLIST:
+			return "COMMAND_GET_NETWORKLIST";
 
             // ResponseType
             case ResponseType.TEST_ALIVE:
@@ -848,6 +851,14 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_message_read_simbook_set_record_id")]
 				set;
 			}
+		}
+
+		[Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class GetNetworkList : Message
+		{
+			[CCode (cname = "msmcomm_create_message")]
+            public GetNetworkList(CommandType t = CommandType.GET_NETWORKLIST);
 		}
     }
 

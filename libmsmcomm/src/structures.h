@@ -135,7 +135,8 @@ struct read_simbook_msg
 struct read_simbook_resp
 {
 	uint32_t ref_id;
-	uint8_t unknown0[3];
+	uint8_t unknown0[2];
+	uint8_t result;
 	uint16_t record_id;
 	uint8_t number[42];
 	uint8_t title[90];
@@ -162,9 +163,25 @@ struct network_state_info_event
 	uint8_t unknown3[16];
 	uint16_t rssi;
 	uint16_t ecio;
-	uint8_t unknown4[546];
+	uint8_t unknown4[4];
+	uint8_t with_nitz_update;
+	uint8_t unknown5[541];
 	uint8_t modem_gsm_icon_ind;
-	uint8_t unknown5[3];
+	uint8_t unknown6[3];
+} __attribute__ ((packed));
+
+
+struct get_networklist_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint8_t value0;
+} __attribute__ ((packed));
+
+
+struct get_networklist_resp
+{
+	uint8_t unknown0[4098];
 } __attribute__ ((packed));
 
 

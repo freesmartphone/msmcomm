@@ -76,6 +76,7 @@ public class Commands
         register( "set_system_time", set_system_time, "Set system time for modem","set_system_time <year> <month> <day> <hour> <minutes> <seconds> <timezone_offset>", 7 );
 		register( "rssi_status", rssi_status, "Enable/disable rssi status updates", "rssi_status <0|1>", 1 );
 		register( "read_simbook", read_simbook, "Read entries from sim book", "read_simbook <record id>", 1 );
+		register( "get_networklist", get_networklist, "Request a list with all available networks");
 	}
 
     private uint8 nextValidRefId()
@@ -302,6 +303,13 @@ public class Commands
 		msg.index = nextValidRefId();
 
 		msg.record_id = (uint16)params[0].to_int();
+		msm.sendMessage(msg);
+	}
+
+	private void get_networklist( string[] params )
+	{
+		var msg = new Msmcomm.Command.GetNetworkList();
+		msg.index = nextValidRefId();
 		msm.sendMessage(msg);
 	}
 }

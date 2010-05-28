@@ -27,6 +27,7 @@
 		</structure>
 		<structure name="read_simbook_resp" length="142">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="result" start="6" type="uint8_t"/>
 			<field name="record_id" start="7" end="8" type="uint16_t"/>
 			<field name="number" start="9" end="50" type="uint8_t"/>
 			<field name="title" start="51" end="140" type="uint8_t"/>

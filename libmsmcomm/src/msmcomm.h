@@ -44,6 +44,7 @@
 #define MSMCOMM_MESSAGE_CMD_SET_SYSTEM_TIME 					25
 #define MSMCOMM_MESSAGE_CMD_RSSI_STATUS							26
 #define MSMCOMM_MESSAGE_CMD_READ_SIMBOOK						27
+#define MSMCOMM_MESSAGE_CMD_GET_NETWORKLIST						28
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE								101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO						102
@@ -287,6 +288,7 @@ uint32_t msmcomm_message_get_size(struct msmcomm_message *msg);
 uint32_t msmcomm_message_get_type(struct msmcomm_message *msg);
 uint32_t msmcomm_message_get_ref_id(struct msmcomm_message *msg);
 void msmcomm_message_set_ref_id(struct msmcomm_message *msg, uint32_t ref_id);
+unsigned int msmcomm_message_was_successful(struct msmcomm_message *msg);
 
 /**
  * These are message/response/event specific operations which only should be

@@ -44,3 +44,28 @@ uint8_t* msg_get_imei_prepare_data(struct msmcomm_message *msg)
 {
 	return msg->payload;
 }
+
+void msg_get_networklist_init(struct msmcomm_message *msg)
+{
+	msg->group_id = 0x3;
+	msg->msg_id = 0xa;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_networklist_msg);
+}
+
+uint32_t msg_get_networklist_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct get_networklist_msg);
+}
+
+void msg_get_networklist_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t* msg_get_networklist_prepare_data(struct msmcomm_message *msg)
+{
+	MESSAGE_CAST(msg, struct get_networklist_msg)->ref_id = msg->ref_id;
+	MESSAGE_CAST(msg, struct get_networklist_msg)->value0 = 0x13;
+	return msg->payload;
+}

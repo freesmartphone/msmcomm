@@ -60,6 +60,10 @@ void resp_read_simbook_handle_data(struct msmcomm_message *msg, uint8_t *data, u
 
 	msg->payload = data;
 	msg->ref_id = MESSAGE_CAST(msg, struct read_simbook_resp)->ref_id;
+
+	/* handle message specifc error codes */
+	if (MESSAGE_CAST(msg, struct read_simbook_resp)->result == 0xb)
+		msg->success = 0;
 }
 
 uint32_t resp_read_simbook_get_size(struct msmcomm_message *msg)

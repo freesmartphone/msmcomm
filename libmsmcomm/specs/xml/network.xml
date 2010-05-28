@@ -15,7 +15,14 @@
 			<field name="hplmn_length" start="106" type="uint8_t"/>
 			<field name="rssi" start="123" end="124" type="uint16_t"/>
 			<field name="ecio" start="125" end="126" type="uint16_t"/>
+			<field name="with_nitz_update" start="131" type="uint8_t"/>
 			<field name="modem_gsm_icon_ind" start="673" type="uint8_t"/>
+		</structure>
+		<structure name="get_networklist_msg" length="6">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="value0" start="5" type="uint8_t"/>
+		</structure>
+		<structure name="get_networklist_resp" length="4098">
 		</structure>
 	</structures>
 </namespace:network>
