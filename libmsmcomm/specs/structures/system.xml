@@ -33,10 +33,15 @@
 		<structure name="get_imei_msg" length="4">
 		</structure>
 		<structure name="change_operation_mode_msg" length="5">
-			<description>
-			</description>
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="operation_mode" start="4" type="uint8_t"/>
+			<field name="operation_mode" start="4" type="uint8_t">
+				<descripton>
+				Possible values are:
+				- reset: Reset the modem to it's internal default configuration
+				- online: Set the modem into online mode (network access)
+				- offline: Set the modem into offline mode (no network access)
+				</description>
+			</field>
 		</structure>
 		<structure name="test_alive_msg" length="5">
 			<field name="some_value0" start="0" type="uint8_t"/>
