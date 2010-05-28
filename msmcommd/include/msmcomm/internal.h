@@ -93,6 +93,8 @@
 #define MSMC_LLC_WINDOW_SIZE			8
 #define MSMC_LLC_MAX_SEQUENCE_NR		0xf
 
+#define MSMC_FRAME_MAX_ATTEMPTS 			10
+
 struct msmc_context
 {
 	/* Options, flags etc. */

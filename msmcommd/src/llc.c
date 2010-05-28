@@ -193,15 +193,6 @@ void send_frame(struct msmc_context *ctx, struct frame *fr)
 	talloc_free(data);
 }
 
-static void tx_item_try_send(struct msmc_context *ctx, struct tx_item *ti)
-{
-	assert(ti != NULL);
-	assert(ti->frame != NULL);
-
-	send_frame(ctx, ti->frame);
-	ti->attempts++;
-}
-
 static struct timer_list sync_timer;
 
 static void sync_timer_cb(void *_data)
@@ -245,6 +236,22 @@ static void restart_link(struct msmc_context *ctx)
 	/* clear rx buffer */
 	buffer_reset(ctx->rx_buf);
 	ctx->rx_buf_size = 0;
+}
+
+static void tx_item_try_send(struct msmc_context *ctx, struct tx_item *ti)
+{
+	assert(ti != NULL);
+	assert(ti->frame != NULL);
+
+	if (ti->attempts >= MSMC_FRAME_MAX_ATTEMPTS)
+	{
+		DEBUG("We have send a packet more than %i times with no response, restarting link!");
+		restart_link(ctx);
+		return;
+	}
+
+	send_frame(ctx, ti->frame);
+	ti->attempts++;
 }
 
 static void handle_frame_type(struct msmc_context *ctx, struct frame *fr)
