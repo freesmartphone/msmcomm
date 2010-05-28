@@ -212,6 +212,7 @@ namespace Msmcomm
         SMS_WMS_CFG_MEMORY_STATUS_SET,
         SMS_WMS_CFG_GW_READY,
         SMS_WMS_READ_TEMPLATE,
+        GET_NETWORKLIST,
     }
 
     public string eventTypeToString( int t )
@@ -461,6 +462,8 @@ namespace Msmcomm
 			return "SMS_WMS_CFG_GW_READY";
 			case EventType.SMS_WMS_READ_TEMPLATE:
 			return "SMS_WMS_READ_TEMPLATE";
+			case EventType.GET_NETWORKLIST:
+			return "URC_GET_NETWORKLIST";
             default:
 			return "%d (unknown)".printf( t );
         }
@@ -680,7 +683,18 @@ namespace Msmcomm
 					details += @"number = '$(msg.number)' ";
 					details += @"title = '$(msg.title)' ";
 					details += @"encoding_type = $(ecodingTypeToString(msg.encoding_type))";
-					
+					break;
+				case Msmcomm.EventType.GET_NETWORKLIST:
+					var msg = (Msmcomm.Unsolicited.GetNetworkList) this.copy();
+					var count = msg.network_count;
+					details = @"network_count = $(count) ";
+					for (int n=0; n<count; n++) {
+						uint plmn = msg.getPlmn(n);
+						string name = msg.getNetworkName(n);
+						details += @"[ plmn = $(plmn) ";
+						details += @"name = '$(name)' ] ";
+					}
+					break;
                 default:
                     break;
             }
@@ -1032,6 +1046,22 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class CallOrigination : CallStatus
         {
+        }
+
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class GetNetworkList : Message
+        {
+			public uint network_count {
+				[CCode (cname = "msmcomm_event_get_networklist_get_network_count")]
+				get;
+			}
+
+			[CCode (cname = "msmcomm_event_get_networklist_get_plmn")]
+			public uint getPlmn(int nnum);
+
+			[CCode (cname = "msmcomm_event_get_networklist_get_network_name")]
+			public string getNetworkName(int nnum);
         }
 
         [Compact]

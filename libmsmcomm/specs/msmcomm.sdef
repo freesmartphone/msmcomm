@@ -107,7 +107,25 @@ start get_networklist_msg 6
 [5] uint8_t value0
 end
 
-start get_networklist_resp 4098
+start get_networklist_event 4093
+[276-278] uint8_t plmn_0
+[288] uint8_t operator_name_len_0
+[289-370] uint8_t operator_name_0
+[371-373] uint8_t plmn_1
+[383] uint8_t operator_name_len_1
+[384-465] uint8_t operator_name_1
+[466-468] uint8_t plmn_2
+[478] uint8_t operator_name_len_2
+[479-560] uint8_t operator_name_2
+[561-563] uint8_t plmn_3
+[573] uint8_t operator_name_len_3
+[574-655] uint8_t operator_name_3
+[656-658] uint8_t plmn_4
+[668] uint8_t operator_name_len_4
+[669-750] uint8_t operator_name_4
+[751-753] uint8_t plmn_5
+[763] uint8_t operator_name_len_5
+[764-845] uint8_t operator_name_5
 end
 
 #-------------------------------------------------------------------

@@ -75,6 +75,7 @@ EVENT_TYPE(radio_reset_ind)
 EVENT_TYPE(charger_status)
 EVENT_TYPE(operator_mode)
 EVENT_TYPE(cm_ph_info_available)
+EVENT_TYPE(get_networklist)
 /*
 EVENT_TYPE(pdsm_pd_done)
 EVENT_TYPE(pd_position_data)
@@ -111,6 +112,7 @@ struct descriptor resp_descriptors[] = {
 	*/
 	//EVENT_DATA(MSMCOMM_EVENT_POWER_STATE, power_state),
 	EVENT_DATA(MSMCOMM_EVENT_NETWORK_STATE_INFO, network_state_info),
+	EVENT_DATA(MSMCOMM_EVENT_GET_NETWORKLIST, get_networklist),
 
 	/* responses */
 	RESPONSE_DATA(MSMCOMM_RESPONSE_TEST_ALIVE, test_alive),

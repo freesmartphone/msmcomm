@@ -169,6 +169,8 @@
 
 #define MSMCOMM_EVENT_SMS_WMS_READ_TEMPLATE						288
 
+#define MSMCOMM_EVENT_GET_NETWORKLIST							289
+
 /*
  * Operation modes
  */
@@ -370,6 +372,10 @@ uint8_t msmcomm_event_network_state_info_get_service_domain(struct msmcomm_messa
 uint8_t msmcomm_event_network_state_info_get_service_capability(struct msmcomm_message *msg);
 uint8_t msmcomm_event_network_state_info_get_gprs_attached(struct msmcomm_message *msg);
 uint16_t msmcomm_event_network_state_info_get_roam(struct msmcomm_message *msg);
+
+unsigned int msmcomm_event_get_networklist_get_network_count(struct msmcomm_message *msg);
+unsigned int msmcomm_event_get_networklist_get_plmn(struct msmcomm_message *msg, int nnum);
+char* msmcomm_event_get_networklist_get_network_name(struct msmcomm_message *msg, int nnum);
 
 /* 
  * Frame handling

@@ -179,9 +179,34 @@ struct get_networklist_msg
 } __attribute__ ((packed));
 
 
-struct get_networklist_resp
+struct get_networklist_event
 {
-	uint8_t unknown0[4098];
+	uint8_t unknown0[276];
+	uint8_t plmn_0[3];
+	uint8_t unknown1[9];
+	uint8_t operator_name_len_0;
+	uint8_t operator_name_0[82];
+	uint8_t plmn_1[3];
+	uint8_t unknown2[9];
+	uint8_t operator_name_len_1;
+	uint8_t operator_name_1[82];
+	uint8_t plmn_2[3];
+	uint8_t unknown3[9];
+	uint8_t operator_name_len_2;
+	uint8_t operator_name_2[82];
+	uint8_t plmn_3[3];
+	uint8_t unknown4[9];
+	uint8_t operator_name_len_3;
+	uint8_t operator_name_3[82];
+	uint8_t plmn_4[3];
+	uint8_t unknown5[9];
+	uint8_t operator_name_len_4;
+	uint8_t operator_name_4[82];
+	uint8_t plmn_5[3];
+	uint8_t unknown6[9];
+	uint8_t operator_name_len_5;
+	uint8_t operator_name_5[82];
+	uint8_t unknown7[3247];
 } __attribute__ ((packed));
 
 

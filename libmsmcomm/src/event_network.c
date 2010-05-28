@@ -191,3 +191,131 @@ uint16_t msmcomm_event_network_state_info_get_roam(struct msmcomm_message *msg)
 
 	return MESSAGE_CAST(msg, struct network_state_info_event)->roam;
 }
+
+/*
+ * MSMCOMM_EVENT_GET_NETWORKLIST
+ */
+
+unsigned int event_get_networklist_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x5 && msg->msg_id == 0x12);
+}
+
+void event_get_networklist_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	if (len != sizeof(struct get_networklist_event))
+		return;
+
+	msg->payload = data;
+}
+
+uint32_t event_get_networklist_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct get_networklist_event);
+}
+
+unsigned int msmcomm_event_get_networklist_get_network_count(struct msmcomm_message *msg)
+{
+	struct get_networklist_event *evt = MESSAGE_CAST(msg, struct get_networklist_event);
+	int count = 0;
+
+	if (evt->plmn_0[0] == 0x0)
+		return count;
+	else count++;
+
+	if (evt->plmn_1[0] == 0x0)
+		return count;
+	else count++;
+	
+	if (evt->plmn_2[0] == 0x0)
+		return count;
+	else count++;
+	
+	if (evt->plmn_3[0] == 0x0)
+		return count;
+	else count++;
+	
+	if (evt->plmn_4[0] == 0x0)
+		return count;
+	else count++;
+
+	if (evt->plmn_5[0] == 0x0)
+		return count;
+	else count++;
+}
+
+unsigned int msmcomm_event_get_networklist_get_plmn(struct msmcomm_message *msg, int nnum)
+{
+	struct get_networklist_event *evt = MESSAGE_CAST(msg, struct get_networklist_event);
+	unsigned int result = 0x0;
+	uint8_t *plmn = NULL;
+
+	switch (nnum) {
+		case 0:
+			plmn = evt->plmn_0;
+			break;
+		case 1:
+			plmn = evt->plmn_1;
+			break;
+		case 2:
+			plmn = evt->plmn_2;
+			break;
+		case 3:
+			plmn = evt->plmn_3;
+			break;
+		case 4:
+			plmn = evt->plmn_4;
+			break;
+		case 5:
+			plmn = evt->plmn_5;
+			break;
+		default:
+			break;
+	}
+
+	if (plmn == NULL)
+		return 0x0;
+
+	result = plmn[0] | (plmn[1] << 8) | (plmn[2] << 16);
+	return result;
+}
+
+char* msmcomm_event_get_networklist_get_network_name(struct msmcomm_message *msg, int nnum)
+{
+	struct get_networklist_event *evt = MESSAGE_CAST(msg, struct get_networklist_event);
+	char *result = NULL;
+	int len = 0;
+	uint8_t *network_name = NULL;
+
+	switch (nnum) {
+		case 0:
+			network_name = evt->operator_name_0;
+			break;
+		case 1:
+			network_name = evt->operator_name_1;
+			break;
+		case 2:
+			network_name = evt->operator_name_2;
+			break;
+		case 3:
+			network_name = evt->operator_name_3;
+			break;
+		case 4:
+			network_name = evt->operator_name_4;
+			break;
+		case 5:
+			network_name = evt->operator_name_5;
+			break;
+		default:
+			break;
+	}
+
+	if (network_name == NULL)
+		return 0x0;
+	
+	len = strlen(network_name);
+	result = (char*)malloc(sizeof(char) * len + 1);
+	memcpy(result, network_name, len);
+	result[len] = 0;
+	return result;
+}

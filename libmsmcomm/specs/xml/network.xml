@@ -22,7 +22,25 @@
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="value0" start="5" type="uint8_t"/>
 		</structure>
-		<structure name="get_networklist_resp" length="4098">
+		<structure name="get_networklist_event" length="4093">
+			<field name="plmn_0" start="276" end="278" type="uint8_t"/>
+			<field name="operator_name_len_0" start="288" type="uint8_t"/>
+			<field name="operator_name_0" start="289" end="370" type="uint8_t"/>
+			<field name="plmn_1" start="371" end="373" type="uint8_t"/>
+			<field name="operator_name_len_1" start="383" type="uint8_t"/>
+			<field name="operator_name_1" start="384" end="465" type="uint8_t"/>
+			<field name="plmn_2" start="466" end="468" type="uint8_t"/>
+			<field name="operator_name_len_2" start="478" type="uint8_t"/>
+			<field name="operator_name_2" start="479" end="560" type="uint8_t"/>
+			<field name="plmn_3" start="561" end="563" type="uint8_t"/>
+			<field name="operator_name_len_3" start="573" type="uint8_t"/>
+			<field name="operator_name_3" start="574" end="655" type="uint8_t"/>
+			<field name="plmn_4" start="656" end="658" type="uint8_t"/>
+			<field name="operator_name_len_4" start="668" type="uint8_t"/>
+			<field name="operator_name_4" start="669" end="750" type="uint8_t"/>
+			<field name="plmn_5" start="751" end="753" type="uint8_t"/>
+			<field name="operator_name_len_5" start="763" type="uint8_t"/>
+			<field name="operator_name_5" start="764" end="845" type="uint8_t"/>
 		</structure>
 	</structures>
 </namespace:network>
