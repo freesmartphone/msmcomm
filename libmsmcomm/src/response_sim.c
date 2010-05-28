@@ -63,7 +63,7 @@ void resp_read_simbook_handle_data(struct msmcomm_message *msg, uint8_t *data, u
 
 	/* handle message specifc error codes */
 	if (MESSAGE_CAST(msg, struct read_simbook_resp)->result == 0xb)
-		msg->success = MSMCOMM_RESULT_READ_SIMBOK_INVLAID_RECORD_ID;
+		msg->success = MSMCOMM_RESULT_READ_SIMBOOK_INVLAID_RECORD_ID;
 }
 
 uint32_t resp_read_simbook_get_size(struct msmcomm_message *msg)

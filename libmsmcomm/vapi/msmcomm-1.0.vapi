@@ -518,6 +518,36 @@ namespace Msmcomm
 		return result;
 	}
 
+	[CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESULT_", cheader_filename = "msmcomm.h")]
+	public enum ResultType
+	{
+		NONE,
+		OK,
+		ERROR,
+		READ_SIMBOOK_INVALID_RECORD_ID,
+	}
+
+	public string resultTypeToString(ResultType type)
+	{
+		var result = "<unknown>";
+		switch (type)
+		{
+			case NONE:
+				result = "RESULT_NONE";
+				break;
+			case OK:
+				result = "RESULT_OK";
+				break;
+			case ERROR:
+				result = "RESULT_ERROR";
+				break;
+			case READ_SIMBOOK_INVALID_RECORD_ID:
+				result = "RESULT_READ_SIMBOOK_INVALID_RECORD_ID";
+				break;
+		}
+		return result;
+	}
+
     [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void EventHandlerCb(int event, Message message);
     [CCode (cname = "msmcomm_write_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
