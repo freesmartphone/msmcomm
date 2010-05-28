@@ -588,6 +588,11 @@ namespace Msmcomm
             set;
         }
 
+        public uint result {
+			[CCode (cname = "msmcomm_message_get_result")]
+			get;
+		}
+
         [CCode (cname = "msmcomm_message_make_copy")]
         public Message copy();
 

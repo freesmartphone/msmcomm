@@ -233,6 +233,15 @@
 #define MSMCOMM_ERROR_INVALID_PAYLOAD_LENGTH												3
 
 /*
+ * Message result codes
+ */
+#define MSMCOMM_RESULT_NONE 																1
+#define MSMCOMM_RESULT_OK 																	2
+/* NOTE: Every result code > MSMCOMM_RESULT_ERROR should be an error! */
+#define MSMCOMM_RESULT_ERROR																10
+#define MSMCOMM_RESULT_READ_SIMBOK_INVLAID_RECORD_ID										MSMCOMM_RESULT_ERROR + 1
+
+/*
  * Encoding types
  */
 #define MSMCOMM_ENCODING_TYPE_NONE															1
@@ -288,7 +297,7 @@ uint32_t msmcomm_message_get_size(struct msmcomm_message *msg);
 uint32_t msmcomm_message_get_type(struct msmcomm_message *msg);
 uint32_t msmcomm_message_get_ref_id(struct msmcomm_message *msg);
 void msmcomm_message_set_ref_id(struct msmcomm_message *msg, uint32_t ref_id);
-unsigned int msmcomm_message_was_successful(struct msmcomm_message *msg);
+unsigned int msmcomm_message_get_result(struct msmcomm_message *msg);
 
 /**
  * These are message/response/event specific operations which only should be
