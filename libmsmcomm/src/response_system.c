@@ -238,11 +238,17 @@ void resp_cm_ph_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t
 		return;
 
 	msg->payload = data;
+	msg->ref_id = MESSAGE_CAST(msg, struct cm_ph_resp)->ref_id;
 }
 
 uint32_t resp_cm_ph_get_size(struct msmcomm_message *msg)
 {
 	return sizeof(struct cm_ph_resp);
+}
+
+uint8_t msmcomm_resp_cm_ph_get_result(struct msmcomm_message *msg)
+{
+	return MESSAGE_CAST(msg, struct cm_ph_resp)->result;
 }
 
 /*

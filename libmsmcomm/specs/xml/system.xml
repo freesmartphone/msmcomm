@@ -10,6 +10,14 @@
 		<structure name="radio_reset_ind_event" length="76">
 		</structure>
 		<structure name="cm_ph_resp" length="12">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="result" start="4" type="uint8_t">
+				<description>
+				Maybe this field contains a result code as response to various messages. Meaning
+				of the different values is current unknown. Possible values for this field are:
+				- 10: seen as response to get_networklist_msg
+				</description>
+			</field>
 		</structure>
 		<structure name="cm_ph_event" length="4101">
 		</structure>

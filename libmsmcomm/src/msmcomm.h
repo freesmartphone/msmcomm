@@ -343,6 +343,7 @@ unsigned int msmcomm_resp_charger_status_get_voltage(struct msmcomm_message *msg
 unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg);
 void msmcomm_message_set_system_time_set(struct msmcomm_message *msg, uint16_t year, uint16_t month, uint16_t day, uint16_t hours, uint16_t minutes, uint16_t seconds, int32_t timezone_offset);
 void msmcomm_message_rssi_status_set_status(struct msmcomm_message *msg, uint8_t status);
+uint8_t msmcomm_resp_cm_ph_get_result(struct msmcomm_message *msg);
 
 /* Call responses ---------------------------------- */
 uint16_t msmcomm_resp_cm_call_get_error_code(struct msmcomm_message *msg);

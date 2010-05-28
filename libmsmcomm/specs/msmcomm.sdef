@@ -142,6 +142,8 @@ start radio_reset_ind_event 76
 end
 
 start cm_ph_resp 12
+[0-3] uint32_t ref_id
+[4] uint8_t result
 end
 
 start cm_ph_event 4101

@@ -231,7 +231,9 @@ struct radio_reset_ind_event
 
 struct cm_ph_resp
 {
-	uint8_t unknown0[12];
+	uint32_t ref_id;
+	uint8_t result;
+	uint8_t unknown0[7];
 } __attribute__ ((packed));
 
 

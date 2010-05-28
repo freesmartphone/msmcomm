@@ -532,16 +532,16 @@ namespace Msmcomm
 		var result = "<unknown>";
 		switch (type)
 		{
-			case NONE:
+			case ResultType.NONE:
 				result = "RESULT_NONE";
 				break;
-			case OK:
+			case ResultType.OK:
 				result = "RESULT_OK";
 				break;
-			case ERROR:
+			case ResultType.ERROR:
 				result = "RESULT_ERROR";
 				break;
-			case READ_SIMBOOK_INVALID_RECORD_ID:
+			case ResultType.READ_SIMBOOK_INVALID_RECORD_ID:
 				result = "RESULT_READ_SIMBOOK_INVALID_RECORD_ID";
 				break;
 		}
@@ -724,6 +724,10 @@ namespace Msmcomm
 						details += @"[ plmn = $(plmn) ";
 						details += @"name = '$(name)' ] ";
 					}
+					break;
+				case Msmcomm.ResponseType.CM_PH:
+					var msg = (Msmcomm.Reply.CmPh) this.copy();
+					details = @"result = $(msg.result)";
 					break;
                 default:
                     break;
@@ -1006,6 +1010,16 @@ namespace Msmcomm
 
 			public EncodingType encoding_type {
 				[CCode (cname = "msmcomm_resp_read_simbook_get_encoding_type")]
+				get;
+			}
+		}
+
+		[Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+		public class CmPh : Message
+		{
+			public uint8 result {
+				[CCode (cname = "msmcomm_resp_cm_ph_get_result")]
 				get;
 			}
 		}
