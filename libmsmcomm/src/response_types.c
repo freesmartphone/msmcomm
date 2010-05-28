@@ -68,6 +68,8 @@ RESPONSE_TYPE(charging)
 RESPONSE_TYPE(charger_status)
 RESPONSE_TYPE(cm_ph)
 RESPONSE_TYPE(set_system_time)
+RESPONSE_TYPE(rssi_status)
+RESPONSE_TYPE(read_simbook)
 
 EVENT_TYPE(radio_reset_ind)
 EVENT_TYPE(charger_status)
@@ -128,6 +130,8 @@ struct descriptor resp_descriptors[] = {
 	RESPONSE_DATA(MSMCOMM_RESPONSE_CHARGER_STATUS, charger_status),
 	RESPONSE_DATA(MSMCOMM_RESPONSE_CM_PH, cm_ph),
 	RESPONSE_DATA(MSMCOMM_RESPONSE_SET_SYSTEM_TIME, set_system_time),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_RSSI_STATUS, rssi_status),
+	RESPONSE_DATA(MSMCOMM_RESPONSE_READ_SIMBOOK, read_simbook),
 };
 
 const unsigned int resp_descriptors_count = sizeof(resp_descriptors)

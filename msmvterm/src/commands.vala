@@ -70,11 +70,13 @@ public class Commands
         register( "verify_pin", verify_pin, "Send SIM PIN authentication code", "verify_pin <pin>", 1 );
         register( "get_charger_status", get_charger_status, "Query current charging status" );
         register( "charging", charging, "Set charging mode:\n\tmode: usb, inductive\n\tvoltage: 250mA, 500mA, 1A (warning!)", "charging <usb|inductive> <250|500|1000>", 2 );
-        register( "dial_call", dial_call, "Dial out", "dial <number>", 1);
-        register( "answer_call", answer_call, "Answer an incomming call", "answer_call <call_nr>", 1);
-        register( "end_call", end_call, "End an active call", "end_call <call_nr>", 1);
-        register( "set_system_time", set_system_time, "Set system time for modem","set_system_time <year> <month> <day> <hour> <minutes> <seconds> <timezone_offset>", 7);
-    }
+        register( "dial_call", dial_call, "Dial out", "dial <number>", 1 );
+        register( "answer_call", answer_call, "Answer an incomming call", "answer_call <call_nr>", 1 );
+        register( "end_call", end_call, "End an active call", "end_call <call_nr>", 1 );
+        register( "set_system_time", set_system_time, "Set system time for modem","set_system_time <year> <month> <day> <hour> <minutes> <seconds> <timezone_offset>", 7 );
+		register( "rssi_status", rssi_status, "Enable/disable rssi status updates", "rssi_status <0|1>", 1 );
+		register( "read_simbook", read_simbook, "Read entries from sim book", "read_simbook <record id>", 1 );
+	}
 
     private uint8 nextValidRefId()
     {
@@ -281,4 +283,25 @@ public class Commands
         msg.setData(params[0].to_int(), params[1].to_int(), params[2].to_int(), params[3].to_int(), params[4].to_int(), params[5].to_int(), params[6].to_int());
         msm.sendMessage(msg);
     }
+
+    private void rssi_status( string[] params )
+    {
+		var msg = new Msmcomm.Command.RssiStatus();
+		msg.index = nextValidRefId();
+
+		int value = params[0].to_int();
+		if (value > 0) msg.status = true;
+		else msg.status = false;
+
+		msm.sendMessage(msg);
+	}
+
+	private void read_simbook( string[] params )
+	{
+		var msg = new Msmcomm.Command.ReadSimbook();
+		msg.index = nextValidRefId();
+
+		msg.record_id = (uint16)params[0].to_int();
+		msm.sendMessage(msg);
+	}
 }

@@ -21,6 +21,24 @@
 				<certainty:guess attr="end"/>
 			</field>
 		</structure>
+		<structure name="read_simbook_msg" length="6">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="record_id" start="4" end="5" type="uint16_t"/>
+		</structure>
+		<structure name="read_simbook_resp" length="142">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="record_id" start="7" end="8" type="uint16_t"/>
+			<field name="number" start="9" end="50" type="uint8_t"/>
+			<field name="title" start="51" end="140" type="uint8_t"/>
+			<field name="encoding_type" start="141" type="uint8_t">
+				<description>
+				Possible values:
+				- 0: No encoding
+				- 4: Ascii
+				- 9: Binary (bucs2)
+				</description>
+			</field>
+		</structure>
 	</structures>
 </namespace:sim>
 

@@ -125,6 +125,24 @@ struct sms_wms_read_template_event
 } __attribute__ ((packed));
 
 
+struct read_simbook_msg
+{
+	uint32_t ref_id;
+	uint16_t record_id;
+} __attribute__ ((packed));
+
+
+struct read_simbook_resp
+{
+	uint32_t ref_id;
+	uint8_t unknown0[3];
+	uint16_t record_id;
+	uint8_t number[42];
+	uint8_t title[90];
+	uint8_t encoding_type;
+} __attribute__ ((packed));
+
+
 struct network_state_info_event
 {
 	uint8_t change_field[8];
@@ -281,6 +299,20 @@ struct set_system_time_resp
 	uint32_t ref_id;
 	uint8_t static0;
 	uint8_t unknown0;
+} __attribute__ ((packed));
+
+
+struct rssi_status_msg
+{
+	uint32_t ref_id;
+	uint8_t status;
+} __attribute__ ((packed));
+
+
+struct rssi_status_resp
+{
+	uint32_t ref_id;
+	uint8_t unknown0[4];
 } __attribute__ ((packed));
 
 

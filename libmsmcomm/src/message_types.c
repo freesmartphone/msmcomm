@@ -48,6 +48,8 @@ MESSAGE_TYPE(dial_call)
 MESSAGE_TYPE(get_charger_status)
 MESSAGE_TYPE(charging)
 MESSAGE_TYPE(set_system_time)
+MESSAGE_TYPE(rssi_status)
+MESSAGE_TYPE(read_simbook)
 
 struct descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE,change_operation_mode),
@@ -64,6 +66,8 @@ struct descriptor msg_descriptors[] = {
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS, get_charger_status),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHARGING, charging),
 	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_SYSTEM_TIME, set_system_time),
+	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_RSSI_STATUS, rssi_status),
+	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_READ_SIMBOOK, read_simbook),
 };
 
 unsigned int msg_descriptors_size = (unsigned int)(sizeof(msg_descriptors) / sizeof(struct descriptor));

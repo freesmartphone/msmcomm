@@ -67,6 +67,19 @@ start sms_wms_read_template_event 2083
 [229-274] uint8_t scaddr
 end
 
+start read_simbook_msg 6
+[0-3] uint32_t ref_id
+[4-5] uint16_t record_id
+end
+
+start read_simbook_resp 142
+[0-3] uint32_t ref_id
+[7-8] uint16_t record_id
+[9-50] uint8_t number
+[51-140] uint8_t title
+[141] uint8_t encoding_type
+end
+
 #-------------------------------------------------------------------
 # NETWORK
 #-------------------------------------------------------------------
@@ -171,6 +184,15 @@ end
 start set_system_time_resp 6
 [0-3] uint32_t ref_id
 [4] uint8_t static0
+end
+
+start rssi_status_msg 5
+[0-3] uint32_t ref_id
+[4] uint8_t status
+end
+
+start rssi_status_resp 8
+[0-3] uint32_t ref_id
 end
 
 #-------------------------------------------------------------------

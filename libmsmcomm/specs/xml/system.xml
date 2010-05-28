@@ -84,5 +84,21 @@
 				</descripton>
 			</field>
 		</structure>
+		<structure name="rssi_status_msg" length="5">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="status" start="4" type="uint8_t">
+				<description>
+				Set to "0" disables RSSI status updates and set to "1" enables them.
+				</description>
+			</field>
+		</structure>
+		<structure name="rssi_status_resp" length="8">
+			<description>
+			Typical rssi_status_resp looks like this (it's the same for rssi enable/disable):
+			00000000 49 00 00 00 01 00 01 00
+			We don't know the meaning of the last four bytes.
+			</description>
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
 	</structures>
 </namespace:system>

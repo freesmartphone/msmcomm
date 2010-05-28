@@ -340,3 +340,36 @@ void msmcomm_message_set_system_time_set(struct msmcomm_message *msg,
 	MESSAGE_CAST(msg, struct set_system_time_msg)->seconds = seconds;
 	MESSAGE_CAST(msg, struct set_system_time_msg)->timezone_offset = timezone_offset;
 }
+
+/*
+ * MSMCOMM_MESSAGE_CMD_RSSI_STATUS
+ */
+
+void msg_rssi_status_init(struct msmcomm_message *msg)
+{
+	msg->group_id = 0x6;
+	msg->msg_id = 0x1;
+
+	msg->payload = talloc_zero(talloc_msmc_ctx, struct rssi_status_msg);
+}
+
+uint32_t msg_rssi_status_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct rssi_status_msg);
+}
+
+void msg_rssi_status_free(struct msmcomm_message *msg)
+{
+	talloc_free(msg->payload);
+}
+
+uint8_t* msg_rssi_status_prepare_data(struct msmcomm_message *msg)
+{
+	MESSAGE_CAST(msg, struct rssi_status_msg)->ref_id = msg->ref_id;
+	return msg->payload;
+}
+
+void msmcomm_message_rssi_status_set_status(struct msmcomm_message *msg, uint8_t status)
+{
+	MESSAGE_CAST(msg, struct rssi_status_msg)->status = status ? 1 : 0;
+}

@@ -98,7 +98,9 @@ namespace Msmcomm
         GET_CHARGER_STATUS,
         CHARGING,
         DIAL_CALL,
-        SET_SYSTEM_TIME
+        SET_SYSTEM_TIME,
+        RSSI_STATUS,
+        READ_SIMBOOK,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -120,6 +122,8 @@ namespace Msmcomm
         CHARGING,
         CM_PH,
         SET_SYSTEM_TIME,
+        RSSI_STATUS,
+        READ_SIMBOOK,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
@@ -246,6 +250,10 @@ namespace Msmcomm
             return "COMMAND_DIAL_CALL";
 			case CommandType.SET_SYSTEM_TIME:
 			return "COMMAND_SET_SYSTEM_TIME";
+			case CommandType.RSSI_STATUS:
+			return "COMMAND_RSSI_STATUS";
+			case CommandType.READ_SIMBOOK:
+			return "COMMAND_READ_SIMBOOK";
 
             // ResponseType
             case ResponseType.TEST_ALIVE:
@@ -280,6 +288,10 @@ namespace Msmcomm
             return "RESPONSE_CM_PH";
 			case ResponseType.SET_SYSTEM_TIME:
 			return "RESPONSE_SET_SYSTEM_TIME";
+			case ResponseType.RSSI_STATUS:
+			return "RESPONSE_RSSI_STATUS";
+			case ResponseType.READ_SIMBOOK:
+			return "RESPONSE_READ_SIMBOOK";
 
             // EventType
         	case EventType.RESET_RADIO_IND:
@@ -474,6 +486,32 @@ namespace Msmcomm
         INDUCTIVE
     }
 
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_ENCODING_TYPE_", cheader_filename = "msmcomm.h")]
+    public enum EncodingType
+    {
+        NONE,
+        ASCII,
+        BUCS2,
+    }
+
+    public string ecodingTypeToString(EncodingType type)
+    {
+		var result = "<unknown>";
+		switch (type)
+		{
+			case EncodingType.NONE:
+				result = "NONE";
+				break;
+			case EncodingType.ASCII:
+				result = "ASCII";
+				break;
+			case EncodingType.BUCS2:
+				result = "BUCS2";
+				break;
+		}
+		return result;
+	}
+
     [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void EventHandlerCb(int event, Message message);
     [CCode (cname = "msmcomm_write_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
@@ -606,28 +644,40 @@ namespace Msmcomm
                     break;
                 case Msmcomm.EventType.NETWORK_STATE_INFO:
 					var msg = (Msmcomm.Unsolicited.NetworkStateInfo) this.copy();
-					details = @"new_value = $(msg.new_value) ";
-					details += @"change_field = $(msg.change_field) ";
-					details += @"operator_name = $(msg.operator_name) ";
-					details += @"rssi = $(msg.rssi) ";
-					details += @"ecio = $(msg.ecio) ";
-					details += @"service_domain = $(msg.service_domain) ";
-					details += @"service_capabilitiy = $(msg.service_capabilitiy) ";
-					details += @"gprs_attached = $(msg.gprs_attached) ";
-					details += @"roam = $(msg.roam) ";
+					if (msg.onlyRssiUpdate) {
+						details += @"rssi = $(msg.rssi) ";
+					}
+					else {
+						details = @"new_value = $(msg.new_value) ";
+						details += @"change_field = $(msg.change_field) ";
+						details += @"operator_name = $(msg.operator_name) ";
+						details += @"rssi = $(msg.rssi) ";
+						details += @"ecio = $(msg.ecio) ";
+						details += @"service_domain = $(msg.service_domain) ";
+						details += @"service_capabilitiy = $(msg.service_capabilitiy) ";
+						details += @"gprs_attached = $(msg.gprs_attached) ";
+						details += @"roam = $(msg.roam)";
+					}
 					break;
 				case Msmcomm.EventType.SMS_WMS_READ_TEMPLATE:
 					var msg = (Msmcomm.Unsolicited.SMS.WmsReadTemplate) this.copy();
-					details = @"digit_mode = $(msg.digit_mode)";
-					details += @"number_mode = $(msg.number_mode)";
-					details += @"number_type = $(msg.number_type)";
-					details += @"number_plan = $(msg.number_plan)";
+					details = @"digit_mode = $(msg.digit_mode) ";
+					details += @"number_mode = $(msg.number_mode) ";
+					details += @"number_type = $(msg.number_type) ";
+					details += @"number_plan = $(msg.number_plan) ";
 					break;
+				case Msmcomm.ResponseType.READ_SIMBOOK:
+					var msg = (Msmcomm.Reply.ReadSimbook) this.copy();
+					details = @"record_id = $(msg.record_id) ";
+					details += @"number = '$(msg.number)' ";
+					details += @"title = '$(msg.title)' ";
+					details += @"encoding_type = $(ecodingTypeToString(msg.encoding_type))";
+					
                 default:
                     break;
             }
 
-            return @"$str [%s]".printf( details );
+            return @"$str [ %s ]".printf( details );
         }
     }
 
@@ -767,6 +817,38 @@ namespace Msmcomm
 			[CCode (cname = "msmcomm_message_set_system_time_set")]
 			public void setData(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset);
 		}
+
+		[Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class RssiStatus : Message
+		{
+			[CCode (cname = "msmcomm_create_message")]
+            public RssiStatus(CommandType t = CommandType.RSSI_STATUS);
+
+			[CCode (cname = "msmcomm_message_rssi_status_set_status")]
+			private void _setStatus(uint8 status);
+			
+			public bool status {
+				public set {
+					if (value) _setStatus(1);
+					else _setStatus(0);
+				}
+			}
+		}
+
+		[Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class ReadSimbook : Message
+		{
+			[CCode (cname = "msmcomm_create_message")]
+            public ReadSimbook(CommandType t = CommandType.READ_SIMBOOK);
+
+			
+			public uint16 record_id {
+				[CCode (cname = "msmcomm_message_read_simbook_set_record_id")]
+				set;
+			}
+		}
     }
 
     namespace Reply
@@ -842,6 +924,31 @@ namespace Msmcomm
 			[CCode (cname = "msmcomm_resp_cm_call_get_error_code")]
 			public uint16 getErrorCode();
 		}
+
+		[Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+		public class ReadSimbook : Message
+		{
+			public uint16 record_id {
+				[CCode (cname = "msmcomm_resp_read_simbook_get_record_id")]
+				get;
+			}
+
+			public string number {
+				[CCode (cname = "msmcomm_resp_read_simbook_get_number")]
+				get;
+			}
+
+			public string title {
+				[CCode (cname = "msmcomm_resp_read_simbook_get_title")]
+				get;
+			}
+
+			public EncodingType encoding_type {
+				[CCode (cname = "msmcomm_resp_read_simbook_get_encoding_type")]
+				get;
+			}
+		}
     }
 
     namespace Unsolicited
@@ -915,7 +1022,7 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class NetworkStateInfo : Message
         {
-			public bool is_only_is_update {
+			public bool onlyRssiUpdate {
 				[CCode (cname = "msmcomm_event_network_state_info_is_only_rssi_update")]
 				get;
 			}

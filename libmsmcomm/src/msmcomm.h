@@ -42,6 +42,8 @@
 #define MSMCOMM_MESSAGE_CMD_CHARGING							23
 #define MSMCOMM_MESSAGE_CMD_DIAL_CALL							24
 #define MSMCOMM_MESSAGE_CMD_SET_SYSTEM_TIME 					25
+#define MSMCOMM_MESSAGE_CMD_RSSI_STATUS							26
+#define MSMCOMM_MESSAGE_CMD_READ_SIMBOOK						27
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE								101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO						102
@@ -59,6 +61,8 @@
 #define MSMCOMM_RESPONSE_CHARGING								115
 #define MSMCOMM_RESPONSE_CM_PH									116
 #define MSMCOMM_RESPONSE_SET_SYSTEM_TIME 						117
+#define MSMCOMM_RESPONSE_RSSI_STATUS 							118
+#define MSMCOMM_RESPONSE_READ_SIMBOOK							119
 
 #define MSMCOMM_EVENT_RESET_RADIO_IND							201
 #define MSMCOMM_EVENT_CHARGER_STATUS							202
@@ -227,6 +231,13 @@
 #define MSMCOMM_ERROR_MSGID_NOT_SUPPORTED													2
 #define MSMCOMM_ERROR_INVALID_PAYLOAD_LENGTH												3
 
+/*
+ * Encoding types
+ */
+#define MSMCOMM_ENCODING_TYPE_NONE															1
+#define MSMCOMM_ENCODING_TYPE_ASCII 														2
+#define MSMCOMM_ENCODING_TYPE_BUCS2															3
+
 struct msmcomm_context;
 struct msmcomm_message;
 
@@ -295,10 +306,19 @@ void msmcomm_message_dial_call_set_caller_id(struct msmcomm_message *msg, uint8_
 
 /* SIM messages ------------------------------------ */
 void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char* pin);
+void msmcomm_message_read_simbook_set_record_id(struct msmcomm_message *msg, uint16_t record_id);
+
+/* SIM events -------------------------------------- */
 uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg);
 uint8_t msmcomm_event_sms_wms_read_template_get_number_mode(struct msmcomm_message *msg);
 uint8_t msmcomm_event_sms_wms_read_template_get_number_type(struct msmcomm_message *msg);
 uint8_t msmcomm_event_sms_wms_read_template_get_number_plan(struct msmcomm_message *msg);
+
+/* SIM responses ----------------------------------- */
+uint16_t msmcomm_resp_read_simbook_get_record_id(struct msmcomm_message *msg);
+unsigned int msmcomm_resp_read_simbook_get_encoding_type(struct msmcomm_message *msg);
+char* msmcomm_resp_read_simbook_get_number(struct msmcomm_message *msg);
+char* msmcomm_resp_read_simbook_get_title(struct msmcomm_message *msg);
 
 /* System responses -------------------------------- */
 char* msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg);
@@ -309,6 +329,7 @@ unsigned int msmcomm_resp_charging_get_mode(struct msmcomm_message *msg);
 unsigned int msmcomm_resp_charger_status_get_voltage(struct msmcomm_message *msg);
 unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg);
 void msmcomm_message_set_system_time_set(struct msmcomm_message *msg, uint16_t year, uint16_t month, uint16_t day, uint16_t hours, uint16_t minutes, uint16_t seconds, int32_t timezone_offset);
+void msmcomm_message_rssi_status_set_status(struct msmcomm_message *msg, uint8_t status);
 
 /* Call responses ---------------------------------- */
 uint16_t msmcomm_resp_cm_call_get_error_code(struct msmcomm_message *msg);

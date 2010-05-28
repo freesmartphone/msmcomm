@@ -188,7 +188,7 @@ void resp_charging_handle_data(struct msmcomm_message *msg, uint8_t *data, uint3
 		return;
 
 	msg->payload = data;
-	msg->ref_id = MESSAGE_CAST(msg, struct charging_msg);
+	msg->ref_id = MESSAGE_CAST(msg, struct charging_msg)->ref_id;
 }
 
 uint32_t resp_charging_get_size(struct msmcomm_message *msg)
@@ -265,4 +265,27 @@ void resp_set_system_time_handle_data(struct msmcomm_message *msg, uint8_t *data
 uint32_t resp_set_system_time_get_size(struct msmcomm_message *msg)
 {
 	return sizeof(struct set_system_time_resp);
+}
+
+/*
+ * MSMCOMM_RESPONSE_RSSI_STATUS
+ */
+
+unsigned int resp_rssi_status_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x7) && (msg->msg_id == 0x1);
+}
+
+void resp_rssi_status_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	if (len != sizeof(struct rssi_status_resp))
+		return;
+
+	msg->payload = data;
+	msg->ref_id = MESSAGE_CAST(msg, struct rssi_status_resp)->ref_id;
+}
+
+uint32_t resp_rssi_status_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct rssi_status_resp);
 }

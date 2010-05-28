@@ -43,3 +43,80 @@ uint32_t resp_get_sim_capabilities_get_size(struct msmcomm_message *msg)
 {
 	return 0;
 }
+
+/*
+ * MSMCOMM_RESPONSE_READ_SIMBOOK
+ */
+
+unsigned int resp_read_simbook_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x19) && (msg->msg_id == 0x0);
+}
+
+void resp_read_simbook_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	if (len != sizeof(struct read_simbook_resp))
+		return;
+
+	msg->payload = data;
+	msg->ref_id = MESSAGE_CAST(msg, struct read_simbook_resp)->ref_id;
+}
+
+uint32_t resp_read_simbook_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct read_simbook_resp);
+}
+
+uint16_t msmcomm_resp_read_simbook_get_record_id(struct msmcomm_message *msg)
+{
+	return MESSAGE_CAST(msg, struct read_simbook_resp)->record_id;
+}
+
+unsigned int msmcomm_resp_read_simbook_get_encoding_type(struct msmcomm_message *msg)
+{
+	switch(MESSAGE_CAST(msg, struct read_simbook_resp)->encoding_type) {
+		case 0x4:
+			return MSMCOMM_ENCODING_TYPE_ASCII;
+		case 0x9:
+			return MSMCOMM_ENCODING_TYPE_BUCS2;
+	}
+
+	return MSMCOMM_ENCODING_TYPE_NONE;
+}
+
+char* msmcomm_resp_read_simbook_get_number(struct msmcomm_message *msg)
+{
+	char *number = NULL;
+	int len = 0;
+	struct read_simbook_resp *resp = MESSAGE_CAST(msg, struct read_simbook_resp);
+
+	if (resp->number == NULL)
+		return NULL;
+
+	len = strlen(resp->number) + 1;
+	number = (uint8_t*)malloc(len * sizeof(char));
+	memcpy(number, resp->number, len - 1);
+	number[len-1] = 0;
+	
+	return number;
+}
+
+char* msmcomm_resp_read_simbook_get_title(struct msmcomm_message *msg)
+{
+	char *title = NULL;
+	int len = 0;
+	struct read_simbook_resp *resp = MESSAGE_CAST(msg, struct read_simbook_resp);
+
+	if (resp->title == NULL)
+		return NULL;
+
+	len = strlen(resp->title) + 1;
+	title = (uint8_t*)malloc(len * sizeof(char));
+	memcpy(title, resp->title, len - 1);
+	title[len-1] = 0;
+
+	return title;
+}
+
+
+
