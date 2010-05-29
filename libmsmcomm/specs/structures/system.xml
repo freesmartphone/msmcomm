@@ -40,7 +40,7 @@
 				- reset: Reset the modem to it's internal default configuration
 				- online: Set the modem into online mode (network access)
 				- offline: Set the modem into offline mode (no network access)
-				</description>
+				</descripton>
 			</field>
 		</structure>
 		<structure name="test_alive_msg" length="5">
