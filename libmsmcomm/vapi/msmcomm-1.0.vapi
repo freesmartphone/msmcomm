@@ -103,6 +103,7 @@ namespace Msmcomm
         READ_SIMBOOK,
         GET_NETWORKLIST,
         SET_MODE_PREFERENCE,
+        GET_PHONEBOOK_PROPERTIES,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -126,6 +127,7 @@ namespace Msmcomm
         SET_SYSTEM_TIME,
         RSSI_STATUS,
         READ_SIMBOOK,
+        GET_PHONEBOOK_PROPERTIES,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
@@ -300,6 +302,8 @@ namespace Msmcomm
 			return "RESPONSE_RSSI_STATUS";
 			case ResponseType.READ_SIMBOOK:
 			return "RESPONSE_READ_SIMBOOK";
+			case ResponseType.GET_PHONEBOOK_PROPERTIES:
+			return "RESPONSE_GET_PHONEBOOK_PROPERTIES";
 
             // EventType
         	case EventType.RESET_RADIO_IND:
@@ -811,6 +815,11 @@ namespace Msmcomm
 					var msg = (Msmcomm.Unsolicited.PhonebookReady) this.copy();
 					details = @"book_type = $(phonebookTypeToString(msg.book_type))";
 					break;
+				case Msmcomm.ResponseType.GET_PHONEBOOK_PROPERTIES:
+					var msg= (Msmcomm.Reply.GetPhonebookProperties) this.copy();
+					details = @"slot_count = $(msg.slot_count) slots_used = $(msg.slots_used) ";
+					details += @"max_chars_per_title = $(msg.max_chars_per_title) max_chars_per_number = $(msg.max_chars_per_number)";
+					break;
                 default:
                     break;
             }
@@ -1008,6 +1017,19 @@ namespace Msmcomm
 				set;
 			}
 		}
+
+		[Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class GetPhonebookProperties : Message
+		{
+			[CCode (cname = "msmcomm_create_message")]
+            public GetPhonebookProperties(CommandType t = CommandType.GET_PHONEBOOK_PROPERTIES);
+
+			public PhonebookType book_type {
+				[CCode (cname = "msmcomm_message_get_phonebook_properties_set_book_type")]
+				set;
+			}
+		}
     }
 
     namespace Reply
@@ -1115,6 +1137,31 @@ namespace Msmcomm
 		{
 			public uint8 result {
 				[CCode (cname = "msmcomm_resp_cm_ph_get_result")]
+				get;
+			}
+		}
+
+		[Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+		public class GetPhonebookProperties : Message
+		{
+			public uint8 slot_count {
+				[CCode (cname = "msmcomm_resp_get_phonebook_properties_get_slot_count")]
+				get;
+			}
+
+			public uint8 slots_used {
+				[CCode (cname = "msmcomm_resp_get_phonebook_properties_get_slots_used")]
+				get;
+			}
+
+			public uint8 max_chars_per_title {
+				[CCode (cname = "msmcomm_resp_get_phonebook_properties_get_max_chars_per_title")]
+				get;
+			}
+
+			public uint8 max_chars_per_number {
+				[CCode (cname = "msmcomm_resp_get_phonebook_properties_get_max_chars_per_number")]
 				get;
 			}
 		}

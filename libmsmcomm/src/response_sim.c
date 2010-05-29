@@ -122,5 +122,47 @@ char* msmcomm_resp_read_simbook_get_title(struct msmcomm_message *msg)
 	return title;
 }
 
+/*
+ * MSMCOMM_RESPONSE_GET_PHONEBOOK_PROPERTIES
+ */
+
+unsigned int resp_get_phonebook_properties_is_valid(struct msmcomm_message *msg)
+{
+	return (msg->group_id == 0x1a) && (msg->msg_id == 0xc);
+}
+
+void resp_get_phonebook_properties_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	if (len != sizeof(struct get_phonebook_properties_resp))
+		return;
+
+	msg->payload = data;
+}
+
+uint32_t resp_get_phonebook_properties_get_size(struct msmcomm_message *msg)
+{
+	return sizeof(struct get_phonebook_properties_resp);
+}
+
+uint32_t msmcomm_resp_get_phonebook_properties_get_slot_count(struct msmcomm_message *msg)
+{
+	return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->slot_count;
+}
+
+uint32_t msmcomm_resp_get_phonebook_properties_get_slots_used(struct msmcomm_message *msg)
+{
+	return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->slots_used;
+}
+
+uint32_t msmcomm_resp_get_phonebook_properties_get_max_chars_per_title(struct msmcomm_message *msg)
+{
+	return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->max_chars_per_title;
+}
+
+uint32_t msmcomm_resp_get_phonebook_properties_get_max_chars_per_number(struct msmcomm_message *msg)
+{
+	return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->max_chars_per_number;
+}
+
 
 

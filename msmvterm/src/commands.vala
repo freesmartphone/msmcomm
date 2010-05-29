@@ -78,6 +78,7 @@ public class Commands
 		register( "read_simbook", read_simbook, "Read entries from sim book", "read_simbook <record id>", 1 );
 		register( "get_networklist", get_networklist, "Request a list with all available networks");
 		register( "set_mode_preference", set_mode_preference, "Set the prefered mode for the network (Automatic, GSM, UMTS)", "set_mode_preference <auto|gsm|umts>", 1 );
+		register( "get_phonebook_properties", get_phonebook_properties, "Get the properties of a phonebook type", "get_phonebook_properties <mbdn|efecc|adn|fdn|spn>", 1 );
 	}
 
     private uint8 nextValidRefId()
@@ -343,4 +344,37 @@ public class Commands
         
         msm.sendMessage( msg );
     }
+
+    private void get_phonebook_properties( string[] params )
+    {
+		var msg = new Msmcomm.Command.GetPhonebookProperties();
+        msg.index = nextValidRefId();
+
+        switch ( params[0] )
+        {
+            case "mbdn":
+                msg.book_type = Msmcomm.PhonebookType.MBDN;
+                break;
+			case "efecc":
+                msg.book_type = Msmcomm.PhonebookType.EFECC;
+                break;
+			case "adn":
+                msg.book_type = Msmcomm.PhonebookType.ADN;
+                break;
+			case "fdn":
+                msg.book_type = Msmcomm.PhonebookType.FDN;
+                break;
+			case "sdn":
+                msg.book_type = Msmcomm.PhonebookType.SDN;
+                break;
+			case "all":
+				msg.book_type = Msmcomm.PhonebookType.ALL;
+                break;
+            default:
+                ERR( @"Unknown phonebook type $(params[0])" );
+                return;
+        }
+
+        msm.sendMessage( msg );
+	}
 }

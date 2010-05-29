@@ -46,6 +46,7 @@
 #define MSMCOMM_MESSAGE_CMD_READ_SIMBOOK						27
 #define MSMCOMM_MESSAGE_CMD_GET_NETWORKLIST						28
 #define MSMCOMM_MESSAGE_CMD_SET_MODE_PREFERENCE 				29
+#define MSMCOMM_MESSAGE_CMD_GET_PHONEBOOK_PROPERTIES 			30
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE								101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO						102
@@ -65,6 +66,7 @@
 #define MSMCOMM_RESPONSE_SET_SYSTEM_TIME 						117
 #define MSMCOMM_RESPONSE_RSSI_STATUS 							118
 #define MSMCOMM_RESPONSE_READ_SIMBOOK							119
+#define MSMCOMM_RESPONSE_GET_PHONEBOOK_PROPERTIES 				120
 
 #define MSMCOMM_EVENT_RESET_RADIO_IND							201
 #define MSMCOMM_EVENT_CHARGER_STATUS							202
@@ -362,6 +364,11 @@ uint16_t msmcomm_resp_read_simbook_get_record_id(struct msmcomm_message *msg);
 unsigned int msmcomm_resp_read_simbook_get_encoding_type(struct msmcomm_message *msg);
 char* msmcomm_resp_read_simbook_get_number(struct msmcomm_message *msg);
 char* msmcomm_resp_read_simbook_get_title(struct msmcomm_message *msg);
+
+uint32_t msmcomm_resp_get_phonebook_properties_get_slot_count(struct msmcomm_message *msg);
+uint32_t msmcomm_resp_get_phonebook_properties_get_slots_used(struct msmcomm_message *msg);
+uint32_t msmcomm_resp_get_phonebook_properties_get_max_chars_per_title(struct msmcomm_message *msg);
+uint32_t msmcomm_resp_get_phonebook_properties_get_max_chars_per_number(struct msmcomm_message *msg);
 
 /* System responses -------------------------------- */
 char* msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg);

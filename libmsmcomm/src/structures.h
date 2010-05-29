@@ -152,6 +152,25 @@ struct phonebook_ready_event
 } __attribute__ ((packed));
 
 
+struct get_phonebook_properties_msg
+{
+	uint32_t ref_id;
+	uint8_t book_type;
+} __attribute__ ((packed));
+
+
+struct get_phonebook_properties_resp
+{
+	uint8_t unknown0;
+	uint8_t book_type;
+	uint32_t slots_used;
+	uint32_t slot_count;
+	uint32_t max_chars_per_title;
+	uint32_t max_chars_per_number;
+	uint8_t unknown1[185];
+} __attribute__ ((packed));
+
+
 struct network_state_info_event
 {
 	uint8_t change_field[8];
