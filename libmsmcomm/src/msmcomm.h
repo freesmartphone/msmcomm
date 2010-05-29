@@ -349,7 +349,8 @@ void msmcomm_message_dial_call_set_caller_id(struct msmcomm_message *msg, uint8_
 
 /* SIM messages ------------------------------------ */
 void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char* pin);
-void msmcomm_message_read_simbook_set_record_id(struct msmcomm_message *msg, uint16_t record_id);
+void msmcomm_message_read_simbook_set_book_type(struct msmcomm_message *msg, unsigned int book_type);
+void msmcomm_message_read_simbook_set_position(struct msmcomm_message *msg, uint8_t position);
 
 /* SIM events -------------------------------------- */
 uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg);
@@ -360,7 +361,8 @@ uint8_t msmcomm_event_sms_wms_read_template_get_number_plan(struct msmcomm_messa
 unsigned int msmcomm_event_phonebook_ready_get_book_type(struct msmcomm_message *msg);
 
 /* SIM responses ----------------------------------- */
-uint16_t msmcomm_resp_read_simbook_get_record_id(struct msmcomm_message *msg);
+unsigned int msmcomm_resp_read_simbook_get_book_type(struct msmcomm_message *msg);
+uint8_t msmcomm_resp_read_simbook_get_position(struct msmcomm_message *msg);
 unsigned int msmcomm_resp_read_simbook_get_encoding_type(struct msmcomm_message *msg);
 char* msmcomm_resp_read_simbook_get_number(struct msmcomm_message *msg);
 char* msmcomm_resp_read_simbook_get_title(struct msmcomm_message *msg);

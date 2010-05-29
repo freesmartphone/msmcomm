@@ -128,7 +128,8 @@ struct sms_wms_read_template_event
 struct read_simbook_msg
 {
 	uint32_t ref_id;
-	uint16_t record_id;
+	uint8_t position;
+	uint8_t book_type;
 } __attribute__ ((packed));
 
 
@@ -137,7 +138,8 @@ struct read_simbook_resp
 	uint32_t ref_id;
 	uint8_t unknown0[2];
 	uint8_t result;
-	uint16_t record_id;
+	uint8_t position;
+	uint8_t book_type;
 	uint8_t number[42];
 	uint8_t title[90];
 	uint8_t encoding_type;

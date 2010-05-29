@@ -75,7 +75,7 @@ public class Commands
         register( "end_call", end_call, "End an active call", "end_call <call_nr>", 1 );
         register( "set_system_time", set_system_time, "Set system time for modem","set_system_time <year> <month> <day> <hour> <minutes> <seconds> <timezone_offset>", 7 );
 		register( "rssi_status", rssi_status, "Enable/disable rssi status updates", "rssi_status <0|1>", 1 );
-		register( "read_simbook", read_simbook, "Read entries from sim book", "read_simbook <record id>", 1 );
+		register( "read_simbook", read_simbook, "Read entries from sim book", "read_simbook <mbdn|efecc|adn|fdn|spn> <position>", 2 );
 		register( "get_networklist", get_networklist, "Request a list with all available networks");
 		register( "set_mode_preference", set_mode_preference, "Set the prefered mode for the network (Automatic, GSM, UMTS)", "set_mode_preference <auto|gsm|umts>", 1 );
 		register( "get_phonebook_properties", get_phonebook_properties, "Get the properties of a phonebook type", "get_phonebook_properties <mbdn|efecc|adn|fdn|spn>", 1 );
@@ -304,13 +304,32 @@ public class Commands
 		var msg = new Msmcomm.Command.ReadSimbook();
 		msg.index = nextValidRefId();
 
-		var record_id = (uint16)params[0].to_int();
-		if (record_id <= 0) {
-			ERR( @"Please set a proper record id for this command." );
-			return;
-		}
+		switch ( params[0] )
+        {
+            case "mbdn":
+                msg.book_type = Msmcomm.PhonebookType.MBDN;
+                break;
+			case "efecc":
+                msg.book_type = Msmcomm.PhonebookType.EFECC;
+                break;
+			case "adn":
+                msg.book_type = Msmcomm.PhonebookType.ADN;
+                break;
+			case "fdn":
+                msg.book_type = Msmcomm.PhonebookType.FDN;
+                break;
+			case "sdn":
+                msg.book_type = Msmcomm.PhonebookType.SDN;
+                break;
+			case "all":
+				msg.book_type = Msmcomm.PhonebookType.ALL;
+                break;
+            default:
+                ERR( @"Unknown phonebook type $(params[0])" );
+                return;
+        }
 
-		msg.record_id = record_id;
+		msg.position = (uint8)params[1].to_int();
 		msm.sendMessage(msg);
 	}
 

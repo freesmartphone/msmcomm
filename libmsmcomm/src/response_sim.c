@@ -71,9 +71,24 @@ uint32_t resp_read_simbook_get_size(struct msmcomm_message *msg)
 	return sizeof(struct read_simbook_resp);
 }
 
-uint16_t msmcomm_resp_read_simbook_get_record_id(struct msmcomm_message *msg)
+unsigned int msmcomm_resp_read_simbook_get_book_type(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct read_simbook_resp)->record_id;
+	switch (MESSAGE_CAST(msg, struct read_simbook_resp)->book_type)
+	{
+		case 0x10:
+			return MSMCOMM_PHONEBOOK_TYPE_ADN;
+		case 0x20:
+			return MSMCOMM_PHONEBOOK_TYPE_FDN;
+		case 0x8:
+			return MSMCOMM_PHONEBOOK_TYPE_SDN;
+	}
+
+	return MSMCOMM_PHONEBOOK_TYPE_NONE;
+}
+
+uint8_t msmcomm_resp_read_simbook_get_position(struct msmcomm_message *msg)
+{
+	return MESSAGE_CAST(msg, struct read_simbook_resp)->position;
 }
 
 unsigned int msmcomm_resp_read_simbook_get_encoding_type(struct msmcomm_message *msg)

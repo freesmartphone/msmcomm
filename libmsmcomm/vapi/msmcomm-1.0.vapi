@@ -791,7 +791,8 @@ namespace Msmcomm
 					break;
 				case Msmcomm.ResponseType.READ_SIMBOOK:
 					var msg = (Msmcomm.Reply.ReadSimbook) this.copy();
-					details = @"record_id = $(msg.record_id) ";
+					details = @"book_type = $(phonebookTypeToString(msg.book_type)) ";
+					details += @"position = $(msg.position) ";
 					details += @"number = '$(msg.number)' ";
 					details += @"title = '$(msg.title)' ";
 					details += @"encoding_type = $(ecodingTypeToString(msg.encoding_type))";
@@ -991,8 +992,13 @@ namespace Msmcomm
             public ReadSimbook(CommandType t = CommandType.READ_SIMBOOK);
 
 			
-			public uint16 record_id {
-				[CCode (cname = "msmcomm_message_read_simbook_set_record_id")]
+			public PhonebookType book_type {
+				[CCode (cname = "msmcomm_message_read_simbook_set_book_type")]
+				set;
+			}
+
+			public uint8 position {
+				[CCode (cname = "msmcomm_message_read_simbook_set_position")]
 				set;
 			}
 		}
@@ -1110,8 +1116,14 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
 		public class ReadSimbook : Message
 		{
-			public uint16 record_id {
-				[CCode (cname = "msmcomm_resp_read_simbook_get_record_id")]
+
+			public PhonebookType book_type {
+				[CCode (cname = "msmcomm_resp_read_simbook_get_book_type")]
+				get;
+			}
+			
+			public uint8 position {
+				[CCode (cname = "msmcomm_resp_read_simbook_get_position")]
 				get;
 			}
 

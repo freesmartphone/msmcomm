@@ -92,9 +92,32 @@ uint8_t* msg_read_simbook_prepare_data(struct msmcomm_message *msg)
 	return msg->payload;
 }
 
-void msmcomm_message_read_simbook_set_record_id(struct msmcomm_message *msg, uint16_t record_id)
+void msmcomm_message_read_simbook_set_book_type(struct msmcomm_message *msg, unsigned int book_type)
 {
-	MESSAGE_CAST(msg, struct read_simbook_msg)->record_id = record_id;
+	uint8_t value = 0x0;
+	switch (book_type)
+	{
+		case MSMCOMM_PHONEBOOK_TYPE_MBDN:
+			break;
+		case MSMCOMM_PHONEBOOK_TYPE_EFECC:
+			break;
+		case MSMCOMM_PHONEBOOK_TYPE_ADN:
+			value = 0x10;
+			break;
+		case MSMCOMM_PHONEBOOK_TYPE_SDN:
+			value = 0x8;
+			break;
+		case MSMCOMM_PHONEBOOK_TYPE_FDN:
+			value = 0x20;
+			break;
+	}
+
+	MESSAGE_CAST(msg, struct read_simbook_msg)->book_type = value;
+}
+
+void msmcomm_message_read_simbook_set_position(struct msmcomm_message *msg, uint8_t position)
+{
+	MESSAGE_CAST(msg, struct read_simbook_msg)->position = position;
 }
 
 /*
