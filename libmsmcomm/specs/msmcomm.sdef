@@ -5,7 +5,7 @@ start call_status_event 1107
 [0] uint8_t call_id
 [1] uint8_t call_type
 [3-17] uint8_t caller_id
-[63] uint8_t caller_id_len
+[67] uint8_t caller_id_len
 [590] uint8_t cause_value0
 [595] uint8_t cause_value1
 [624] uint8_t cause_value2

@@ -28,9 +28,9 @@ struct call_status_event
 	uint8_t call_type;
 	uint8_t unknown0;
 	uint8_t caller_id[15];
-	uint8_t unknown1[45];
+	uint8_t unknown1[49];
 	uint8_t caller_id_len;
-	uint8_t unknown2[526];
+	uint8_t unknown2[522];
 	uint8_t cause_value0;
 	uint8_t unknown3[4];
 	uint8_t cause_value1;

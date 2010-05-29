@@ -61,12 +61,12 @@ unsigned int group_call_get_type(struct msmcomm_message *msg)
 	return MSMCOMM_MESSAGE_INVALID;
 }
 
-uint8_t msmcomm_event_call_get_call_id(struct msmcomm_message *msg)
+uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message *msg)
 {
 	return MESSAGE_CAST(msg, struct call_status_event)->call_id;
 }
 
-uint8_t msmcomm_event_call_get_call_type(struct msmcomm_message *msg)
+uint8_t msmcomm_event_call_status_get_call_type(struct msmcomm_message *msg)
 {
 	return MESSAGE_CAST(msg, struct call_status_event)->call_type;
 }
@@ -75,15 +75,15 @@ char* msmcomm_event_call_status_get_caller_id
 	(struct msmcomm_message *msg) 
 {
 	char *tmp;
-	int len;
+	int len = 0;
 
 	if (msg->payload == NULL)
 		return NULL;
 
 	len = MESSAGE_CAST(msg, struct call_status_event)->caller_id_len;
-	tmp = (char*)malloc(len);
-	snprintf(tmp, len, "%s", 
-			 MESSAGE_CAST(msg, struct call_status_event)->caller_id);
+	tmp = (char*)malloc(len+1);
+	memcpy(tmp, MESSAGE_CAST(msg, struct call_status_event)->caller_id, len);
+	tmp[len] = 0;
 	return tmp;
 }
 

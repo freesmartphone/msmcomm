@@ -821,6 +821,16 @@ namespace Msmcomm
 					details = @"slot_count = $(msg.slot_count) slots_used = $(msg.slots_used) ";
 					details += @"max_chars_per_title = $(msg.max_chars_per_title) max_chars_per_number = $(msg.max_chars_per_number)";
 					break;
+				case Msmcomm.EventType.CALL_INCOMMING:
+				case Msmcomm.EventType.CALL_ORIGINATION:
+				case Msmcomm.EventType.CALL_CONNECT:
+				case Msmcomm.EventType.CALL_END:
+				case Msmcomm.EventType.CALL_STATUS:
+					var msg = (Msmcomm.Unsolicited.CallStatus) this.copy();
+					details = @"caller_id = '$(msg.caller_id)' ";
+					details += @"call_id = $(msg.call_id) ";
+					details += @"reject_type = $(msg.reject_type) ";
+					details += @"reject_value = $(msg.reject_value) ";
                 default:
                     break;
             }
@@ -1201,24 +1211,27 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public abstract class CallStatus : Message
         {
-            [CCode (cname = "msmcomm_event_call_status_get_caller_id")]
-            private void _getCallerId(string callerId);
-
-            public string getCallerId()
+            public string caller_id
             {
-                string callerId;
-                _getCallerId(callerId);
-                return callerId;
+				[CCode (cname = "msmcomm_event_call_status_get_caller_id")]
+				get;
             }
 
-            [CCode (cname = "msmcomm_event_call_status_get_call_id")]
-            public uint getCallId();
+            
+            public uint call_id {
+				[CCode (cname = "msmcomm_event_call_status_get_call_id")]
+				get;
+			}
 
-            [CCode (cname = "msmcomm_event_call_status_get_reject_type")]
-            public uint getRejectType();
+            public uint reject_type {
+				[CCode (cname = "msmcomm_event_call_status_get_reject_type")]
+				get;
+			}
 
-            [CCode (cname = "msmcomm_event_call_status_get_reject_value")]
-            public uint getRejectValue();
+            public uint reject_value {
+				[CCode (cname = "msmcomm_event_call_status_get_reject_value")]
+				get;
+			}
 
         }
 
