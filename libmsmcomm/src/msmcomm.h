@@ -173,6 +173,24 @@
 #define MSMCOMM_EVENT_GET_NETWORKLIST							289
 
 /*
+ * Phonebook events
+ */
+#define MSMCOMM_EVENT_PHONEBOOK_READY 							290
+
+/*
+ * Phonebook types
+ */
+
+#define MSMCOMM_PHONEBOOK_TYPE_NONE 							0
+#define MSMCOMM_PHONEBOOK_TYPE_ADN 								1
+#define MSMCOMM_PHONEBOOK_TYPE_FDN 								2
+#define MSMCOMM_PHONEBOOK_TYPE_SDN 								3
+#define MSMCOMM_PHONEBOOK_TYPE_EFECC 							4
+#define MSMCOMM_PHONEBOOK_TYPE_MBDN 							5
+#define MSMCOMM_PHONEBOOK_TYPE_MBN								6
+#define MSMCOMM_PHONEBOOK_TYPE_ALL 								7
+
+/*
  * Operation modes
  */
 #define MSMCOMM_OPERATION_MODE_RESET							0
@@ -336,6 +354,8 @@ uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_messag
 uint8_t msmcomm_event_sms_wms_read_template_get_number_mode(struct msmcomm_message *msg);
 uint8_t msmcomm_event_sms_wms_read_template_get_number_type(struct msmcomm_message *msg);
 uint8_t msmcomm_event_sms_wms_read_template_get_number_plan(struct msmcomm_message *msg);
+
+unsigned int msmcomm_event_phonebook_ready_get_book_type(struct msmcomm_message *msg);
 
 /* SIM responses ----------------------------------- */
 uint16_t msmcomm_resp_read_simbook_get_record_id(struct msmcomm_message *msg);

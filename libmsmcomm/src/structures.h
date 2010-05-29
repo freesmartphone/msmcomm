@@ -144,6 +144,14 @@ struct read_simbook_resp
 } __attribute__ ((packed));
 
 
+struct phonebook_ready_event
+{
+	uint8_t unknown0[2];
+	uint8_t book_type;
+	uint8_t unknown1[200];
+} __attribute__ ((packed));
+
+
 struct network_state_info_event
 {
 	uint8_t change_field[8];

@@ -40,6 +40,9 @@
 				</description>
 			</field>
 		</structure>
+		<structure name="phonebook_ready_event" length="203">
+		  <field name="book_type" start="2" type="uint8_t"/>
+		</structure>
 	</structures>
 </namespace:sim>
 

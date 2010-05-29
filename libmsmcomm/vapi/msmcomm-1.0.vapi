@@ -214,6 +214,7 @@ namespace Msmcomm
         SMS_WMS_CFG_GW_READY,
         SMS_WMS_READ_TEMPLATE,
         GET_NETWORKLIST,
+        PHONEBOOK_READY,
     }
 
     public string eventTypeToString( int t )
@@ -467,6 +468,8 @@ namespace Msmcomm
 			return "SMS_WMS_READ_TEMPLATE";
 			case EventType.GET_NETWORKLIST:
 			return "URC_GET_NETWORKLIST";
+			case EventType.PHONEBOOK_READY:
+			return "URC_PHONEBOOK_READY";
             default:
 			return "%d (unknown)".printf( t );
         }
@@ -572,6 +575,52 @@ namespace Msmcomm
 				break;
 			case NetworkMode.UMTS:
 				result = "NETWORK_MODE_UMTS";
+				break;
+		}
+		return result;
+	}
+
+	[CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_PHONEBOOK_TYPE_", cheader_filename = "msmcomm.h")]
+	public enum PhonebookType
+	{
+		NONE,
+		ALL,
+		MBDN,
+		MBN,
+		ADN,
+		SDN,
+		FDN,
+		EFECC,
+	}
+
+	public string phonebookTypeToString(PhonebookType type)
+	{
+		var result = "<unknown>";
+		switch (type)
+		{
+			case PhonebookType.NONE:
+				result = "PHONEBOOK_TYPE_NONE";
+				break;
+			case PhonebookType.ALL:
+				result = "PHONEBOOK_TYPE_ALL";
+				break;
+			case PhonebookType.MBDN:
+				result = "PHONEBOOK_TYPE_MBDN";
+				break;
+			case PhonebookType.MBN:
+				result = "PHONEBOOK_TYPE_MBN";
+				break;
+			case PhonebookType.ADN:
+				result = "PHONEBOOK_TYPE_ADN";
+				break;
+			case PhonebookType.SDN:
+				result = "PHONEBOOK_TYPE_SDN";
+				break;
+			case PhonebookType.FDN:
+				result = "PHONEBOOK_TYPE_FDN";
+				break;
+			case PhonebookType.EFECC:
+				result = "PHONEBOOK_TYPE_EFECC";
 				break;
 		}
 		return result;
@@ -757,6 +806,10 @@ namespace Msmcomm
 				case Msmcomm.ResponseType.CM_PH:
 					var msg = (Msmcomm.Reply.CmPh) this.copy();
 					details = @"result = $(msg.result)";
+					break;
+				case Msmcomm.EventType.PHONEBOOK_READY:
+					var msg = (Msmcomm.Unsolicited.PhonebookReady) this.copy();
+					details = @"book_type = $(phonebookTypeToString(msg.book_type))";
 					break;
                 default:
                     break;
@@ -1203,6 +1256,16 @@ namespace Msmcomm
 
 			public uint16 roam {
 				[CCode (cname = "msmcomm_event_network_state_info_get_roam")]
+				get;
+			}
+		}
+
+		[Compact]
+		[CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+		public class PhonebookReady : Message
+		{
+			public PhonebookType book_type {
+				[CCode (cname = "msmcomm_event_phonebook_ready_get_book_type")]
 				get;
 			}
 		}

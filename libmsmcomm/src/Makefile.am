@@ -28,6 +28,7 @@ response_audio.c \
 event_system.c \
 event_network.c \
 event_sms.c \
+event_sim.c \
 group_sim_event.c \
 group_call_event.c \
 group_gps_event.c \

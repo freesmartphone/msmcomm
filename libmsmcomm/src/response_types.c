@@ -85,6 +85,7 @@ EVENT_TYPE(pdsm_xtra)
 */
 EVENT_TYPE(power_state)
 EVENT_TYPE(network_state_info)
+EVENT_TYPE(phonebook_ready)
 
 GROUP_TYPE(sim)
 GROUP_TYPE(call)
@@ -113,6 +114,7 @@ struct descriptor resp_descriptors[] = {
 	//EVENT_DATA(MSMCOMM_EVENT_POWER_STATE, power_state),
 	EVENT_DATA(MSMCOMM_EVENT_NETWORK_STATE_INFO, network_state_info),
 	EVENT_DATA(MSMCOMM_EVENT_GET_NETWORKLIST, get_networklist),
+	EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_READY, phonebook_ready),
 
 	/* responses */
 	RESPONSE_DATA(MSMCOMM_RESPONSE_TEST_ALIVE, test_alive),
