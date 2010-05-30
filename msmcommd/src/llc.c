@@ -56,7 +56,7 @@ static int network_port_setup(struct msmc_context *ctx)
     int fd;
 
     /* FIXME enhance log output */
-
+    
     fd = socket(PF_INET, SOCK_STREAM, 0);
     if (fd < 0)
     {
@@ -80,10 +80,7 @@ static int network_port_setup(struct msmc_context *ctx)
     int result = connect(fd, (struct sockaddr *)&addr, sizeof (addr));
 
     if (result < 0)
-    {
-        perror("Connection failed");
-        return EXIT_FAILURE;
-    }
+        return -1;
 
     return fd;
 }
@@ -750,6 +747,11 @@ int init_llc(struct msmc_context *ctx)
         ctx->fds[MSMC_FD_SERIAL].fd = serial_port_setup(ctx);
     else
         ctx->fds[MSMC_FD_SERIAL].fd = network_port_setup(ctx);
+    
+    if (ctx->fds[MSMC_FD_SERIAL].fd < 0) {
+        ERROR_MSG("Could not establish a connection to the modem port!");
+        return -1;
+    }
 
     bsc_register_fd(&ctx->fds[MSMC_FD_SERIAL]);
 
