@@ -5,6 +5,7 @@ start call_status_event 1107
 [0] uint8_t call_id
 [1] uint8_t call_type
 [3-17] uint8_t caller_id
+[57-59] uint8_t plmn
 [67] uint8_t caller_id_len
 [590] uint8_t cause_value0
 [595] uint8_t cause_value1
@@ -23,13 +24,13 @@ end
 start answer_call_msg 8
 [0-3] uint32_t ref_id
 [4] uint8_t host_id
-[5] uint8_t call_nr
+[5] uint8_t call_id
 end
 
 start end_call_msg 61
 [0-3] uint32_t ref_id
 [4] uint8_t host_id
-[5] uint8_t call_nr
+[5] uint8_t call_id
 end
 
 start dial_call_msg 206

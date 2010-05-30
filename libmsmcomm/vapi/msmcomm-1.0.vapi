@@ -629,6 +629,32 @@ namespace Msmcomm
 		}
 		return result;
 	}
+    
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_CALL_TYPE_", cheader_filename = "msmcomm.h")]
+	public enum CallType
+	{
+		NONE,
+		AUDIO,
+        DATA,
+	}
+
+	public string callTypeToString(CallType type)
+	{
+		var result = "<unknown>";
+		switch (type)
+		{
+			case CallType.NONE:
+				result = "CALL_TYPE_NONE";
+				break;
+			case CallType.AUDIO:
+				result = "CALL_TYPE_AUDIO";
+				break;
+			case CallType.DATA:
+				result = "CALL_TYPE_DATA";
+				break;
+		}
+		return result;
+	}
 
     [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void EventHandlerCb(int event, Message message);
@@ -829,6 +855,7 @@ namespace Msmcomm
 					var msg = (Msmcomm.Unsolicited.CallStatus) this.copy();
 					details = @"caller_id = '$(msg.caller_id)' ";
 					details += @"call_id = $(msg.call_id) ";
+                    details += @"call_type = $(callTypeToString(msg.call_type)) ";
 					details += @"reject_type = $(msg.reject_type) ";
 					details += @"reject_value = $(msg.reject_value) ";
                 default:
@@ -930,8 +957,13 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_create_message")]
             public EndCall(CommandType t = CommandType.END_CALL);
 
-            public uint8 id {
-                [CCode (cname = "msmcomm_message_end_call_set_call_number")]
+            public uint8 call_id {
+                [CCode (cname = "msmcomm_message_end_call_set_call_id")]
+                set;
+            }
+            
+            public uint8 host_id {
+                [CCode (cname = "msmcomm_message_end_call_set_host_id")]
                 set;
             }
         }
@@ -943,8 +975,13 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_create_message")]
             public AnswerCall(CommandType t = CommandType.ANSWER_CALL);
 
-            public uint8 id {
-                [CCode (cname = "msmcomm_message_answer_call_set_call_number")]
+            public uint8 call_id {
+                [CCode (cname = "msmcomm_message_answer_call_set_call_id")]
+                set;
+            }
+            
+            public uint8 host_id {
+                [CCode (cname = "msmcomm_message_answer_call_set_host_id")]
                 set;
             }
         }
@@ -1217,6 +1254,10 @@ namespace Msmcomm
 				get;
             }
 
+            public CallType call_type {
+                [CCode (cname = "msmcomm_event_call_status_get_call_type")]
+				get;
+            }
             
             public uint call_id {
 				[CCode (cname = "msmcomm_event_call_status_get_call_id")]

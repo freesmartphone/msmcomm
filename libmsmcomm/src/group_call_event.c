@@ -50,12 +50,12 @@ unsigned int group_call_get_type(struct msmcomm_message *msg)
     {
         case 0:
             return MSMCOMM_EVENT_CALL_ORIGINATION;
+        case 3:
+            return MSMCOMM_EVENT_CALL_END;
         case 5:
             return MSMCOMM_EVENT_CALL_INCOMMING;
         case 6:
             return MSMCOMM_EVENT_CALL_CONNECT;
-        case 3:
-            return MSMCOMM_EVENT_CALL_END;
         default:
             break;
     }
@@ -68,9 +68,17 @@ uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message * msg)
     return MESSAGE_CAST(msg, struct call_status_event)->call_id;
 }
 
-uint8_t msmcomm_event_call_status_get_call_type(struct msmcomm_message *msg)
+unsigned int msmcomm_event_call_status_get_call_type(struct msmcomm_message *msg)
 {
-    return MESSAGE_CAST(msg, struct call_status_event)->call_type;
+    switch (MESSAGE_CAST(msg, struct call_status_event)->call_type)
+    {
+		case 0x2:
+			return MSMCOMM_CALL_TYPE_AUDIO;
+		case 0x1:
+			return MSMCOMM_CALL_TYPE_DATA;
+	}
+	
+	return MSMCOMM_CALL_TYPE_NONE;
 }
 
 char *msmcomm_event_call_status_get_caller_id(struct msmcomm_message *msg)

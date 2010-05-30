@@ -261,7 +261,7 @@ public class Commands
             ERR( @"Invalid call index $(params[0]), must be 0 <= x <= 10 )" );
             return;
         }
-        //msg.id = (uint8)id;
+        msg.call_id = (uint8)id;
         msm.sendMessage(msg);
     }
 
@@ -275,7 +275,7 @@ public class Commands
             ERR( @"Invalid call index $(params[0]), must be 0 <= x <= 10 )" );
             return;
         }
-        msg.id = (uint8)id;
+        msg.call_id = (uint8)id;
         msm.sendMessage(msg);
     }
 

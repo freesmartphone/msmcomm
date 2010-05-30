@@ -56,7 +56,6 @@ void msg_dial_call_free(struct msmcomm_message *msg)
 uint8_t *msg_dial_call_prepare_data(struct msmcomm_message *msg)
 {
     MESSAGE_CAST(msg, struct dial_call_msg)->ref_id = msg->ref_id;
-
     return msg->payload;
 }
 
@@ -68,19 +67,12 @@ void msmcomm_message_dial_call_set_caller_id
 
     /* copy caller id to payload structure */
     memcpy(MESSAGE_CAST(msg, struct dial_call_msg)->caller_id, caller_id, len);
+    MESSAGE_CAST(msg, struct dial_call_msg)->caller_id_len = len;
 }
 
 /*
  * MSMCOMM_MESSAGE_CMD_ANSWER_CALL
  */
-
-/*
- * [CMD] til.answercall 2
- * PACKET: dir=write fd=11 fn='/dev/modemuart' len=14/0xe
- * frame (type=Data, seq=04, ack=09)
- * 00 01 00 3b 00 00 00 02 02 01 00                  ...;.......     
- */
-
 
 void msg_answer_call_init(struct msmcomm_message *msg)
 {
@@ -88,13 +80,6 @@ void msg_answer_call_init(struct msmcomm_message *msg)
     msg->msg_id = 0x1;
 
     msg->payload = talloc_zero(talloc_msmc_ctx, struct answer_call_msg);
-
-    /* FIXME unknown why we have to set these bytes ... */
-    MESSAGE_CAST(msg, struct answer_call_msg)->ref_id = 0x3b;
-
-    MESSAGE_CAST(msg, struct answer_call_msg)->host_id = 0x2;
-
-    MESSAGE_CAST(msg, struct answer_call_msg)->call_nr = 0x2;
 }
 
 uint32_t msg_answer_call_get_size(struct msmcomm_message *msg)
@@ -114,18 +99,18 @@ uint8_t *msg_answer_call_prepare_data(struct msmcomm_message *msg)
     return msg->payload;
 }
 
-/*
- * MSMCOMM_MESSAGE_CMD_END_CALL
- */
+void msmcomm_message_answer_call_set_host_id(struct msmcomm_message *msg, uint8_t host_id)
+{
+    MESSAGE_CAST(msg, struct answer_call_msg)->host_id = host_id;
+}
+
+void msmcomm_message_answer_call_set_call_id(struct msmcomm_message *msg, uint8_t call_id)
+{
+    MESSAGE_CAST(msg, struct answer_call_msg)->call_id = call_id;
+}
 
 /*
- * [CMD] tel.endcall 2
- * PACKET: dir=write fd=11 fn='/dev/modemuart' len=67/0x43
- * frame (type=Data, seq=06, ack=0e)
- * 00 02 00 3d 00 00 00 01 02 00 00 00 00 00 00 00   ...=............
- * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
- * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
- * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+ * MSMCOMM_MESSAGE_CMD_END_CALL
  */
 
 void msg_end_call_init(struct msmcomm_message *msg)
@@ -153,7 +138,12 @@ uint8_t *msg_end_call_prepare_data(struct msmcomm_message *msg)
     return msg->payload;
 }
 
-void msmcomm_message_end_call_set_call_number(struct msmcomm_message *msg, uint8_t call_nr)
+void msmcomm_message_end_call_set_host_id(struct msmcomm_message *msg, uint8_t host_id)
 {
-    MESSAGE_CAST(msg, struct end_call_msg)->call_nr = call_nr;
+    MESSAGE_CAST(msg, struct end_call_msg)->host_id = host_id;
+}
+
+void msmcomm_message_end_call_set_call_id(struct msmcomm_message *msg, uint8_t call_id)
+{
+    MESSAGE_CAST(msg, struct end_call_msg)->call_id = call_id;
 }

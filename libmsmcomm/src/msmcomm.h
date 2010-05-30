@@ -278,6 +278,13 @@
 #define MSMCOMM_NETWORK_MODE_GSM 															2
 #define MSMCOMM_NETWORK_MODE_UMTS 															3
 
+/*
+ * Call types
+ */
+#define MSMCOMM_CALL_TYPE_NONE                                                              0
+#define MSMCOMM_CALL_TYPE_DATA                                                              1
+#define MSMCOMM_CALL_TYPE_AUDIO                                                             2
+
 struct msmcomm_context;
 struct msmcomm_message;
 
@@ -347,6 +354,12 @@ void msmcomm_message_set_mode_preference_status_set_mode(struct msmcomm_message 
 void msmcomm_message_end_call_set_call_number(struct msmcomm_message *msg, uint8_t call_nr);
 void msmcomm_message_dial_call_set_caller_id(struct msmcomm_message *msg, uint8_t *caller_id, uint8_t len);
 
+void msmcomm_message_answer_call_set_host_id(struct msmcomm_message *msg, uint8_t host_id);
+void msmcomm_message_answer_call_set_call_id(struct msmcomm_message *msg, uint8_t call_id);
+
+void msmcomm_message_end_call_set_host_id(struct msmcomm_message *msg, uint8_t host_id);
+void msmcomm_message_end_call_set_call_id(struct msmcomm_message *msg, uint8_t call_id);
+
 /* SIM messages ------------------------------------ */
 void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char* pin);
 void msmcomm_message_read_simbook_set_book_type(struct msmcomm_message *msg, unsigned int book_type);
@@ -398,6 +411,7 @@ char* msmcomm_event_call_status_get_caller_id(struct msmcomm_message *msg);
 uint8_t msmcomm_event_call_status_get_reject_type(struct msmcomm_message *msg);
 uint8_t msmcomm_event_call_status_get_reject_value(struct msmcomm_message *msg);
 uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message *msg);
+unsigned int msmcomm_event_call_status_get_call_type(struct msmcomm_message *msg);
 
 /* Network events ---------------------------------- */
 unsigned int msmcomm_event_network_state_info_is_only_rssi_update(struct msmcomm_message *msg);

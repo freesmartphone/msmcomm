@@ -28,19 +28,21 @@ struct call_status_event
 	uint8_t call_type;
 	uint8_t unknown0;
 	uint8_t caller_id[15];
-	uint8_t unknown1[49];
+	uint8_t unknown1[39];
+	uint8_t plmn[3];
+	uint8_t unknown2[7];
 	uint8_t caller_id_len;
-	uint8_t unknown2[522];
+	uint8_t unknown3[522];
 	uint8_t cause_value0;
-	uint8_t unknown3[4];
+	uint8_t unknown4[4];
 	uint8_t cause_value1;
-	uint8_t unknown4[28];
+	uint8_t unknown5[28];
 	uint8_t cause_value2;
 	uint8_t reject_type;
 	uint8_t reject_value;
-	uint8_t unknown5[306];
+	uint8_t unknown6[306];
 	uint8_t is_tty;
-	uint8_t unknown6[173];
+	uint8_t unknown7[173];
 } __attribute__ ((packed));
 
 
@@ -57,7 +59,7 @@ struct answer_call_msg
 {
 	uint32_t ref_id;
 	uint8_t host_id;
-	uint8_t call_nr;
+	uint8_t call_id;
 	uint8_t unknown0[2];
 } __attribute__ ((packed));
 
@@ -66,7 +68,7 @@ struct end_call_msg
 {
 	uint32_t ref_id;
 	uint8_t host_id;
-	uint8_t call_nr;
+	uint8_t call_id;
 	uint8_t unknown0[55];
 } __attribute__ ((packed));
 
