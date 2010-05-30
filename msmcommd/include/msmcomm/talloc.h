@@ -1,5 +1,6 @@
 #ifndef _TALLOC_H_
 #define _TALLOC_H_
+
 /* 
    Unix SMB/CIFS implementation.
    Samba temporary memory allocation functions
@@ -50,6 +51,7 @@ typedef void TALLOC_CTX;
 
 #ifndef PRINTF_ATTRIBUTE
 #if (__GNUC__ >= 3)
+
 /** Use gcc attribute to check printf fns.  a1 is the 1-based index of
  * the parameter containing the format, and a2 the index of the first
  * argument. Note that some gcc 2.x versions don't handle this
@@ -69,6 +71,7 @@ typedef void TALLOC_CTX;
 		int (*_talloc_destructor_fn)(_TALLOC_TYPEOF(ptr)) = (function);	      \
 		_talloc_set_destructor((ptr), (int (*)(void *))_talloc_destructor_fn); \
 	} while(0)
+
 /* this extremely strange macro is to avoid some braindamaged warning
    stupidity in gcc 4.1.x */
 #define talloc_steal(ctx, ptr) ({ _TALLOC_TYPEOF(ptr) __talloc_steal_ret = (_TALLOC_TYPEOF(ptr))_talloc_steal((ctx),(ptr)); __talloc_steal_ret; })
@@ -122,71 +125,119 @@ typedef void TALLOC_CTX;
 
 /* The following definitions come from talloc.c  */
 void *_talloc(const void *context, size_t size);
+
 void *talloc_pool(const void *context, size_t size);
-void _talloc_set_destructor(const void *ptr, int (*_destructor)(void *));
+
+void _talloc_set_destructor(const void *ptr, int (*_destructor) (void *));
+
 int talloc_increase_ref_count(const void *ptr);
+
 size_t talloc_reference_count(const void *ptr);
+
 void *_talloc_reference(const void *context, const void *ptr);
+
 int talloc_unlink(const void *context, void *ptr);
-const char *talloc_set_name(const void *ptr, const char *fmt, ...) PRINTF_ATTRIBUTE(2,3);
-void talloc_set_name_const(const void *ptr, const char *name);
-void *talloc_named(const void *context, size_t size, 
-		   const char *fmt, ...) PRINTF_ATTRIBUTE(3,4);
-void *talloc_named_const(const void *context, size_t size, const char *name);
-const char *talloc_get_name(const void *ptr);
-void *talloc_check_name(const void *ptr, const char *name);
-void *_talloc_get_type_abort(const void *ptr, const char *name, const char *location);
-void *talloc_parent(const void *ptr);
-const char *talloc_parent_name(const void *ptr);
-void *talloc_init(const char *fmt, ...) PRINTF_ATTRIBUTE(1,2);
-int talloc_free(void *ptr);
-void talloc_free_children(void *ptr);
-void *_talloc_realloc(const void *context, void *ptr, size_t size, const char *name);
-void *_talloc_steal(const void *new_ctx, const void *ptr);
-void *_talloc_move(const void *new_ctx, const void *pptr);
-size_t talloc_total_size(const void *ptr);
-size_t talloc_total_blocks(const void *ptr);
-void talloc_report_depth_cb(const void *ptr, int depth, int max_depth,
-			    void (*callback)(const void *ptr,
-			  		     int depth, int max_depth,
-					     int is_ref,
-					     void *private_data),
-			    void *private_data);
-void talloc_report_depth_file(const void *ptr, int depth, int max_depth, FILE *f);
-void talloc_report_full(const void *ptr, FILE *f);
-void talloc_report(const void *ptr, FILE *f);
-void talloc_enable_null_tracking(void);
-void talloc_disable_null_tracking(void);
-void talloc_enable_leak_report(void);
-void talloc_enable_leak_report_full(void);
-void *_talloc_zero(const void *ctx, size_t size, const char *name);
-void *_talloc_memdup(const void *t, const void *p, size_t size, const char *name);
-void *_talloc_array(const void *ctx, size_t el_size, unsigned count, const char *name);
-void *_talloc_zero_array(const void *ctx, size_t el_size, unsigned count, const char *name);
-void *_talloc_realloc_array(const void *ctx, void *ptr, size_t el_size, unsigned count, const char *name);
-void *talloc_realloc_fn(const void *context, void *ptr, size_t size);
-void *talloc_autofree_context(void);
-size_t talloc_get_size(const void *ctx);
-void *talloc_find_parent_byname(const void *ctx, const char *name);
-void talloc_show_parents(const void *context, FILE *file);
-int talloc_is_parent(const void *context, const void *ptr);
 
-char *talloc_strdup(const void *t, const char *p);
-char *talloc_strdup_append(char *s, const char *a);
-char *talloc_strdup_append_buffer(char *s, const char *a);
+const char *talloc_set_name(const void *ptr, const char *fmt, ...) PRINTF_ATTRIBUTE(2, 3);
 
-char *talloc_strndup(const void *t, const char *p, size_t n);
-char *talloc_strndup_append(char *s, const char *a, size_t n);
-char *talloc_strndup_append_buffer(char *s, const char *a, size_t n);
+     void talloc_set_name_const(const void *ptr, const char *name);
 
-char *talloc_vasprintf(const void *t, const char *fmt, va_list ap) PRINTF_ATTRIBUTE(2,0);
-char *talloc_vasprintf_append(char *s, const char *fmt, va_list ap) PRINTF_ATTRIBUTE(2,0);
-char *talloc_vasprintf_append_buffer(char *s, const char *fmt, va_list ap) PRINTF_ATTRIBUTE(2,0);
+     void *talloc_named(const void *context, size_t size,
+                        const char *fmt, ...) PRINTF_ATTRIBUTE(3, 4);
+     void *talloc_named_const(const void *context, size_t size, const char *name);
 
-char *talloc_asprintf(const void *t, const char *fmt, ...) PRINTF_ATTRIBUTE(2,3);
-char *talloc_asprintf_append(char *s, const char *fmt, ...) PRINTF_ATTRIBUTE(2,3);
-char *talloc_asprintf_append_buffer(char *s, const char *fmt, ...) PRINTF_ATTRIBUTE(2,3);
+     const char *talloc_get_name(const void *ptr);
 
-void talloc_set_abort_fn(void (*abort_fn)(const char *reason));
+     void *talloc_check_name(const void *ptr, const char *name);
+
+     void *_talloc_get_type_abort(const void *ptr, const char *name, const char *location);
+
+     void *talloc_parent(const void *ptr);
+
+     const char *talloc_parent_name(const void *ptr);
+
+     void *talloc_init(const char *fmt, ...) PRINTF_ATTRIBUTE(1, 2);
+
+     int talloc_free(void *ptr);
+
+     void talloc_free_children(void *ptr);
+
+     void *_talloc_realloc(const void *context, void *ptr, size_t size, const char *name);
+
+     void *_talloc_steal(const void *new_ctx, const void *ptr);
+
+     void *_talloc_move(const void *new_ctx, const void *pptr);
+
+     size_t talloc_total_size(const void *ptr);
+
+     size_t talloc_total_blocks(const void *ptr);
+
+     void talloc_report_depth_cb(const void *ptr, int depth, int max_depth,
+                                 void (*callback) (const void *ptr,
+                                                   int depth, int max_depth,
+                                                   int is_ref,
+                                                   void *private_data), void *private_data);
+     void talloc_report_depth_file(const void *ptr, int depth, int max_depth, FILE * f);
+
+     void talloc_report_full(const void *ptr, FILE * f);
+
+     void talloc_report(const void *ptr, FILE * f);
+
+     void talloc_enable_null_tracking(void);
+
+     void talloc_disable_null_tracking(void);
+
+     void talloc_enable_leak_report(void);
+
+     void talloc_enable_leak_report_full(void);
+
+     void *_talloc_zero(const void *ctx, size_t size, const char *name);
+
+     void *_talloc_memdup(const void *t, const void *p, size_t size, const char *name);
+
+     void *_talloc_array(const void *ctx, size_t el_size, unsigned count, const char *name);
+
+     void *_talloc_zero_array(const void *ctx, size_t el_size, unsigned count, const char *name);
+
+     void *_talloc_realloc_array(const void *ctx, void *ptr, size_t el_size, unsigned count,
+                                 const char *name);
+     void *talloc_realloc_fn(const void *context, void *ptr, size_t size);
+
+     void *talloc_autofree_context(void);
+
+     size_t talloc_get_size(const void *ctx);
+
+     void *talloc_find_parent_byname(const void *ctx, const char *name);
+
+     void talloc_show_parents(const void *context, FILE * file);
+
+     int talloc_is_parent(const void *context, const void *ptr);
+
+     char *talloc_strdup(const void *t, const char *p);
+
+     char *talloc_strdup_append(char *s, const char *a);
+
+     char *talloc_strdup_append_buffer(char *s, const char *a);
+
+     char *talloc_strndup(const void *t, const char *p, size_t n);
+
+     char *talloc_strndup_append(char *s, const char *a, size_t n);
+
+     char *talloc_strndup_append_buffer(char *s, const char *a, size_t n);
+
+     char *talloc_vasprintf(const void *t, const char *fmt, va_list ap) PRINTF_ATTRIBUTE(2, 0);
+
+     char *talloc_vasprintf_append(char *s, const char *fmt, va_list ap) PRINTF_ATTRIBUTE(2, 0);
+
+     char *talloc_vasprintf_append_buffer(char *s, const char *fmt, va_list ap) PRINTF_ATTRIBUTE(2,
+                                                                                                 0);
+
+     char *talloc_asprintf(const void *t, const char *fmt, ...) PRINTF_ATTRIBUTE(2, 3);
+
+     char *talloc_asprintf_append(char *s, const char *fmt, ...) PRINTF_ATTRIBUTE(2, 3);
+
+     char *talloc_asprintf_append_buffer(char *s, const char *fmt, ...) PRINTF_ATTRIBUTE(2, 3);
+
+     void talloc_set_abort_fn(void (*abort_fn) (const char *reason));
 
 #endif

@@ -1,3 +1,4 @@
+
 /* select filedescriptor handling, taken from:
  * userspace logging daemon for the iptables ULOG target
  * of the linux 2.4 netfilter subsystem.
@@ -24,103 +25,114 @@
 #include <msmcomm/timer.h>
 
 static int maxfd = 0;
+
 static LLIST_HEAD(bsc_fds);
+
 static int unregistered_count;
 
 int bsc_register_fd(struct bsc_fd *fd)
 {
-	int flags;
+    int flags;
 
-	/* make FD nonblocking */
+    /* make FD nonblocking */
 #if 0
-	flags = fcntl(fd->fd, F_GETFL);
-	if (flags < 0)
-		return flags;
-	flags |= O_NONBLOCK;
-	flags = fcntl(fd->fd, F_SETFL, flags);
-	if (flags < 0)
-		return flags;
+    flags = fcntl(fd->fd, F_GETFL);
+    if (flags < 0)
+        return flags;
+    flags |= O_NONBLOCK;
+    flags = fcntl(fd->fd, F_SETFL, flags);
+    if (flags < 0)
+        return flags;
 #endif
 
-	/* Register FD */
-	if (fd->fd > maxfd)
-		maxfd = fd->fd;
+    /* Register FD */
+    if (fd->fd > maxfd)
+        maxfd = fd->fd;
 
-	llist_add_tail(&fd->list, &bsc_fds);
+    llist_add_tail(&fd->list, &bsc_fds);
 
-	return 0;
+    return 0;
 }
 
 void bsc_unregister_fd(struct bsc_fd *fd)
 {
-	unregistered_count++;
-	llist_del(&fd->list);
+    unregistered_count++;
+    llist_del(&fd->list);
 }
 
 int bsc_select_main(int polling)
 {
-	struct bsc_fd *ufd, *tmp;
-	fd_set readset, writeset, exceptset;
-	int work = 0, rc;
-	struct timeval no_time = {0, 0};
+    struct bsc_fd *ufd, *tmp;
 
-	FD_ZERO(&readset);
-	FD_ZERO(&writeset);
-	FD_ZERO(&exceptset);
+    fd_set readset, writeset, exceptset;
 
-	/* prepare read and write fdsets */
-	llist_for_each_entry(ufd, &bsc_fds, list) {
-		if (ufd->when & BSC_FD_READ)
-			FD_SET(ufd->fd, &readset);
+    int work = 0, rc;
+    struct timeval no_time = { 0, 0 };
 
-		if (ufd->when & BSC_FD_WRITE)
-			FD_SET(ufd->fd, &writeset);
+    FD_ZERO(&readset);
+    FD_ZERO(&writeset);
+    FD_ZERO(&exceptset);
 
-		if (ufd->when & BSC_FD_EXCEPT)
-			FD_SET(ufd->fd, &exceptset);
-	}
+    /* prepare read and write fdsets */
+    llist_for_each_entry(ufd, &bsc_fds, list)
+    {
+        if (ufd->when & BSC_FD_READ)
+            FD_SET(ufd->fd, &readset);
 
-	bsc_timer_check();
+        if (ufd->when & BSC_FD_WRITE)
+            FD_SET(ufd->fd, &writeset);
 
-	if (!polling)
-		bsc_prepare_timers();
-	rc = select(maxfd+1, &readset, &writeset, &exceptset, polling ? &no_time : bsc_nearest_timer());
-	if (rc < 0)
-		return 0;
+        if (ufd->when & BSC_FD_EXCEPT)
+            FD_SET(ufd->fd, &exceptset);
+    }
 
-	/* fire timers */
-	bsc_update_timers();
+    bsc_timer_check();
 
-	/* call registered callback functions */
-restart:
-	unregistered_count = 0;
-	llist_for_each_entry_safe(ufd, tmp, &bsc_fds, list) {
-		int flags = 0;
+    if (!polling)
+        bsc_prepare_timers();
+    rc = select(maxfd + 1, &readset, &writeset, &exceptset,
+                polling ? &no_time : bsc_nearest_timer());
+    if (rc < 0)
+        return 0;
 
-		if (FD_ISSET(ufd->fd, &readset)) {
-			flags |= BSC_FD_READ;
-			FD_CLR(ufd->fd, &readset);
-		}
+    /* fire timers */
+    bsc_update_timers();
 
-		if (FD_ISSET(ufd->fd, &writeset)) {
-			flags |= BSC_FD_WRITE;
-			FD_CLR(ufd->fd, &writeset);
-		}
+    /* call registered callback functions */
+  restart:
+    unregistered_count = 0;
+    llist_for_each_entry_safe(ufd, tmp, &bsc_fds, list)
+    {
+        int flags = 0;
 
-		if (FD_ISSET(ufd->fd, &exceptset)) {
-			flags |= BSC_FD_EXCEPT;
-			FD_CLR(ufd->fd, &exceptset);
-		}
+        if (FD_ISSET(ufd->fd, &readset))
+        {
+            flags |= BSC_FD_READ;
+            FD_CLR(ufd->fd, &readset);
+        }
 
-		if (flags) {
-			work = 1;
-			ufd->cb(ufd, flags);
-		}
-		/* ugly, ugly hack. If more than one filedescriptors were
-		 * unregistered, they might have been consecutive and
-		 * llist_for_each_entry_safe() is no longer safe */
-		if (unregistered_count > 1)
-			goto restart;
-	}
-	return work;
+        if (FD_ISSET(ufd->fd, &writeset))
+        {
+            flags |= BSC_FD_WRITE;
+            FD_CLR(ufd->fd, &writeset);
+        }
+
+        if (FD_ISSET(ufd->fd, &exceptset))
+        {
+            flags |= BSC_FD_EXCEPT;
+            FD_CLR(ufd->fd, &exceptset);
+        }
+
+        if (flags)
+        {
+            work = 1;
+            ufd->cb(ufd, flags);
+        }
+        /* ugly, ugly hack. If more than one filedescriptors were
+         * unregistered, they might have been consecutive and
+         * llist_for_each_entry_safe() is no longer safe */
+        if (unregistered_count > 1)
+            goto restart;
+    }
+    return work;
 }

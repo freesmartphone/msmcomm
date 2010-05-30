@@ -7,7 +7,9 @@
 #define inline __inline__
 #endif
 
-static inline void prefetch(const void *x) {;}
+static inline void prefetch(const void *x)
+{;
+}
 
 /**
  * container_of - cast a member of a structure out to the containing structure
@@ -40,8 +42,9 @@ static inline void prefetch(const void *x) {;}
  * using the generic single-entry routines.
  */
 
-struct llist_head {
-	struct llist_head *next, *prev;
+struct llist_head
+{
+    struct llist_head *next, *prev;
 };
 
 #define LLIST_HEAD_INIT(name) { &(name), &(name) }
@@ -62,13 +65,12 @@ struct llist_head {
  * the prev/next entries already!
  */
 static inline void __llist_add(struct llist_head *_new,
-			      struct llist_head *prev,
-			      struct llist_head *next)
+                               struct llist_head *prev, struct llist_head *next)
 {
-	next->prev = _new;
-	_new->next = next;
-	_new->prev = prev;
-	prev->next = _new;
+    next->prev = _new;
+    _new->next = next;
+    _new->prev = prev;
+    prev->next = _new;
 }
 
 /**
@@ -81,7 +83,7 @@ static inline void __llist_add(struct llist_head *_new,
  */
 static inline void llist_add(struct llist_head *_new, struct llist_head *head)
 {
-	__llist_add(_new, head, head->next);
+    __llist_add(_new, head, head->next);
 }
 
 /**
@@ -94,7 +96,7 @@ static inline void llist_add(struct llist_head *_new, struct llist_head *head)
  */
 static inline void llist_add_tail(struct llist_head *_new, struct llist_head *head)
 {
-	__llist_add(_new, head->prev, head);
+    __llist_add(_new, head->prev, head);
 }
 
 /*
@@ -104,10 +106,10 @@ static inline void llist_add_tail(struct llist_head *_new, struct llist_head *he
  * This is only for internal llist manipulation where we know
  * the prev/next entries already!
  */
-static inline void __llist_del(struct llist_head * prev, struct llist_head * next)
+static inline void __llist_del(struct llist_head *prev, struct llist_head *next)
 {
-	next->prev = prev;
-	prev->next = next;
+    next->prev = prev;
+    prev->next = next;
 }
 
 /**
@@ -118,9 +120,9 @@ static inline void __llist_del(struct llist_head * prev, struct llist_head * nex
  */
 static inline void llist_del(struct llist_head *entry)
 {
-	__llist_del(entry->prev, entry->next);
-	entry->next = (struct llist_head *)LLIST_POISON1;
-	entry->prev = (struct llist_head *)LLIST_POISON2;
+    __llist_del(entry->prev, entry->next);
+    entry->next = (struct llist_head *)LLIST_POISON1;
+    entry->prev = (struct llist_head *)LLIST_POISON2;
 }
 
 /**
@@ -129,8 +131,8 @@ static inline void llist_del(struct llist_head *entry)
  */
 static inline void llist_del_init(struct llist_head *entry)
 {
-	__llist_del(entry->prev, entry->next);
-	INIT_LLIST_HEAD(entry); 
+    __llist_del(entry->prev, entry->next);
+    INIT_LLIST_HEAD(entry);
 }
 
 /**
@@ -140,8 +142,8 @@ static inline void llist_del_init(struct llist_head *entry)
  */
 static inline void llist_move(struct llist_head *llist, struct llist_head *head)
 {
-        __llist_del(llist->prev, llist->next);
-        llist_add(llist, head);
+    __llist_del(llist->prev, llist->next);
+    llist_add(llist, head);
 }
 
 /**
@@ -149,11 +151,10 @@ static inline void llist_move(struct llist_head *llist, struct llist_head *head)
  * @llist: the entry to move
  * @head: the head that will follow our entry
  */
-static inline void llist_move_tail(struct llist_head *llist,
-				  struct llist_head *head)
+static inline void llist_move_tail(struct llist_head *llist, struct llist_head *head)
 {
-        __llist_del(llist->prev, llist->next);
-        llist_add_tail(llist, head);
+    __llist_del(llist->prev, llist->next);
+    llist_add_tail(llist, head);
 }
 
 /**
@@ -162,21 +163,22 @@ static inline void llist_move_tail(struct llist_head *llist,
  */
 static inline int llist_empty(const struct llist_head *head)
 {
-	return head->next == head;
+    return head->next == head;
 }
 
-static inline void __llist_splice(struct llist_head *llist,
-				 struct llist_head *head)
+static inline void __llist_splice(struct llist_head *llist, struct llist_head *head)
 {
-	struct llist_head *first = llist->next;
-	struct llist_head *last = llist->prev;
-	struct llist_head *at = head->next;
+    struct llist_head *first = llist->next;
 
-	first->prev = head;
-	head->next = first;
+    struct llist_head *last = llist->prev;
 
-	last->next = at;
-	at->prev = last;
+    struct llist_head *at = head->next;
+
+    first->prev = head;
+    head->next = first;
+
+    last->next = at;
+    at->prev = last;
 }
 
 /**
@@ -186,8 +188,8 @@ static inline void __llist_splice(struct llist_head *llist,
  */
 static inline void llist_splice(struct llist_head *llist, struct llist_head *head)
 {
-	if (!llist_empty(llist))
-		__llist_splice(llist, head);
+    if (!llist_empty(llist))
+        __llist_splice(llist, head);
 }
 
 /**
@@ -197,13 +199,13 @@ static inline void llist_splice(struct llist_head *llist, struct llist_head *hea
  *
  * The llist at @llist is reinitialised
  */
-static inline void llist_splice_init(struct llist_head *llist,
-				    struct llist_head *head)
+static inline void llist_splice_init(struct llist_head *llist, struct llist_head *head)
 {
-	if (!llist_empty(llist)) {
-		__llist_splice(llist, head);
-		INIT_LLIST_HEAD(llist);
-	}
+    if (!llist_empty(llist))
+    {
+        __llist_splice(llist, head);
+        INIT_LLIST_HEAD(llist);
+    }
 }
 
 /**
@@ -223,15 +225,18 @@ static inline void llist_splice_init(struct llist_head *llist,
 #define llist_for_each(pos, head) \
 	for (pos = (head)->next, prefetch(pos->next); pos != (head); \
         	pos = pos->next, prefetch(pos->next))
-        	
+
 static inline int llist_count(struct llist_head *head)
 {
-	int count = 0;
-	struct llist_head *list;
-	llist_for_each(list, head) {
-		count++;
-	}
-	return count;
+    int count = 0;
+
+    struct llist_head *list;
+
+    llist_for_each(list, head)
+    {
+        count++;
+    }
+    return count;
 }
 
 /**
@@ -255,7 +260,7 @@ static inline int llist_count(struct llist_head *head)
 #define llist_for_each_prev(pos, head) \
 	for (pos = (head)->prev, prefetch(pos->prev); pos != (head); \
         	pos = pos->prev, prefetch(pos->prev))
-        	
+
 /**
  * llist_for_each_safe	-	iterate over a llist safe against removal of llist entry
  * @pos:	the &struct llist_head to use as a loop counter.
@@ -327,11 +332,11 @@ static inline int llist_count(struct llist_head *head)
 #define llist_for_each_rcu(pos, head) \
 	for (pos = (head)->next, prefetch(pos->next); pos != (head); \
         	pos = pos->next, ({ smp_read_barrier_depends(); 0;}), prefetch(pos->next))
-        	
+
 #define __llist_for_each_rcu(pos, head) \
 	for (pos = (head)->next; pos != (head); \
         	pos = pos->next, ({ smp_read_barrier_depends(); 0;}))
-        	
+
 /**
  * llist_for_each_safe_rcu	-	iterate over an rcu-protected llist safe
  *					against removal of llist entry

@@ -1,3 +1,4 @@
+
 /*
  * (C) 2008, 2009 by Holger Hans Peter Freyther <zecke@selfish.org>
  * All Rights Reserved
@@ -41,24 +42,29 @@
  *        the timers.
  *
  */
-struct timer_list {
-	struct llist_head entry;
-	struct timeval timeout;
-	unsigned int active  : 1;
-	unsigned int handled : 1;
-	unsigned int in_list : 1;
+struct timer_list
+{
+    struct llist_head entry;
+    struct timeval timeout;
+    unsigned int active:1;
+    unsigned int handled:1;
+    unsigned int in_list:1;
 
-	void (*cb)(void*);
-	void *data;
+    void (*cb) (void *);
+    void *data;
 };
 
 /**
  * timer management
  */
 void bsc_add_timer(struct timer_list *timer);
+
 void bsc_schedule_timer(struct timer_list *timer, int seconds, int microseconds);
+
 void bsc_reschedule_timer(struct timer_list *timer, int seconds, int microseconds);
+
 void bsc_del_timer(struct timer_list *timer);
+
 int bsc_timer_pending(struct timer_list *timer);
 
 
@@ -66,8 +72,11 @@ int bsc_timer_pending(struct timer_list *timer);
  * internal timer list management
  */
 struct timeval *bsc_nearest_timer();
+
 void bsc_prepare_timers();
+
 int bsc_update_timers();
+
 int bsc_timer_check(void);
 
 #endif

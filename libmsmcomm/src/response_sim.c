@@ -1,3 +1,4 @@
+
 /* 
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -31,17 +32,18 @@
 
 unsigned int resp_get_sim_capabilities_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x10) && (msg->msg_id == 0x1);
+    return (msg->group_id == 0x10) && (msg->msg_id == 0x1);
 }
 
-void resp_get_sim_capabilities_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void resp_get_sim_capabilities_handle_data(struct msmcomm_message *msg, uint8_t * data,
+                                           uint32_t len)
 {
-	/* FIXME */
+    /* FIXME */
 }
 
 uint32_t resp_get_sim_capabilities_get_size(struct msmcomm_message *msg)
 {
-	return 0;
+    return 0;
 }
 
 /*
@@ -50,91 +52,96 @@ uint32_t resp_get_sim_capabilities_get_size(struct msmcomm_message *msg)
 
 unsigned int resp_read_simbook_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x19) && (msg->msg_id == 0x0);
+    return (msg->group_id == 0x19) && (msg->msg_id == 0x0);
 }
 
-void resp_read_simbook_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void resp_read_simbook_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-	if (len != sizeof(struct read_simbook_resp))
-		return;
+    if (len != sizeof (struct read_simbook_resp))
+        return;
 
-	msg->payload = data;
-	msg->ref_id = MESSAGE_CAST(msg, struct read_simbook_resp)->ref_id;
+    msg->payload = data;
+    msg->ref_id = MESSAGE_CAST(msg, struct read_simbook_resp)->ref_id;
 
-	/* handle message specifc error codes */
-	if (MESSAGE_CAST(msg, struct read_simbook_resp)->result == 0xb)
-		msg->result = MSMCOMM_RESULT_READ_SIMBOOK_INVALID_RECORD_ID;
+    /* handle message specifc error codes */
+    if (MESSAGE_CAST(msg, struct read_simbook_resp)->result == 0xb)
+        msg->result = MSMCOMM_RESULT_READ_SIMBOOK_INVALID_RECORD_ID;
 }
 
 uint32_t resp_read_simbook_get_size(struct msmcomm_message *msg)
 {
-	return sizeof(struct read_simbook_resp);
+    return sizeof (struct read_simbook_resp);
 }
 
 unsigned int msmcomm_resp_read_simbook_get_book_type(struct msmcomm_message *msg)
 {
-	switch (MESSAGE_CAST(msg, struct read_simbook_resp)->book_type)
-	{
-		case 0x10:
-			return MSMCOMM_PHONEBOOK_TYPE_ADN;
-		case 0x20:
-			return MSMCOMM_PHONEBOOK_TYPE_FDN;
-		case 0x8:
-			return MSMCOMM_PHONEBOOK_TYPE_SDN;
-	}
+    switch (MESSAGE_CAST(msg, struct read_simbook_resp)->book_type)
+    {
+        case 0x10:
+            return MSMCOMM_PHONEBOOK_TYPE_ADN;
+        case 0x20:
+            return MSMCOMM_PHONEBOOK_TYPE_FDN;
+        case 0x8:
+            return MSMCOMM_PHONEBOOK_TYPE_SDN;
+    }
 
-	return MSMCOMM_PHONEBOOK_TYPE_NONE;
+    return MSMCOMM_PHONEBOOK_TYPE_NONE;
 }
 
-uint8_t msmcomm_resp_read_simbook_get_position(struct msmcomm_message *msg)
+uint8_t msmcomm_resp_read_simbook_get_position(struct msmcomm_message * msg)
 {
-	return MESSAGE_CAST(msg, struct read_simbook_resp)->position;
+    return MESSAGE_CAST(msg, struct read_simbook_resp)->position;
 }
 
 unsigned int msmcomm_resp_read_simbook_get_encoding_type(struct msmcomm_message *msg)
 {
-	switch(MESSAGE_CAST(msg, struct read_simbook_resp)->encoding_type) {
-		case 0x4:
-			return MSMCOMM_ENCODING_TYPE_ASCII;
-		case 0x9:
-			return MSMCOMM_ENCODING_TYPE_BUCS2;
-	}
+    switch (MESSAGE_CAST(msg, struct read_simbook_resp)->encoding_type)
+    {
+        case 0x4:
+            return MSMCOMM_ENCODING_TYPE_ASCII;
+        case 0x9:
+            return MSMCOMM_ENCODING_TYPE_BUCS2;
+    }
 
-	return MSMCOMM_ENCODING_TYPE_NONE;
+    return MSMCOMM_ENCODING_TYPE_NONE;
 }
 
-char* msmcomm_resp_read_simbook_get_number(struct msmcomm_message *msg)
+char *msmcomm_resp_read_simbook_get_number(struct msmcomm_message *msg)
 {
-	char *number = NULL;
-	int len = 0;
-	struct read_simbook_resp *resp = MESSAGE_CAST(msg, struct read_simbook_resp);
+    char *number = NULL;
 
-	if (resp->number == NULL)
-		return NULL;
+    int len = 0;
 
-	len = strlen(resp->number) + 1;
-	number = (uint8_t*)malloc(len * sizeof(char));
-	memcpy(number, resp->number, len - 1);
-	number[len-1] = 0;
-	
-	return number;
+    struct read_simbook_resp *resp = MESSAGE_CAST(msg, struct read_simbook_resp);
+
+    if (resp->number == NULL)
+        return NULL;
+
+    len = strlen(resp->number) + 1;
+    number = (uint8_t *) malloc(len * sizeof (char));
+    memcpy(number, resp->number, len - 1);
+    number[len - 1] = 0;
+
+    return number;
 }
 
-char* msmcomm_resp_read_simbook_get_title(struct msmcomm_message *msg)
+char *msmcomm_resp_read_simbook_get_title(struct msmcomm_message *msg)
 {
-	char *title = NULL;
-	int len = 0;
-	struct read_simbook_resp *resp = MESSAGE_CAST(msg, struct read_simbook_resp);
+    char *title = NULL;
 
-	if (resp->title == NULL)
-		return NULL;
+    int len = 0;
 
-	len = strlen(resp->title) + 1;
-	title = (uint8_t*)malloc(len * sizeof(char));
-	memcpy(title, resp->title, len - 1);
-	title[len-1] = 0;
+    struct read_simbook_resp *resp = MESSAGE_CAST(msg, struct read_simbook_resp);
 
-	return title;
+    if (resp->title == NULL)
+        return NULL;
+
+    len = strlen(resp->title) + 1;
+    title = (uint8_t *) malloc(len * sizeof (char));
+    memcpy(title, resp->title, len - 1);
+    title[len - 1] = 0;
+
+    return title;
 }
 
 /*
@@ -143,41 +150,39 @@ char* msmcomm_resp_read_simbook_get_title(struct msmcomm_message *msg)
 
 unsigned int resp_get_phonebook_properties_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x1a) && (msg->msg_id == 0xc);
+    return (msg->group_id == 0x1a) && (msg->msg_id == 0xc);
 }
 
-void resp_get_phonebook_properties_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void resp_get_phonebook_properties_handle_data(struct msmcomm_message *msg, uint8_t * data,
+                                               uint32_t len)
 {
-	if (len != sizeof(struct get_phonebook_properties_resp))
-		return;
+    if (len != sizeof (struct get_phonebook_properties_resp))
+        return;
 
-	msg->payload = data;
+    msg->payload = data;
 }
 
-uint32_t resp_get_phonebook_properties_get_size(struct msmcomm_message *msg)
+uint32_t resp_get_phonebook_properties_get_size(struct msmcomm_message * msg)
 {
-	return sizeof(struct get_phonebook_properties_resp);
+    return sizeof (struct get_phonebook_properties_resp);
 }
 
 uint32_t msmcomm_resp_get_phonebook_properties_get_slot_count(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->slot_count;
+    return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->slot_count;
 }
 
 uint32_t msmcomm_resp_get_phonebook_properties_get_slots_used(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->slots_used;
+    return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->slots_used;
 }
 
 uint32_t msmcomm_resp_get_phonebook_properties_get_max_chars_per_title(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->max_chars_per_title;
+    return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->max_chars_per_title;
 }
 
 uint32_t msmcomm_resp_get_phonebook_properties_get_max_chars_per_number(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->max_chars_per_number;
+    return MESSAGE_CAST(msg, struct get_phonebook_properties_resp)->max_chars_per_number;
 }
-
-
-

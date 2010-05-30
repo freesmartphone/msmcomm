@@ -1,3 +1,4 @@
+
 /* 
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -28,12 +29,12 @@ extern void *talloc_msmc_ctx;
 
 unsigned int event_pdsm_pd_done_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x23) && (msg->msg_id == 0x1);
+    return (msg->group_id == 0x23) && (msg->msg_id == 0x1);
 }
 
-void event_pdsm_pd_done_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_pdsm_pd_done_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-	/* FIXME */
+    /* FIXME */
 }
 
 /*
@@ -42,13 +43,13 @@ void event_pdsm_pd_done_handle_data(struct msmcomm_message *msg, uint8_t *data, 
 
 unsigned int event_pd_position_data_is_valid(struct msmcomm_message *msg)
 {
-	//return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
-	return 0;
+    //return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
+    return 0;
 }
 
-void event_pd_position_data_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_pd_position_data_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-	/* FIXME */
+    /* FIXME */
 }
 
 /*
@@ -57,13 +58,14 @@ void event_pd_position_data_handle_data(struct msmcomm_message *msg, uint8_t *da
 
 unsigned int event_pd_parameter_change_is_valid(struct msmcomm_message *msg)
 {
-	//return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
-	return 0;
+    //return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
+    return 0;
 }
 
-void event_pd_parameter_change_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_pd_parameter_change_handle_data(struct msmcomm_message *msg, uint8_t * data,
+                                           uint32_t len)
 {
-	/* FIXME */
+    /* FIXME */
 }
 
 /*
@@ -72,13 +74,13 @@ void event_pd_parameter_change_handle_data(struct msmcomm_message *msg, uint8_t 
 
 unsigned int event_pdsm_lcs_is_valid(struct msmcomm_message *msg)
 {
-	//return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
-	return 0;
+    //return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
+    return 0;
 }
 
-void event_pdsm_lcs_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_pdsm_lcs_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-	/* FIXME */
+    /* FIXME */
 }
 
 /*
@@ -87,11 +89,11 @@ void event_pdsm_lcs_handle_data(struct msmcomm_message *msg, uint8_t *data, uint
 
 unsigned int event_pdsm_xtra_is_valid(struct msmcomm_message *msg)
 {
-	//return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
-	return 0;
+    //return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
+    return 0;
 }
 
-void event_pdsm_xtra_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_pdsm_xtra_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-	/* FIXME */
+    /* FIXME */
 }

@@ -1,3 +1,4 @@
+
 /* 
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -51,30 +52,28 @@ MESSAGE_TYPE(set_system_time)
 MESSAGE_TYPE(rssi_status)
 MESSAGE_TYPE(read_simbook)
 MESSAGE_TYPE(get_networklist)
-MESSAGE_TYPE(set_mode_preference)
-MESSAGE_TYPE(get_phonebook_properties)
+MESSAGE_TYPE(set_mode_preference) MESSAGE_TYPE(get_phonebook_properties)
+     struct descriptor msg_descriptors[] = {
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE, change_operation_mode),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_TEST_ALIVE, test_alive),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_IMEI, get_imei),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO, get_firmware_info),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO, get_phone_state_info),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_VERIFY_PIN, verify_pin),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_LOCATION_PRIV_PREF, get_location_priv_pref),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_ANSWER_CALL, answer_call),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_AUDIO_PROFILE, set_audio_profile),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_END_CALL, end_call),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_DIAL_CALL, dial_call),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS, get_charger_status),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHARGING, charging),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_SYSTEM_TIME, set_system_time),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_RSSI_STATUS, rssi_status),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_READ_SIMBOOK, read_simbook),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_NETWORKLIST, get_networklist),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_MODE_PREFERENCE, set_mode_preference),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_PHONEBOOK_PROPERTIES, get_phonebook_properties),
+     };
 
-struct descriptor msg_descriptors[] = {
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE,change_operation_mode),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_TEST_ALIVE, test_alive),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_IMEI, get_imei),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO, get_firmware_info),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO, get_phone_state_info),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_VERIFY_PIN, verify_pin),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_LOCATION_PRIV_PREF, get_location_priv_pref),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_ANSWER_CALL, answer_call),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_AUDIO_PROFILE, set_audio_profile),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_END_CALL, end_call),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_DIAL_CALL, dial_call),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS, get_charger_status),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHARGING, charging),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_SYSTEM_TIME, set_system_time),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_RSSI_STATUS, rssi_status),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_READ_SIMBOOK, read_simbook),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_NETWORKLIST, get_networklist),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_MODE_PREFERENCE, set_mode_preference),
-	MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_PHONEBOOK_PROPERTIES, get_phonebook_properties),
-};
-
-unsigned int msg_descriptors_size = (unsigned int)(sizeof(msg_descriptors) / sizeof(struct descriptor));
-
+unsigned int msg_descriptors_size =
+    (unsigned int)(sizeof (msg_descriptors) / sizeof (struct descriptor));

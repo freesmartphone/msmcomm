@@ -1,3 +1,4 @@
+
 /* 
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -28,17 +29,17 @@ extern void *talloc_msmc_ctx;
 
 unsigned int event_link_established_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x8c) && (msg->msg_id == 0x1);
+    return (msg->group_id == 0x8c) && (msg->msg_id == 0x1);
 }
 
-void event_link_established_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_link_established_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-	/* no data to handle */
+    /* no data to handle */
 }
 
 uint32_t event_link_established_ind_get_size(struct msmcomm_message *msg)
 {
-	return 0;
+    return 0;
 }
 
 /*
@@ -47,53 +48,53 @@ uint32_t event_link_established_ind_get_size(struct msmcomm_message *msg)
 
 unsigned int event_radio_reset_ind_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x1d) && (msg->msg_id == 0x0);
+    return (msg->group_id == 0x1d) && (msg->msg_id == 0x0);
 }
 
-void event_radio_reset_ind_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_radio_reset_ind_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-	if (len != sizeof(struct radio_reset_ind_event))
-		return;
-	msg->payload = data;
+    if (len != sizeof (struct radio_reset_ind_event))
+        return;
+    msg->payload = data;
 }
 
-uint32_t event_radio_reset_ind_get_size(struct msmcomm_message *msg)
+uint32_t event_radio_reset_ind_get_size(struct msmcomm_message * msg)
 {
-	return sizeof(struct radio_reset_ind_event);
+    return sizeof (struct radio_reset_ind_event);
 }
 
 /*
  * MSMCOMM_EVENT_CHARGER_STATUS
  */
 
-unsigned int event_charger_status_is_valid(struct msmcomm_message *msg) 
+unsigned int event_charger_status_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x1d) && (msg->msg_id == 0x1);
+    return (msg->group_id == 0x1d) && (msg->msg_id == 0x1);
 }
 
-void event_charger_status_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_charger_status_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-	if (len != sizeof(struct charger_status_event))
-		return;
-		
-	msg->payload = data;
+    if (len != sizeof (struct charger_status_event))
+        return;
+
+    msg->payload = data;
 }
 
 unsigned int msmcomm_event_charger_status_get_voltage(struct msmcomm_message *msg)
 {
-	/* FIXME */
-	return MSMCOMM_CHARGING_VOLTAGE_MODE_500mA;
+    /* FIXME */
+    return MSMCOMM_CHARGING_VOLTAGE_MODE_500mA;
 }
 
-uint32_t event_charger_status_get_size(struct msmcomm_message *msg)
+uint32_t event_charger_status_get_size(struct msmcomm_message * msg)
 {
-	return sizeof(struct charger_status_event);
+    return sizeof (struct charger_status_event);
 }
 
 /*
  * MSMCOMM_EVENT_OPERATOR_MODE
  */
- 
+
 /*
 handleRadioData groupId = 0x5, msgId = 0x0 
 handleRadioData HCI_SUBSYS_CM_PH_EVT with msgId 0x0 mNetworkSelModePref 0 
@@ -105,20 +106,20 @@ handleRadioData Received HCI_SYS_OPRT_MODE_ONLINE
 
 unsigned int event_operator_mode_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x5) && (msg->msg_id == 0x0);
+    return (msg->group_id == 0x5) && (msg->msg_id == 0x0);
 }
 
-void event_operator_mode_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_operator_mode_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-	if (len != sizeof(struct cm_ph_event))
-		return;
+    if (len != sizeof (struct cm_ph_event))
+        return;
 
-	msg->payload = data;
+    msg->payload = data;
 }
 
-uint32_t event_operator_mode_get_size(struct msmcomm_message *msg)
+uint32_t event_operator_mode_get_size(struct msmcomm_message * msg)
 {
-	return sizeof(struct cm_ph_event);
+    return sizeof (struct cm_ph_event);
 }
 
 /*
@@ -127,18 +128,19 @@ uint32_t event_operator_mode_get_size(struct msmcomm_message *msg)
 
 unsigned int event_cm_ph_info_available_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x5) && (msg->msg_id == 0xe);
+    return (msg->group_id == 0x5) && (msg->msg_id == 0xe);
 }
 
-void event_cm_ph_info_available_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_cm_ph_info_available_handle_data(struct msmcomm_message *msg, uint8_t * data,
+                                            uint32_t len)
 {
-	if (len != sizeof(struct cm_ph_event))
-		return;
+    if (len != sizeof (struct cm_ph_event))
+        return;
 
-	msg->payload = data;
+    msg->payload = data;
 }
 
-uint32_t event_cm_ph_info_available_get_size(struct msmcomm_message *msg)
+uint32_t event_cm_ph_info_available_get_size(struct msmcomm_message * msg)
 {
-	return sizeof(struct cm_ph_event);
+    return sizeof (struct cm_ph_event);
 }

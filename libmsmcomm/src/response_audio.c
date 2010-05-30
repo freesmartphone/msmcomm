@@ -1,3 +1,4 @@
+
 /*
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -28,18 +29,18 @@ extern void *talloc_msmc_ctx;
 
 unsigned int resp_sound_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x1f) && (msg->msg_id == 0x1);
+    return (msg->group_id == 0x1f) && (msg->msg_id == 0x1);
 }
 
-void resp_sound_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void resp_sound_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-	if (len != sizeof(struct sound_resp))
-		return;
+    if (len != sizeof (struct sound_resp))
+        return;
 
-	msg->payload = data;
+    msg->payload = data;
 }
 
-uint32_t resp_sound_get_size(struct msmcomm_message *msg)
+uint32_t resp_sound_get_size(struct msmcomm_message * msg)
 {
-	return sizeof(struct sound_resp);
+    return sizeof (struct sound_resp);
 }

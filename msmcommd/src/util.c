@@ -1,3 +1,4 @@
+
 /*
  * (C) 2009-2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -23,42 +24,48 @@
 #define VALUES_PER_LINE 16
 extern int append_newline;
 
-void hexdump(uint8_t *data, uint32_t len)
+void hexdump(uint8_t * data, uint32_t len)
 {
-	char ascii[VALUES_PER_LINE + 1];
-	int count;
-	int offset;
-	uint8_t *p;
-	if (!data)
-		return;
-	p = data;
+    char ascii[VALUES_PER_LINE + 1];
 
-	memset( ascii, 0, VALUES_PER_LINE + 1 );
-	count = 0;
+    int count;
 
-	while (len--)
-	{
-		uint8_t b = *p++;
-		log_small_message("%02x ", b & 0xff);
-		if ( b > 32 && b < 128 )
-			ascii[count] = b;
-		else
-			ascii[count] = '.';
-		count++;
+    int offset;
 
-		if (count == VALUES_PER_LINE) {
-			log_small_message("      %s\n", ascii);
-			memset( ascii, 0, VALUES_PER_LINE + 1 );
-			count = 0;
-		}
-	}
+    uint8_t *p;
 
-	if ( count != 0 )
-	{
-		while ( count++ < VALUES_PER_LINE )
-		{
-			log_small_message( "   " );
-		}
-		log_small_message("      %s\n", ascii);
-	}
+    if (!data)
+        return;
+    p = data;
+
+    memset(ascii, 0, VALUES_PER_LINE + 1);
+    count = 0;
+
+    while (len--)
+    {
+        uint8_t b = *p++;
+
+        log_small_message("%02x ", b & 0xff);
+        if (b > 32 && b < 128)
+            ascii[count] = b;
+        else
+            ascii[count] = '.';
+        count++;
+
+        if (count == VALUES_PER_LINE)
+        {
+            log_small_message("      %s\n", ascii);
+            memset(ascii, 0, VALUES_PER_LINE + 1);
+            count = 0;
+        }
+    }
+
+    if (count != 0)
+    {
+        while (count++ < VALUES_PER_LINE)
+        {
+            log_small_message("   ");
+        }
+        log_small_message("      %s\n", ascii);
+    }
 }

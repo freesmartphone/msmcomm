@@ -1,3 +1,4 @@
+
 /* 
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -19,4 +20,3 @@
  */
 
 #include "internal.h"
-

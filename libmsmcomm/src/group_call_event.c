@@ -1,3 +1,4 @@
+
 /* 
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -28,90 +29,90 @@ extern void *talloc_msmc_ctx;
 
 unsigned int group_call_is_valid(struct msmcomm_message *msg)
 {
-	return msg->group_id == 0x2;
+    return msg->group_id == 0x2;
 }
 
-void group_call_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
-{ 
-	if (len != sizeof(struct call_status_event))
-		return;
+void group_call_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
+{
+    if (len != sizeof (struct call_status_event))
+        return;
 
-	msg->payload = data;
+    msg->payload = data;
 }
 
 void group_call_free(struct msmcomm_message *msg)
-{ 
+{
 }
 
 unsigned int group_call_get_type(struct msmcomm_message *msg)
 {
-	switch(msg->msg_id) {
-	case 0:
-		return MSMCOMM_EVENT_CALL_ORIGINATION;
-	case 5:
-		return MSMCOMM_EVENT_CALL_INCOMMING;
-	case 6:
-		return MSMCOMM_EVENT_CALL_CONNECT;
-	case 3:
-		return MSMCOMM_EVENT_CALL_END;
-	default:
-		break;
-	}
-	
-	return MSMCOMM_MESSAGE_INVALID;
+    switch (msg->msg_id)
+    {
+        case 0:
+            return MSMCOMM_EVENT_CALL_ORIGINATION;
+        case 5:
+            return MSMCOMM_EVENT_CALL_INCOMMING;
+        case 6:
+            return MSMCOMM_EVENT_CALL_CONNECT;
+        case 3:
+            return MSMCOMM_EVENT_CALL_END;
+        default:
+            break;
+    }
+
+    return MSMCOMM_MESSAGE_INVALID;
 }
 
-uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message *msg)
+uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message * msg)
 {
-	return MESSAGE_CAST(msg, struct call_status_event)->call_id;
+    return MESSAGE_CAST(msg, struct call_status_event)->call_id;
 }
 
 uint8_t msmcomm_event_call_status_get_call_type(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct call_status_event)->call_type;
+    return MESSAGE_CAST(msg, struct call_status_event)->call_type;
 }
 
-char* msmcomm_event_call_status_get_caller_id
-	(struct msmcomm_message *msg) 
+char *msmcomm_event_call_status_get_caller_id(struct msmcomm_message *msg)
 {
-	char *tmp;
-	int len = 0;
+    char *tmp;
 
-	if (msg->payload == NULL)
-		return NULL;
+    int len = 0;
 
-	len = MESSAGE_CAST(msg, struct call_status_event)->caller_id_len;
-	tmp = (char*)malloc(len+1);
-	memcpy(tmp, MESSAGE_CAST(msg, struct call_status_event)->caller_id, len);
-	tmp[len] = 0;
-	return tmp;
+    if (msg->payload == NULL)
+        return NULL;
+
+    len = MESSAGE_CAST(msg, struct call_status_event)->caller_id_len;
+    tmp = (char *)malloc(len + 1);
+    memcpy(tmp, MESSAGE_CAST(msg, struct call_status_event)->caller_id, len);
+
+    tmp[len] = 0;
+    return tmp;
 }
 
-uint8_t msmcomm_event_call_status_get_reject_type(struct msmcomm_message *msg)
+uint8_t msmcomm_event_call_status_get_reject_type(struct msmcomm_message * msg)
 {
-	return MESSAGE_CAST(msg, struct call_status_event)->reject_type;
+    return MESSAGE_CAST(msg, struct call_status_event)->reject_type;
 }
 
 uint8_t msmcomm_event_call_status_get_reject_value(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct call_status_event)->reject_value;
+    return MESSAGE_CAST(msg, struct call_status_event)->reject_value;
 }
 
 unsigned int msmcomm_event_call_status_get_cause_value(struct msmcomm_message *msg)
 {
-	uint8_t value = 0xff;
+    uint8_t value = 0xff;
 
-	if (MESSAGE_CAST(msg, struct call_status_event)->cause_value0 == 0)
-		return MESSAGE_CAST(msg, struct call_status_event)->cause_value1;
+    if (MESSAGE_CAST(msg, struct call_status_event)->cause_value0 == 0)
+        return MESSAGE_CAST(msg, struct call_status_event)->cause_value1;
 
-	if (MESSAGE_CAST(msg, struct call_status_event)->cause_value2 == 0)
-		return MESSAGE_CAST(msg, struct call_status_event)->cause_value2;
+    if (MESSAGE_CAST(msg, struct call_status_event)->cause_value2 == 0)
+        return MESSAGE_CAST(msg, struct call_status_event)->cause_value2;
 
-	if (MESSAGE_CAST(msg, struct call_status_event)->reject_type == 0x3)
-		value = 0xe1;
+    if (MESSAGE_CAST(msg, struct call_status_event)->reject_type == 0x3)
+        value = 0xe1;
 
 
-	return 0;
+    return 0;
 }
-
-

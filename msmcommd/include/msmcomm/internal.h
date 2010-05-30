@@ -1,3 +1,4 @@
+
 /* 
  * (c) 2009 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -97,61 +98,62 @@
 
 struct msmc_context
 {
-	/* Options, flags etc. */
-	char				network_port[5];
-	char	    		serial_port[BUF_SIZE];
-	char				network_addr[BUF_SIZE];
-	char				relay_addr[BUF_SIZE];
-	char 				relay_port[5];
-	struct bsc_fd		fds[MSMC_FD_COUNT];
+    /* Options, flags etc. */
+    char network_port[5];
+    char serial_port[BUF_SIZE];
+    char network_addr[BUF_SIZE];
+    char relay_addr[BUF_SIZE];
+    char relay_port[5];
+    struct bsc_fd fds[MSMC_FD_COUNT];
 
-	struct buffer		*rx_buf;
-	unsigned int		rx_buf_size;
+    struct buffer *rx_buf;
+    unsigned int rx_buf_size;
 
-	/* HCI LL specific */
-	int					state;
-	uint8_t				window_size;
-	uint8_t				next_seq;
-	uint8_t				next_ack;
-	uint8_t				expected_seq;
-	uint8_t				last_ack;
+    /* HCI LL specific */
+    int state;
+    uint8_t window_size;
+    uint8_t next_seq;
+    uint8_t next_ack;
+    uint8_t expected_seq;
+    uint8_t last_ack;
 };
 
-typedef void (*msmc_data_handler_cb_t) (struct msmc_context *ctx, const uint8_t *data, uint32_t len);
+typedef void (*msmc_data_handler_cb_t) (struct msmc_context * ctx, const uint8_t * data,
+                                        uint32_t len);
 
 struct msmc_data_handler
 {
-	struct llist_head		list;
-	msmc_data_handler_cb_t	cb;
+    struct llist_head list;
+    msmc_data_handler_cb_t cb;
 };
 
 struct tx_item
 {
-	struct llist_head list;
-	struct frame *frame;
-	unsigned int attempts;
+    struct llist_head list;
+    struct frame *frame;
+    unsigned int attempts;
 };
 
 struct frame
 {
-	struct llist_head list;
-	uint8_t address;
-	uint8_t	 type;
-	uint8_t unknown;
-	uint8_t	 seq;
-	uint8_t	 ack;
-	uint8_t	*payload;
-	uint32_t	 payload_len;
+    struct llist_head list;
+    uint8_t address;
+    uint8_t type;
+    uint8_t unknown;
+    uint8_t seq;
+    uint8_t ack;
+    uint8_t *payload;
+    uint32_t payload_len;
 };
 
 struct relay_connection
 {
-	struct llist_head list;
-	struct sockaddr addr;
-	uint32_t in_count;
-	uint32_t out_count;
-	struct bsc_fd bfd;
-	struct msmc_context *ctx;
+    struct llist_head list;
+    struct sockaddr addr;
+    uint32_t in_count;
+    uint32_t out_count;
+    struct bsc_fd bfd;
+    struct msmc_context *ctx;
 };
 
 #define LOGL_DEBUG 		1
@@ -162,11 +164,16 @@ struct relay_connection
 #define LOG_TARGET_FILE		1
 
 void log_change_target(int new_target);
+
 void log_target_close();
+
 void log_change_destination(char *destination);
+
 void log_message(char *file, uint32_t line, uint32_t level, const char *format, ...);
-unsigned short crc16_calc(const uint8_t *data, uint32_t len); 
-void hexdump(uint8_t *data, uint32_t len);
+
+unsigned short crc16_calc(const uint8_t * data, uint32_t len);
+
+void hexdump(uint8_t * data, uint32_t len);
 
 #ifdef DEBUG
 #define DEBUG_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_DEBUG, fmt, ## args)
@@ -178,39 +185,46 @@ void hexdump(uint8_t *data, uint32_t len);
 #define INFO_MSG(fmt, args...) log_message(__FILE__, __LINE__, MSMC_LOG_LEVEL_INFO, fmt, ## args)
 
 void init_talloc(void);
+
 void init_talloc_late(void);
 
 void init_frame(struct frame *fr, uint32_t type);
+
 void encode_frame(struct frame *fr);
+
 void decode_frame(struct frame *fr);
 
 int init_llc(struct msmc_context *ctx);
+
 void shutdown_llc(struct msmc_context *ctx);
+
 void register_llc_data_handler(struct msmc_context *ctx, msmc_data_handler_cb_t cb);
-void schedule_llc_data(struct msmc_context *ctx, const uint8_t *data, uint32_t len);
+
+void schedule_llc_data(struct msmc_context *ctx, const uint8_t * data, uint32_t len);
 
 int init_relay_interface(struct msmc_context *ctx);
+
 void shutdown_relay_interface(struct msmc_context *ctx);
 
-enum source_type {
-	SOURCE_TYPE_NONE,
-	SOURCE_TYPE_NETWORK,
-	SOURCE_TYPE_SERIAL,
+enum source_type
+{
+    SOURCE_TYPE_NONE,
+    SOURCE_TYPE_NETWORK,
+    SOURCE_TYPE_SERIAL,
 };
 
-struct config 
+struct config
 {
-	enum source_type source_type;
-	char serial_path[BUF_SIZE];
-	char network_addr[BUF_SIZE];
-	char network_port[5];
-	char relay_addr[BUF_SIZE];
-	char relay_port[5];
-	int log_target;
-	char log_destination[BUF_SIZE];
+    enum source_type source_type;
+    char serial_path[BUF_SIZE];
+    char network_addr[BUF_SIZE];
+    char network_port[5];
+    char relay_addr[BUF_SIZE];
+    char relay_port[5];
+    int log_target;
+    char log_destination[BUF_SIZE];
 };
 
 struct config *config_load(const char *filename);
 
 #endif
-

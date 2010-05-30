@@ -1,3 +1,4 @@
+
 /*
  * Buffering to output and input.
  * Copyright (C) 1998 Kunihiro Ishiguro
@@ -39,8 +40,10 @@ void buffer_free(struct buffer *);
 
 /* Add the given data to the end of the buffer. */
 extern void buffer_put(struct buffer *, const void *, size_t);
+
 /* Add a single character to the end of the buffer. */
 extern void buffer_putc(struct buffer *, u_char);
+
 /* Add a NUL-terminated string to the end of the buffer. */
 extern void buffer_putstr(struct buffer *, const char *);
 
@@ -53,25 +56,25 @@ char *buffer_getstr(struct buffer *);
 /* Returns 1 if there is no pending data in the buffer.  Otherwise returns 0. */
 int buffer_empty(struct buffer *);
 
-typedef enum {
-	/* An I/O error occurred.  The buffer should be destroyed and the
-	   file descriptor should be closed. */
-	BUFFER_ERROR = -1,
+typedef enum
+{
+    /* An I/O error occurred.  The buffer should be destroyed and the
+       file descriptor should be closed. */
+    BUFFER_ERROR = -1,
 
-	/* The data was written successfully, and the buffer is now empty
-	   (there is no pending data waiting to be flushed). */
-	BUFFER_EMPTY = 0,
+    /* The data was written successfully, and the buffer is now empty
+       (there is no pending data waiting to be flushed). */
+    BUFFER_EMPTY = 0,
 
-	/* There is pending data in the buffer waiting to be flushed.  Please
-	   try flushing the buffer when select indicates that the file descriptor
-	   is writeable. */
-	BUFFER_PENDING = 1
+    /* There is pending data in the buffer waiting to be flushed.  Please
+       try flushing the buffer when select indicates that the file descriptor
+       is writeable. */
+    BUFFER_PENDING = 1
 } buffer_status_t;
 
 /* Try to write this data to the file descriptor.  Any data that cannot
    be written immediately is added to the buffer queue. */
-extern buffer_status_t buffer_write(struct buffer *, int fd,
-				    const void *, size_t);
+extern buffer_status_t buffer_write(struct buffer *, int fd, const void *, size_t);
 
 /* This function attempts to flush some (but perhaps not all) of
    the queued data to the given file descriptor. */
@@ -97,6 +100,6 @@ extern buffer_status_t buffer_flush_all(struct buffer *, int fd);
    is too complicated to retry the write later).
 */
 extern buffer_status_t buffer_flush_window(struct buffer *, int fd, int width,
-					   int height, int erase, int no_more);
+                                           int height, int erase, int no_more);
 
-#endif				/* _ZEBRA_BUFFER_H */
+#endif /* _ZEBRA_BUFFER_H */

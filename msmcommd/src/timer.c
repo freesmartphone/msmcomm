@@ -1,3 +1,4 @@
+
 /*
  * (C) 2008,2009 by Holger Hans Peter Freyther <zecke@selfish.org>
  * All Rights Reserved
@@ -24,7 +25,9 @@
 #include <msmcomm/internal.h>
 
 static LLIST_HEAD(timer_list);
+
 static struct timeval s_nearest_time;
+
 static struct timeval s_select_time;
 
 #define MICRO_SECONDS  1000000LL
@@ -34,50 +37,51 @@ static struct timeval s_select_time;
 
 void bsc_add_timer(struct timer_list *timer)
 {
-	struct timer_list *list_timer;
+    struct timer_list *list_timer;
 
-	/* TODO: Optimize and remember the closest item... */
-	timer->active = 1;
+    /* TODO: Optimize and remember the closest item... */
+    timer->active = 1;
 
-	/* this might be called from within update_timers */
-	llist_for_each_entry(list_timer, &timer_list, entry)
-		if (timer == list_timer)
-			return;
+    /* this might be called from within update_timers */
+    llist_for_each_entry(list_timer, &timer_list, entry) if (timer == list_timer)
+        return;
 
-	timer->in_list = 1;
-	llist_add(&timer->entry, &timer_list);
+    timer->in_list = 1;
+    llist_add(&timer->entry, &timer_list);
 }
 
 void bsc_schedule_timer(struct timer_list *timer, int seconds, int microseconds)
 {
-	struct timeval current_time;
+    struct timeval current_time;
 
-	gettimeofday(&current_time, NULL);
-	unsigned long long currentTime = current_time.tv_sec * MICRO_SECONDS + current_time.tv_usec;
-	currentTime += seconds * MICRO_SECONDS + microseconds;
-	timer->timeout.tv_sec = currentTime / MICRO_SECONDS;
-	timer->timeout.tv_usec = currentTime % MICRO_SECONDS;
-	bsc_add_timer(timer);
+    gettimeofday(&current_time, NULL);
+    unsigned long long currentTime = current_time.tv_sec * MICRO_SECONDS + current_time.tv_usec;
+
+    currentTime += seconds * MICRO_SECONDS + microseconds;
+    timer->timeout.tv_sec = currentTime / MICRO_SECONDS;
+    timer->timeout.tv_usec = currentTime % MICRO_SECONDS;
+    bsc_add_timer(timer);
 }
 
 void bsc_reschedule_timer(struct timer_list *timer, int seconds, int microseconds)
 {
-	bsc_del_timer(timer);
-	bsc_schedule_timer(timer, seconds, microseconds);
+    bsc_del_timer(timer);
+    bsc_schedule_timer(timer, seconds, microseconds);
 }
 
 void bsc_del_timer(struct timer_list *timer)
 {
-	if (timer->in_list) {
-		timer->active = 0;
-		timer->in_list = 0;
-		llist_del(&timer->entry);
-	}
+    if (timer->in_list)
+    {
+        timer->active = 0;
+        timer->in_list = 0;
+        llist_del(&timer->entry);
+    }
 }
 
 int bsc_timer_pending(struct timer_list *timer)
 {
-	return timer->active;
+    return timer->active;
 }
 
 /*
@@ -88,26 +92,30 @@ int bsc_timer_pending(struct timer_list *timer)
  */
 struct timeval *bsc_nearest_timer()
 {
-	struct timeval current_time;
+    struct timeval current_time;
 
-	if (s_nearest_time.tv_sec == 0 && s_nearest_time.tv_usec == 0)
-		return NULL;
+    if (s_nearest_time.tv_sec == 0 && s_nearest_time.tv_usec == 0)
+        return NULL;
 
-	if (gettimeofday(&current_time, NULL) == -1)
-		return NULL;
+    if (gettimeofday(&current_time, NULL) == -1)
+        return NULL;
 
-	unsigned long long nearestTime = s_nearest_time.tv_sec * MICRO_SECONDS + s_nearest_time.tv_usec;
-	unsigned long long currentTime = current_time.tv_sec * MICRO_SECONDS + current_time.tv_usec;
+    unsigned long long nearestTime = s_nearest_time.tv_sec * MICRO_SECONDS + s_nearest_time.tv_usec;
 
-	if (nearestTime < currentTime) {
-		s_select_time.tv_sec = 0;
-		s_select_time.tv_usec = 0;
-	} else {
-		s_select_time.tv_sec = (nearestTime - currentTime) / MICRO_SECONDS;
-		s_select_time.tv_usec = (nearestTime - currentTime) % MICRO_SECONDS;
-	}
+    unsigned long long currentTime = current_time.tv_sec * MICRO_SECONDS + current_time.tv_usec;
 
-	return &s_select_time;
+    if (nearestTime < currentTime)
+    {
+        s_select_time.tv_sec = 0;
+        s_select_time.tv_usec = 0;
+    }
+    else
+    {
+        s_select_time.tv_sec = (nearestTime - currentTime) / MICRO_SECONDS;
+        s_select_time.tv_usec = (nearestTime - currentTime) % MICRO_SECONDS;
+    }
+
+    return &s_select_time;
 }
 
 /*
@@ -115,18 +123,24 @@ struct timeval *bsc_nearest_timer()
  */
 void bsc_prepare_timers()
 {
-	struct timer_list *timer, *nearest_timer = NULL;
-	llist_for_each_entry(timer, &timer_list, entry) {
-		if (!nearest_timer || TIME_SMALLER(timer->timeout, nearest_timer->timeout)) {
-			nearest_timer = timer;
-		}
-	}
+    struct timer_list *timer, *nearest_timer = NULL;
 
-	if (nearest_timer) {
-		s_nearest_time = nearest_timer->timeout;
-	} else {
-		memset(&s_nearest_time, 0, sizeof(struct timeval));
-	}
+    llist_for_each_entry(timer, &timer_list, entry)
+    {
+        if (!nearest_timer || TIME_SMALLER(timer->timeout, nearest_timer->timeout))
+        {
+            nearest_timer = timer;
+        }
+    }
+
+    if (nearest_timer)
+    {
+        s_nearest_time = nearest_timer->timeout;
+    }
+    else
+    {
+        memset(&s_nearest_time, 0, sizeof (struct timeval));
+    }
 }
 
 /*
@@ -134,59 +148,68 @@ void bsc_prepare_timers()
  */
 int bsc_update_timers()
 {
-	struct timeval current_time;
-	struct timer_list *timer, *tmp;
-	int work = 0;
+    struct timeval current_time;
 
-	gettimeofday(&current_time, NULL);
+    struct timer_list *timer, *tmp;
 
-	/*
-	 * The callbacks might mess with our list and in this case
-	 * even llist_for_each_entry_safe is not safe to use. To allow
-	 * del_timer, add_timer, schedule_timer to be called from within
-	 * the callback we jump through some loops.
-	 *
-	 * First we set the handled flag of each active timer to zero,
-	 * then we iterate over the list and execute the callbacks. As the
-	 * list might have been changed (specially the next) from within
-	 * the callback we have to start over again. Once every callback
-	 * is dispatched we will remove the non-active from the list.
-	 *
-	 * TODO: If this is a performance issue we can poison a global
-	 * variable in add_timer and del_timer and only then restart.
-	 */
-	llist_for_each_entry(timer, &timer_list, entry) {
-		timer->handled = 0;
-	}
+    int work = 0;
 
-restart:
-	llist_for_each_entry(timer, &timer_list, entry) {
-		if (!timer->handled && TIME_SMALLER(timer->timeout, current_time)) {
-			timer->handled = 1;
-			timer->active = 0;
-			(*timer->cb)(timer->data);
-			work = 1;
-			goto restart;
-		}
-	}
+    gettimeofday(&current_time, NULL);
 
-	llist_for_each_entry_safe(timer, tmp, &timer_list, entry) {
-		timer->handled = 0;
-		if (!timer->active) {
-			bsc_del_timer(timer);
-		}
-	}
+    /*
+     * The callbacks might mess with our list and in this case
+     * even llist_for_each_entry_safe is not safe to use. To allow
+     * del_timer, add_timer, schedule_timer to be called from within
+     * the callback we jump through some loops.
+     *
+     * First we set the handled flag of each active timer to zero,
+     * then we iterate over the list and execute the callbacks. As the
+     * list might have been changed (specially the next) from within
+     * the callback we have to start over again. Once every callback
+     * is dispatched we will remove the non-active from the list.
+     *
+     * TODO: If this is a performance issue we can poison a global
+     * variable in add_timer and del_timer and only then restart.
+     */
+    llist_for_each_entry(timer, &timer_list, entry)
+    {
+        timer->handled = 0;
+    }
 
-	return work;
+  restart:
+    llist_for_each_entry(timer, &timer_list, entry)
+    {
+        if (!timer->handled && TIME_SMALLER(timer->timeout, current_time))
+        {
+            timer->handled = 1;
+            timer->active = 0;
+            (*timer->cb) (timer->data);
+            work = 1;
+            goto restart;
+        }
+    }
+
+    llist_for_each_entry_safe(timer, tmp, &timer_list, entry)
+    {
+        timer->handled = 0;
+        if (!timer->active)
+        {
+            bsc_del_timer(timer);
+        }
+    }
+
+    return work;
 }
 
 int bsc_timer_check(void)
 {
-	struct timer_list *timer;
-	int i = 0;
+    struct timer_list *timer;
 
-	llist_for_each_entry(timer, &timer_list, entry) {
-		i++;
-	}
-	return i;
+    int i = 0;
+
+    llist_for_each_entry(timer, &timer_list, entry)
+    {
+        i++;
+    }
+    return i;
 }

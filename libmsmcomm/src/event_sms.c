@@ -1,3 +1,4 @@
+
 /*
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -28,38 +29,39 @@ extern void *talloc_msmc_ctx;
 
 unsigned int event_sms_wms_read_template_is_valid(struct msmcomm_message *msg)
 {
-	return (msg->group_id == 0x17) && (SUBSYSTEM_ID(msg) == 0x1) && (MSG_ID(msg) == 0x7);
+    return (msg->group_id == 0x17) && (SUBSYSTEM_ID(msg) == 0x1) && (MSG_ID(msg) == 0x7);
 }
 
-void event_sms_wms_read_template_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+void event_sms_wms_read_template_handle_data(struct msmcomm_message *msg, uint8_t * data,
+                                             uint32_t len)
 {
-	if (len != sizeof(struct sms_wms_read_template_event))
-		return;
+    if (len != sizeof (struct sms_wms_read_template_event))
+        return;
 
-	msg->payload = data;
+    msg->payload = data;
 }
 
-uint32_t msmcomm_event_sms_wms_read_template_ind_get_size(struct msmcomm_message *msg)
+uint32_t msmcomm_event_sms_wms_read_template_ind_get_size(struct msmcomm_message * msg)
 {
-	return sizeof(struct sms_wms_read_template_event);
+    return sizeof (struct sms_wms_read_template_event);
 }
 
 uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct sms_wms_read_template_event)->digit_mode;
+    return MESSAGE_CAST(msg, struct sms_wms_read_template_event)->digit_mode;
 }
 
 uint8_t msmcomm_event_sms_wms_read_template_get_number_mode(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct sms_wms_read_template_event)->number_mode;
+    return MESSAGE_CAST(msg, struct sms_wms_read_template_event)->number_mode;
 }
 
 uint8_t msmcomm_event_sms_wms_read_template_get_number_type(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct sms_wms_read_template_event)->number_type;
+    return MESSAGE_CAST(msg, struct sms_wms_read_template_event)->number_type;
 }
 
 uint8_t msmcomm_event_sms_wms_read_template_get_number_plan(struct msmcomm_message *msg)
 {
-	return MESSAGE_CAST(msg, struct sms_wms_read_template_event)->number_plan;
+    return MESSAGE_CAST(msg, struct sms_wms_read_template_event)->number_plan;
 }

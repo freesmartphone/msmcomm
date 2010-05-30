@@ -1,3 +1,4 @@
+
 /* 
  * (c) 2010 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
@@ -28,23 +29,23 @@ extern void *talloc_msmc_ctx;
 
 void msg_get_location_priv_pref_init(struct msmcomm_message *msg)
 {
-	msg->group_id = 0x21;
-	msg->msg_id = 0x3;
+    msg->group_id = 0x21;
+    msg->msg_id = 0x3;
 
-	msg->payload = talloc_zero(talloc_msmc_ctx, struct get_location_priv_pref_msg);
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct get_location_priv_pref_msg);
 }
 
 uint32_t msg_get_location_priv_pref_get_size(struct msmcomm_message *msg)
 {
-	return sizeof(struct get_location_priv_pref_msg);
+    return sizeof (struct get_location_priv_pref_msg);
 }
 
 void msg_get_location_priv_pref_free(struct msmcomm_message *msg)
 {
-	talloc_free(msg->payload);
+    talloc_free(msg->payload);
 }
 
-uint8_t* msg_get_location_priv_pref_prepare_data(struct msmcomm_message *msg)
+uint8_t *msg_get_location_priv_pref_prepare_data(struct msmcomm_message *msg)
 {
-	return msg->payload;
+    return msg->payload;
 }
