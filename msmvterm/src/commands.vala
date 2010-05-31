@@ -76,7 +76,9 @@ public class Commands
         register( "set_system_time", set_system_time, "Set system time for modem","set_system_time <year> <month> <day> <hour> <minutes> <seconds> <timezone_offset>", 7 );
 		register( "rssi_status", rssi_status, "Enable/disable rssi status updates", "rssi_status <0|1>", 1 );
 		register( "read_phonebook", read_phonebook, "Read entries from phonebook (stored on the SIM card)", "read_phonebook <mbdn|efecc|adn|fdn|spn> <position>", 2 );
-		register( "get_networklist", get_networklist, "Request a list with all available networks");
+		register( "write_phonebook", write_phonebook, "Write an entry to the phonebook (stored on the SIM card)", "write_phonebook <mbdn|efecc|adn|fdn|spn> <title> <number>", 3 );
+        register( "delete_phonebook", delete_phonebook, "Deletes an entry from the phonebook (stored on the SIM card)", "delete_phonebook <mbdn|efecc|adn|fdn|spn> <position>", 2 );
+        register( "get_networklist", get_networklist, "Request a list with all available networks");
 		register( "set_mode_preference", set_mode_preference, "Set the prefered mode for the network (Automatic, GSM, UMTS)", "set_mode_preference <auto|gsm|umts>", 1 );
 		register( "get_phonebook_properties", get_phonebook_properties, "Get the properties of a phonebook type", "get_phonebook_properties <mbdn|efecc|adn|fdn|spn>", 1 );
 	}
@@ -298,37 +300,43 @@ public class Commands
 
 		msm.sendMessage(msg);
 	}
+    
+    private Msmcomm.PhonebookType stringToPhonebookType( string str )
+    {
+        Msmcomm.PhonebookType result = Msmcomm.PhonebookType.NONE;
+        switch ( str )
+        {
+            case "mbdn":
+                result = Msmcomm.PhonebookType.MBDN;
+                break;
+			case "efecc":
+                result = Msmcomm.PhonebookType.EFECC;
+                break;
+			case "adn":
+                result = Msmcomm.PhonebookType.ADN;
+                break;
+			case "fdn":
+                result = Msmcomm.PhonebookType.FDN;
+                break;
+			case "sdn":
+                result = Msmcomm.PhonebookType.SDN;
+                break;
+			case "all":
+				result = Msmcomm.PhonebookType.ALL;
+                break;
+            default:
+                ERR( @"Unknown phonebook type $(str)" );
+                break;
+        }
+        
+        return result;
+    }
 
 	private void read_phonebook( string[] params )
 	{
 		var msg = new Msmcomm.Command.ReadPhonebook();
 		msg.index = nextValidRefId();
-
-		switch ( params[0] )
-        {
-            case "mbdn":
-                msg.book_type = Msmcomm.PhonebookType.MBDN;
-                break;
-			case "efecc":
-                msg.book_type = Msmcomm.PhonebookType.EFECC;
-                break;
-			case "adn":
-                msg.book_type = Msmcomm.PhonebookType.ADN;
-                break;
-			case "fdn":
-                msg.book_type = Msmcomm.PhonebookType.FDN;
-                break;
-			case "sdn":
-                msg.book_type = Msmcomm.PhonebookType.SDN;
-                break;
-			case "all":
-				msg.book_type = Msmcomm.PhonebookType.ALL;
-                break;
-            default:
-                ERR( @"Unknown phonebook type $(params[0])" );
-                return;
-        }
-
+        msg.book_type = stringToPhonebookType( params[0] );
 		msg.position = (uint8)params[1].to_int();
 		msm.sendMessage(msg);
 	}
@@ -338,7 +346,7 @@ public class Commands
 		var msg = new Msmcomm.Command.GetNetworkList();
 		msg.index = nextValidRefId();
 		msm.sendMessage(msg);
-	}
+	} 
 
 	private void set_mode_preference( string[] params )
     {
@@ -368,32 +376,27 @@ public class Commands
     {
 		var msg = new Msmcomm.Command.GetPhonebookProperties();
         msg.index = nextValidRefId();
-
-        switch ( params[0] )
-        {
-            case "mbdn":
-                msg.book_type = Msmcomm.PhonebookType.MBDN;
-                break;
-			case "efecc":
-                msg.book_type = Msmcomm.PhonebookType.EFECC;
-                break;
-			case "adn":
-                msg.book_type = Msmcomm.PhonebookType.ADN;
-                break;
-			case "fdn":
-                msg.book_type = Msmcomm.PhonebookType.FDN;
-                break;
-			case "sdn":
-                msg.book_type = Msmcomm.PhonebookType.SDN;
-                break;
-			case "all":
-				msg.book_type = Msmcomm.PhonebookType.ALL;
-                break;
-            default:
-                ERR( @"Unknown phonebook type $(params[0])" );
-                return;
-        }
+        msg.book_type = stringToPhonebookType( params[0] );
 
         msm.sendMessage( msg );
+	}
+    
+    private void write_phonebook( string[] params )
+	{
+		var msg = new Msmcomm.Command.WritePhonebook();
+		msg.index = nextValidRefId();
+        msg.book_type = stringToPhonebookType( params[0] );
+		msg.title = params[1].substring( 1, params[1].length - 2 );
+        msg.number = params[2].substring( 1, params[2].length - 2 );
+		msm.sendMessage(msg);
+	}
+    
+    private void delete_phonebook( string[] params )
+	{
+		var msg = new Msmcomm.Command.DeletePhonebook();
+		msg.index = nextValidRefId();
+        msg.book_type = stringToPhonebookType( params[0] );
+		msg.position = (uint8)params[1].to_int();
+		msm.sendMessage(msg);
 	}
 }

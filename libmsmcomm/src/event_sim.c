@@ -73,3 +73,52 @@ unsigned int msmcomm_event_phonebook_ready_get_book_type(struct msmcomm_message 
 
     return type;
 }
+
+/*
+ * MSMCOMM_EVENT_PHONEBOOK_MODIFIED
+ */
+
+unsigned int magic_to_book_type(uint8_t magic)
+{
+    switch (magic)
+    {
+        case 0x10:
+            return MSMCOMM_PHONEBOOK_TYPE_ADN;
+        case 0x8:
+            return MSMCOMM_PHONEBOOK_TYPE_SDN;
+        case 0x20:
+            return MSMCOMM_PHONEBOOK_TYPE_FDN;
+    }
+
+    return MSMCOMM_PHONEBOOK_TYPE_NONE;
+}
+
+unsigned int event_phonebook_modified_is_valid(struct msmcomm_message *msg)
+{
+    return (msg->group_id == 0x1a && msg->msg_id == 0xa);
+}
+
+void event_phonebook_modified_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
+{
+    if (len != sizeof (struct phonebook_modified_event))
+        return;
+
+    msg->payload = data;
+    msg->ref_id = MESSAGE_CAST(msg, struct phonebook_modified_event)->ref_id;
+}
+
+uint32_t event_phonebook_modified_get_size(struct msmcomm_message * msg)
+{
+    return sizeof (struct phonebook_modified_event);
+}
+
+uint8_t msmcomm_event_phonebook_modified_get_book_type(struct msmcomm_message *msg)
+{
+    return magic_to_book_type(MESSAGE_CAST(msg, struct phonebook_modified_event)->book_type);
+}
+
+uint8_t msmcomm_event_phonebook_modified_get_position(struct msmcomm_message *msg)
+{
+    return MESSAGE_CAST(msg, struct phonebook_modified_event)->position;
+}
+

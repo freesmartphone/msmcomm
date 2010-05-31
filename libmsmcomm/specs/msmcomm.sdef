@@ -74,8 +74,18 @@ start read_phonebook_msg 6
 [5] uint8_t book_type
 end
 
+start modify_phonebook_msg 139
+[0-3] uint32_t ref_id
+[4] uint8_t position
+[5] uint8_t book_type
+[6-46] uint8_t number
+[48-137] uint8_t title
+[138] uint8_t value0
+end
+
 start phonebook_resp 142
 [0-3] uint32_t ref_id
+[4] uint8_t modify_id
 [6] uint8_t result
 [7] uint8_t position
 [8] uint8_t book_type
@@ -86,6 +96,12 @@ end
 
 start phonebook_ready_event 203
 [2] uint8_t book_type
+end
+
+start phonebook_modified_event 203
+[1] uint8_t position
+[2] uint8_t book_type
+[3-6] uint32_t ref_id
 end
 
 start get_phonebook_properties_msg 5

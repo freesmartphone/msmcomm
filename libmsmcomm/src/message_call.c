@@ -60,14 +60,14 @@ uint8_t *msg_dial_call_prepare_data(struct msmcomm_message *msg)
 }
 
 void msmcomm_message_dial_call_set_caller_id
-    (struct msmcomm_message *msg, uint8_t * caller_id, uint8_t len)
+    (struct msmcomm_message *msg, const char * caller_id, unsigned int len)
 {
     if (len > sizeof ((struct dial_call_msg *) 0)->caller_id)
         return;
 
     /* copy caller id to payload structure */
     memcpy(MESSAGE_CAST(msg, struct dial_call_msg)->caller_id, caller_id, len);
-    MESSAGE_CAST(msg, struct dial_call_msg)->caller_id_len = len;
+    MESSAGE_CAST(msg, struct dial_call_msg)->caller_id_len = (uint8_t)len;
 }
 
 /*

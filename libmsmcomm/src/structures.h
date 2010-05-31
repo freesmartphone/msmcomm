@@ -135,10 +135,23 @@ struct read_phonebook_msg
 } __attribute__ ((packed));
 
 
+struct modify_phonebook_msg
+{
+	uint32_t ref_id;
+	uint8_t position;
+	uint8_t book_type;
+	uint8_t number[41];
+	uint8_t unknown0;
+	uint8_t title[90];
+	uint8_t value0;
+} __attribute__ ((packed));
+
+
 struct phonebook_resp
 {
 	uint32_t ref_id;
-	uint8_t unknown0[2];
+	uint8_t modify_id;
+	uint8_t unknown0;
 	uint8_t result;
 	uint8_t position;
 	uint8_t book_type;
@@ -153,6 +166,16 @@ struct phonebook_ready_event
 	uint8_t unknown0[2];
 	uint8_t book_type;
 	uint8_t unknown1[200];
+} __attribute__ ((packed));
+
+
+struct phonebook_modified_event
+{
+	uint8_t unknown0;
+	uint8_t position;
+	uint8_t book_type;
+	uint32_t ref_id;
+	uint8_t unknown1[196];
 } __attribute__ ((packed));
 
 

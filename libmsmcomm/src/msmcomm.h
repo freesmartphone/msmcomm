@@ -180,6 +180,7 @@
  * Phonebook events
  */
 #define MSMCOMM_EVENT_PHONEBOOK_READY 							290
+#define MSMCOMM_EVENT_PHONEBOOK_MODIFIED                         291
 
 /*
  * Phonebook types
@@ -354,7 +355,7 @@ void msmcomm_message_set_mode_preference_status_set_mode(struct msmcomm_message 
 
 /* Call messages ------------------------------------ */
 void msmcomm_message_end_call_set_call_number(struct msmcomm_message *msg, uint8_t call_nr);
-void msmcomm_message_dial_call_set_caller_id(struct msmcomm_message *msg, uint8_t *caller_id, uint8_t len);
+void msmcomm_message_dial_call_set_caller_id(struct msmcomm_message *msg, const char *caller_id, unsigned int len);
 
 void msmcomm_message_answer_call_set_host_id(struct msmcomm_message *msg, uint8_t host_id);
 void msmcomm_message_answer_call_set_call_id(struct msmcomm_message *msg, uint8_t call_id);
@@ -367,6 +368,13 @@ void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char*
 void msmcomm_message_read_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type);
 void msmcomm_message_read_phonebook_set_position(struct msmcomm_message *msg, uint8_t position);
 
+void msmcomm_message_write_phonebook_set_number(struct msmcomm_message *msg, const char *number, unsigned int len);
+void msmcomm_message_write_phonebook_set_title(struct msmcomm_message *msg, const char *title, unsigned int len);
+void msmcomm_message_write_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type);
+
+void msmcomm_message_delete_phonebook_set_position(struct msmcomm_message *msg, uint8_t position);
+void msmcomm_message_delete_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type);
+
 /* SIM events -------------------------------------- */
 uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg);
 uint8_t msmcomm_event_sms_wms_read_template_get_number_mode(struct msmcomm_message *msg);
@@ -375,12 +383,16 @@ uint8_t msmcomm_event_sms_wms_read_template_get_number_plan(struct msmcomm_messa
 
 unsigned int msmcomm_event_phonebook_ready_get_book_type(struct msmcomm_message *msg);
 
+uint8_t msmcomm_event_phonebook_modified_get_position(struct msmcomm_message *msg);
+uint8_t msmcomm_event_phonebook_modified_get_book_type(struct msmcomm_message *msg);
+
 /* SIM responses ----------------------------------- */
 unsigned int msmcomm_resp_phonebook_get_book_type(struct msmcomm_message *msg);
 uint8_t msmcomm_resp_phonebook_get_position(struct msmcomm_message *msg);
 unsigned int msmcomm_resp_phonebook_get_encoding_type(struct msmcomm_message *msg);
 char* msmcomm_resp_phonebook_get_number(struct msmcomm_message *msg);
 char* msmcomm_resp_phonebook_get_title(struct msmcomm_message *msg);
+uint8_t msmcomm_resp_phonebook_get_modify_id(struct msmcomm_message *msg);
 
 uint32_t msmcomm_resp_get_phonebook_properties_get_slot_count(struct msmcomm_message *msg);
 uint32_t msmcomm_resp_get_phonebook_properties_get_slots_used(struct msmcomm_message *msg);

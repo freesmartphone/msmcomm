@@ -95,9 +95,9 @@ uint8_t *msg_read_phonebook_prepare_data(struct msmcomm_message *msg)
     return msg->payload;
 }
 
-void msmcomm_message_read_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type)
+uint8_t book_type_to_magic(unsigned int book_type)
 {
-    uint8_t value = 0x0;
+   uint8_t magic = 0x0;
 
     switch (book_type)
     {
@@ -106,17 +106,22 @@ void msmcomm_message_read_phonebook_set_book_type(struct msmcomm_message *msg, u
         case MSMCOMM_PHONEBOOK_TYPE_EFECC:
             break;
         case MSMCOMM_PHONEBOOK_TYPE_ADN:
-            value = 0x10;
+            magic = 0x10;
             break;
         case MSMCOMM_PHONEBOOK_TYPE_SDN:
-            value = 0x8;
+            magic = 0x8;
             break;
         case MSMCOMM_PHONEBOOK_TYPE_FDN:
-            value = 0x20;
+            magic = 0x20;
             break;
     }
 
-    MESSAGE_CAST(msg, struct read_phonebook_msg)->book_type = value;
+    return magic;
+}
+
+void msmcomm_message_read_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type)
+{
+    MESSAGE_CAST(msg, struct read_phonebook_msg)->book_type = book_type_to_magic(book_type);
 }
 
 void msmcomm_message_read_phonebook_set_position(struct msmcomm_message *msg, uint8_t position)
@@ -179,6 +184,97 @@ void msmcomm_message_get_phonebook_properties_set_book_type(struct msmcomm_messa
             value = 0x3;
             break;
     }
-
+    
     MESSAGE_CAST(msg, struct get_phonebook_properties_msg)->book_type = value;
 }
+
+/*
+ * MSMCOMM_MESSAGE_CMD_WRITE_PHONEBOOK
+ */
+
+void msg_write_phonebook_init(struct msmcomm_message *msg)
+{
+    msg->group_id = 0x18;
+    msg->msg_id = 0x2;
+
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct modify_phonebook_msg);
+}
+
+uint32_t msg_write_phonebook_get_size(struct msmcomm_message *msg)
+{
+    return sizeof (struct modify_phonebook_msg);
+}
+
+void msg_write_phonebook_free(struct msmcomm_message *msg)
+{
+    talloc_free(msg->payload);
+}
+
+uint8_t *msg_write_phonebook_prepare_data(struct msmcomm_message *msg)
+{
+    MESSAGE_CAST(msg, struct modify_phonebook_msg)->ref_id = msg->ref_id;
+    MESSAGE_CAST(msg, struct modify_phonebook_msg)->value0 = 0x4;
+    return msg->payload;
+}
+
+void msmcomm_message_write_phonebook_set_number(struct msmcomm_message *msg, const char *number, unsigned int len)
+{
+    unsigned int max_len = sizeof(MESSAGE_CAST(msg, struct modify_phonebook_msg)->number) / sizeof(uint8_t);
+    if (len > max_len)
+        return;
+    memcpy(MESSAGE_CAST(msg, struct modify_phonebook_msg)->number, number, len);
+}
+
+void msmcomm_message_write_phonebook_set_title(struct msmcomm_message *msg, const char *title, unsigned int len)
+{
+    unsigned int max_len = sizeof(MESSAGE_CAST(msg, struct modify_phonebook_msg)->title) / sizeof(uint8_t);
+    if (len > max_len)
+        return;
+    memcpy(MESSAGE_CAST(msg, struct modify_phonebook_msg)->title, title, len);
+}
+
+void msmcomm_message_write_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type)
+{
+    MESSAGE_CAST(msg, struct modify_phonebook_msg)->book_type = book_type_to_magic(book_type);
+}
+
+/*
+ * MSMCOMM_MESSAGE_CMD_DELETE_PHONEBOOK
+ */
+
+void msg_delete_phonebook_init(struct msmcomm_message *msg)
+{
+    msg->group_id = 0x18;
+    msg->msg_id = 0x2;
+
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct modify_phonebook_msg);
+}
+
+uint32_t msg_delete_phonebook_get_size(struct msmcomm_message *msg)
+{
+    return sizeof (struct modify_phonebook_msg);
+}
+
+void msg_delete_phonebook_free(struct msmcomm_message *msg)
+{
+    talloc_free(msg->payload);
+}
+
+uint8_t *msg_delete_phonebook_prepare_data(struct msmcomm_message *msg)
+{
+    MESSAGE_CAST(msg, struct modify_phonebook_msg)->ref_id = msg->ref_id;
+    MESSAGE_CAST(msg, struct modify_phonebook_msg)->value0 = 0x4;
+    
+    return msg->payload;
+}
+
+void msmcomm_message_delete_phonebook_set_position(struct msmcomm_message *msg, uint8_t position)
+{
+    MESSAGE_CAST(msg, struct modify_phonebook_msg)->position = position;
+}
+
+void msmcomm_message_delete_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type)
+{
+    MESSAGE_CAST(msg, struct modify_phonebook_msg)->book_type = book_type_to_magic(book_type);
+}
+

@@ -70,7 +70,9 @@ RESPONSE_TYPE(phonebook)
 RESPONSE_TYPE(get_phonebook_properties)
 EVENT_TYPE(radio_reset_ind)
 EVENT_TYPE(charger_status)
-EVENT_TYPE(operator_mode) EVENT_TYPE(cm_ph_info_available) EVENT_TYPE(get_networklist)
+EVENT_TYPE(operator_mode) 
+EVENT_TYPE(cm_ph_info_available) 
+EVENT_TYPE(get_networklist)
 
 /*
 EVENT_TYPE(pdsm_pd_done)
@@ -81,7 +83,12 @@ EVENT_TYPE(pdsm_xtra)
 */
 EVENT_TYPE(power_state)
 EVENT_TYPE(network_state_info)
-EVENT_TYPE(phonebook_ready) GROUP_TYPE(sim) GROUP_TYPE(call) GROUP_TYPE(sups)
+EVENT_TYPE(phonebook_ready) 
+EVENT_TYPE(phonebook_modified)
+
+GROUP_TYPE(sim) 
+GROUP_TYPE(call) 
+GROUP_TYPE(sups)
 
 struct descriptor group_descriptors[] = {
     GROUP_DATA(sim),
@@ -106,6 +113,7 @@ struct descriptor resp_descriptors[] = {
     EVENT_DATA(MSMCOMM_EVENT_NETWORK_STATE_INFO, network_state_info),
     EVENT_DATA(MSMCOMM_EVENT_GET_NETWORKLIST, get_networklist),
     EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_READY, phonebook_ready),
+    EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_MODIFIED, phonebook_modified),
 
     /* responses */
     RESPONSE_DATA(MSMCOMM_RESPONSE_TEST_ALIVE, test_alive),

@@ -26,8 +26,17 @@
 			<field name="position" start="4" type="uint8_t"/>
 			<field name="book_type" start="5" type="uint8_t"/>
 		</structure>
+		<structure name="modify_phonebook_msg" length="139">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="position" start="4" type="uint8_t"/>
+			<field name="book_type" start="5" type="uint8_t"/>
+			<field name="number" start="6" end="46" type="uint8_t"/>
+			<field name="title" start="48" end="137" type="uint8_t"/>
+			<field name="value0" start="138" type="uint8_t"/>
+		</structure>
 		<structure name="phonebook_resp" length="142">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+            <field name="modify_id" start="4" type="uint8_t"/>
 			<field name="result" start="6" type="uint8_t"/>
 			<field name="position" start="7" type="uint8_t"/>
 			<field name="book_type" start="8" type="uint8_t"/>
@@ -44,6 +53,11 @@
 		</structure>
 		<structure name="phonebook_ready_event" length="203">
 		  <field name="book_type" start="2" type="uint8_t"/>
+		</structure>
+		<structure name="phonebook_modified_event" length="203">
+            <field name="position" start="1" type="uint8_t"/>
+            <field name="book_type" start="2" type="uint8_t"/>
+            <field name="ref_id" start="3" end="6" type="uint32_t"/>
 		</structure>
 		<structure name="get_phonebook_properties_msg" length="5">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>

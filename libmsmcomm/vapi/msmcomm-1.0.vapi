@@ -104,6 +104,8 @@ namespace Msmcomm
         GET_NETWORKLIST,
         SET_MODE_PREFERENCE,
         GET_PHONEBOOK_PROPERTIES,
+        WRITE_PHONEBOOK,
+        DELETE_PHONEBOOK,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -217,6 +219,7 @@ namespace Msmcomm
         SMS_WMS_READ_TEMPLATE,
         GET_NETWORKLIST,
         PHONEBOOK_READY,
+        PHONEBOOK_MODIFIED,
     }
 
     public string eventTypeToString( int t )
@@ -474,6 +477,8 @@ namespace Msmcomm
 			return "URC_GET_NETWORKLIST";
 			case EventType.PHONEBOOK_READY:
 			return "URC_PHONEBOOK_READY";
+            case EventType.PHONEBOOK_MODIFIED:
+            return "URC_PHONEBOOK_MODIFIED";
             default:
 			return "%d (unknown)".printf( t );
         }
@@ -858,6 +863,12 @@ namespace Msmcomm
                     details += @"call_type = $(callTypeToString(msg.call_type)) ";
 					details += @"reject_type = $(msg.reject_type) ";
 					details += @"reject_value = $(msg.reject_value) ";
+                    break;
+                case Msmcomm.EventType.PHONEBOOK_MODIFIED:
+                    var msg = (Msmcomm.Unsolicited.PhonebookModified) this.copy();
+                    details = @"book_type = $(phonebookTypeToString(msg.book_type)) ";
+                    details += @"position = $(msg.position)";
+                    break;
                 default:
                     break;
             }
@@ -1049,6 +1060,57 @@ namespace Msmcomm
 				set;
 			}
 		}
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class WritePhonebook : Message
+		{
+			[CCode (cname = "msmcomm_create_message")]
+            public WritePhonebook(CommandType t = CommandType.WRITE_PHONEBOOK);
+            
+            [CCode (cname = "msmcomm_message_write_phonebook_set_number")]
+            private void _setNumber(string number, uint length);
+            
+            [CCode (cname = "msmcomm_message_write_phonebook_set_title")]
+            private void _setTitle(string title, uint length);
+            
+            public string number {
+                set {
+                    var number = value;
+                    _setNumber(number, (uint)number.length);
+                }
+            }
+            
+            public string title {
+                set {
+                    var title = value;
+                    _setTitle(title, (uint)title.length);
+                }
+            }
+            
+            public PhonebookType book_type {
+                [CCode (cname = "msmcomm_message_write_phonebook_set_book_type")]
+                set;
+            }
+		}
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class DeletePhonebook : Message
+		{
+			[CCode (cname = "msmcomm_create_message")]
+            public DeletePhonebook(CommandType t = CommandType.DELETE_PHONEBOOK);
+            
+            public uint8 position {
+                [CCode (cname = "msmcomm_message_delete_phonebook_set_position")]
+                set;
+            }
+            
+            public PhonebookType book_type {
+                [CCode (cname = "msmcomm_message_delete_phonebook_set_book_type")]
+                set;
+            }
+		}
 
 		[Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
@@ -1187,6 +1249,11 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_resp_phonebook_get_encoding_type")]
 				get;
 			}
+            
+            public uint8 modify_id {
+                [CCode (cname = "msmcomm_resp_phonebook_get_modify_id")]
+                get;
+            }
 		}
 
 		[Compact]
@@ -1378,6 +1445,21 @@ namespace Msmcomm
 		{
 			public PhonebookType book_type {
 				[CCode (cname = "msmcomm_event_phonebook_ready_get_book_type")]
+				get;
+			}
+		}
+        
+        [Compact]
+		[CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+		public class PhonebookModified : Message
+		{
+			public PhonebookType book_type {
+				[CCode (cname = "msmcomm_event_phonebook_modified_get_book_type")]
+				get;
+			}
+            
+            public uint8 position {
+				[CCode (cname = "msmcomm_event_phonebook_modified_get_position")]
 				get;
 			}
 		}

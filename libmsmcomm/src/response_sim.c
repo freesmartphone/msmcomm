@@ -144,6 +144,11 @@ char *msmcomm_resp_phonebook_get_title(struct msmcomm_message *msg)
     return title;
 }
 
+uint8_t msmcomm_resp_phonebook_get_modify_id(struct msmcomm_message *msg)
+{
+    return MESSAGE_CAST(msg, struct phonebook_resp)->modify_id;
+}
+
 /*
  * MSMCOMM_RESPONSE_GET_PHONEBOOK_PROPERTIES
  */
