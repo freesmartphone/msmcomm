@@ -50,8 +50,9 @@ MESSAGE_TYPE(get_charger_status)
 MESSAGE_TYPE(charging)
 MESSAGE_TYPE(set_system_time)
 MESSAGE_TYPE(rssi_status)
-MESSAGE_TYPE(read_simbook)
+MESSAGE_TYPE(read_phonebook)
 MESSAGE_TYPE(get_networklist)
+
 MESSAGE_TYPE(set_mode_preference) MESSAGE_TYPE(get_phonebook_properties)
      struct descriptor msg_descriptors[] = {
          MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE, change_operation_mode),
@@ -69,7 +70,7 @@ MESSAGE_TYPE(set_mode_preference) MESSAGE_TYPE(get_phonebook_properties)
          MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHARGING, charging),
          MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_SYSTEM_TIME, set_system_time),
          MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_RSSI_STATUS, rssi_status),
-         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_READ_SIMBOOK, read_simbook),
+         MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_READ_PHONEBOOK, read_phonebook),
          MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_NETWORKLIST, get_networklist),
          MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_SET_MODE_PREFERENCE, set_mode_preference),
          MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_PHONEBOOK_PROPERTIES, get_phonebook_properties),

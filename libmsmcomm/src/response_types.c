@@ -66,7 +66,7 @@ RESPONSE_TYPE(charger_status)
 RESPONSE_TYPE(cm_ph)
 RESPONSE_TYPE(set_system_time)
 RESPONSE_TYPE(rssi_status)
-RESPONSE_TYPE(read_simbook)
+RESPONSE_TYPE(phonebook)
 RESPONSE_TYPE(get_phonebook_properties)
 EVENT_TYPE(radio_reset_ind)
 EVENT_TYPE(charger_status)
@@ -82,12 +82,12 @@ EVENT_TYPE(pdsm_xtra)
 EVENT_TYPE(power_state)
 EVENT_TYPE(network_state_info)
 EVENT_TYPE(phonebook_ready) GROUP_TYPE(sim) GROUP_TYPE(call) GROUP_TYPE(sups)
-     struct descriptor group_descriptors[] = {
-         GROUP_DATA(sim),
-         GROUP_DATA(call),
-         GROUP_DATA(sups),
-     };
 
+struct descriptor group_descriptors[] = {
+    GROUP_DATA(sim),
+    GROUP_DATA(call),
+    GROUP_DATA(sups),
+};
 
 struct descriptor resp_descriptors[] = {
     /* events */
@@ -126,7 +126,7 @@ struct descriptor resp_descriptors[] = {
     RESPONSE_DATA(MSMCOMM_RESPONSE_CM_PH, cm_ph),
     RESPONSE_DATA(MSMCOMM_RESPONSE_SET_SYSTEM_TIME, set_system_time),
     RESPONSE_DATA(MSMCOMM_RESPONSE_RSSI_STATUS, rssi_status),
-    RESPONSE_DATA(MSMCOMM_RESPONSE_READ_SIMBOOK, read_simbook),
+    RESPONSE_DATA(MSMCOMM_RESPONSE_PHONEBOOK, phonebook),
     RESPONSE_DATA(MSMCOMM_RESPONSE_GET_PHONEBOOK_PROPERTIES, get_phonebook_properties),
 };
 

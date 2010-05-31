@@ -43,10 +43,12 @@
 #define MSMCOMM_MESSAGE_CMD_DIAL_CALL							24
 #define MSMCOMM_MESSAGE_CMD_SET_SYSTEM_TIME 					25
 #define MSMCOMM_MESSAGE_CMD_RSSI_STATUS							26
-#define MSMCOMM_MESSAGE_CMD_READ_SIMBOOK						27
+#define MSMCOMM_MESSAGE_CMD_READ_PHONEBOOK						27
 #define MSMCOMM_MESSAGE_CMD_GET_NETWORKLIST						28
 #define MSMCOMM_MESSAGE_CMD_SET_MODE_PREFERENCE 				29
 #define MSMCOMM_MESSAGE_CMD_GET_PHONEBOOK_PROPERTIES 			30
+#define MSMCOMM_MESSAGE_CMD_WRITE_PHONEBOOK                     31
+#define MSMCOMM_MESSAGE_CMD_DELETE_PHONEBOOK                    32
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE								101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO						102
@@ -65,7 +67,7 @@
 #define MSMCOMM_RESPONSE_CM_PH									116
 #define MSMCOMM_RESPONSE_SET_SYSTEM_TIME 						117
 #define MSMCOMM_RESPONSE_RSSI_STATUS 							118
-#define MSMCOMM_RESPONSE_READ_SIMBOOK							119
+#define MSMCOMM_RESPONSE_PHONEBOOK		    					119
 #define MSMCOMM_RESPONSE_GET_PHONEBOOK_PROPERTIES 				120
 
 #define MSMCOMM_EVENT_RESET_RADIO_IND							201
@@ -362,8 +364,8 @@ void msmcomm_message_end_call_set_call_id(struct msmcomm_message *msg, uint8_t c
 
 /* SIM messages ------------------------------------ */
 void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char* pin);
-void msmcomm_message_read_simbook_set_book_type(struct msmcomm_message *msg, unsigned int book_type);
-void msmcomm_message_read_simbook_set_position(struct msmcomm_message *msg, uint8_t position);
+void msmcomm_message_read_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type);
+void msmcomm_message_read_phonebook_set_position(struct msmcomm_message *msg, uint8_t position);
 
 /* SIM events -------------------------------------- */
 uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg);
@@ -374,11 +376,11 @@ uint8_t msmcomm_event_sms_wms_read_template_get_number_plan(struct msmcomm_messa
 unsigned int msmcomm_event_phonebook_ready_get_book_type(struct msmcomm_message *msg);
 
 /* SIM responses ----------------------------------- */
-unsigned int msmcomm_resp_read_simbook_get_book_type(struct msmcomm_message *msg);
-uint8_t msmcomm_resp_read_simbook_get_position(struct msmcomm_message *msg);
-unsigned int msmcomm_resp_read_simbook_get_encoding_type(struct msmcomm_message *msg);
-char* msmcomm_resp_read_simbook_get_number(struct msmcomm_message *msg);
-char* msmcomm_resp_read_simbook_get_title(struct msmcomm_message *msg);
+unsigned int msmcomm_resp_phonebook_get_book_type(struct msmcomm_message *msg);
+uint8_t msmcomm_resp_phonebook_get_position(struct msmcomm_message *msg);
+unsigned int msmcomm_resp_phonebook_get_encoding_type(struct msmcomm_message *msg);
+char* msmcomm_resp_phonebook_get_number(struct msmcomm_message *msg);
+char* msmcomm_resp_phonebook_get_title(struct msmcomm_message *msg);
 
 uint32_t msmcomm_resp_get_phonebook_properties_get_slot_count(struct msmcomm_message *msg);
 uint32_t msmcomm_resp_get_phonebook_properties_get_slots_used(struct msmcomm_message *msg);

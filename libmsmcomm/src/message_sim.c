@@ -67,35 +67,35 @@ void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char 
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_READ_SIMBOOK
+ * MSMCOMM_MESSAGE_CMD_READ_PHONEBOOK
  */
 
-void msg_read_simbook_init(struct msmcomm_message *msg)
+void msg_read_phonebook_init(struct msmcomm_message *msg)
 {
     msg->group_id = 0x18;
     msg->msg_id = 0x0;
 
-    msg->payload = talloc_zero(talloc_msmc_ctx, struct read_simbook_msg);
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct read_phonebook_msg);
 }
 
-uint32_t msg_read_simbook_get_size(struct msmcomm_message *msg)
+uint32_t msg_read_phonebook_get_size(struct msmcomm_message *msg)
 {
-    return sizeof (struct read_simbook_msg);
+    return sizeof (struct read_phonebook_msg);
 }
 
-void msg_read_simbook_free(struct msmcomm_message *msg)
+void msg_read_phonebook_free(struct msmcomm_message *msg)
 {
     talloc_free(msg->payload);
 }
 
-uint8_t *msg_read_simbook_prepare_data(struct msmcomm_message *msg)
+uint8_t *msg_read_phonebook_prepare_data(struct msmcomm_message *msg)
 {
-    MESSAGE_CAST(msg, struct read_simbook_msg)->ref_id = msg->ref_id;
+    MESSAGE_CAST(msg, struct read_phonebook_msg)->ref_id = msg->ref_id;
 
     return msg->payload;
 }
 
-void msmcomm_message_read_simbook_set_book_type(struct msmcomm_message *msg, unsigned int book_type)
+void msmcomm_message_read_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type)
 {
     uint8_t value = 0x0;
 
@@ -116,12 +116,12 @@ void msmcomm_message_read_simbook_set_book_type(struct msmcomm_message *msg, uns
             break;
     }
 
-    MESSAGE_CAST(msg, struct read_simbook_msg)->book_type = value;
+    MESSAGE_CAST(msg, struct read_phonebook_msg)->book_type = value;
 }
 
-void msmcomm_message_read_simbook_set_position(struct msmcomm_message *msg, uint8_t position)
+void msmcomm_message_read_phonebook_set_position(struct msmcomm_message *msg, uint8_t position)
 {
-    MESSAGE_CAST(msg, struct read_simbook_msg)->position = position;
+    MESSAGE_CAST(msg, struct read_phonebook_msg)->position = position;
 }
 
 /*

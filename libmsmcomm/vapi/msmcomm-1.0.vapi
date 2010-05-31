@@ -100,7 +100,7 @@ namespace Msmcomm
         DIAL_CALL,
         SET_SYSTEM_TIME,
         RSSI_STATUS,
-        READ_SIMBOOK,
+        READ_PHONEBOOK,
         GET_NETWORKLIST,
         SET_MODE_PREFERENCE,
         GET_PHONEBOOK_PROPERTIES,
@@ -126,7 +126,7 @@ namespace Msmcomm
         CM_PH,
         SET_SYSTEM_TIME,
         RSSI_STATUS,
-        READ_SIMBOOK,
+        PHONEBOOK,
         GET_PHONEBOOK_PROPERTIES,
     }
 
@@ -258,8 +258,8 @@ namespace Msmcomm
 			return "COMMAND_SET_SYSTEM_TIME";
 			case CommandType.RSSI_STATUS:
 			return "COMMAND_RSSI_STATUS";
-			case CommandType.READ_SIMBOOK:
-			return "COMMAND_READ_SIMBOOK";
+			case CommandType.READ_PHONEBOOK:
+			return "COMMAND_READ_PHONEBOOK";
 			case CommandType.GET_NETWORKLIST:
 			return "COMMAND_GET_NETWORKLIST";
 			case CommandType.SET_MODE_PREFERENCE:
@@ -300,8 +300,8 @@ namespace Msmcomm
 			return "RESPONSE_SET_SYSTEM_TIME";
 			case ResponseType.RSSI_STATUS:
 			return "RESPONSE_RSSI_STATUS";
-			case ResponseType.READ_SIMBOOK:
-			return "RESPONSE_READ_SIMBOOK";
+			case ResponseType.PHONEBOOK:
+			return "RESPONSE_PHONEBOOK";
 			case ResponseType.GET_PHONEBOOK_PROPERTIES:
 			return "RESPONSE_GET_PHONEBOOK_PROPERTIES";
 
@@ -815,8 +815,8 @@ namespace Msmcomm
 					details += @"number_type = $(msg.number_type) ";
 					details += @"number_plan = $(msg.number_plan) ";
 					break;
-				case Msmcomm.ResponseType.READ_SIMBOOK:
-					var msg = (Msmcomm.Reply.ReadSimbook) this.copy();
+				case Msmcomm.ResponseType.PHONEBOOK:
+					var msg = (Msmcomm.Reply.Phonebook) this.copy();
 					details = @"book_type = $(phonebookTypeToString(msg.book_type)) ";
 					details += @"position = $(msg.position) ";
 					details += @"number = '$(msg.number)' ";
@@ -1033,19 +1033,19 @@ namespace Msmcomm
 
 		[Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-        public class ReadSimbook : Message
+        public class ReadPhonebook : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
-            public ReadSimbook(CommandType t = CommandType.READ_SIMBOOK);
+            public ReadPhonebook(CommandType t = CommandType.READ_PHONEBOOK);
 
 			
 			public PhonebookType book_type {
-				[CCode (cname = "msmcomm_message_read_simbook_set_book_type")]
+				[CCode (cname = "msmcomm_message_read_phonebook_set_book_type")]
 				set;
 			}
 
 			public uint8 position {
-				[CCode (cname = "msmcomm_message_read_simbook_set_position")]
+				[CCode (cname = "msmcomm_message_read_phonebook_set_position")]
 				set;
 			}
 		}
@@ -1161,31 +1161,30 @@ namespace Msmcomm
 
 		[Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-		public class ReadSimbook : Message
+		public class Phonebook : Message
 		{
-
 			public PhonebookType book_type {
-				[CCode (cname = "msmcomm_resp_read_simbook_get_book_type")]
+				[CCode (cname = "msmcomm_resp_phonebook_get_book_type")]
 				get;
 			}
 			
 			public uint8 position {
-				[CCode (cname = "msmcomm_resp_read_simbook_get_position")]
+				[CCode (cname = "msmcomm_resp_phonebook_get_position")]
 				get;
 			}
 
 			public string number {
-				[CCode (cname = "msmcomm_resp_read_simbook_get_number")]
+				[CCode (cname = "msmcomm_resp_phonebook_get_number")]
 				get;
 			}
 
 			public string title {
-				[CCode (cname = "msmcomm_resp_read_simbook_get_title")]
+				[CCode (cname = "msmcomm_resp_phonebook_get_title")]
 				get;
 			}
 
 			public EncodingType encoding_type {
-				[CCode (cname = "msmcomm_resp_read_simbook_get_encoding_type")]
+				[CCode (cname = "msmcomm_resp_phonebook_get_encoding_type")]
 				get;
 			}
 		}

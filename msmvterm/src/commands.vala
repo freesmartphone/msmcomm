@@ -75,7 +75,7 @@ public class Commands
         register( "end_call", end_call, "End an active call", "end_call <call_nr>", 1 );
         register( "set_system_time", set_system_time, "Set system time for modem","set_system_time <year> <month> <day> <hour> <minutes> <seconds> <timezone_offset>", 7 );
 		register( "rssi_status", rssi_status, "Enable/disable rssi status updates", "rssi_status <0|1>", 1 );
-		register( "read_simbook", read_simbook, "Read entries from sim book", "read_simbook <mbdn|efecc|adn|fdn|spn> <position>", 2 );
+		register( "read_phonebook", read_phonebook, "Read entries from phonebook (stored on the SIM card)", "read_phonebook <mbdn|efecc|adn|fdn|spn> <position>", 2 );
 		register( "get_networklist", get_networklist, "Request a list with all available networks");
 		register( "set_mode_preference", set_mode_preference, "Set the prefered mode for the network (Automatic, GSM, UMTS)", "set_mode_preference <auto|gsm|umts>", 1 );
 		register( "get_phonebook_properties", get_phonebook_properties, "Get the properties of a phonebook type", "get_phonebook_properties <mbdn|efecc|adn|fdn|spn>", 1 );
@@ -299,9 +299,9 @@ public class Commands
 		msm.sendMessage(msg);
 	}
 
-	private void read_simbook( string[] params )
+	private void read_phonebook( string[] params )
 	{
-		var msg = new Msmcomm.Command.ReadSimbook();
+		var msg = new Msmcomm.Command.ReadPhonebook();
 		msg.index = nextValidRefId();
 
 		switch ( params[0] )

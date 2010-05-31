@@ -47,35 +47,35 @@ uint32_t resp_get_sim_capabilities_get_size(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_READ_SIMBOOK
+ * MSMCOMM_RESPONSE_READ_PHONEBOOK
  */
 
-unsigned int resp_read_simbook_is_valid(struct msmcomm_message *msg)
+unsigned int resp_phonebook_is_valid(struct msmcomm_message *msg)
 {
     return (msg->group_id == 0x19) && (msg->msg_id == 0x0);
 }
 
-void resp_read_simbook_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
+void resp_phonebook_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-    if (len != sizeof (struct read_simbook_resp))
+    if (len != sizeof (struct phonebook_resp))
         return;
 
     msg->payload = data;
-    msg->ref_id = MESSAGE_CAST(msg, struct read_simbook_resp)->ref_id;
+    msg->ref_id = MESSAGE_CAST(msg, struct phonebook_resp)->ref_id;
 
     /* handle message specifc error codes */
-    if (MESSAGE_CAST(msg, struct read_simbook_resp)->result == 0xb)
+    if (MESSAGE_CAST(msg, struct phonebook_resp)->result == 0xb)
         msg->result = MSMCOMM_RESULT_READ_SIMBOOK_INVALID_RECORD_ID;
 }
 
-uint32_t resp_read_simbook_get_size(struct msmcomm_message *msg)
+uint32_t resp_phonebook_get_size(struct msmcomm_message *msg)
 {
-    return sizeof (struct read_simbook_resp);
+    return sizeof (struct phonebook_resp);
 }
 
-unsigned int msmcomm_resp_read_simbook_get_book_type(struct msmcomm_message *msg)
+unsigned int msmcomm_resp_phonebook_get_book_type(struct msmcomm_message *msg)
 {
-    switch (MESSAGE_CAST(msg, struct read_simbook_resp)->book_type)
+    switch (MESSAGE_CAST(msg, struct phonebook_resp)->book_type)
     {
         case 0x10:
             return MSMCOMM_PHONEBOOK_TYPE_ADN;
@@ -88,14 +88,14 @@ unsigned int msmcomm_resp_read_simbook_get_book_type(struct msmcomm_message *msg
     return MSMCOMM_PHONEBOOK_TYPE_NONE;
 }
 
-uint8_t msmcomm_resp_read_simbook_get_position(struct msmcomm_message * msg)
+uint8_t msmcomm_resp_phonebook_get_position(struct msmcomm_message * msg)
 {
-    return MESSAGE_CAST(msg, struct read_simbook_resp)->position;
+    return MESSAGE_CAST(msg, struct phonebook_resp)->position;
 }
 
-unsigned int msmcomm_resp_read_simbook_get_encoding_type(struct msmcomm_message *msg)
+unsigned int msmcomm_resp_phonebook_get_encoding_type(struct msmcomm_message *msg)
 {
-    switch (MESSAGE_CAST(msg, struct read_simbook_resp)->encoding_type)
+    switch (MESSAGE_CAST(msg, struct phonebook_resp)->encoding_type)
     {
         case 0x4:
             return MSMCOMM_ENCODING_TYPE_ASCII;
@@ -106,13 +106,13 @@ unsigned int msmcomm_resp_read_simbook_get_encoding_type(struct msmcomm_message 
     return MSMCOMM_ENCODING_TYPE_NONE;
 }
 
-char *msmcomm_resp_read_simbook_get_number(struct msmcomm_message *msg)
+char *msmcomm_resp_phonebook_get_number(struct msmcomm_message *msg)
 {
     char *number = NULL;
 
     int len = 0;
 
-    struct read_simbook_resp *resp = MESSAGE_CAST(msg, struct read_simbook_resp);
+    struct phonebook_resp *resp = MESSAGE_CAST(msg, struct phonebook_resp);
 
     if (resp->number == NULL)
         return NULL;
@@ -125,13 +125,13 @@ char *msmcomm_resp_read_simbook_get_number(struct msmcomm_message *msg)
     return number;
 }
 
-char *msmcomm_resp_read_simbook_get_title(struct msmcomm_message *msg)
+char *msmcomm_resp_phonebook_get_title(struct msmcomm_message *msg)
 {
     char *title = NULL;
 
     int len = 0;
 
-    struct read_simbook_resp *resp = MESSAGE_CAST(msg, struct read_simbook_resp);
+    struct phonebook_resp *resp = MESSAGE_CAST(msg, struct phonebook_resp);
 
     if (resp->title == NULL)
         return NULL;

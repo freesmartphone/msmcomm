@@ -127,7 +127,7 @@ struct sms_wms_read_template_event
 } __attribute__ ((packed));
 
 
-struct read_simbook_msg
+struct read_phonebook_msg
 {
 	uint32_t ref_id;
 	uint8_t position;
@@ -135,7 +135,7 @@ struct read_simbook_msg
 } __attribute__ ((packed));
 
 
-struct read_simbook_resp
+struct phonebook_resp
 {
 	uint32_t ref_id;
 	uint8_t unknown0[2];

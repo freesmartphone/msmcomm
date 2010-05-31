@@ -68,13 +68,13 @@ start sms_wms_read_template_event 2083
 [229-274] uint8_t scaddr
 end
 
-start read_simbook_msg 6
+start read_phonebook_msg 6
 [0-3] uint32_t ref_id
 [4] uint8_t position
 [5] uint8_t book_type
 end
 
-start read_simbook_resp 142
+start phonebook_resp 142
 [0-3] uint32_t ref_id
 [6] uint8_t result
 [7] uint8_t position
