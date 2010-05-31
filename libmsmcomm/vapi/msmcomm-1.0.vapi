@@ -106,6 +106,7 @@ namespace Msmcomm
         GET_PHONEBOOK_PROPERTIES,
         WRITE_PHONEBOOK,
         DELETE_PHONEBOOK,
+        CHANGE_PIN,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -1143,6 +1144,34 @@ namespace Msmcomm
 			public PhonebookType book_type {
 				[CCode (cname = "msmcomm_message_get_phonebook_properties_set_book_type")]
 				set;
+			}
+		}
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class ChangePin : Message
+		{
+			[CCode (cname = "msmcomm_create_message")]
+            public ChangePin(CommandType t = CommandType.CHANGE_PIN);
+            
+            [CCode (cname = "msmcomm_message_change_pin_set_new_pin")]
+            private void _setNewPin(string new_pin, uint len);
+            
+            [CCode (cname = "msmcomm_message_change_pin_set_old_pin")]
+            private void _setOldPin(string old_pin, uint len);
+
+			public string new_pin {
+				set {
+                    var pin = value;
+                    _setNewPin(pin, (uint)pin.length);
+                }
+			}
+            
+            public string old_pin {
+				set {
+                    var pin = value;
+                    _setOldPin(pin, (uint)pin.length);
+                }
 			}
 		}
     }

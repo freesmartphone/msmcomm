@@ -54,6 +54,7 @@ MESSAGE_TYPE(read_phonebook)
 MESSAGE_TYPE(get_networklist)
 MESSAGE_TYPE(write_phonebook)
 MESSAGE_TYPE(delete_phonebook)
+MESSAGE_TYPE(change_pin)
 
 MESSAGE_TYPE(set_mode_preference) MESSAGE_TYPE(get_phonebook_properties)
 
@@ -79,6 +80,7 @@ struct descriptor msg_descriptors[] = {
     MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_GET_PHONEBOOK_PROPERTIES, get_phonebook_properties),
     MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_WRITE_PHONEBOOK, write_phonebook),
     MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_DELETE_PHONEBOOK, delete_phonebook),
+    MESSAGE_DATA(MSMCOMM_MESSAGE_CMD_CHANGE_PIN, change_pin),
 };
 
 unsigned int msg_descriptors_size =

@@ -49,6 +49,7 @@
 #define MSMCOMM_MESSAGE_CMD_GET_PHONEBOOK_PROPERTIES 			30
 #define MSMCOMM_MESSAGE_CMD_WRITE_PHONEBOOK                     31
 #define MSMCOMM_MESSAGE_CMD_DELETE_PHONEBOOK                    32
+#define MSMCOMM_MESSAGE_CMD_CHANGE_PIN                          33
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE								101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO						102
@@ -374,6 +375,9 @@ void msmcomm_message_write_phonebook_set_book_type(struct msmcomm_message *msg, 
 
 void msmcomm_message_delete_phonebook_set_position(struct msmcomm_message *msg, uint8_t position);
 void msmcomm_message_delete_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type);
+
+void msmcomm_message_change_pin_set_old_pin(struct msmcomm_message *msg, const char *old_pin, unsigned int len);
+void msmcomm_message_change_pin_set_new_pin(struct msmcomm_message *msg, const char *new_pin, unsigned int len);
 
 /* SIM events -------------------------------------- */
 uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg);

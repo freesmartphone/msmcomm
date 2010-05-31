@@ -101,7 +101,18 @@ struct sups_resp
 
 struct get_sim_capabilities_resp
 {
-	uint8_t unknown0[1934];
+	uint8_t unknown0[5];
+	uint32_t ref_id;
+	uint8_t unknown1[1925];
+} __attribute__ ((packed));
+
+
+struct change_pin_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint8_t old_pin[9];
+	uint8_t new_pin[9];
 } __attribute__ ((packed));
 
 

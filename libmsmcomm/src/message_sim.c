@@ -278,3 +278,44 @@ void msmcomm_message_delete_phonebook_set_book_type(struct msmcomm_message *msg,
     MESSAGE_CAST(msg, struct modify_phonebook_msg)->book_type = book_type_to_magic(book_type);
 }
 
+/*
+ * MSMCOMM_MESSAGE_CMD_CHANGE_PIN
+ */
+
+void msg_change_pin_init(struct msmcomm_message *msg)
+{
+    msg->group_id = 0xf;
+    msg->msg_id = 0xf;
+
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct change_pin_msg);
+}
+
+uint32_t msg_change_pin_get_size(struct msmcomm_message *msg)
+{
+    return sizeof (struct change_pin_msg);
+}
+
+void msg_change_pin_free(struct msmcomm_message *msg)
+{
+    talloc_free(msg->payload);
+}
+
+uint8_t *msg_change_pin_prepare_data(struct msmcomm_message *msg)
+{
+    MESSAGE_CAST(msg, struct change_pin_msg)->ref_id = msg->ref_id;
+
+    return msg->payload;
+}
+
+void msmcomm_message_change_pin_set_old_pin(struct msmcomm_message *msg, const char *old_pin, unsigned int len)
+{
+    assert(len <= 8);
+    memcpy(MESSAGE_CAST(msg, struct change_pin_msg)->old_pin, old_pin, len);
+}
+
+void msmcomm_message_change_pin_set_new_pin(struct msmcomm_message *msg, const char *new_pin, unsigned int len)
+{
+    assert(len <= 8);
+    memcpy(MESSAGE_CAST(msg, struct change_pin_msg)->new_pin, new_pin, len);
+}
+

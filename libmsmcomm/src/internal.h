@@ -42,6 +42,7 @@
 #include <signal.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <assert.h>
 
 #include "talloc.h"
 #include "linuxlist.h"

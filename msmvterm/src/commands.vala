@@ -76,12 +76,13 @@ public class Commands
         register( "set_system_time", set_system_time, "Set system time for modem","set_system_time <year> <month> <day> <hour> <minutes> <seconds> <timezone_offset>", 7 );
 		register( "rssi_status", rssi_status, "Enable/disable rssi status updates", "rssi_status <0|1>", 1 );
 		register( "read_phonebook", read_phonebook, "Read entries from phonebook (stored on the SIM card)", "read_phonebook <mbdn|efecc|adn|fdn|spn> <position>", 2 );
-		register( "write_phonebook", write_phonebook, "Write an entry to the phonebook (stored on the SIM card)", "write_phonebook <mbdn|efecc|adn|fdn|spn> <title> <number>", 3 );
+		register( "write_phonebook", write_phonebook, "Write an entry to the phonebook (stored on the SIM card)", "write_phonebook <mbdn|efecc|adn|fdn|spn> \"<title>\" \"<number>\"", 3 );
         register( "delete_phonebook", delete_phonebook, "Deletes an entry from the phonebook (stored on the SIM card)", "delete_phonebook <mbdn|efecc|adn|fdn|spn> <position>", 2 );
         register( "get_networklist", get_networklist, "Request a list with all available networks");
 		register( "set_mode_preference", set_mode_preference, "Set the prefered mode for the network (Automatic, GSM, UMTS)", "set_mode_preference <auto|gsm|umts>", 1 );
 		register( "get_phonebook_properties", get_phonebook_properties, "Get the properties of a phonebook type", "get_phonebook_properties <mbdn|efecc|adn|fdn|spn>", 1 );
-	}
+        register( "change_pin", change_pin, "Change the pin of your SIM card", "change_pin <old pin> <new pin>", 2 );
+    }
 
     private uint8 nextValidRefId()
     {
@@ -399,4 +400,13 @@ public class Commands
 		msg.position = (uint8)params[1].to_int();
 		msm.sendMessage(msg);
 	}
+    
+    private void change_pin( string[] params )
+    {
+        var msg = new Msmcomm.Command.ChangePin();
+        msg.index = nextValidRefId();
+        msg.old_pin = params[0];
+        msg.new_pin = params[1];
+        msm.sendMessage(msg);
+    }
 }
