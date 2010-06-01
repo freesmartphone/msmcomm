@@ -69,6 +69,21 @@
 #define SUBSYSTEM_ID(msg) ((msg->msg_id & 0xf0) >> 8)
 #define MSG_ID(msg) (msg->msg_id & 0xf)
 
+struct msmcomm_context
+{
+    msmcomm_event_handler_cb event_cb;
+    msmcomm_write_handler_cb write_cb;
+    msmcomm_read_handler_cb read_cb;
+    msmcomm_log_handler_cb log_cb;
+    msmcomm_error_handler_cb error_cb;
+
+    void *event_data;
+    void *write_data;
+    void *read_data;
+    void *error_data;
+    void *log_data;
+};
+
 struct msmcomm_message
 {
 	uint8_t group_id;
