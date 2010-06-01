@@ -439,4 +439,48 @@ void msmcomm_message_disable_pin_set_pin(struct msmcomm_message *msg, const char
     _message_pin_status_set_pin(msg, pin);
 }
 
+/*
+ * MSMCOMM_COMMAND_SIM_INFO
+ */
+
+void msg_sim_info_init(struct msmcomm_message *msg)
+{
+    msg->group_id = 0xf;
+    msg->msg_id = 0x3;
+
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct sim_info_msg);
+}
+
+uint32_t msg_sim_info_get_size(struct msmcomm_message *msg)
+{
+    return sizeof (struct sim_info_msg);
+}
+
+void msg_sim_info_free(struct msmcomm_message *msg)
+{
+    talloc_free(msg->payload);
+}
+
+uint8_t *msg_sim_info_prepare_data(struct msmcomm_message *msg)
+{
+    MESSAGE_CAST(msg, struct sim_info_msg)->ref_id = msg->ref_id;
+    return msg->payload;
+}
+
+void msmcomm_message_sim_info_set_field_type(struct msmcomm_message *msg, unsigned int field_type)
+{
+    switch (field_type)
+    {
+        case MSMCOMM_SIM_INFO_FIELD_TYPE_IMSI:
+            MESSAGE_CAST(msg, struct sim_info_msg)->field_type_0 = 0x1;
+            MESSAGE_CAST(msg, struct sim_info_msg)->field_type_1 = 0x4;
+            break;
+        case MSMCOMM_SIM_INFO_FIELD_TYPE_MSISDN:
+            MESSAGE_CAST(msg, struct sim_info_msg)->field_type_0 = 0x19;
+            MESSAGE_CAST(msg, struct sim_info_msg)->field_type_1 = 0x4;
+            break;
+    }
+}
+
+
 

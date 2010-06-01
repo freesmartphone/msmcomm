@@ -52,6 +52,7 @@
 #define MSMCOMM_COMMAND_CHANGE_PIN                                  33
 #define MSMCOMM_COMMAND_ENABLE_PIN                                  34
 #define MSMCOMM_COMMAND_DISABLE_PIN                                 35
+#define MSMCOMM_COMMAND_SIM_INFO                                    36
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE                                 101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO                          102
@@ -301,6 +302,13 @@
 #define MSMCOMM_SIM_PIN_2                                           2
 
 /*
+ * SIM Field Types
+ */
+#define MSMCOMM_SIM_INFO_FIELD_TYPE_NONE                            0
+#define MSMCOMM_SIM_INFO_FIELD_TYPE_IMSI                            1
+#define MSMCOMM_SIM_INFO_FIELD_TYPE_MSISDN                          2
+
+/*
  * Some constants
  */
 #define MSMCOMM_MAX_IMSI_LENGTH                                     15
@@ -500,7 +508,12 @@ unsigned int msmcomm_event_get_networklist_get_network_count(struct msmcomm_mess
 unsigned int msmcomm_event_get_networklist_get_plmn(struct msmcomm_message *msg, int nnum);
 char *msmcomm_event_get_networklist_get_network_name(struct msmcomm_message *msg, int nnum);
 
-char* msmcomm_resp_sim_get_imsi(struct msmcomm_message *msg);
+char* msmcomm_resp_sim_get_field_data(struct msmcomm_message *msg);
+unsigned int msmcomm_resp_sim_info_get_field_type(struct msmcomm_message *msg);
+
+void msmcomm_message_sim_info_set_field_type(struct msmcomm_message *msg, 
+                                             unsigned int field_type);
+                                            
 
 /*
  * Lowlevel Frame handling

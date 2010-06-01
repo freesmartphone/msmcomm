@@ -104,10 +104,13 @@ struct sim_resp
 	uint8_t unknown0[4];
 	uint8_t result0;
 	uint32_t ref_id;
-	uint8_t unknown1[3];
+	uint8_t unknown1;
+	uint8_t field_type_0;
+	uint8_t field_type_1;
 	uint8_t result1;
-	uint8_t unknown2[2];
-	uint8_t imsi[8];
+	uint8_t unknown2;
+	uint8_t field_length;
+	uint8_t field_data[8];
 	uint8_t unknown3[1911];
 } __attribute__ ((packed));
 
@@ -211,6 +214,15 @@ struct get_phonebook_properties_resp
 	uint32_t max_chars_per_title;
 	uint32_t max_chars_per_number;
 	uint8_t unknown1[185];
+} __attribute__ ((packed));
+
+
+struct sim_info_msg
+{
+	uint32_t ref_id;
+	uint8_t field_type_0;
+	uint8_t field_type_1;
+	uint8_t unknown0[35];
 } __attribute__ ((packed));
 
 

@@ -83,6 +83,7 @@ public class Commands
 		register( "get_phonebook_properties", get_phonebook_properties, "Get the properties of a phonebook type", "get_phonebook_properties <mbdn|efecc|adn|fdn|spn>", 1 );
         register( "change_pin", change_pin, "Change the pin of your SIM card", "change_pin <old pin> <new pin>", 2 );
         register( "pin_status", pin_status, "Enable/Disable pin authentication", "pin_status <0|1> <pin>", 2 );
+        register( "sim_info", sim_info, "Gather information from the SIM card", "sim_info <imsi|msisdn>", 1 );
     }
 
     private uint8 nextValidRefId()
@@ -444,5 +445,23 @@ public class Commands
                 ERR( @"Set known pin_status 0 or 1 and not '$(params[0])'" );
                 return;
         }
+    }
+    
+    private void sim_info( string[] params )
+    {
+        var msg = new Msmcomm.Command.SimInfo();
+        msg.index = nextValidRefId();
+        
+        switch (params[0])
+        {
+            case "imsi":
+                msg.field_type = Msmcomm.SimInfoFieldType.IMSI;
+                break;
+            case "msisdn":
+                msg.field_type = Msmcomm.SimInfoFieldType.MSISDN;
+                break;
+        }
+        
+        msm.sendMessage(msg);
     }
 }

@@ -109,6 +109,7 @@ namespace Msmcomm
         CHANGE_PIN,
         ENABLE_PIN,
         DISABLE_PIN,
+        SIM_INFO,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -274,6 +275,8 @@ namespace Msmcomm
             return "COMMAND_ENABLE_PIN";
             case CommandType.DISABLE_PIN:
             return "COMMAND_DISABLE_PIN";
+            case CommandType.SIM_INFO:
+            return "COMMAND_SIM_INFO";
 
             // ResponseType
             case ResponseType.TEST_ALIVE:
@@ -697,6 +700,32 @@ namespace Msmcomm
 		}
 		return result;
 	}
+    
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_SIM_INFO_FIELD_TYPE_", cheader_filename = "msmcomm.h")]
+    public enum SimInfoFieldType 
+    {
+        NONE, 
+        MSISDN,
+        IMSI,
+    }
+    
+    public string simInfoTypeToString(SimInfoFieldType type)
+	{
+		var result = "<unknown>";
+		switch (type)
+		{
+			case SimInfoFieldType.NONE:
+				result = "SIM_INFO_FIELD_TYPE_NONE";
+				break;
+			case SimInfoFieldType.IMSI:
+				result = "SIM_INFO_FIELD_TYPE_IMSI";
+				break;
+			case SimInfoFieldType.MSISDN:
+				result = "SIM_INFO_FIELD_TYPE_MSISDN";
+				break;
+		}
+		return result;
+	}
 
     [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void EventHandlerCb(int event, Message message);
@@ -908,7 +937,9 @@ namespace Msmcomm
                     break;
                 case Msmcomm.ResponseType.SIM:
                     var msg = (Msmcomm.Reply.Sim) this.copy();
-                    details = @"imsi = '$(msg.imsi)'";
+                    details = @"field_type = $(simInfoTypeToString(msg.field_type)) ";
+                    if (msg.field_data != null)
+                        details += @"field_data = '$(msg.field_data)'";
                     break;
                 default:
                     break;
@@ -1245,6 +1276,19 @@ namespace Msmcomm
                 set;
             }
         }
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class SimInfo : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public SimInfo(CommandType t = CommandType.SIM_INFO);
+            
+            public SimInfoFieldType field_type {
+                [CCode (cname = "msmcomm_message_sim_info_set_field_type")]
+                set;
+            }
+        }
     }
 
     namespace Reply
@@ -1395,10 +1439,15 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
 		public class Sim : Message
 		{
-            public string imsi {
-				[CCode (cname = "msmcomm_resp_sim_get_imsi")]
+            public string field_data {
+				[CCode (cname = "msmcomm_resp_sim_get_field_data")]
 				get;
 			}
+            
+            public SimInfoFieldType field_type {
+                [CCode (cname = "msmcomm_resp_sim_info_get_field_type")]
+                get;
+            }
 		}
     }
 

@@ -4,8 +4,11 @@
         <structure name="sim_resp" length="1934">
             <field name="result0" start="4" type="uint8_t"/>
             <field name="ref_id" start="5" end="8" type="uint32_t"/>
+            <field name="field_type_0" start="10" type="uint8_t"/>
+            <field name="field_type_1" start="11" type="uint8_t"/>
             <field name="result1" start="12" type="uint8_t"/>
-            <field name="imsi" start="15" end="22" type="uint8_t"/>
+            <field name="field_length" start="14" type="uint8_t"/>
+            <field name="field_data" start="15" end="22" type="uint8_t"/>
 		</structure>
         <structure name="change_pin_msg" length="23">
             <field name="ref_id" start="0" end="3" type="uint32_t"/>
@@ -79,6 +82,11 @@
 			<field name="slot_count" start="6" end="9" type="uint32_t"/>
 			<field name="max_chars_per_title" start="10" end="13" type="uint32_t"/>
 			<field name="max_chars_per_number" start="14" end="17" type="uint32_t"/>
+		</structure>
+        <structure name="sim_info_msg" length="41">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="field_type_0" start="4" type="uint8_t"/>
+            <field name="field_type_1" start="5" type="uint8_t"/>
 		</structure>
 	</structures>
 </namespace:sim>

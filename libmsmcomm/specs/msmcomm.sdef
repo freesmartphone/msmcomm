@@ -54,8 +54,11 @@ end
 start sim_resp 1934
 [4] uint8_t result0
 [5-8] uint32_t ref_id
+[10] uint8_t field_type_0
+[11] uint8_t field_type_1
 [12] uint8_t result1
-[15-22] uint8_t imsi
+[14] uint8_t field_length
+[15-22] uint8_t field_data
 end
 
 start change_pin_msg 23
@@ -126,6 +129,12 @@ start get_phonebook_properties_resp 203
 [6-9] uint32_t slot_count
 [10-13] uint32_t max_chars_per_title
 [14-17] uint32_t max_chars_per_number
+end
+
+start sim_info_msg 41
+[0-3] uint32_t ref_id
+[4] uint8_t field_type_0
+[5] uint8_t field_type_1
 end
 
 #-------------------------------------------------------------------

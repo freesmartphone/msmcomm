@@ -38,7 +38,6 @@ unsigned int resp_sim_is_valid(struct msmcomm_message *msg)
 void resp_sim_handle_data(struct msmcomm_message *msg, uint8_t * data,
                                            uint32_t len)
 {
-    printf("len = %i sizeof (struct sim_resp) = %i\n", len, sizeof (struct sim_resp));
     if (len != sizeof (struct sim_resp))
         return;
 
@@ -58,23 +57,56 @@ uint32_t resp_sim_get_size(struct msmcomm_message *msg)
     return sizeof(struct sim_resp);
 }
 
-char* msmcomm_resp_sim_get_imsi(struct msmcomm_message *msg)
+unsigned int msmcomm_resp_sim_info_get_field_type(struct msmcomm_message *msg)
 {
-    int n, m;
-    char *imsi = (char*)malloc(sizeof(char) * (MSMCOMM_MAX_IMSI_LENGTH + 1));
+    unsigned int type = MSMCOMM_SIM_INFO_FIELD_TYPE_NONE;
     
-    /* Copy imsi from message structure */
-    m = 0;
-    imsi[m++] = 0x30 + MESSAGE_CAST(msg, struct sim_resp)->imsi[0] & 0xf;
-    for (n = 1; n<8; n++) 
+    if (MESSAGE_CAST(msg, struct sim_resp)->field_type_0 == 0x1 &&
+        MESSAGE_CAST(msg, struct sim_resp)->field_type_1 == 0x4) 
     {
-        imsi[m++] = 0x30 + MESSAGE_CAST(msg, struct sim_resp)->imsi[n] & 0xf;
-        imsi[m++] = 0x30 + ((MESSAGE_CAST(msg, struct sim_resp)->imsi[n] & 0xf0) >> 8);
+        type = MSMCOMM_SIM_INFO_FIELD_TYPE_IMSI;
+    }
+    else if (MESSAGE_CAST(msg, struct sim_resp)->field_type_0 == 0x19 &&
+        MESSAGE_CAST(msg, struct sim_resp)->field_type_1 == 0x4) 
+    {
+        type = MSMCOMM_SIM_INFO_FIELD_TYPE_MSISDN;
     }
     
-    imsi[MSMCOMM_MAX_IMSI_LENGTH] = 0;
+    return type;
+}
+
+char* msmcomm_resp_sim_get_field_data(struct msmcomm_message *msg)
+{
+    int n, m;
+    char *field_data = NULL;
     
-    return imsi;
+    switch (msmcomm_resp_sim_info_get_field_type(msg)) 
+    {
+        case MSMCOMM_SIM_INFO_FIELD_TYPE_IMSI:
+            /* We got the IMSI with this response */
+            if (MESSAGE_CAST(msg, struct sim_resp)->field_length != 8)
+                break;
+            
+            field_data = (char*)malloc(sizeof(char) * (MSMCOMM_MAX_IMSI_LENGTH + 1));
+            
+            /* Copy imsi from message structure */
+            m = 0;
+            field_data[m++] = 0x30 + ((MESSAGE_CAST(msg, struct sim_resp)->field_data[0] & 0xf0) >> 4);
+            for (n = 1; n<8; n++) 
+            {
+                field_data[m++] = 0x30 + (MESSAGE_CAST(msg, struct sim_resp)->field_data[n] & 0xf);
+                field_data[m++] = 0x30 + ((MESSAGE_CAST(msg, struct sim_resp)->field_data[n] & 0xf0) >> 4);
+            }
+            
+            field_data[MSMCOMM_MAX_IMSI_LENGTH] = 0;
+            break;
+        case MSMCOMM_SIM_INFO_FIELD_TYPE_MSISDN:
+            /* We got the MSISDN with this response */
+            /* FIXME */
+            break;
+    }
+    
+    return field_data;
 }
  
 /*
