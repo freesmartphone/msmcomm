@@ -33,9 +33,6 @@ void msg_verify_pin_init(struct msmcomm_message *msg)
     msg->msg_id = 0xe;
 
     msg->payload = talloc_zero(talloc_msmc_ctx, struct verify_pin_msg);
-
-    /* we think the second bytes includes the pin type */
-    MESSAGE_CAST(msg, struct verify_pin_msg)->pin_type = 0x12;
 }
 
 uint32_t msg_verify_pin_get_size(struct msmcomm_message *msg)
@@ -50,20 +47,30 @@ void msg_verify_pin_free(struct msmcomm_message *msg)
 
 uint8_t *msg_verify_pin_prepare_data(struct msmcomm_message *msg)
 {
+    MESSAGE_CAST(msg, struct verify_pin_msg)->ref_id = msg->ref_id;
     return msg->payload;
 }
 
-/* NOTE: PIN is passed as ascii chars! PIN is only allowed to be 4 or 8 chars */
 void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char *pin)
 {
     int len = strlen(pin);
-
-    if (len != 4 && len != 8)
-    {
-        fprintf(stderr, "WARNING: PIN is neither 4 nor 8 characters long\n");
-        return;
-    }
+    assert(len == 4 || len == 8);
     memcpy(MESSAGE_CAST(msg, struct verify_pin_msg)->pin, pin, len);
+}
+
+void msmcomm_message_verify_pin_set_pin_type(struct msmcomm_message *msg, unsigned int pin_type)
+{
+    unsigned int type = 0x0;
+    switch (pin_type) 
+    {
+        case MSMCOMM_SIM_PIN_1:
+            type = 0x0;
+            break;
+        case MSMCOMM_SIM_PIN_2:
+            type = 0x1;
+            break;
+    }
+    MESSAGE_CAST(msg, struct verify_pin_msg)->pin_type = type;
 }
 
 /*
@@ -309,13 +316,13 @@ uint8_t *msg_change_pin_prepare_data(struct msmcomm_message *msg)
 
 void msmcomm_message_change_pin_set_old_pin(struct msmcomm_message *msg, const char *old_pin, unsigned int len)
 {
-    assert(len <= 8);
+    assert(len == 4 || len == 8);
     memcpy(MESSAGE_CAST(msg, struct change_pin_msg)->old_pin, old_pin, len);
 }
 
 void msmcomm_message_change_pin_set_new_pin(struct msmcomm_message *msg, const char *new_pin, unsigned int len)
 {
-    assert(len <= 8);
+    assert(len == 4 || len == 8);
     memcpy(MESSAGE_CAST(msg, struct change_pin_msg)->new_pin, new_pin, len);
 }
 

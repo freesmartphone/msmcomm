@@ -10,7 +10,8 @@
             <field name="new_pin" start="14" end="22" type="uint8_t"/>
 		</structure>
 		<structure name="verify_pin_msg" length="14">
-			<field name="pin_type" start="0" type="uint8_t"/>
+            <field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="pin_type" start="4" type="uint8_t"/>
 			<field name="pin" start="5" end="12" type="uint8_t"/>
 		</structure>
 		<structure name="sms_wms_read_template_event" length="2083">

@@ -118,10 +118,10 @@ struct change_pin_msg
 
 struct verify_pin_msg
 {
+	uint32_t ref_id;
 	uint8_t pin_type;
-	uint8_t unknown0[4];
 	uint8_t pin[8];
-	uint8_t unknown1;
+	uint8_t unknown0;
 } __attribute__ ((packed));
 
 

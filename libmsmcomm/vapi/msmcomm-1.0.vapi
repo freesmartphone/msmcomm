@@ -661,6 +661,32 @@ namespace Msmcomm
 		}
 		return result;
 	}
+    
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_SIM_", cheader_filename = "msmcomm.h")]
+    public enum SimPinType 
+    {
+        PIN_NONE,
+        PIN_1,
+        PIN_2,
+    }
+    
+    public string simPinTypeToString(SimPinType type)
+	{
+		var result = "<unknown>";
+		switch (type)
+		{
+			case SimPinType.PIN_NONE:
+				result = "SIM_PIN_NONE";
+				break;
+			case SimPinType.PIN_1:
+				result = "SIM_PIN_1";
+				break;
+			case SimPinType.PIN_2:
+				result = "SIM_PIN_2";
+				break;
+		}
+		return result;
+	}
 
     [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void EventHandlerCb(int event, Message message);
@@ -958,6 +984,11 @@ namespace Msmcomm
 
             public string pin {
                 [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
+                set;
+            }
+            
+            public SimPinType pin_type {
+                [CCode (cname = "msmcomm_message_verify_pin_set_pin_type")]
                 set;
             }
         }

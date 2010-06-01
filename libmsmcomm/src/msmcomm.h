@@ -289,6 +289,13 @@
 #define MSMCOMM_CALL_TYPE_DATA                                                              1
 #define MSMCOMM_CALL_TYPE_AUDIO                                                             2
 
+/*
+ * SIM Pin Types
+ */
+#define MSMCOMM_SIM_PIN_NONE                                                                0
+#define MSMCOMM_SIM_PIN_1                                                                   1
+#define MSMCOMM_SIM_PIN_2                                                                   2
+
 struct msmcomm_context;
 struct msmcomm_message;
 
@@ -366,6 +373,8 @@ void msmcomm_message_end_call_set_call_id(struct msmcomm_message *msg, uint8_t c
 
 /* SIM messages ------------------------------------ */
 void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char* pin);
+void msmcomm_message_verify_pin_set_pin_type(struct msmcomm_message *msg, unsigned int pin_type);
+
 void msmcomm_message_read_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type);
 void msmcomm_message_read_phonebook_set_position(struct msmcomm_message *msg, uint8_t position);
 
@@ -378,6 +387,8 @@ void msmcomm_message_delete_phonebook_set_book_type(struct msmcomm_message *msg,
 
 void msmcomm_message_change_pin_set_old_pin(struct msmcomm_message *msg, const char *old_pin, unsigned int len);
 void msmcomm_message_change_pin_set_new_pin(struct msmcomm_message *msg, const char *new_pin, unsigned int len);
+
+
 
 /* SIM events -------------------------------------- */
 uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg);
