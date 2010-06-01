@@ -551,6 +551,7 @@ namespace Msmcomm
 		ERROR,
 		READ_SIMBOOK_INVALID_RECORD_ID,
         SIM_BAD_STATE,
+        BAD_CALL_ID,
 	}
 
 	public string resultTypeToString(ResultType type)
@@ -572,6 +573,9 @@ namespace Msmcomm
 				break;
             case ResultType.SIM_BAD_STATE:
                 result = "RESULT_SIM_BAD_STATE";
+                break;
+            case ResultType.BAD_CALL_ID:
+                result = "RESULT_BAD_CALL_ID";
                 break;
 		}
 		return result;
@@ -825,7 +829,7 @@ namespace Msmcomm
                     break;
                 case Msmcomm.ResponseType.CM_CALL:
                     var msg = (Msmcomm.Reply.Call) this.copy();
-                    details = @"refId = $(msg.index) cmd = $(msg.getCmd()) err = $(msg.getErrorCode())";
+                    details = @"cmd = $(msg.cmd_type)";
                     break;
                 case Msmcomm.ResponseType.CHARGER_STATUS:
                     var msg = (Msmcomm.Reply.ChargerStatus) this.copy();
@@ -1049,11 +1053,6 @@ namespace Msmcomm
                 [CCode (cname = "msmcomm_message_end_call_set_call_id")]
                 set;
             }
-            
-            public uint8 host_id {
-                [CCode (cname = "msmcomm_message_end_call_set_host_id")]
-                set;
-            }
         }
 
         [Compact]
@@ -1065,11 +1064,6 @@ namespace Msmcomm
 
             public uint8 call_id {
                 [CCode (cname = "msmcomm_message_answer_call_set_call_id")]
-                set;
-            }
-            
-            public uint8 host_id {
-                [CCode (cname = "msmcomm_message_answer_call_set_host_id")]
                 set;
             }
         }
@@ -1356,14 +1350,13 @@ namespace Msmcomm
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-		public class Call : Message
-		{
-			[CCode (cname = "msmcomm_resp_cm_call_get_cmd")]
-			public uint16 getCmd();
-
-			[CCode (cname = "msmcomm_resp_cm_call_get_error_code")]
-			public uint16 getErrorCode();
-		}
+        public class Call : Message
+        {
+            public uint16 cmd_type {
+                [CCode (cname = "msmcomm_resp_cm_call_get_cmd_type")]
+                get;
+            }
+        }
 
 		[Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]

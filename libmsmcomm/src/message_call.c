@@ -80,6 +80,11 @@ void msg_answer_call_init(struct msmcomm_message *msg)
     msg->msg_id = 0x1;
 
     msg->payload = talloc_zero(talloc_msmc_ctx, struct answer_call_msg);
+
+    /* some constant values */
+    MESSAGE_CAST(msg, struct answer_call_msg)->value0 = 0x2;
+    MESSAGE_CAST(msg, struct answer_call_msg)->value1 = 0x1;
+    MESSAGE_CAST(msg, struct answer_call_msg)->value2 = 0x0;
 }
 
 uint32_t msg_answer_call_get_size(struct msmcomm_message *msg)
@@ -99,11 +104,6 @@ uint8_t *msg_answer_call_prepare_data(struct msmcomm_message *msg)
     return msg->payload;
 }
 
-void msmcomm_message_answer_call_set_host_id(struct msmcomm_message *msg, uint8_t host_id)
-{
-    MESSAGE_CAST(msg, struct answer_call_msg)->host_id = host_id;
-}
-
 void msmcomm_message_answer_call_set_call_id(struct msmcomm_message *msg, uint8_t call_id)
 {
     MESSAGE_CAST(msg, struct answer_call_msg)->call_id = call_id;
@@ -119,6 +119,9 @@ void msg_end_call_init(struct msmcomm_message *msg)
     msg->msg_id = 0x2;
 
     msg->payload = talloc_zero(talloc_msmc_ctx, struct end_call_msg);
+
+    /* some constant values */
+    MESSAGE_CAST(msg, struct end_call_msg)->value0 = 0x1;
 }
 
 uint32_t msg_end_call_get_size(struct msmcomm_message *msg)
@@ -136,11 +139,6 @@ uint8_t *msg_end_call_prepare_data(struct msmcomm_message *msg)
     MESSAGE_CAST(msg, struct end_call_msg)->ref_id = msg->ref_id;
 
     return msg->payload;
-}
-
-void msmcomm_message_end_call_set_host_id(struct msmcomm_message *msg, uint8_t host_id)
-{
-    MESSAGE_CAST(msg, struct end_call_msg)->host_id = host_id;
 }
 
 void msmcomm_message_end_call_set_call_id(struct msmcomm_message *msg, uint8_t call_id)

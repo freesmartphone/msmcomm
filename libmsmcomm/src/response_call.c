@@ -39,6 +39,17 @@ void resp_cm_call_handle_data(struct msmcomm_message *msg, uint8_t * data, uint3
 
     msg->payload = data;
     msg->ref_id = MESSAGE_CAST(msg, struct cm_call_resp)->ref_id;
+    
+    printf("result = %02x\n", MESSAGE_CAST(msg, struct cm_call_resp)->result);
+    switch (MESSAGE_CAST(msg, struct cm_call_resp)->result)
+    {
+        case 0x31:
+            msg->result = MSMCOMM_RESULT_BAD_CALL_ID;
+            break;
+        case 0x2:
+            msg->result = MSMCOMM_RESULT_ERROR;
+            break;
+    }
 }
 
 uint32_t resp_cm_call_get_size(struct msmcomm_message *msg)
@@ -46,12 +57,7 @@ uint32_t resp_cm_call_get_size(struct msmcomm_message *msg)
     return sizeof (struct cm_call_resp);
 }
 
-uint16_t msmcomm_resp_cm_call_get_cmd(struct msmcomm_message *msg)
+uint16_t msmcomm_resp_cm_call_get_cmd_type(struct msmcomm_message *msg)
 {
     return MESSAGE_CAST(msg, struct cm_call_resp)->cmd_type;
-}
-
-uint16_t msmcomm_resp_cm_call_get_error_code(struct msmcomm_message *msg)
-{
-    return MESSAGE_CAST(msg, struct cm_call_resp)->error_code;
 }

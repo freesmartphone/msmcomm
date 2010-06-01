@@ -50,24 +50,26 @@ struct cm_call_resp
 {
 	uint32_t ref_id;
 	uint16_t cmd_type;
-	uint8_t unknown0[2];
-	uint16_t error_code;
+	uint8_t unknown0;
+	uint8_t result;
+	uint8_t unknown1[2];
 } __attribute__ ((packed));
 
 
 struct answer_call_msg
 {
 	uint32_t ref_id;
-	uint8_t host_id;
 	uint8_t call_id;
-	uint8_t unknown0[2];
+	uint8_t value0;
+	uint8_t value1;
+	uint8_t value2;
 } __attribute__ ((packed));
 
 
 struct end_call_msg
 {
 	uint32_t ref_id;
-	uint8_t host_id;
+	uint8_t value0;
 	uint8_t call_id;
 	uint8_t unknown0[55];
 } __attribute__ ((packed));

@@ -272,6 +272,7 @@
 #define MSMCOMM_RESULT_ERROR                                        10
 #define MSMCOMM_RESULT_READ_SIMBOOK_INVALID_RECORD_ID               MSMCOMM_RESULT_ERROR + 1
 #define MSMCOMM_RESULT_SIM_BAD_STATE                                MSMCOMM_RESULT_ERROR + 2
+#define MSMCOMM_RESULT_BAD_CALL_ID                                  MSMCOMM_RESULT_ERROR + 3
 
 /*
  * Encoding types
@@ -386,20 +387,13 @@ void msmcomm_message_charging_set_mode(struct msmcomm_message *msg, unsigned int
 
 void msmcomm_message_set_mode_preference_status_set_mode(struct msmcomm_message *msg, unsigned int mode);
 
-
-void msmcomm_message_end_call_set_call_number(struct msmcomm_message *msg, 
-                                              uint8_t call_nr);
 void msmcomm_message_dial_call_set_caller_id(struct msmcomm_message *msg, 
                                              const char *caller_id,
                                              unsigned int len);
                                              
-void msmcomm_message_answer_call_set_host_id(struct msmcomm_message *msg, 
-                                             uint8_t host_id);
 void msmcomm_message_answer_call_set_call_id(struct msmcomm_message *msg, 
                                              uint8_t call_id);
                                              
-void msmcomm_message_end_call_set_host_id(struct msmcomm_message *msg, 
-                                          uint8_t host_id);
 void msmcomm_message_end_call_set_call_id(struct msmcomm_message *msg, 
                                           uint8_t call_id);
 
@@ -477,8 +471,7 @@ void msmcomm_message_rssi_status_set_status(struct msmcomm_message *msg, uint8_t
 
 uint8_t msmcomm_resp_cm_ph_get_result(struct msmcomm_message *msg);
 
-uint16_t msmcomm_resp_cm_call_get_error_code(struct msmcomm_message *msg);
-uint16_t msmcomm_resp_cm_call_get_cmd(struct msmcomm_message *msg);
+uint16_t msmcomm_resp_cm_call_get_cmd_type(struct msmcomm_message *msg);
 
 uint8_t msmcomm_event_power_state_get_state(struct msmcomm_message *msg);
 

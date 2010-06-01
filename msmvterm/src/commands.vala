@@ -273,13 +273,9 @@ public class Commands
     {
         var msg = new Msmcomm.Command.AnswerCall();
         msg.index = nextValidRefId();
-        var id = params[0].to_int();
-        if ( id < 0 || id > 10 )
-        {
-            ERR( @"Invalid call index $(params[0]), must be 0 <= x <= 10 )" );
-            return;
-        }
-        msg.call_id = (uint8)id;
+    
+        msg.call_id = (uint8)params[0].to_int();
+        
         msm.sendMessage(msg);
     }
 
