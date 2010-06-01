@@ -101,12 +101,14 @@ struct sups_resp
 
 struct sim_resp
 {
-	uint8_t unknown0[5];
-	uint32_t ref_id;
+	uint8_t unknown0[4];
 	uint8_t result0;
-	uint8_t unknown1[7];
+	uint32_t ref_id;
+	uint8_t unknown1[3];
 	uint8_t result1;
-	uint8_t unknown2[1921];
+	uint8_t unknown2[2];
+	uint8_t imsi[8];
+	uint8_t unknown3[1911];
 } __attribute__ ((packed));
 
 

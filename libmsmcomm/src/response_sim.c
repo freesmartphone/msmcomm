@@ -38,6 +38,7 @@ unsigned int resp_sim_is_valid(struct msmcomm_message *msg)
 void resp_sim_handle_data(struct msmcomm_message *msg, uint8_t * data,
                                            uint32_t len)
 {
+    printf("len = %i sizeof (struct sim_resp) = %i\n", len, sizeof (struct sim_resp));
     if (len != sizeof (struct sim_resp))
         return;
 
@@ -57,6 +58,25 @@ uint32_t resp_sim_get_size(struct msmcomm_message *msg)
     return sizeof(struct sim_resp);
 }
 
+char* msmcomm_resp_sim_get_imsi(struct msmcomm_message *msg)
+{
+    int n, m;
+    char *imsi = (char*)malloc(sizeof(char) * (MSMCOMM_MAX_IMSI_LENGTH + 1));
+    
+    /* Copy imsi from message structure */
+    m = 0;
+    imsi[m++] = 0x30 + MESSAGE_CAST(msg, struct sim_resp)->imsi[0] & 0xf;
+    for (n = 1; n<8; n++) 
+    {
+        imsi[m++] = 0x30 + MESSAGE_CAST(msg, struct sim_resp)->imsi[n] & 0xf;
+        imsi[m++] = 0x30 + ((MESSAGE_CAST(msg, struct sim_resp)->imsi[n] & 0xf0) >> 8);
+    }
+    
+    imsi[MSMCOMM_MAX_IMSI_LENGTH] = 0;
+    
+    return imsi;
+}
+ 
 /*
  * MSMCOMM_RESPONSE_READ_PHONEBOOK
  */

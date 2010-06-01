@@ -27,7 +27,6 @@
 #define MSMCOMM_MESSAGE_INVALID                                     0
 #define MSMCOMM_MESSAGE_NOT_USED                                    1
 
-
 #define MSMCOMM_COMMAND_CHANGE_OPERATION_MODE                       10
 #define MSMCOMM_COMMAND_GET_IMEI                                    12
 #define MSMCOMM_COMMAND_GET_FIRMWARE_INFO                           13
@@ -301,6 +300,11 @@
 #define MSMCOMM_SIM_PIN_1                                           1
 #define MSMCOMM_SIM_PIN_2                                           2
 
+/*
+ * Some constants
+ */
+#define MSMCOMM_MAX_IMSI_LENGTH                                     15
+
 struct msmcomm_context;
 
 struct msmcomm_message;
@@ -495,6 +499,8 @@ uint16_t msmcomm_event_network_state_info_get_roam(struct msmcomm_message *msg);
 unsigned int msmcomm_event_get_networklist_get_network_count(struct msmcomm_message *msg);
 unsigned int msmcomm_event_get_networklist_get_plmn(struct msmcomm_message *msg, int nnum);
 char *msmcomm_event_get_networklist_get_network_name(struct msmcomm_message *msg, int nnum);
+
+char* msmcomm_resp_sim_get_imsi(struct msmcomm_message *msg);
 
 /*
  * Lowlevel Frame handling

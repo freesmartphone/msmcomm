@@ -908,6 +908,7 @@ namespace Msmcomm
                     break;
                 case Msmcomm.ResponseType.SIM:
                     var msg = (Msmcomm.Reply.Sim) this.copy();
+                    details = @"imsi = '$(msg.imsi)'";
                     break;
                 default:
                     break;
@@ -1394,6 +1395,10 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
 		public class Sim : Message
 		{
+            public string imsi {
+				[CCode (cname = "msmcomm_resp_sim_get_imsi")]
+				get;
+			}
 		}
     }
 
