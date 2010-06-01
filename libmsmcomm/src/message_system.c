@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /* 
- * MSMCOMM_MESSAGE_CMD_CHANGE_OPERATION_MODE
+ * MSMCOMM_COMMAND_CHANGE_OPERATION_MODE
  */
 
 /*
@@ -79,7 +79,7 @@ uint8_t *msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_TEST_ALIVE
+ * MSMCOMM_COMMAND_TEST_ALIVE
  */
 
 void msg_test_alive_init(struct msmcomm_message *msg)
@@ -110,7 +110,7 @@ uint8_t *msg_test_alive_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_GET_FIRMWARE_INFO
+ * MSMCOMM_COMMAND_GET_FIRMWARE_INFO
  */
 
 void msg_get_firmware_info_init(struct msmcomm_message *msg)
@@ -139,7 +139,7 @@ uint8_t *msg_get_firmware_info_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_GET_PHONE_STATE_INFO
+ * MSMCOMM_COMMAND_GET_PHONE_STATE_INFO
  */
 
 void msg_get_phone_state_info_init(struct msmcomm_message *msg)
@@ -168,7 +168,7 @@ uint8_t *msg_get_phone_state_info_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_SET_AUDIO_PROFILE
+ * MSMCOMM_COMMAND_SET_AUDIO_PROFILE
  */
 
 /* [CMD] tel.setaudioprofile 0 0
@@ -211,7 +211,7 @@ uint8_t *msg_set_audio_profile_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_GET_CHARGER_STATUS
+ * MSMCOMM_COMMAND_GET_CHARGER_STATUS
  */
 
 void msg_get_charger_status_init(struct msmcomm_message *msg)
@@ -240,7 +240,7 @@ uint8_t *msg_get_charger_status_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_CHARGING
+ * MSMCOMM_COMMAND_CHARGING
  */
 
 void msg_charging_init(struct msmcomm_message *msg)
@@ -312,7 +312,7 @@ void msmcomm_message_charging_set_voltage(struct msmcomm_message *msg, unsigned 
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_SET_SYSTEM_TIME
+ * MSMCOMM_COMMAND_SET_SYSTEM_TIME
  */
 void msg_set_system_time_init(struct msmcomm_message *msg)
 {
@@ -363,7 +363,7 @@ void msmcomm_message_set_system_time_set(struct msmcomm_message *msg,
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_RSSI_STATUS
+ * MSMCOMM_COMMAND_RSSI_STATUS
  */
 
 void msg_rssi_status_init(struct msmcomm_message *msg)
@@ -397,7 +397,7 @@ void msmcomm_message_rssi_status_set_status(struct msmcomm_message *msg, uint8_t
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_SET_MODE_PREFERENCE
+ * MSMCOMM_COMMAND_SET_MODE_PREFERENCE
  */
 
 void msg_set_mode_preference_init(struct msmcomm_message *msg)

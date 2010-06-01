@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_MESSAGE_CMD_VERIFY_PIN
+ * MSMCOMM_COMMAND_VERIFY_PIN
  */
 
 void msg_verify_pin_init(struct msmcomm_message *msg)
@@ -85,7 +85,7 @@ void msmcomm_message_verify_pin_set_pin_type(struct msmcomm_message *msg, unsign
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_READ_PHONEBOOK
+ * MSMCOMM_COMMAND_READ_PHONEBOOK
  */
 
 void msg_read_phonebook_init(struct msmcomm_message *msg)
@@ -148,7 +148,7 @@ void msmcomm_message_read_phonebook_set_position(struct msmcomm_message *msg, ui
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_GET_PHONEBOOK_PROPERTIES
+ * MSMCOMM_COMMAND_GET_PHONEBOOK_PROPERTIES
  */
 
 void msg_get_phonebook_properties_init(struct msmcomm_message *msg)
@@ -207,7 +207,7 @@ void msmcomm_message_get_phonebook_properties_set_book_type(struct msmcomm_messa
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_WRITE_PHONEBOOK
+ * MSMCOMM_COMMAND_WRITE_PHONEBOOK
  */
 
 void msg_write_phonebook_init(struct msmcomm_message *msg)
@@ -257,7 +257,7 @@ void msmcomm_message_write_phonebook_set_book_type(struct msmcomm_message *msg, 
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_DELETE_PHONEBOOK
+ * MSMCOMM_COMMAND_DELETE_PHONEBOOK
  */
 
 void msg_delete_phonebook_init(struct msmcomm_message *msg)
@@ -297,7 +297,7 @@ void msmcomm_message_delete_phonebook_set_book_type(struct msmcomm_message *msg,
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_CHANGE_PIN
+ * MSMCOMM_COMMAND_CHANGE_PIN
  */
 
 void msg_change_pin_init(struct msmcomm_message *msg)

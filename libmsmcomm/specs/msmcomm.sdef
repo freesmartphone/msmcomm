@@ -51,8 +51,10 @@ end
 #-------------------------------------------------------------------
 # SIM
 #-------------------------------------------------------------------
-start get_sim_capabilities_resp 1934
+start sim_resp 1934
 [5-8] uint32_t ref_id
+[4] uint8_t result0
+[12] uint8_t result1
 end
 
 start change_pin_msg 23

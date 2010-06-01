@@ -58,7 +58,7 @@ RESPONSE_TYPE(pa_set_param)
 RESPONSE_TYPE(lcs_agent_client_rsp)
 RESPONSE_TYPE(xtra_set_data)
 */
-RESPONSE_TYPE(get_sim_capabilities)
+RESPONSE_TYPE(sim)
 RESPONSE_TYPE(sound)
 RESPONSE_TYPE(cm_call)
 RESPONSE_TYPE(charging)
@@ -126,7 +126,7 @@ struct descriptor resp_descriptors[] = {
        RESPONSE_DATA(MSMCOMM_RESPONSE_LCS_AGENT_CLIENT_RSP, lcs_agent_client_rsp),
        RESPONSE_DATA(MSMCOMM_RESPONSE_XTRA_SET_DATA, xtra_set_data),
      */
-    RESPONSE_DATA(MSMCOMM_RESPONSE_GET_SIM_CAPABILITIES, get_sim_capabilities),
+    RESPONSE_DATA(MSMCOMM_RESPONSE_SIM, sim),
     RESPONSE_DATA(MSMCOMM_RESPONSE_SOUND, sound),
     RESPONSE_DATA(MSMCOMM_RESPONSE_CM_CALL, cm_call),
     RESPONSE_DATA(MSMCOMM_RESPONSE_CHARGING, charging),

@@ -81,7 +81,7 @@ namespace Msmcomm
         }
     }
 
-    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MESSAGE_CMD_", cheader_filename = "msmcomm.h")]
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_COMMAND_", cheader_filename = "msmcomm.h")]
     public enum CommandType
     {
         CHANGE_OPERATION_MODE,
@@ -120,7 +120,7 @@ namespace Msmcomm
         PA_SET_PARAM,
         LCS_AGENT_CLIENT_RSP,
         XTRA_SET_DATA,
-        GET_SIM_CAPABILITIES,
+        SIM,
         GET_VOICEMAIL_NR,
         SOUND,
         CM_CALL,
@@ -286,8 +286,8 @@ namespace Msmcomm
 			return "RESPONSE_LCS_AGENT_CLIENT_RSP";
             case ResponseType.XTRA_SET_DATA:
 			return "RESPONSE_XTRA_SET_DATA";
-            case ResponseType.GET_SIM_CAPABILITIES:
-			return "RESPONSE_GET_SIM_CAPABILITIES";
+            case ResponseType.SIM:
+			return "RESPONSE_SIM";
             case ResponseType.GET_VOICEMAIL_NR:
 			return "RESPONSE_GET_VOICEMAIL_NR";
             case ResponseType.SOUND:
@@ -541,6 +541,7 @@ namespace Msmcomm
 		OK,
 		ERROR,
 		READ_SIMBOOK_INVALID_RECORD_ID,
+        SIM_BAD_STATE,
 	}
 
 	public string resultTypeToString(ResultType type)
@@ -560,6 +561,9 @@ namespace Msmcomm
 			case ResultType.READ_SIMBOOK_INVALID_RECORD_ID:
 				result = "RESULT_READ_SIMBOOK_INVALID_RECORD_ID";
 				break;
+            case ResultType.SIM_BAD_STATE:
+                result = "RESULT_SIM_BAD_STATE";
+                break;
 		}
 		return result;
 	}
@@ -895,6 +899,9 @@ namespace Msmcomm
                     var msg = (Msmcomm.Unsolicited.PhonebookModified) this.copy();
                     details = @"book_type = $(phonebookTypeToString(msg.book_type)) ";
                     details += @"position = $(msg.position)";
+                    break;
+                case Msmcomm.ResponseType.SIM:
+                    var msg = (Msmcomm.ResponseType.Sim) this.copy();
                     break;
                 default:
                     break;
@@ -1349,6 +1356,12 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_resp_get_phonebook_properties_get_max_chars_per_number")]
 				get;
 			}
+		}
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+		public class Sim : Message
+		{
 		}
     }
 

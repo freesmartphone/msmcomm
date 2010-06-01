@@ -60,7 +60,7 @@
 #define MSMCOMM_RESPONSE_PA_SET_PARAM                               106
 #define MSMCOMM_RESPONSE_LCS_AGENT_CLIENT_RSP                       107
 #define MSMCOMM_RESPONSE_XTRA_SET_DATA                              108
-#define MSMCOMM_RESPONSE_GET_SIM_CAPABILITIES                       110
+#define MSMCOMM_RESPONSE_SIM                                        110
 #define MSMCOMM_RESPONSE_GET_VOICEMAIL_NR                           111
 #define MSMCOMM_RESPONSE_SOUND                                      112
 #define MSMCOMM_RESPONSE_CM_CALL                                    113
@@ -266,9 +266,10 @@
 #define MSMCOMM_RESULT_NONE                                         1
 #define MSMCOMM_RESULT_OK                                           2
 
-/* NOTE: Every result code > MSMCOMM_RESULT_ERROR should be an error! */
+/* NOTE: Every result code >= MSMCOMM_RESULT_ERROR should be an error! */
 #define MSMCOMM_RESULT_ERROR                                        10
 #define MSMCOMM_RESULT_READ_SIMBOOK_INVALID_RECORD_ID               MSMCOMM_RESULT_ERROR + 1
+#define MSMCOMM_RESULT_SIM_BAD_STATE                                MSMCOMM_RESULT_ERROR + 2
 
 /*
  * Encoding types
@@ -453,7 +454,7 @@ unsigned int msmcomm_resp_charger_status_get_mode(struct msmcomm_message *msg);
 
 void msmcomm_message_set_system_time_set(struct msmcomm_message *msg, uint16_t year, uint16_t month,
                                          uint16_t day, uint16_t hours, uint16_t minutes,
-                                         uint16_t seconds, int32_t timezone_offset)
+                                         uint16_t seconds, int32_t timezone_offset);
 
 void msmcomm_message_rssi_status_set_status(struct msmcomm_message *msg, uint8_t status);
 

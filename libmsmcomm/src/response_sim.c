@@ -22,7 +22,7 @@
 #include "internal.h"
 
 /*
- * MSMCOMM_RESPONSE_GET_SIM_CAPABILITIES
+ * MSMCOMM_RESPONSE_SIM
  */
 
 /* Notes:
@@ -30,20 +30,31 @@
  * - it's even the response for the verify-pin message
  */
 
-unsigned int resp_get_sim_capabilities_is_valid(struct msmcomm_message *msg)
+unsigned int resp_sim_is_valid(struct msmcomm_message *msg)
 {
     return (msg->group_id == 0x10) && (msg->msg_id == 0x1);
 }
 
-void resp_get_sim_capabilities_handle_data(struct msmcomm_message *msg, uint8_t * data,
+void resp_sim_handle_data(struct msmcomm_message *msg, uint8_t * data,
                                            uint32_t len)
 {
-    /* FIXME */
+    if (len != sizeof (struct sim_resp))
+        return;
+
+    msg->payload = data;
+    msg->ref_id = MESSAGE_CAST(msg, struct sim_resp)->ref_id;
+    
+    /* Handle individual result codes */
+    if (MESSAGE_CAST(msg, struct sim_resp)->result0 == 0x2 &&
+        MESSAGE_CAST(msg, struct sim_resp)->result1 == 0x9) 
+    {
+        msg->result = MSMCOMM_RESULT_SIM_BAD_STATE;
+    }
 }
 
-uint32_t resp_get_sim_capabilities_get_size(struct msmcomm_message *msg)
+uint32_t resp_sim_get_size(struct msmcomm_message *msg)
 {
-    return 0;
+    return sizeof(struct sim_resp);
 }
 
 /*

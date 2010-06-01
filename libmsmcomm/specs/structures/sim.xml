@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <namespace:sim>
 	<structures>
-		<structure name="get_sim_capabilities_resp" length="1934">
+		<structure name="sim_resp" length="1934">
             <field name="ref_id" start="5" end="8" type="uint32_t"/>
+            <field name="result0" start="4" type="uint8_t"/>
+            <field name="result1" start="12" type="uint8_t"/>
 		</structure>
         <structure name="change_pin_msg" length="23">
             <field name="ref_id" start="0" end="3" type="uint32_t"/>

@@ -99,11 +99,14 @@ struct sups_resp
 } __attribute__ ((packed));
 
 
-struct get_sim_capabilities_resp
+struct sim_resp
 {
 	uint8_t unknown0[5];
 	uint32_t ref_id;
-	uint8_t unknown1[1925];
+	uint8_t result0;
+	uint8_t unknown1[7];
+	uint8_t result1;
+	uint8_t unknown2[1921];
 } __attribute__ ((packed));
 
 

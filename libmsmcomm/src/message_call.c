@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_MESSAGE_CMD_DIAL_CALL
+ * MSMCOMM_COMMAND_DIAL_CALL
  */
 
 void msg_dial_call_init(struct msmcomm_message *msg)
@@ -71,7 +71,7 @@ void msmcomm_message_dial_call_set_caller_id
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_ANSWER_CALL
+ * MSMCOMM_COMMAND_ANSWER_CALL
  */
 
 void msg_answer_call_init(struct msmcomm_message *msg)
@@ -110,7 +110,7 @@ void msmcomm_message_answer_call_set_call_id(struct msmcomm_message *msg, uint8_
 }
 
 /*
- * MSMCOMM_MESSAGE_CMD_END_CALL
+ * MSMCOMM_COMMAND_END_CALL
  */
 
 void msg_end_call_init(struct msmcomm_message *msg)
