@@ -54,8 +54,19 @@ uint8_t *msg_verify_pin_prepare_data(struct msmcomm_message *msg)
 void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char *pin)
 {
     int len = strlen(pin);
-    assert(len == 4 || len == 8);
-    memcpy(MESSAGE_CAST(msg, struct verify_pin_msg)->pin, pin, len);
+    unsigned int bytes = 0;
+    
+    /* A valid pin should be 4 or 8 bytes long */
+    if (len >= 4)
+    {
+        bytes = 4; 
+    }
+    else if (len >= 8)
+    {
+        bytes = 8;
+    }
+    
+    memcpy(MESSAGE_CAST(msg, struct verify_pin_msg)->pin, pin, bytes);
 }
 
 void msmcomm_message_verify_pin_set_pin_type(struct msmcomm_message *msg, unsigned int pin_type)
@@ -316,13 +327,35 @@ uint8_t *msg_change_pin_prepare_data(struct msmcomm_message *msg)
 
 void msmcomm_message_change_pin_set_old_pin(struct msmcomm_message *msg, const char *old_pin, unsigned int len)
 {
-    assert(len == 4 || len == 8);
-    memcpy(MESSAGE_CAST(msg, struct change_pin_msg)->old_pin, old_pin, len);
+    unsigned int bytes = 0;
+    
+    /* A valid pin should be 4 or 8 bytes long */
+    if (len >= 4)
+    {
+        bytes = 4; 
+    }
+    else if (len >= 8)
+    {
+        bytes = 8;
+    }
+    
+    memcpy(MESSAGE_CAST(msg, struct change_pin_msg)->old_pin, old_pin, bytes);
 }
 
 void msmcomm_message_change_pin_set_new_pin(struct msmcomm_message *msg, const char *new_pin, unsigned int len)
 {
-    assert(len == 4 || len == 8);
-    memcpy(MESSAGE_CAST(msg, struct change_pin_msg)->new_pin, new_pin, len);
+    unsigned int bytes = 0;
+    
+    /* A valid pin should be 4 or 8 bytes long */
+    if (len >= 4)
+    {
+        bytes = 4; 
+    }
+    else if (len >= 8)
+    {
+        bytes = 8;
+    }
+    
+    memcpy(MESSAGE_CAST(msg, struct change_pin_msg)->new_pin, new_pin, bytes);
 }
 
