@@ -63,7 +63,7 @@ start change_pin_msg 23
 [14-22] uint8_t new_pin
 end
 
-start verify_pin_msg 14
+start pin_status_msg 14
 [0-3] uint32_t ref_id
 [4] uint8_t pin_type
 [5-12] uint8_t pin

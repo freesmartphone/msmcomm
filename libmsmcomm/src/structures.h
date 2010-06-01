@@ -119,7 +119,7 @@ struct change_pin_msg
 } __attribute__ ((packed));
 
 
-struct verify_pin_msg
+struct pin_status_msg
 {
 	uint32_t ref_id;
 	uint8_t pin_type;

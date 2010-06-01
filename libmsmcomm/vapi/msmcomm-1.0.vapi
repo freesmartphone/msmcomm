@@ -107,6 +107,8 @@ namespace Msmcomm
         WRITE_PHONEBOOK,
         DELETE_PHONEBOOK,
         CHANGE_PIN,
+        ENABLE_PIN,
+        DISABLE_PIN,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -268,6 +270,10 @@ namespace Msmcomm
 			return "COMMAND_GET_NETWORKLIST";
 			case CommandType.SET_MODE_PREFERENCE:
 			return "COMMAND_SET_MODE_PREFERENCE";
+            case CommandType.ENABLE_PIN:
+            return "COMMAND_ENABLE_PIN";
+            case CommandType.DISABLE_PIN:
+            return "COMMAND_DISABLE_PIN";
 
             // ResponseType
             case ResponseType.TEST_ALIVE:
@@ -901,7 +907,7 @@ namespace Msmcomm
                     details += @"position = $(msg.position)";
                     break;
                 case Msmcomm.ResponseType.SIM:
-                    var msg = (Msmcomm.ResponseType.Sim) this.copy();
+                    var msg = (Msmcomm.Reply.Sim) this.copy();
                     break;
                 default:
                     break;
@@ -1212,6 +1218,32 @@ namespace Msmcomm
                 }
 			}
 		}
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class EnablePin : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public EnablePin(CommandType t = CommandType.ENABLE_PIN);
+
+            public string pin {
+                [CCode (cname = "msmcomm_message_enable_pin_set_pin")]
+                set;
+            }
+        }
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class DisablePin : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public DisablePin(CommandType t = CommandType.DISABLE_PIN);
+
+            public string pin {
+                [CCode (cname = "msmcomm_message_disable_pin_set_pin")]
+                set;
+            }
+        }
     }
 
     namespace Reply

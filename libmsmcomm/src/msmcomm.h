@@ -51,6 +51,8 @@
 #define MSMCOMM_COMMAND_WRITE_PHONEBOOK                             31
 #define MSMCOMM_COMMAND_DELETE_PHONEBOOK                            32
 #define MSMCOMM_COMMAND_CHANGE_PIN                                  33
+#define MSMCOMM_COMMAND_ENABLE_PIN                                  34
+#define MSMCOMM_COMMAND_DISABLE_PIN                                 35
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE                                 101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO                          102
@@ -391,9 +393,12 @@ void msmcomm_message_end_call_set_call_id(struct msmcomm_message *msg,
 
 void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, 
                                         const char *pin);
-
-void msmcomm_message_verify_pin_set_pin_type(struct msmcomm_message *msg, 
+                                             
+void msmcomm_message_enable_pin_set_pin_type(struct msmcomm_message *msg, 
                                              unsigned int pin_type);
+
+void msmcomm_message_disable_pin_set_pin_type(struct msmcomm_message *msg, unsigned int pin_type);
+void msmcomm_message_disable_pin_set_pin(struct msmcomm_message *msg, const char *pin);
 
 void msmcomm_message_read_phonebook_set_book_type(struct msmcomm_message *msg,
                                                   unsigned int book_type);
@@ -490,7 +495,6 @@ uint16_t msmcomm_event_network_state_info_get_roam(struct msmcomm_message *msg);
 unsigned int msmcomm_event_get_networklist_get_network_count(struct msmcomm_message *msg);
 unsigned int msmcomm_event_get_networklist_get_plmn(struct msmcomm_message *msg, int nnum);
 char *msmcomm_event_get_networklist_get_network_name(struct msmcomm_message *msg, int nnum);
-
 
 /*
  * Lowlevel Frame handling

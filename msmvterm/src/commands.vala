@@ -82,6 +82,7 @@ public class Commands
 		register( "set_mode_preference", set_mode_preference, "Set the prefered mode for the network (Automatic, GSM, UMTS)", "set_mode_preference <auto|gsm|umts>", 1 );
 		register( "get_phonebook_properties", get_phonebook_properties, "Get the properties of a phonebook type", "get_phonebook_properties <mbdn|efecc|adn|fdn|spn>", 1 );
         register( "change_pin", change_pin, "Change the pin of your SIM card", "change_pin <old pin> <new pin>", 2 );
+        register( "pin_status", pin_status, "Enable/Disable pin authentication", "pin_status <0|1> <pin>", 2 );
     }
 
     private uint8 nextValidRefId()
@@ -421,5 +422,27 @@ public class Commands
         msg.old_pin = params[0];
         msg.new_pin = params[1];
         msm.sendMessage(msg);
+    }
+    
+    private void pin_status( string[] params )
+    {
+        switch ( params[0] )
+        {
+            case "0":
+                var msg = new Msmcomm.Command.DisablePin();
+                msg.index = nextValidRefId();
+                msg.pin = params[1];
+                msm.sendMessage(msg);
+                break;
+            case "1":
+                var msg = new Msmcomm.Command.EnablePin();
+                msg.index = nextValidRefId();
+                msg.pin = params[1];
+                msm.sendMessage(msg);
+                break;
+            default:
+                ERR( @"Set known pin_status 0 or 1 and not '$(params[0])'" );
+                return;
+        }
     }
 }

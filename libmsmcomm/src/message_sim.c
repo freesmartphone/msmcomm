@@ -24,34 +24,10 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_COMMAND_VERIFY_PIN
+ * Common methods for pin_status_msg types
  */
 
-void msg_verify_pin_init(struct msmcomm_message *msg)
-{
-    msg->group_id = 0xf;
-    msg->msg_id = 0xe;
-
-    msg->payload = talloc_zero(talloc_msmc_ctx, struct verify_pin_msg);
-}
-
-uint32_t msg_verify_pin_get_size(struct msmcomm_message *msg)
-{
-    return sizeof (struct verify_pin_msg);
-}
-
-void msg_verify_pin_free(struct msmcomm_message *msg)
-{
-    talloc_free(msg->payload);
-}
-
-uint8_t *msg_verify_pin_prepare_data(struct msmcomm_message *msg)
-{
-    MESSAGE_CAST(msg, struct verify_pin_msg)->ref_id = msg->ref_id;
-    return msg->payload;
-}
-
-void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char *pin)
+void _message_pin_status_set_pin(struct msmcomm_message *msg, const char *pin)
 {
     int len = strlen(pin);
     unsigned int bytes = 0;
@@ -66,10 +42,10 @@ void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char 
         bytes = 8;
     }
     
-    memcpy(MESSAGE_CAST(msg, struct verify_pin_msg)->pin, pin, bytes);
+    memcpy(MESSAGE_CAST(msg, struct pin_status_msg)->pin, pin, bytes);
 }
 
-void msmcomm_message_verify_pin_set_pin_type(struct msmcomm_message *msg, unsigned int pin_type)
+void _message_pin_status_set_pin_type(struct msmcomm_message *msg, unsigned int pin_type)
 {
     unsigned int type = 0x0;
     switch (pin_type) 
@@ -81,7 +57,45 @@ void msmcomm_message_verify_pin_set_pin_type(struct msmcomm_message *msg, unsign
             type = 0x1;
             break;
     }
-    MESSAGE_CAST(msg, struct verify_pin_msg)->pin_type = type;
+    MESSAGE_CAST(msg, struct pin_status_msg)->pin_type = type;
+}
+
+/*
+ * MSMCOMM_COMMAND_VERIFY_PIN
+ */
+
+void msg_verify_pin_init(struct msmcomm_message *msg)
+{
+    msg->group_id = 0xf;
+    msg->msg_id = 0xe;
+
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct pin_status_msg);
+}
+
+uint32_t msg_verify_pin_get_size(struct msmcomm_message *msg)
+{
+    return sizeof (struct pin_status_msg);
+}
+
+void msg_verify_pin_free(struct msmcomm_message *msg)
+{
+    talloc_free(msg->payload);
+}
+
+uint8_t *msg_verify_pin_prepare_data(struct msmcomm_message *msg)
+{
+    MESSAGE_CAST(msg, struct pin_status_msg)->ref_id = msg->ref_id;
+    return msg->payload;
+}
+
+void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char *pin)
+{
+    _message_pin_status_set_pin(msg, pin);
+}
+
+void msmcomm_message_verify_pin_set_pin_type(struct msmcomm_message *msg, unsigned int pin_type)
+{
+    _message_pin_status_set_pin_type(msg, pin_type);
 }
 
 /*
@@ -358,4 +372,71 @@ void msmcomm_message_change_pin_set_new_pin(struct msmcomm_message *msg, const c
     
     memcpy(MESSAGE_CAST(msg, struct change_pin_msg)->new_pin, new_pin, bytes);
 }
+
+/*
+ * MSMCOMM_COMMAND_ENABLE_PIN
+ */
+
+void msg_enable_pin_init(struct msmcomm_message *msg)
+{
+    msg->group_id = 0xf;
+    msg->msg_id = 0x12;
+
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct pin_status_msg);
+}
+
+uint32_t msg_enable_pin_get_size(struct msmcomm_message *msg)
+{
+    return sizeof (struct pin_status_msg);
+}
+
+void msg_enable_pin_free(struct msmcomm_message *msg)
+{
+    talloc_free(msg->payload);
+}
+
+uint8_t *msg_enable_pin_prepare_data(struct msmcomm_message *msg)
+{
+    MESSAGE_CAST(msg, struct pin_status_msg)->ref_id = msg->ref_id;
+    return msg->payload;
+}
+
+void msmcomm_message_enable_pin_set_pin(struct msmcomm_message *msg, const char *pin)
+{
+    _message_pin_status_set_pin(msg, pin);
+}
+
+/*
+ * MSMCOMM_COMMAND_DISABLE_PIN
+ */
+
+void msg_disable_pin_init(struct msmcomm_message *msg)
+{
+    msg->group_id = 0xf;
+    msg->msg_id = 0x12;
+
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct pin_status_msg);
+}
+
+uint32_t msg_disable_pin_get_size(struct msmcomm_message *msg)
+{
+    return sizeof (struct pin_status_msg);
+}
+
+void msg_disable_pin_free(struct msmcomm_message *msg)
+{
+    talloc_free(msg->payload);
+}
+
+uint8_t *msg_disable_pin_prepare_data(struct msmcomm_message *msg)
+{
+    MESSAGE_CAST(msg, struct pin_status_msg)->ref_id = msg->ref_id;
+    return msg->payload;
+}
+
+void msmcomm_message_disable_pin_set_pin(struct msmcomm_message *msg, const char *pin)
+{
+    _message_pin_status_set_pin(msg, pin);
+}
+
 
