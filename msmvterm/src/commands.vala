@@ -70,7 +70,7 @@ public class Commands
         register( "verify_pin", verify_pin, "Send SIM PIN authentication code", "verify_pin <pin1|pin2> <pin>", 2 );
         register( "get_charger_status", get_charger_status, "Query current charging status" );
         register( "charging", charging, "Set charging mode:\n\tmode: usb, inductive\n\tvoltage: 250mA, 500mA, 1A (warning!)", "charging <usb|inductive> <250|500|1000>", 2 );
-        register( "dial_call", dial_call, "Dial out", "dial <number>", 1 );
+        register( "dial_call", dial_call, "Dial out", "dial <number> <allow|block>", 2 );
         register( "answer_call", answer_call, "Answer an incomming call", "answer_call <call_nr>", 1 );
         register( "end_call", end_call, "End an active call", "end_call <call_nr>", 1 );
         register( "set_system_time", set_system_time, "Set system time for modem","set_system_time <year> <month> <day> <hour> <minutes> <seconds> <timezone_offset>", 7 );
@@ -268,6 +268,20 @@ public class Commands
         var msg = new Msmcomm.Command.DialCall();
         msg.index = nextValidRefId();
         msg.setCallerId(params[0]);
+        
+        switch (params[1])
+        {
+            case "allow":
+                msg.block = true;
+                break;
+            case "block":
+                msg.block = false;
+                break;
+            default:
+                ERR( @"Unknown block mode $(params[1])" );
+                return;
+        }
+        
         msm.sendMessage ( msg );
     }
 

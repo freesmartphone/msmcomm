@@ -86,7 +86,7 @@ struct dial_call_msg
 	uint8_t unknown2[2];
 	uint8_t value1;
 	uint8_t unknown3[31];
-	uint8_t value2;
+	uint8_t block;
 	uint8_t unknown4;
 } __attribute__ ((packed));
 

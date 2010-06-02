@@ -395,6 +395,7 @@ void msmcomm_message_set_mode_preference_status_set_mode(struct msmcomm_message 
 void msmcomm_message_dial_call_set_caller_id(struct msmcomm_message *msg, 
                                              const char *caller_id,
                                              unsigned int len);
+void msmcomm_message_dial_call_set_block(struct msmcomm_message *msg, unsigned int block);
                                              
 void msmcomm_message_answer_call_set_call_id(struct msmcomm_message *msg, 
                                              uint8_t call_id);

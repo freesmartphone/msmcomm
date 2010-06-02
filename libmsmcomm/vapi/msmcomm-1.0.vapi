@@ -1104,6 +1104,11 @@ namespace Msmcomm
             {
                 _setCallerId(caller_id, (uint)caller_id.length);
             }
+            
+            public bool block {
+                [CCode (cname = "msmcomm_message_dial_call_set_block")]
+                set;
+            }
         }
 
         [Compact]

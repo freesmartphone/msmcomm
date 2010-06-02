@@ -38,8 +38,8 @@ void msg_dial_call_init(struct msmcomm_message *msg)
 
     MESSAGE_CAST(msg, struct dial_call_msg)->value1 = 0x1;
 
-    /* switch from 0xb to 0xc and back again due to some calls */
-    MESSAGE_CAST(msg, struct dial_call_msg)->value2 = 0xc;
+    /* We allow the other side to see our number! */
+    MESSAGE_CAST(msg, struct dial_call_msg)->block = 0xc;
 }
 
 uint32_t msg_dial_call_get_size(struct msmcomm_message *msg)
@@ -67,6 +67,15 @@ void msmcomm_message_dial_call_set_caller_id
     /* copy caller id to payload structure */
     memcpy(MESSAGE_CAST(msg, struct dial_call_msg)->caller_id, caller_id, len);
     MESSAGE_CAST(msg, struct dial_call_msg)->caller_id_len = (uint8_t)len;
+}
+
+void msmcomm_message_dial_call_set_block(struct msmcomm_message *msg, unsigned int block)
+{
+    uint8_t magic = 0xc;
+    if (block) {
+        magic = 0xb;
+    }
+    MESSAGE_CAST(msg, struct dial_call_msg)->block = magic;
 }
 
 /*

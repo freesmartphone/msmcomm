@@ -41,7 +41,7 @@ start dial_call_msg 206
 [105-168] uint8_t caller_id
 [169] uint8_t caller_id_len
 [172] uint8_t value1
-[204] uint8_t value2
+[204] uint8_t block
 end
 
 start cm_sups_event 0
