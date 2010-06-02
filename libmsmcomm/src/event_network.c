@@ -305,7 +305,7 @@ unsigned int msmcomm_event_get_networklist_get_plmn(struct msmcomm_message *msg,
     if (plmn == NULL)
         return 0x0;
 
-    result = plmn[0] | (plmn[1] << 8) | (plmn[2] << 16);
+    result = network_plmn_to_value(plmn);
     return result;
 }
 
