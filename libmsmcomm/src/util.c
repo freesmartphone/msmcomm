@@ -29,6 +29,6 @@ unsigned int network_plmn_to_value(const uint8_t *plmn)
     value += ((plmn[0] & 0xf0) >> 4) * 1000;
     value += (plmn[1] & 0xf) * 100;
     value += (plmn[2] & 0xf) * 10;
-    value += ((plmn[2] & 0xf0) << 4);
+    value += ((plmn[2] & 0xf0) >> 4);
     return value;
 }
