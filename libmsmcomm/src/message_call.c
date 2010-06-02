@@ -34,13 +34,12 @@ void msg_dial_call_init(struct msmcomm_message *msg)
 
     msg->payload = talloc_zero(talloc_msmc_ctx, struct dial_call_msg);
 
-    /* FIXME this value is set everytime to 0x4 */
-    MESSAGE_CAST(msg, struct dial_call_msg)->const_value = 0x4;
+    MESSAGE_CAST(msg, struct dial_call_msg)->value0 = 0x4;
 
-    /* FIXME this two values are even still unknown */
-    MESSAGE_CAST(msg, struct dial_call_msg)->some_value_0 = 0x1;
+    MESSAGE_CAST(msg, struct dial_call_msg)->value1 = 0x1;
 
-    MESSAGE_CAST(msg, struct dial_call_msg)->some_value_1 = 0xc;
+    /* switch from 0xb to 0xc and back again due to some calls */
+    MESSAGE_CAST(msg, struct dial_call_msg)->value2 = 0xc;
 }
 
 uint32_t msg_dial_call_get_size(struct msmcomm_message *msg)

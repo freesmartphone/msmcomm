@@ -33,11 +33,11 @@
 		</structure>
 		<structure name="dial_call_msg" length="206">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="const_value" start="5" type="uint8_t"/>
+			<field name="value0" start="5" type="uint8_t"/>
 			<field name="caller_id" start="105" end="168" type="uint8_t"/>
 			<field name="caller_id_len" start="169" type="uint8_t"/>
-			<field name="some_value_0" start="172" type="uint8_t"/>
-			<field name="some_value_1" start="204" type="uint8_t"/>
+			<field name="value1" start="172" type="uint8_t"/>
+			<field name="value2" start="204" type="uint8_t"/>
 		</structure>
 		<structure name="cm_sups_event" length="0">
 		</structure>

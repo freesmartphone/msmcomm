@@ -37,11 +37,11 @@ end
 
 start dial_call_msg 206
 [0-3] uint32_t ref_id
-[5] uint8_t const_value
+[5] uint8_t value0
 [105-168] uint8_t caller_id
 [169] uint8_t caller_id_len
-[172] uint8_t some_value_0
-[204] uint8_t some_value_1
+[172] uint8_t value1
+[204] uint8_t value2
 end
 
 start cm_sups_event 0

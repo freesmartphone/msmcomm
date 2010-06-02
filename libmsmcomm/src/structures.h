@@ -79,14 +79,14 @@ struct dial_call_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
-	uint8_t const_value;
+	uint8_t value0;
 	uint8_t unknown1[99];
 	uint8_t caller_id[64];
 	uint8_t caller_id_len;
 	uint8_t unknown2[2];
-	uint8_t some_value_0;
+	uint8_t value1;
 	uint8_t unknown3[31];
-	uint8_t some_value_1;
+	uint8_t value2;
 	uint8_t unknown4;
 } __attribute__ ((packed));
 
