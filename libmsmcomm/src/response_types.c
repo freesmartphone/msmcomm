@@ -68,6 +68,8 @@ RESPONSE_TYPE(set_system_time)
 RESPONSE_TYPE(rssi_status)
 RESPONSE_TYPE(phonebook)
 RESPONSE_TYPE(get_phonebook_properties)
+RESPONSE_TYPE(audio_modem_tuning_params)
+
 EVENT_TYPE(radio_reset_ind)
 EVENT_TYPE(charger_status)
 EVENT_TYPE(operator_mode) 
@@ -136,6 +138,7 @@ struct descriptor resp_descriptors[] = {
     RESPONSE_DATA(MSMCOMM_RESPONSE_RSSI_STATUS, rssi_status),
     RESPONSE_DATA(MSMCOMM_RESPONSE_PHONEBOOK, phonebook),
     RESPONSE_DATA(MSMCOMM_RESPONSE_GET_PHONEBOOK_PROPERTIES, get_phonebook_properties),
+    RESPONSE_DATA(MSMCOMM_RESPONSE_AUDIO_MODEM_TUNING_PARAMS, audio_modem_tuning_params),
 };
 
 const unsigned int resp_descriptors_count = sizeof (resp_descriptors) / sizeof (struct descriptor);

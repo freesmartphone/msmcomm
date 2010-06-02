@@ -60,6 +60,7 @@ MESSAGE_TYPE(disable_pin)
 MESSAGE_TYPE(sim_info)
 MESSAGE_TYPE(set_mode_preference) 
 MESSAGE_TYPE(get_phonebook_properties)
+MESSAGE_TYPE(get_audio_modem_tuning_params)
 
 struct descriptor msg_descriptors[] = {
     MESSAGE_DATA(MSMCOMM_COMMAND_CHANGE_OPERATION_MODE, change_operation_mode),
@@ -87,6 +88,7 @@ struct descriptor msg_descriptors[] = {
     MESSAGE_DATA(MSMCOMM_COMMAND_ENABLE_PIN, enable_pin),
     MESSAGE_DATA(MSMCOMM_COMMAND_DISABLE_PIN, disable_pin),
     MESSAGE_DATA(MSMCOMM_COMMAND_SIM_INFO, sim_info),
+    MESSAGE_DATA(MSMCOMM_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS, get_audio_modem_tuning_params),
 };
 
 unsigned int msg_descriptors_size =

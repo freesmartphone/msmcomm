@@ -44,3 +44,33 @@ uint32_t resp_sound_get_size(struct msmcomm_message * msg)
 {
     return sizeof (struct sound_resp);
 }
+
+/*
+ * MSMCOMM_RESPONSE_AUDIO_MODEM_TUNING_PARAMS
+ */
+
+unsigned int resp_audio_modem_tuning_params_is_valid(struct msmcomm_message *msg)
+{
+    return (msg->group_id == 0x1f) && (msg->msg_id == 0xb);
+}
+
+void resp_audio_modem_tuning_params_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
+{
+    if (len != sizeof (struct audio_modem_tuning_params_resp))
+        return;
+
+    msg->payload = data;
+}
+
+uint32_t resp_audio_modem_tuning_params_get_size(struct msmcomm_message * msg)
+{
+    return sizeof (struct audio_modem_tuning_params_resp);
+}
+
+uint8_t *msmcomm_resp_audio_modem_tuning_params_get_params(struct msmcomm_message *msg, unsigned int *len)
+{
+    uint8_t *params = (uint8_t*)malloc(sizeof(uint8_t) * MSMCOMM_AUDIO_MODEM_TUNING_PARAMS_LENGTH);    
+    memcpy(params, MESSAGE_CAST(msg, struct audio_modem_tuning_params_resp)->params, MSMCOMM_AUDIO_MODEM_TUNING_PARAMS_LENGTH);
+    *len = MSMCOMM_AUDIO_MODEM_TUNING_PARAMS_LENGTH;
+    return params;
+}

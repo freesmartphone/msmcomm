@@ -18,6 +18,7 @@ message_network.c \
 message_sim.c \
 message_call.c \
 message_gps.c \
+message_audio.c \
 response_types.c \
 response_system.c \
 response_network.c \

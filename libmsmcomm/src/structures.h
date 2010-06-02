@@ -465,13 +465,31 @@ struct set_mode_preference_msg
 struct set_audio_profile_msg
 {
 	uint32_t ref_id;
-	uint8_t unknown0[6];
+	uint8_t class;
+	uint8_t unknown0;
+	uint8_t sub_class;
+	uint8_t unknown1[3];
 } __attribute__ ((packed));
 
 
 struct sound_resp
 {
-	uint8_t unknown0[11];
+	uint32_t ref_id;
+	uint8_t unknown0[7];
+} __attribute__ ((packed));
+
+
+struct get_audio_modem_tuning_params_msg
+{
+	uint32_t ref_id;
+} __attribute__ ((packed));
+
+
+struct audio_modem_tuning_params_resp
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint8_t params[16];
 } __attribute__ ((packed));
 
 

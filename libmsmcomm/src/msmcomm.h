@@ -53,6 +53,7 @@
 #define MSMCOMM_COMMAND_ENABLE_PIN                                  34
 #define MSMCOMM_COMMAND_DISABLE_PIN                                 35
 #define MSMCOMM_COMMAND_SIM_INFO                                    36
+#define MSMCOMM_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS               37
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE                                 101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO                          102
@@ -73,6 +74,7 @@
 #define MSMCOMM_RESPONSE_RSSI_STATUS                                118
 #define MSMCOMM_RESPONSE_PHONEBOOK                                  119
 #define MSMCOMM_RESPONSE_GET_PHONEBOOK_PROPERTIES                   120
+#define MSMCOMM_RESPONSE_AUDIO_MODEM_TUNING_PARAMS                  121
 
 #define MSMCOMM_EVENT_RESET_RADIO_IND                               201
 #define MSMCOMM_EVENT_CHARGER_STATUS                                202
@@ -314,6 +316,7 @@
  * Some constants
  */
 #define MSMCOMM_MAX_IMSI_LENGTH                                     15
+#define MSMCOMM_AUDIO_MODEM_TUNING_PARAMS_LENGTH                    16
 
 struct msmcomm_context;
 
@@ -508,6 +511,7 @@ unsigned int msmcomm_resp_sim_info_get_field_type(struct msmcomm_message *msg);
 void msmcomm_message_sim_info_set_field_type(struct msmcomm_message *msg, 
                                              unsigned int field_type);
                                             
+uint8_t *msmcomm_resp_audio_modem_tuning_params_get_params(struct msmcomm_message *msg, unsigned int *len);
 
 /*
  * Lowlevel Frame handling

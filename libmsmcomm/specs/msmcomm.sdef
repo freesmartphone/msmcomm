@@ -299,9 +299,21 @@ end
 #-------------------------------------------------------------------
 start set_audio_profile_msg 10
 [0-3] uint32_t ref_id
+[4] uint8_t class
+[6] uint8_t sub_class
 end
 
 start sound_resp 11
+[0-3] uint32_t ref_id
+end
+
+start get_audio_modem_tuning_params_msg 4
+[0-3] uint32_t ref_id
+end
+
+start audio_modem_tuning_params_resp 21
+[0-3] uint32_t ref_id
+[5-20] uint8_t params
 end
 
 #-------------------------------------------------------------------

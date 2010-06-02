@@ -110,6 +110,7 @@ namespace Msmcomm
         ENABLE_PIN,
         DISABLE_PIN,
         SIM_INFO,
+        GET_AUDIO_MODEM_TUNING_PARAMS,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -134,6 +135,7 @@ namespace Msmcomm
         RSSI_STATUS,
         PHONEBOOK,
         GET_PHONEBOOK_PROPERTIES,
+        AUDIO_MODEM_TUNING_PARAMS,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
@@ -277,6 +279,8 @@ namespace Msmcomm
             return "COMMAND_DISABLE_PIN";
             case CommandType.SIM_INFO:
             return "COMMAND_SIM_INFO";
+            case CommandType.GET_AUDIO_MODEM_TUNING_PARAMS:
+            return "COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS";
 
             // ResponseType
             case ResponseType.TEST_ALIVE:
@@ -317,6 +321,8 @@ namespace Msmcomm
 			return "RESPONSE_PHONEBOOK";
 			case ResponseType.GET_PHONEBOOK_PROPERTIES:
 			return "RESPONSE_GET_PHONEBOOK_PROPERTIES";
+            case ResponseType.AUDIO_MODEM_TUNING_PARAMS:
+            return "RESPONSE_AUDIO_MODEM_TUNING_PARAMS";
 
             // EventType
         	case EventType.RESET_RADIO_IND:
@@ -949,6 +955,14 @@ namespace Msmcomm
                     if (msg.field_data != null)
                         details += @"field_data = '$(msg.field_data)'";
                     break;
+                case Msmcomm.ResponseType.AUDIO_MODEM_TUNING_PARAMS:
+                    var msg = (Msmcomm.Reply.AudioModemTuningParams) this.copy();
+                    details = "params [ ";
+                    var params = msg.params;
+                    for (var n = 0; n < params.length; n++)
+                        details += "%02x ".printf(params[n]);
+                    details += "]";
+                    break;
                 default:
                     break;
             }
@@ -1287,6 +1301,14 @@ namespace Msmcomm
                 set;
             }
         }
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class GetAudioModemTuningParams : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public GetAudioModemTuningParams(CommandType t = CommandType.GET_AUDIO_MODEM_TUNING_PARAMS);
+        }
     }
 
     namespace Reply
@@ -1445,6 +1467,16 @@ namespace Msmcomm
                 [CCode (cname = "msmcomm_resp_sim_info_get_field_type")]
                 get;
             }
+		}
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+		public class AudioModemTuningParams : Message
+		{
+            public uint8[] params {
+				[CCode (cname = "msmcomm_resp_audio_modem_tuning_params_get_params")]
+				get;
+			}
 		}
     }
 

@@ -84,6 +84,7 @@ public class Commands
         register( "change_pin", change_pin, "Change the pin of your SIM card", "change_pin <old pin> <new pin>", 2 );
         register( "pin_status", pin_status, "Enable/Disable pin authentication", "pin_status <0|1> <pin>", 2 );
         register( "sim_info", sim_info, "Gather information from the SIM card", "sim_info <imsi|msisdn>", 1 );
+        register( "get_audio_modem_tuning_params", get_audio_modem_tuning_params, "Get various audio tuning params from modem" );
     }
 
     private uint8 nextValidRefId()
@@ -461,6 +462,13 @@ public class Commands
                 break;
         }
         
+        msm.sendMessage(msg);
+    }
+    
+    private void get_audio_modem_tuning_params( string[] params )
+    {
+        var msg = new Msmcomm.Command.GetAudioModemTuningParams();
+        msg.index = nextValidRefId();
         msm.sendMessage(msg);
     }
 }
