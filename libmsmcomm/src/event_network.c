@@ -352,3 +352,77 @@ char *msmcomm_event_get_networklist_get_network_name(struct msmcomm_message *msg
     result[len] = 0;
     return result;
 }
+
+/*
+ * MSMCOMM_EVENT_CM_PH
+ */
+
+unsigned int event_cm_ph_is_valid(struct msmcomm_message *msg)
+{
+    return (msg->group_id == 0x5 && msg->msg_id == 0x2);
+}
+
+void event_cm_ph_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
+{
+    if (len != sizeof (struct cm_ph_event))
+        return;
+
+    msg->payload = data;
+}
+
+uint32_t event_cm_ph_get_size(struct msmcomm_message * msg)
+{
+    return sizeof (struct cm_ph_event);
+}
+
+uint8_t msmcomm_event_cm_ph_get_plmn_count(struct msmcomm_message *msg)
+{
+    return MESSAGE_CAST(msg, struct cm_ph_event)->plmn_count;
+}
+
+unsigned int msmcomm_event_cm_ph_get_plmn(struct msmcomm_message *msg, unsigned int n)
+{
+    uint8_t *plmn = NULL;
+    unsigned int value = 0x0;
+    
+    switch (n) 
+    {
+        case 0:
+            plmn = MESSAGE_CAST(msg, struct cm_ph_event)->plmn_0;
+            break;
+        case 1:
+            plmn = MESSAGE_CAST(msg, struct cm_ph_event)->plmn_1;
+            break;
+        case 2:
+            plmn = MESSAGE_CAST(msg, struct cm_ph_event)->plmn_2;
+            break;
+        case 3:
+            plmn = MESSAGE_CAST(msg, struct cm_ph_event)->plmn_3;
+            break;
+        case 4:
+            plmn = MESSAGE_CAST(msg, struct cm_ph_event)->plmn_4;
+            break;
+        case 5:
+            plmn = MESSAGE_CAST(msg, struct cm_ph_event)->plmn_5;
+            break;
+        case 6:
+            plmn = MESSAGE_CAST(msg, struct cm_ph_event)->plmn_6;
+            break;
+        case 7:
+            plmn = MESSAGE_CAST(msg, struct cm_ph_event)->plmn_7;
+            break;
+        case 8:
+            plmn = MESSAGE_CAST(msg, struct cm_ph_event)->plmn_8;
+            break;
+        case 9:
+            plmn = MESSAGE_CAST(msg, struct cm_ph_event)->plmn_9;
+            break;
+    }
+    
+    if (plmn != NULL) 
+    {
+        value = network_plmn_to_value(plmn);
+    }
+    
+    return value;
+}

@@ -19,8 +19,6 @@
 				</description>
 			</field>
 		</structure>
-		<structure name="cm_ph_event" length="4101">
-		</structure>
 		<structure name="get_firmware_info_resp" length="143">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="hci_version" start="4" type="uint8_t"/>

@@ -226,6 +226,7 @@ namespace Msmcomm
         GET_NETWORKLIST,
         PHONEBOOK_READY,
         PHONEBOOK_MODIFIED,
+        CM_PH,
     }
 
     public string eventTypeToString( int t )
@@ -495,6 +496,8 @@ namespace Msmcomm
 			return "URC_PHONEBOOK_READY";
             case EventType.PHONEBOOK_MODIFIED:
             return "URC_PHONEBOOK_MODIFIED";
+            case EventType.CM_PH:
+            return "URC_CM_PH";
             default:
 			return "%d (unknown)".printf( t );
         }
@@ -966,6 +969,17 @@ namespace Msmcomm
                     for (var n = 0; n < params.length; n++)
                         details += "%02x ".printf(params[n]);
                     details += "]";
+                    break;
+                case Msmcomm.EventType.CM_PH:
+                    var msg = (Msmcomm.Unsolicited.CmPh) this.copy();
+                    var count = msg.plmn_count;
+                    details = @"plmn_count = $(count) plmns [ ";
+                    for (var n = 0; n < count; n++)
+                    {
+                        var plmn = msg.plmn(n);
+                        details += @"$(plmn) ";
+                    }
+                    details += " ]";
                     break;
                 default:
                     break;
@@ -1677,6 +1691,19 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_event_phonebook_modified_get_position")]
 				get;
 			}
+		}
+        
+        [Compact]
+		[CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+		public class CmPh : Message
+		{
+			public uint8 plmn_count {
+				[CCode (cname = "msmcomm_event_cm_ph_get_plmn_count")]
+				get;
+			}
+            
+            [CCode (cname = "msmcomm_event_cm_ph_get_plmn")]
+            public uint plmn(uint n);
 		}
 
 		namespace SMS

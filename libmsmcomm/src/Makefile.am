@@ -11,6 +11,7 @@ libmsmcomm_la_SOURCES = \
 talloc.c \
 context.c \
 launch.c \
+util.c \
 message.c \
 message_types.c \
 message_system.c \

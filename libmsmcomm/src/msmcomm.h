@@ -188,6 +188,8 @@
 #define MSMCOMM_EVENT_PHONEBOOK_READY                               290
 #define MSMCOMM_EVENT_PHONEBOOK_MODIFIED                            291
 
+#define MSMCOMM_EVENT_CM_PH                                         292
+
 /*
  * Phonebook types
  */
@@ -517,6 +519,9 @@ uint8_t *msmcomm_resp_audio_modem_tuning_params_get_params(struct msmcomm_messag
 
 void msmcomm_message_set_audio_profile_set_class(struct msmcomm_message *msg, uint8_t class);
 void msmcomm_message_set_audio_profile_set_sub_class(struct msmcomm_message *msg, uint8_t sub_class);
+
+uint8_t msmcomm_event_cm_ph_get_plmn_count(struct msmcomm_message *msg);
+unsigned int msmcomm_event_cm_ph_get_plmn(struct msmcomm_message *msg, unsigned int n);
 
 /*
  * Lowlevel Frame handling

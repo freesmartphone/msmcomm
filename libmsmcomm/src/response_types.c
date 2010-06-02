@@ -75,6 +75,7 @@ EVENT_TYPE(charger_status)
 EVENT_TYPE(operator_mode) 
 EVENT_TYPE(cm_ph_info_available) 
 EVENT_TYPE(get_networklist)
+EVENT_TYPE(cm_ph)
 
 /*
 EVENT_TYPE(pdsm_pd_done)
@@ -116,6 +117,7 @@ struct descriptor resp_descriptors[] = {
     EVENT_DATA(MSMCOMM_EVENT_GET_NETWORKLIST, get_networklist),
     EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_READY, phonebook_ready),
     EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_MODIFIED, phonebook_modified),
+    EVENT_DATA(MSMCOMM_EVENT_CM_PH, cm_ph),
 
     /* responses */
     RESPONSE_DATA(MSMCOMM_RESPONSE_TEST_ALIVE, test_alive),

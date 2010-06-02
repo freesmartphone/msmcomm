@@ -129,6 +129,8 @@ void report_error(struct msmcomm_context *ctx, int error, void *data);
 
 uint16_t crc16_calc(const uint8_t *data, uint32_t len);
 
+unsigned int network_plmn_to_value(const uint8_t *plmn);
+
 
 #endif
 

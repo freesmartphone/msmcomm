@@ -294,6 +294,37 @@ struct get_networklist_event
 } __attribute__ ((packed));
 
 
+struct cm_ph_event
+{
+	uint8_t unknown0[17];
+	uint8_t network_sel_mode_pref;
+	uint8_t current_plmn[3];
+	uint8_t unknown1[251];
+	uint8_t plmn_count;
+	uint8_t unknown2[3];
+	uint8_t plmn_0[3];
+	uint8_t unknown3[187];
+	uint8_t plmn_1[3];
+	uint8_t unknown4[92];
+	uint8_t plmn_2[3];
+	uint8_t unknown5[92];
+	uint8_t plmn_3[3];
+	uint8_t unknown6[92];
+	uint8_t plmn_4[3];
+	uint8_t unknown7[92];
+	uint8_t plmn_5[3];
+	uint8_t unknown8[92];
+	uint8_t plmn_6[3];
+	uint8_t unknown9[92];
+	uint8_t plmn_7[3];
+	uint8_t unknown10[92];
+	uint8_t plmn_8[3];
+	uint8_t unknown11[92];
+	uint8_t plmn_9[3];
+	uint8_t unknown12[2869];
+} __attribute__ ((packed));
+
+
 struct cm_ph_info_available_event
 {
 } __attribute__ ((packed));
@@ -318,12 +349,6 @@ struct cm_ph_resp
 	uint32_t ref_id;
 	uint8_t unknown0[7];
 	uint8_t result;
-} __attribute__ ((packed));
-
-
-struct cm_ph_event
-{
-	uint8_t unknown0[4101];
 } __attribute__ ((packed));
 
 

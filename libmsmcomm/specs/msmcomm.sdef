@@ -186,6 +186,22 @@ start get_networklist_event 4093
 [764-845] uint8_t operator_name_5
 end
 
+start cm_ph_event 4098
+[17] uint8_t network_sel_mode_pref
+[18-20] uint8_t current_plmn
+[272] uint8_t plmn_count
+[276-278] uint8_t plmn_0
+[466-468] uint8_t plmn_1
+[561-563] uint8_t plmn_2
+[656-658] uint8_t plmn_3
+[751-753] uint8_t plmn_4
+[846-848] uint8_t plmn_5
+[941-943] uint8_t plmn_6
+[1036-1038] uint8_t plmn_7
+[1131-1133] uint8_t plmn_8
+[1226-1228] uint8_t plmn_9
+end
+
 #-------------------------------------------------------------------
 # SYSTEM
 #-------------------------------------------------------------------
@@ -202,9 +218,6 @@ end
 start cm_ph_resp 12
 [0-3] uint32_t ref_id
 [11] uint8_t result
-end
-
-start cm_ph_event 4101
 end
 
 start get_firmware_info_resp 143
