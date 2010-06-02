@@ -38,6 +38,18 @@ void resp_sound_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_
         return;
 
     msg->payload = data;
+    
+    if (MESSAGE_CAST(msg, struct sound_resp)->result != 0x0) 
+    {
+        msg->result = MSMCOMM_RESULT_ERROR;
+        
+        switch (MESSAGE_CAST(msg, struct sound_resp)->result)
+        {
+            case 0xb:
+                msg->result = MSMCOMM_RESULT_INVALID_AUDIO_PROFILE;
+                break;
+        }
+    }
 }
 
 uint32_t resp_sound_get_size(struct msmcomm_message * msg)

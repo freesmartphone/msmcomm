@@ -273,9 +273,10 @@
 
 /* NOTE: Every result code >= MSMCOMM_RESULT_ERROR should be an error! */
 #define MSMCOMM_RESULT_ERROR                                        10
-#define MSMCOMM_RESULT_READ_SIMBOOK_INVALID_RECORD_ID               MSMCOMM_RESULT_ERROR + 1
-#define MSMCOMM_RESULT_SIM_BAD_STATE                                MSMCOMM_RESULT_ERROR + 2
-#define MSMCOMM_RESULT_BAD_CALL_ID                                  MSMCOMM_RESULT_ERROR + 3
+#define MSMCOMM_RESULT_READ_SIMBOOK_INVALID_RECORD_ID               11
+#define MSMCOMM_RESULT_SIM_BAD_STATE                                12
+#define MSMCOMM_RESULT_BAD_CALL_ID                                  13
+#define MSMCOMM_RESULT_INVALID_AUDIO_PROFILE                        14
 
 /*
  * Encoding types
@@ -512,6 +513,9 @@ void msmcomm_message_sim_info_set_field_type(struct msmcomm_message *msg,
                                              unsigned int field_type);
                                             
 uint8_t *msmcomm_resp_audio_modem_tuning_params_get_params(struct msmcomm_message *msg, unsigned int *len);
+
+void msmcomm_message_set_audio_profile_set_class(struct msmcomm_message *msg, uint8_t class);
+void msmcomm_message_set_audio_profile_set_sub_class(struct msmcomm_message *msg, uint8_t sub_class);
 
 /*
  * Lowlevel Frame handling

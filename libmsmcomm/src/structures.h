@@ -475,7 +475,9 @@ struct set_audio_profile_msg
 struct sound_resp
 {
 	uint32_t ref_id;
-	uint8_t unknown0[7];
+	uint8_t unknown0[2];
+	uint8_t result;
+	uint8_t unknown1[4];
 } __attribute__ ((packed));
 
 

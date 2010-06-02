@@ -305,6 +305,7 @@ end
 
 start sound_resp 11
 [0-3] uint32_t ref_id
+[6] uint8_t result
 end
 
 start get_audio_modem_tuning_params_msg 4

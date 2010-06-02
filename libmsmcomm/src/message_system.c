@@ -168,49 +168,6 @@ uint8_t *msg_get_phone_state_info_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_COMMAND_SET_AUDIO_PROFILE
- */
-
-/* [CMD] tel.setaudioprofile 0 0
- * handleAudioSettingsMessage Audio Profile Class 0 SubClass 0
- * handleAudioSettingsMessage USER TTY FLAG 3
- * handleAudioSettingsMessage !!!!!!!!!DISABLING TTY!!!!!!!!!
- * .305297Z365ff490 +convertTilAudioProfileToHciSoundDevice 
- * .306762Z375ff490 waitForSignal Forever signal=35D85CE0
- * .307830Z365ff490 -convertTilAudioProfileToHciSoundDevice 
- * .309387Z375ff490 +waitForSignal 
- * .310485Z365ff490 setAudioProfile setAudioProfile 0 0
- * PACKET: dir=write fd=11 fn='/dev/modemuart' len=16/0x10
- * frame (type=Data, seq=05, ack=0c)
- * 1e 00 00 3c 00 00 00 00 00 00 00 00 00            ...<.........   
- */
-
-void msg_set_audio_profile_init(struct msmcomm_message *msg)
-{
-    msg->group_id = 0x1e;
-    msg->msg_id = 0x0;
-
-    msg->payload = talloc_zero(talloc_msmc_ctx, struct set_audio_profile_msg);
-}
-
-uint32_t msg_set_audio_profile_get_size(struct msmcomm_message *msg)
-{
-    return sizeof (struct set_audio_profile_msg);
-}
-
-void msg_set_audio_profile_free(struct msmcomm_message *msg)
-{
-    talloc_free(msg->payload);
-}
-
-uint8_t *msg_set_audio_profile_prepare_data(struct msmcomm_message *msg)
-{
-    MESSAGE_CAST(msg, struct set_audio_profile_msg)->ref_id = msg->ref_id;
-
-    return msg->payload;
-}
-
-/*
  * MSMCOMM_COMMAND_GET_CHARGER_STATUS
  */
 

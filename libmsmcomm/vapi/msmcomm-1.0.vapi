@@ -558,6 +558,7 @@ namespace Msmcomm
 		READ_SIMBOOK_INVALID_RECORD_ID,
         SIM_BAD_STATE,
         BAD_CALL_ID,
+        INVALID_AUDIO_PROFILE,
 	}
 
 	public string resultTypeToString(ResultType type)
@@ -582,6 +583,9 @@ namespace Msmcomm
                 break;
             case ResultType.BAD_CALL_ID:
                 result = "RESULT_BAD_CALL_ID";
+                break;
+            case ResultType.INVALID_AUDIO_PROFILE:
+                result = "RESULT_INVALID_AUDIO_PROFILE";
                 break;
 		}
 		return result;
@@ -1308,6 +1312,24 @@ namespace Msmcomm
         {
             [CCode (cname = "msmcomm_create_message")]
             public GetAudioModemTuningParams(CommandType t = CommandType.GET_AUDIO_MODEM_TUNING_PARAMS);
+        }
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class SetAudioProfile : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public SetAudioProfile(CommandType t = CommandType.SET_AUDIO_PROFILE);
+            
+            public uint8 class {
+                [CCode (cname = "msmcomm_message_set_audio_profile_set_class")]
+                set;
+            }
+            
+            public uint8 sub_class {
+                [CCode (cname = "msmcomm_message_set_audio_profile_set_sub_class")]
+                set;
+            }
         }
     }
 

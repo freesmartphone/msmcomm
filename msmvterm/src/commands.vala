@@ -85,6 +85,7 @@ public class Commands
         register( "pin_status", pin_status, "Enable/Disable pin authentication", "pin_status <0|1> <pin>", 2 );
         register( "sim_info", sim_info, "Gather information from the SIM card", "sim_info <imsi|msisdn>", 1 );
         register( "get_audio_modem_tuning_params", get_audio_modem_tuning_params, "Get various audio tuning params from modem" );
+        register( "set_audio_profile", set_audio_profile, "Set audio profile to modem", "set_audio_profile <class> <sub-class>", 2 );
     }
 
     private uint8 nextValidRefId()
@@ -469,6 +470,15 @@ public class Commands
     {
         var msg = new Msmcomm.Command.GetAudioModemTuningParams();
         msg.index = nextValidRefId();
+        msm.sendMessage(msg);
+    }
+    
+    private void set_audio_profile( string[] params )
+    {
+        var msg = new Msmcomm.Command.SetAudioProfile();
+        msg.index = nextValidRefId();
+        msg.class = (uint8)params[0].to_int();
+        msg.sub_class = (uint8)params[1].to_int();
         msm.sendMessage(msg);
     }
 }

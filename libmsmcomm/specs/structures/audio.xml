@@ -8,6 +8,7 @@
 		</structure>
 		<structure name="sound_resp" length="11">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+            <field name="result" start="6" type="uint8_t"/>
 		</structure>
 		<structure name="get_audio_modem_tuning_params_msg" length="4">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
