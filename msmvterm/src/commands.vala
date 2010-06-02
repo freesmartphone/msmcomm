@@ -336,6 +336,9 @@ public class Commands
 			case "all":
 				result = Msmcomm.PhonebookType.ALL;
                 break;
+            case "test1":
+                result = Msmcomm.PhonebookType.TEST1;
+                break;
             default:
                 ERR( @"Unknown phonebook type $(str)" );
                 break;

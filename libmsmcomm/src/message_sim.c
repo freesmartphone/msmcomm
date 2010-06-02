@@ -146,6 +146,9 @@ uint8_t book_type_to_magic(unsigned int book_type)
         case MSMCOMM_PHONEBOOK_TYPE_FDN:
             magic = 0x20;
             break;
+        case MSMCOMM_PHONEBOOK_TYPE_TEST1:
+            magic = 0x48;
+            break;
     }
 
     return magic;

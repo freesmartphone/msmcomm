@@ -198,6 +198,7 @@
 #define MSMCOMM_PHONEBOOK_TYPE_MBDN                                 5
 #define MSMCOMM_PHONEBOOK_TYPE_MBN                                  6
 #define MSMCOMM_PHONEBOOK_TYPE_ALL                                  7
+#define MSMCOMM_PHONEBOOK_TYPE_TEST1                                8
 
 /*
  * Operation modes

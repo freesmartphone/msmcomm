@@ -618,6 +618,7 @@ namespace Msmcomm
 		SDN,
 		FDN,
 		EFECC,
+        TEST1,
 	}
 
 	public string phonebookTypeToString(PhonebookType type)
@@ -649,6 +650,9 @@ namespace Msmcomm
 			case PhonebookType.EFECC:
 				result = "PHONEBOOK_TYPE_EFECC";
 				break;
+            case PhonebookType.TEST1:
+                result = "PHONEBOOK_TYPE_TEST1";
+                break;
 		}
 		return result;
 	}

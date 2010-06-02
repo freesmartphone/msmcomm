@@ -88,6 +88,8 @@ unsigned int magic_to_book_type(uint8_t magic)
             return MSMCOMM_PHONEBOOK_TYPE_SDN;
         case 0x20:
             return MSMCOMM_PHONEBOOK_TYPE_FDN;
+        case 0x48:
+            return MSMCOMM_PHONEBOOK_TYPE_TEST1;
     }
 
     return MSMCOMM_PHONEBOOK_TYPE_NONE;
