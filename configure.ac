@@ -88,8 +88,6 @@ AC_CONFIG_FILES([
 	libmsmcomm/src/Makefile
 	libmsmcomm/vapi/Makefile
 	libmsmcomm/tests/Makefile
-	msmsh/Makefile
-	msmsh/src/Makefile
 	msmvterm/Makefile
 	msmvterm/src/Makefile
 ])

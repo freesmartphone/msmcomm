@@ -3,7 +3,6 @@ NULL =
 SUBDIRS = \
 	msmcommd \
 	libmsmcomm \
-	msmsh \
 	msmvterm \
 	$(NULL)
 	
