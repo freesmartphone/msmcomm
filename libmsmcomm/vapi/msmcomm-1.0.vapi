@@ -27,7 +27,7 @@ namespace Msmcomm
 {
     [Compact]
     [CCode (cname = "struct msmcomm_frame", free_function = "msmcomm_frame_free", cheader_filename = "msmcomm.h")]
-    public class LowLevel.Frame 
+    public class LowLevel.Frame
     {
         [CCode (cname = "msmcomm_frame_new")]
         public Frame();
@@ -44,7 +44,7 @@ namespace Msmcomm
 
         public uint payload_size {
             [CCode (cname = "msmcomm_frame_get_payload_length")]
-            get; 
+            get;
         }
 
         public uint8 addr {
@@ -264,16 +264,16 @@ namespace Msmcomm
             return "COMMAND_CHARGING";
             case CommandType.DIAL_CALL:
             return "COMMAND_DIAL_CALL";
-			case CommandType.SET_SYSTEM_TIME:
-			return "COMMAND_SET_SYSTEM_TIME";
-			case CommandType.RSSI_STATUS:
-			return "COMMAND_RSSI_STATUS";
-			case CommandType.READ_PHONEBOOK:
-			return "COMMAND_READ_PHONEBOOK";
-			case CommandType.GET_NETWORKLIST:
-			return "COMMAND_GET_NETWORKLIST";
-			case CommandType.SET_MODE_PREFERENCE:
-			return "COMMAND_SET_MODE_PREFERENCE";
+            case CommandType.SET_SYSTEM_TIME:
+            return "COMMAND_SET_SYSTEM_TIME";
+            case CommandType.RSSI_STATUS:
+            return "COMMAND_RSSI_STATUS";
+            case CommandType.READ_PHONEBOOK:
+            return "COMMAND_READ_PHONEBOOK";
+            case CommandType.GET_NETWORKLIST:
+            return "COMMAND_GET_NETWORKLIST";
+            case CommandType.SET_MODE_PREFERENCE:
+            return "COMMAND_SET_MODE_PREFERENCE";
             case CommandType.ENABLE_PIN:
             return "COMMAND_ENABLE_PIN";
             case CommandType.DISABLE_PIN:
@@ -669,7 +669,7 @@ namespace Msmcomm
 		}
 		return result;
 	}
-    
+
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_CALL_TYPE_", cheader_filename = "msmcomm.h")]
 	public enum CallType
 	{
@@ -695,15 +695,15 @@ namespace Msmcomm
 		}
 		return result;
 	}
-    
+
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_SIM_", cheader_filename = "msmcomm.h")]
-    public enum SimPinType 
+    public enum SimPinType
     {
         PIN_NONE,
         PIN_1,
         PIN_2,
     }
-    
+
     public string simPinTypeToString(SimPinType type)
 	{
 		var result = "<unknown>";
@@ -721,15 +721,15 @@ namespace Msmcomm
 		}
 		return result;
 	}
-    
+
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_SIM_INFO_FIELD_TYPE_", cheader_filename = "msmcomm.h")]
-    public enum SimInfoFieldType 
+    public enum SimInfoFieldType
     {
-        NONE, 
+        NONE,
         MSISDN,
         IMSI,
     }
-    
+
     public string simInfoTypeToString(SimInfoFieldType type)
 	{
 		var result = "<unknown>";
@@ -763,11 +763,11 @@ namespace Msmcomm
     public bool checkHciVersion(uint version);
 
     [CCode (cname = "msmcomm_launch_daemon", cheader_filename = "msmcomm.h")]
-    public bool launchDaemon(string workdir); 
-    
+    public bool launchDaemon(string workdir);
+
     [CCode (cname = "msmcomm_is_daemon_running", cheader_filename = "msmcomm.h")]
     public bool isDaemonRunning();
-    
+
     [CCode (cname = "msmcomm_shutdown_daemon", cheader_filename = "msmcomm.h")]
     public bool shutdownDaemon();
 
@@ -1071,7 +1071,7 @@ namespace Msmcomm
                 [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
                 set;
             }
-            
+
             public SimPinType pin_type {
                 [CCode (cname = "msmcomm_message_verify_pin_set_pin_type")]
                 set;
@@ -1118,7 +1118,7 @@ namespace Msmcomm
             {
                 _setCallerId(caller_id, (uint)caller_id.length);
             }
-            
+
             public bool block {
                 [CCode (cname = "msmcomm_message_dial_call_set_block")]
                 set;
@@ -1145,7 +1145,7 @@ namespace Msmcomm
 
 			[CCode (cname = "msmcomm_message_rssi_status_set_status")]
 			private void _setStatus(uint8 status);
-			
+
 			public bool status {
 				public set {
 					if (value) _setStatus(1);
@@ -1161,7 +1161,7 @@ namespace Msmcomm
 			[CCode (cname = "msmcomm_create_message")]
             public ReadPhonebook(CommandType t = CommandType.READ_PHONEBOOK);
 
-			
+
 			public PhonebookType book_type {
 				[CCode (cname = "msmcomm_message_read_phonebook_set_book_type")]
 				set;
@@ -1172,52 +1172,52 @@ namespace Msmcomm
 				set;
 			}
 		}
-        
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class WritePhonebook : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
             public WritePhonebook(CommandType t = CommandType.WRITE_PHONEBOOK);
-            
+
             [CCode (cname = "msmcomm_message_write_phonebook_set_number")]
             private void _setNumber(string number, uint length);
-            
+
             [CCode (cname = "msmcomm_message_write_phonebook_set_title")]
             private void _setTitle(string title, uint length);
-            
+
             public string number {
                 set {
                     var number = value;
                     _setNumber(number, (uint)number.length);
                 }
             }
-            
+
             public string title {
                 set {
                     var title = value;
                     _setTitle(title, (uint)title.length);
                 }
             }
-            
+
             public PhonebookType book_type {
                 [CCode (cname = "msmcomm_message_write_phonebook_set_book_type")]
                 set;
             }
 		}
-        
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class DeletePhonebook : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
             public DeletePhonebook(CommandType t = CommandType.DELETE_PHONEBOOK);
-            
+
             public uint8 position {
                 [CCode (cname = "msmcomm_message_delete_phonebook_set_position")]
                 set;
             }
-            
+
             public PhonebookType book_type {
                 [CCode (cname = "msmcomm_message_delete_phonebook_set_book_type")]
                 set;
@@ -1257,17 +1257,17 @@ namespace Msmcomm
 				set;
 			}
 		}
-        
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class ChangePin : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
             public ChangePin(CommandType t = CommandType.CHANGE_PIN);
-            
+
             [CCode (cname = "msmcomm_message_change_pin_set_new_pin")]
             private void _setNewPin(string new_pin, uint len);
-            
+
             [CCode (cname = "msmcomm_message_change_pin_set_old_pin")]
             private void _setOldPin(string old_pin, uint len);
 
@@ -1277,7 +1277,7 @@ namespace Msmcomm
                     _setNewPin(pin, (uint)pin.length);
                 }
 			}
-            
+
             public string old_pin {
 				set {
                     var pin = value;
@@ -1285,7 +1285,7 @@ namespace Msmcomm
                 }
 			}
 		}
-        
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class EnablePin : Message
@@ -1298,7 +1298,7 @@ namespace Msmcomm
                 set;
             }
         }
-        
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class DisablePin : Message
@@ -1311,20 +1311,20 @@ namespace Msmcomm
                 set;
             }
         }
-        
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class SimInfo : Message
         {
             [CCode (cname = "msmcomm_create_message")]
             public SimInfo(CommandType t = CommandType.SIM_INFO);
-            
+
             public SimInfoFieldType field_type {
                 [CCode (cname = "msmcomm_message_sim_info_set_field_type")]
                 set;
             }
         }
-        
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class GetAudioModemTuningParams : Message
@@ -1332,19 +1332,19 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_create_message")]
             public GetAudioModemTuningParams(CommandType t = CommandType.GET_AUDIO_MODEM_TUNING_PARAMS);
         }
-        
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class SetAudioProfile : Message
         {
             [CCode (cname = "msmcomm_create_message")]
             public SetAudioProfile(CommandType t = CommandType.SET_AUDIO_PROFILE);
-            
+
             public uint8 class {
                 [CCode (cname = "msmcomm_message_set_audio_profile_set_class")]
                 set;
             }
-            
+
             public uint8 sub_class {
                 [CCode (cname = "msmcomm_message_set_audio_profile_set_sub_class")]
                 set;
@@ -1433,7 +1433,7 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_resp_phonebook_get_book_type")]
 				get;
 			}
-			
+
 			public uint8 position {
 				[CCode (cname = "msmcomm_resp_phonebook_get_position")]
 				get;
@@ -1453,7 +1453,7 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_resp_phonebook_get_encoding_type")]
 				get;
 			}
-            
+
             public uint8 modify_id {
                 [CCode (cname = "msmcomm_resp_phonebook_get_modify_id")]
                 get;
@@ -1494,7 +1494,7 @@ namespace Msmcomm
 				get;
 			}
 		}
-        
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
 		public class Sim : Message
@@ -1503,13 +1503,13 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_resp_sim_get_field_data")]
 				get;
 			}
-            
+
             public SimInfoFieldType field_type {
                 [CCode (cname = "msmcomm_resp_sim_info_get_field_type")]
                 get;
             }
 		}
-        
+
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
 		public class AudioModemTuningParams : Message
@@ -1553,7 +1553,7 @@ namespace Msmcomm
                 [CCode (cname = "msmcomm_event_call_status_get_call_type")]
 				get;
             }
-            
+
             public uint call_id {
 				[CCode (cname = "msmcomm_event_call_status_get_call_id")]
 				get;
@@ -1677,7 +1677,7 @@ namespace Msmcomm
 				get;
 			}
 		}
-        
+
         [Compact]
 		[CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
 		public class PhonebookModified : Message
@@ -1686,13 +1686,13 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_event_phonebook_modified_get_book_type")]
 				get;
 			}
-            
+
             public uint8 position {
 				[CCode (cname = "msmcomm_event_phonebook_modified_get_position")]
 				get;
 			}
 		}
-        
+
         [Compact]
 		[CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
 		public class CmPh : Message
@@ -1701,7 +1701,7 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_event_cm_ph_get_plmn_count")]
 				get;
 			}
-            
+
             [CCode (cname = "msmcomm_event_cm_ph_get_plmn")]
             public uint plmn(uint n);
 		}
