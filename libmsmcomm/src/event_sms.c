@@ -41,7 +41,7 @@ void event_sms_wms_read_template_handle_data(struct msmcomm_message *msg, uint8_
     msg->payload = data;
 }
 
-uint32_t msmcomm_event_sms_wms_read_template_ind_get_size(struct msmcomm_message * msg)
+uint32_t event_sms_wms_read_template_ind_get_size(struct msmcomm_message * msg)
 {
     return sizeof (struct sms_wms_read_template_event);
 }
