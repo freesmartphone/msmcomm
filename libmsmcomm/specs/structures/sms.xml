@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:sms>
+	<structures>
+		<structure name="sms_received_message_event" length="2083">
+			<field name="sender_length" start="23" type="uint8_t"/>
+			<field name="sender" start="24" end="59" type="uint8_t"/>
+			<field name="pdu_length" start="62" end="65" type="uint32_t"/>
+			<field name="pdu_start" start="66" type="uint8_t"/>
+			<field name="pdu" start="67" end="2082" type="uint8_t"/>
+		</structure>
+		<structure name="sms_ack_msg" length="1901">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="value0" start="8" type="uint8_t"/>
+			<field name="value1" start="9" type="uint8_t"/>
+		</structure>
+	</structures>
+</namespace:sms>
+

@@ -20,6 +20,7 @@ message_sim.c \
 message_call.c \
 message_gps.c \
 message_audio.c \
+message_sms.c \
 response_types.c \
 response_system.c \
 response_network.c \
@@ -27,6 +28,7 @@ response_sim.c \
 response_call.c \
 response_gps.c \
 response_audio.c \
+response_sms.c \
 event_system.c \
 event_network.c \
 event_sms.c \

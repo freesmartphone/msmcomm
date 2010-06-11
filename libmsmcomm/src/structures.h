@@ -325,6 +325,14 @@ struct cm_ph_event
 } __attribute__ ((packed));
 
 
+struct set_network_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[22];
+	uint8_t plmn[3];
+} __attribute__ ((packed));
+
+
 struct cm_ph_info_available_event
 {
 } __attribute__ ((packed));
@@ -371,7 +379,7 @@ struct get_imei_resp
 
 struct get_imei_msg
 {
-	uint8_t unknown0[4];
+	uint32_t ref_id;
 } __attribute__ ((packed));
 
 
@@ -573,6 +581,28 @@ struct xtra_set_data_resp
 struct get_location_priv_pref_msg
 {
 	uint8_t unknown0[12];
+} __attribute__ ((packed));
+
+
+struct sms_received_message_event
+{
+	uint8_t unknown0[23];
+	uint8_t sender_length;
+	uint8_t sender[36];
+	uint8_t unknown1[2];
+	uint32_t pdu_length;
+	uint8_t pdu_start;
+	uint8_t pdu[2016];
+} __attribute__ ((packed));
+
+
+struct sms_ack_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[4];
+	uint8_t value0;
+	uint8_t value1;
+	uint8_t unknown1[1891];
 } __attribute__ ((packed));
 
 #endif

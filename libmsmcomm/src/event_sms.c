@@ -65,3 +65,69 @@ uint8_t msmcomm_event_sms_wms_read_template_get_number_plan(struct msmcomm_messa
 {
     return MESSAGE_CAST(msg, struct sms_wms_read_template_event)->number_plan;
 }
+
+/*
+ * MSMCOMM_EVENT_SMS_RECEIVED_MESSAGE
+ */
+
+unsigned int event_sms_received_message_is_valid(struct msmcomm_message *msg)
+{
+    return (msg->group_id == 0x17) && 
+           (SUBSYSTEM_ID(msg) == 0x2) && 
+           ((MSG_ID(msg) == 0xf) || MSG_ID(msg) == 0x11);
+}
+
+void event_sms_received_message_handle_data(struct msmcomm_message *msg, uint8_t * data,
+                                             uint32_t len)
+{
+    if (len != sizeof (struct sms_received_message_event))
+        return;
+
+    msg->payload = data;
+}
+
+uint32_t event_sms_received_message_get_size(struct msmcomm_message * msg)
+{
+    return sizeof (struct sms_received_message_event);
+}
+
+char* msmcomm_event_sms_received_message_event_get_sender(struct msmcomm_message *msg)
+{
+    struct sms_received_message_event *evt = MESSAGE_CAST(msg, struct sms_received_message_event);
+    unsigned int len = evt->sender_length + 1;
+    char *sender = NULL;
+    int n = 0;
+    
+    if (evt->sender_length > 0)
+    {
+        sender = (char*)malloc(sizeof(char) * len);
+        memset(sender, 0, evt->sender_length + 1);
+        
+        for (n = 0; n < len - 1; n++)
+        {
+            /* We should provide real ascii characters */
+            sender[n] = 0x30 + evt->sender[n];
+        }
+        
+        sender[len-1] = 0;
+    }
+    
+    return sender;
+} 
+
+uint8_t* msmcomm_event_sms_received_message_event_get_pdu(struct msmcomm_message *msg, 
+                                                          unsigned int *length)
+{
+    uint8_t *pdu = NULL;
+    struct sms_received_message_event *evt = MESSAGE_CAST(msg, struct sms_received_message_event);
+    
+    if (evt->pdu_length > 0)
+    {
+        pdu = (uint8_t*)malloc(sizeof(uint8_t) * evt->pdu_length);
+        *length = evt->pdu_length;
+        memset(pdu, 0, evt->pdu_length);
+        memcpy(pdu, evt->pdu, evt->pdu_length);
+    }
+    
+    return pdu;
+}

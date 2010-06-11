@@ -202,6 +202,11 @@ start cm_ph_event 4098
 [1226-1228] uint8_t plmn_9
 end
 
+start set_network_msg 29
+[0-3] uint32_t ref_id
+[26-28] uint8_t plmn
+end
+
 #-------------------------------------------------------------------
 # SYSTEM
 #-------------------------------------------------------------------
@@ -232,6 +237,7 @@ start get_imei_resp 21
 end
 
 start get_imei_msg 4
+[0-3] uint32_t ref_id
 end
 
 start change_operation_mode_msg 5
@@ -364,5 +370,22 @@ start xtra_set_data_resp 0
 end
 
 start get_location_priv_pref_msg 12
+end
+
+#-------------------------------------------------------------------
+# SMS
+#-------------------------------------------------------------------
+start sms_received_message_event 2083
+[23] uint8_t sender_length
+[24-59] uint8_t sender
+[62-65] uint32_t pdu_length
+[66] uint8_t pdu_start
+[67-2082] uint8_t pdu
+end
+
+start sms_ack_msg 1901
+[0-3] uint32_t ref_id
+[8] uint8_t value0
+[9] uint8_t value1
 end
 
