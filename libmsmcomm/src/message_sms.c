@@ -43,7 +43,7 @@ uint32_t msg_sms_acknowledge_incommming_message_get_size(struct msmcomm_message 
     return sizeof (struct sms_ack_msg);
 }
 
-void msg_sms_acknowledge_incommmng_message_free(struct msmcomm_message *msg)
+void msg_sms_acknowledge_incommming_message_free(struct msmcomm_message *msg)
 {
     talloc_free(msg->payload);
 }
