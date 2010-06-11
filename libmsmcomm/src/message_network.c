@@ -23,6 +23,10 @@
 
 extern void *talloc_msmc_ctx;
 
+/*
+ * MSMCOMM_COMMAND_GET_IMEI
+ */
+
 void msg_get_imei_init(struct msmcomm_message *msg)
 {
     msg->group_id = 0x1b;
@@ -43,8 +47,13 @@ void msg_get_imei_free(struct msmcomm_message *msg)
 
 uint8_t *msg_get_imei_prepare_data(struct msmcomm_message *msg)
 {
+    MESSAGE_CAST(msg, struct get_imei_msg)->ref_id = msg->ref_id;
     return msg->payload;
 }
+
+/*
+ * MSMCOMM_COMMAND_GET_NETWORKLIST
+ */
 
 void msg_get_networklist_init(struct msmcomm_message *msg)
 {
@@ -67,8 +76,6 @@ void msg_get_networklist_free(struct msmcomm_message *msg)
 uint8_t *msg_get_networklist_prepare_data(struct msmcomm_message *msg)
 {
     MESSAGE_CAST(msg, struct get_networklist_msg)->ref_id = msg->ref_id;
-
     MESSAGE_CAST(msg, struct get_networklist_msg)->value0 = 0x13;
-
     return msg->payload;
 }

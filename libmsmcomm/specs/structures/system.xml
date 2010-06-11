@@ -29,6 +29,7 @@
 			<field name="imei" start="4" end="20" type="uint8_t"/>
 		</structure>
 		<structure name="get_imei_msg" length="4">
+            <field name="ref_id" start="0" end="3" type="uint32_t"/>
 		</structure>
 		<structure name="change_operation_mode_msg" length="5">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
