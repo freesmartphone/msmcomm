@@ -79,7 +79,7 @@
 
 #define MSMCOMM_EVENT_RESET_RADIO_IND                               201
 #define MSMCOMM_EVENT_CHARGER_STATUS                                202
-#define MSMCOMM_EVENT_OPERATION_MODE                                206
+#define MSMCOMM_EVENT_OPERATION_MODE                                 206
 #define MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE                          207
 #define MSMCOMM_EVENT_NETWORK_STATE_INFO                            217
 

@@ -27,19 +27,6 @@ extern void *talloc_msmc_ctx;
  * MSMCOMM_COMMAND_CHANGE_OPERATION_MODE
  */
 
-/*
-onlineMode: 
-			fa 00 00 03 00
-			00 00 00 00 00 
-			05 f0 09 7e
-
-offlineMode:
-			fa 00 00 03 00
-			00 00 00 00 00
-			06 3b 36 7e
-*/
-
-
 void msg_change_operation_mode_init(struct msmcomm_message *msg)
 {
     msg->group_id = 0x3;
@@ -319,102 +306,31 @@ void msmcomm_message_set_system_time_set(struct msmcomm_message *msg,
     MESSAGE_CAST(msg, struct set_system_time_msg)->timezone_offset = timezone_offset;
 }
 
+
 /*
- * MSMCOMM_COMMAND_RSSI_STATUS
+ * MSMCOMM_COMMAND_GET_IMEI
  */
 
-void msg_rssi_status_init(struct msmcomm_message *msg)
+void msg_get_imei_init(struct msmcomm_message *msg)
 {
-    msg->group_id = 0x6;
-    msg->msg_id = 0x1;
+    msg->group_id = 0x1b;
+    msg->msg_id = 0x8;
 
-    msg->payload = talloc_zero(talloc_msmc_ctx, struct rssi_status_msg);
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct get_imei_msg);
 }
 
-uint32_t msg_rssi_status_get_size(struct msmcomm_message *msg)
+uint32_t msg_get_imei_get_size(struct msmcomm_message *msg)
 {
-    return sizeof (struct rssi_status_msg);
+    return sizeof (struct get_imei_msg);
 }
 
-void msg_rssi_status_free(struct msmcomm_message *msg)
+void msg_get_imei_free(struct msmcomm_message *msg)
 {
     talloc_free(msg->payload);
 }
 
-uint8_t *msg_rssi_status_prepare_data(struct msmcomm_message *msg)
+uint8_t *msg_get_imei_prepare_data(struct msmcomm_message *msg)
 {
-    MESSAGE_CAST(msg, struct rssi_status_msg)->ref_id = msg->ref_id;
-
+    MESSAGE_CAST(msg, struct get_imei_msg)->ref_id = msg->ref_id;
     return msg->payload;
-}
-
-void msmcomm_message_rssi_status_set_status(struct msmcomm_message *msg, uint8_t status)
-{
-    MESSAGE_CAST(msg, struct rssi_status_msg)->status = status ? 1 : 0;
-}
-
-/*
- * MSMCOMM_COMMAND_SET_MODE_PREFERENCE
- */
-
-void msg_set_mode_preference_init(struct msmcomm_message *msg)
-{
-    msg->group_id = 0x3;
-    msg->msg_id = 0x1;
-
-    msg->payload = talloc_zero(talloc_msmc_ctx, struct set_mode_preference_msg);
-}
-
-uint32_t msg_set_mode_preference_get_size(struct msmcomm_message *msg)
-{
-    return sizeof (struct set_mode_preference_msg);
-}
-
-void msg_set_mode_preference_free(struct msmcomm_message *msg)
-{
-    talloc_free(msg->payload);
-}
-
-uint8_t *msg_set_mode_preference_prepare_data(struct msmcomm_message *msg)
-{
-    MESSAGE_CAST(msg, struct set_mode_preference_msg)->ref_id = msg->ref_id;
-
-    /* NOTE: The following values are the same for every mode! */
-    MESSAGE_CAST(msg, struct set_mode_preference_msg)->value0 = 0x3;
-
-    MESSAGE_CAST(msg, struct set_mode_preference_msg)->value1 = 0x40;
-
-    MESSAGE_CAST(msg, struct set_mode_preference_msg)->value2 = 0x40;
-
-    MESSAGE_CAST(msg, struct set_mode_preference_msg)->value3 = 0x1;
-
-    MESSAGE_CAST(msg, struct set_mode_preference_msg)->value4 = 0x2;
-
-    MESSAGE_CAST(msg, struct set_mode_preference_msg)->value5 = 0x4;
-
-    return msg->payload;
-}
-
-void msmcomm_message_set_mode_preference_status_set_mode(struct msmcomm_message *msg,
-                                                         unsigned int mode)
-{
-    uint8_t mode_value = 0x0;
-
-    switch (mode)
-    {
-        case MSMCOMM_NETWORK_MODE_AUTOMATIC:
-            mode_value = 0x2;
-            break;
-        case MSMCOMM_NETWORK_MODE_GSM:
-            mode_value = 0xd;
-            break;
-        case MSMCOMM_NETWORK_MODE_UMTS:
-            mode_value = 0xe;
-            break;
-        default:
-            INFO("You set some unknown preference mode. Please choose GSM, UMTS or AUTOMATIC.");
-            return;
-    }
-
-    MESSAGE_CAST(msg, struct set_mode_preference_msg)->mode = mode_value;
 }

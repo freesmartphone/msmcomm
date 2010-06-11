@@ -92,17 +92,8 @@ uint32_t event_charger_status_get_size(struct msmcomm_message * msg)
 }
 
 /*
- * MSMCOMM_EVENT_OPERATOR_MODE
+ * MSMCOMM_EVENT_OPERATION_MODE
  */
-
-/*
-handleRadioData groupId = 0x5, msgId = 0x0 
-handleRadioData HCI_SUBSYS_CM_PH_EVT with msgId 0x0 mNetworkSelModePref 0 
-handleRadioData HCI_CM_PH_OPRT_MODE_EVT = 5, powerState = 3 network Selection Mode 0 
-handleRadioData HCI_CM_PH_OPRT_MODE_EVT line = 255, als_Allowed = 0 
-handleRadioData Alsline = 255, alsSim = 0 
-handleRadioData Received HCI_SYS_OPRT_MODE_ONLINE 
-*/
 
 unsigned int event_operator_mode_is_valid(struct msmcomm_message *msg)
 {
@@ -122,25 +113,4 @@ uint32_t event_operator_mode_get_size(struct msmcomm_message * msg)
     return sizeof (struct cm_ph_event);
 }
 
-/*
- * MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE
- */
 
-unsigned int event_cm_ph_info_available_is_valid(struct msmcomm_message *msg)
-{
-    return (msg->group_id == 0x5) && (msg->msg_id == 0xe);
-}
-
-void event_cm_ph_info_available_handle_data(struct msmcomm_message *msg, uint8_t * data,
-                                            uint32_t len)
-{
-    if (len != sizeof (struct cm_ph_event))
-        return;
-
-    msg->payload = data;
-}
-
-uint32_t event_cm_ph_info_available_get_size(struct msmcomm_message * msg)
-{
-    return sizeof (struct cm_ph_event);
-}
