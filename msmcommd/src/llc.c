@@ -265,7 +265,7 @@ static void tx_item_try_send(struct msmc_context *ctx, struct tx_item *ti)
 
     if (ti->attempts >= MSMC_FRAME_MAX_ATTEMPTS)
     {
-        DEBUG("We have send a packet more than %i times with no response, restarting link!");
+        DEBUG_MSG("We have send a packet more than %i times with no response, restarting link!");
         restart_link(ctx);
         return;
     }
