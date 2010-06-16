@@ -21,6 +21,10 @@
 
 #include "internal.h"
 
+/*
+ * Some helpful macros
+ */
+
 #define NEW_TYPE(type, name) \
 	extern unsigned int type##_##name##_is_valid(struct msmcomm_message *msg); \
 	extern void type##_##name##_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len); \
@@ -41,23 +45,41 @@
 		type##_##name##_is_valid, \
 		NULL \
 		}
+        
 #define GROUP_DATA(name) \
 	{	MSMCOMM_MESSAGE_INVALID, \
 		NULL, NULL, NULL, NULL, \
 		group_##name##_handle_data, \
 		group_##name##_is_valid, \
 		group_##name##_get_type }
+        
 #define EVENT_DATA(type, name) TYPE_DATA(event, type, name)
 #define RESPONSE_DATA(type, name) TYPE_DATA(resp, type, name)
-RESPONSE_TYPE(get_imei) RESPONSE_TYPE(get_firmware_info) RESPONSE_TYPE(test_alive)
 
 /*
-RESPONSE_TYPE(pdsm_pd_get_pos)
-RESPONSE_TYPE(pdsm_pd_end_session)
-RESPONSE_TYPE(pa_set_param)
-RESPONSE_TYPE(lcs_agent_client_rsp)
-RESPONSE_TYPE(xtra_set_data)
-*/
+ * Group event types
+ */
+
+GROUP_TYPE(sim) 
+GROUP_TYPE(call) 
+GROUP_TYPE(sups)
+
+struct descriptor group_descriptors[] = {
+    GROUP_DATA(sim),
+    GROUP_DATA(call),
+    GROUP_DATA(sups),
+};
+
+const unsigned int group_descriptors_count = sizeof (group_descriptors)
+    / sizeof (struct descriptor);
+
+/*
+ * Responses
+ */
+
+RESPONSE_TYPE(get_imei) 
+RESPONSE_TYPE(get_firmware_info) 
+RESPONSE_TYPE(test_alive)
 RESPONSE_TYPE(sim)
 RESPONSE_TYPE(sound)
 RESPONSE_TYPE(cm_call)
@@ -70,66 +92,10 @@ RESPONSE_TYPE(phonebook)
 RESPONSE_TYPE(get_phonebook_properties)
 RESPONSE_TYPE(audio_modem_tuning_params)
 
-EVENT_TYPE(radio_reset_ind)
-EVENT_TYPE(charger_status)
-EVENT_TYPE(operator_mode) 
-EVENT_TYPE(cm_ph_info_available) 
-EVENT_TYPE(get_networklist)
-EVENT_TYPE(cm_ph)
-
-/*
-EVENT_TYPE(pdsm_pd_done)
-EVENT_TYPE(pd_position_data)
-EVENT_TYPE(pd_parameter_change)
-EVENT_TYPE(pdsm_lcs)
-EVENT_TYPE(pdsm_xtra)
-*/
-EVENT_TYPE(power_state)
-EVENT_TYPE(network_state_info)
-EVENT_TYPE(phonebook_ready) 
-EVENT_TYPE(phonebook_modified)
-
-GROUP_TYPE(sim) 
-GROUP_TYPE(call) 
-GROUP_TYPE(sups)
-
-struct descriptor group_descriptors[] = {
-    GROUP_DATA(sim),
-    GROUP_DATA(call),
-    GROUP_DATA(sups),
-};
-
 struct descriptor resp_descriptors[] = {
-    /* events */
-    EVENT_DATA(MSMCOMM_EVENT_RESET_RADIO_IND, radio_reset_ind),
-    EVENT_DATA(MSMCOMM_EVENT_CHARGER_STATUS, charger_status),
-    EVENT_DATA(MSMCOMM_EVENT_OPERATION_MODE, operator_mode),
-    EVENT_DATA(MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE, cm_ph_info_available),
-    /*
-       EVENT_DATA(MSMCOMM_EVENT_PDSM_PD_DONE, pdsm_pd_done),
-       EVENT_DATA(MSMCOMM_EVENT_PD_POSITION_DATA, pd_position_data),
-       EVENT_DATA(MSMCOMM_EVENT_PD_PARAMETER_CHANGE, pd_parameter_change),
-       EVENT_DATA(MSMCOMM_EVENT_PDSM_LCS, pdsm_lcs),
-       EVENT_DATA(MSMCOMM_EVENT_PDSM_XTRA, pdsm_xtra),
-     */
-    //EVENT_DATA(MSMCOMM_EVENT_POWER_STATE, power_state),
-    EVENT_DATA(MSMCOMM_EVENT_NETWORK_STATE_INFO, network_state_info),
-    EVENT_DATA(MSMCOMM_EVENT_GET_NETWORKLIST, get_networklist),
-    EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_READY, phonebook_ready),
-    EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_MODIFIED, phonebook_modified),
-    EVENT_DATA(MSMCOMM_EVENT_CM_PH, cm_ph),
-
-    /* responses */
     RESPONSE_DATA(MSMCOMM_RESPONSE_TEST_ALIVE, test_alive),
     RESPONSE_DATA(MSMCOMM_RESPONSE_GET_FIRMWARE_INFO, get_firmware_info),
     RESPONSE_DATA(MSMCOMM_RESPONSE_GET_IMEI, get_imei),
-    /*
-       RESPONSE_DATA(MSMCOMM_RESPONSE_PDSM_PD_GET_POS, pdsm_pd_get_pos),
-       RESPONSE_DATA(MSMCOMM_RESPONSE_PDSM_PD_END_SESSION, pdsm_pd_end_session),
-       RESPONSE_DATA(MSMCOMM_RESPONSE_PA_SET_PARAM, pa_set_param),
-       RESPONSE_DATA(MSMCOMM_RESPONSE_LCS_AGENT_CLIENT_RSP, lcs_agent_client_rsp),
-       RESPONSE_DATA(MSMCOMM_RESPONSE_XTRA_SET_DATA, xtra_set_data),
-     */
     RESPONSE_DATA(MSMCOMM_RESPONSE_SIM, sim),
     RESPONSE_DATA(MSMCOMM_RESPONSE_SOUND, sound),
     RESPONSE_DATA(MSMCOMM_RESPONSE_CM_CALL, cm_call),
@@ -145,14 +111,101 @@ struct descriptor resp_descriptors[] = {
 
 const unsigned int resp_descriptors_count = sizeof (resp_descriptors) / sizeof (struct descriptor);
 
-const unsigned int group_descriptors_count = sizeof (group_descriptors)
-    / sizeof (struct descriptor);
+/*
+ * Events
+ */
+
+EVENT_TYPE(radio_reset_ind)
+EVENT_TYPE(charger_status)
+EVENT_TYPE(operator_mode) 
+EVENT_TYPE(cm_ph_info_available) 
+EVENT_TYPE(get_networklist)
+EVENT_TYPE(cm_ph)
+EVENT_TYPE(power_state)
+EVENT_TYPE(network_state_info)
+EVENT_TYPE(phonebook_ready) 
+EVENT_TYPE(phonebook_modified)
+
+struct descriptor event_descriptors[] = {
+    EVENT_DATA(MSMCOMM_EVENT_RESET_RADIO_IND, radio_reset_ind),
+    EVENT_DATA(MSMCOMM_EVENT_CHARGER_STATUS, charger_status),
+    EVENT_DATA(MSMCOMM_EVENT_OPERATION_MODE, operator_mode),
+    EVENT_DATA(MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE, cm_ph_info_available),
+    EVENT_DATA(MSMCOMM_EVENT_NETWORK_STATE_INFO, network_state_info),
+    EVENT_DATA(MSMCOMM_EVENT_GET_NETWORKLIST, get_networklist),
+    EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_READY, phonebook_ready),
+    EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_MODIFIED, phonebook_modified),
+    EVENT_DATA(MSMCOMM_EVENT_CM_PH, cm_ph),
+};
+
+const unsigned int event_descriptors_count = sizeof (event_descriptors) / sizeof (struct descriptor);
+
+
+struct descriptor * find_descriptor(struct msmcomm_message *message, unsigned int descriptor_type, int *self_naming)
+{
+    int n = 0;
+    int descriptor_count = 0;
+    struct descriptor *descriptors = NULL;
+    struct descriptor *result = NULL;
+	struct descriptor *d = NULL;
+    
+	*self_naming = 1;
+	
+    switch (descriptor_type)
+    {
+        case DESCRIPTOR_TYPE_INVALID:
+            return NULL;
+        case DESCRIPTOR_TYPE_GROUP:
+            descriptors = group_descriptors;
+            descriptor_count = group_descriptors_count;
+			*self_naming = 0;
+            break;
+        case DESCRIPTOR_TYPE_EVENT:
+            descriptors = event_descriptors;
+            descriptor_count = event_descriptors_count;
+            break;
+        case DESCRIPTOR_TYPE_RESPONSE:
+            descriptors = resp_descriptors;
+            descriptor_count = resp_descriptors_count;
+            break;
+    }
+    
+    /* Find the right descriptor */
+	d = descriptors;
+    for (n = 0; n < descriptor_count; n++)
+    {
+        /* check for valid callbacks */
+        if (d->is_valid == NULL || d->handle_data == NULL)
+            continue;
+        
+        /* if we have a descriptor set which provides get_type callback, check it! */
+        if (!*self_naming)
+        {
+            if (d->get_type == NULL)
+                continue;
+        } 
+        
+        /* check if message is valid for this descriptor */
+        if (d->is_valid(message))
+        {
+            result = d;
+            break;
+        }
+        
+        d++;
+    }
+    
+    return result;
+}
+
 
 int handle_response_data(struct msmcomm_context *ctx, uint8_t * data, uint32_t len)
 {
     int n;
+	int self_naming = 1;
+	int type = MSMCOMM_MESSAGE_INVALID;
 
-    struct msmcomm_message resp;
+    struct msmcomm_message message;
 
     /* we can already report events to our user? */
     if (ctx->event_cb == NULL)
@@ -168,57 +221,35 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t * data, uint32_t l
      * of the descritors gets this out of the msgId set in the response
      * structure.
      */
-    resp.group_id = data[0];
-    resp.msg_id = data[1] | (data[2] << 8);
-    resp.payload = NULL;
-    resp.descriptor = NULL;
-    resp.result = MSMCOMM_RESULT_OK;
+	message.group_id = data[0];
+	message.msg_id = data[1] | (data[2] << 8);
+	message.payload = NULL;
+	message.descriptor = NULL;
+	message.result = MSMCOMM_RESULT_OK;
+    
+	/* Find the right descriptor for the message s*/
+    if ((message.descriptor = find_descriptor(&message, DESCRIPTOR_TYPE_GROUP, &self_naming)) == NULL &&
+		(message.descriptor = find_descriptor(&message, DESCRIPTOR_TYPE_EVENT, &self_naming)) == NULL &&
+		(message.descriptor = find_descriptor(&message, DESCRIPTOR_TYPE_RESPONSE, &self_naming)) == NULL)
+	{
+		/* could not find any valid descriptor for this message */
+		return 0;
+	}
+    
+    
+     /* let our descriptor handle the left data */
+    message.descriptor->handle_data(&message, data + 3, len - 3);
 
-    /* first we check if we have a group which handle's this response or event */
-    for (n = 0; n < group_descriptors_count; n++)
-    {
-        /* is descriptor valid? */
-        if (group_descriptors[n].is_valid == NULL ||
-            group_descriptors[n].handle_data == NULL || group_descriptors[n].get_type == NULL)
-            continue;
-
-        if (group_descriptors[n].is_valid(&resp))
-        {
-            /* let our descriptor handle the left data */
-            group_descriptors[n].handle_data(&resp, data + 3, len - 3);
-
-            /* save descriptor for later use */
-            resp.descriptor = &group_descriptors[n];
-
-            /* tell the user about the received event/response */
-            if (ctx->event_cb)
-                ctx->event_cb(ctx, group_descriptors[n].get_type(&resp), &resp);
-
-            return 1;
-        }
-    }
-
-    /* find the right rsp descriptor */
-    for (n = 0; n < resp_descriptors_count; n++)
-    {
-        if (resp_descriptors[n].is_valid == NULL || resp_descriptors[n].handle_data == NULL)
-            continue;
-
-        if (resp_descriptors[n].is_valid(&resp))
-        {
-            /* let our descriptor handle the left data */
-            resp_descriptors[n].handle_data(&resp, data + 3, len - 3);
-
-            /* save descriptor for later use */
-            resp.descriptor = &resp_descriptors[n];
-
-            /* tell the user about the received event/response */
-            if (ctx->event_cb)
-                ctx->event_cb(ctx->event_data, resp_descriptors[n].type, &resp);
-
-            return 1;
-        }
-    }
-
-    return 0;
+	
+	if (self_naming) {
+		type = message.descriptor->type;
+	}
+	else {
+		type = message.descriptor->get_type(&message);
+	}
+	
+	/* Tell the user about the received message */
+    ctx->event_cb(ctx->event_data, type, &message);
+    
+    return 1;
 }

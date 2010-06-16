@@ -65,6 +65,7 @@
 #define DESCRIPTOR_TYPE_MESSAGE		1
 #define DESCRIPTOR_TYPE_RESPONSE	2
 #define DESCRIPTOR_TYPE_GROUP		3
+#define DESCRIPTOR_TYPE_EVENT 		4
 
 #define SUBSYSTEM_ID(msg) ((msg->msg_id & 0xf0) >> 8)
 #define MSG_ID(msg) (msg->msg_id & 0xf)
