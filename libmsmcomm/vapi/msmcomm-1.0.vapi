@@ -814,7 +814,7 @@ namespace Msmcomm
             get;
         }
 
-        public uint8 index {
+        public uint32 index {
             [CCode (cname = "msmcomm_message_get_ref_id")]
             get;
             [CCode (cname = "msmcomm_message_set_ref_id")]
