@@ -24,6 +24,11 @@
 
 #include <stdint.h>
 
+#define MSMCOMM_MESSAGE_TYPE_NONE                                   0
+#define MSMCOMM_MESSAGE_TYPE_COMMAND                                1
+#define MSMCOMM_MESSAGE_TYPE_RESPONSE                               2
+#define MSMCOMM_MESSAGE_TYPE_EVENT                                  3
+
 #define MSMCOMM_MESSAGE_INVALID                                     0
 #define MSMCOMM_MESSAGE_NOT_USED                                    1
 
@@ -383,6 +388,7 @@ uint32_t msmcomm_message_get_type(struct msmcomm_message *msg);
 uint32_t msmcomm_message_get_ref_id(struct msmcomm_message *msg);
 void msmcomm_message_set_ref_id(struct msmcomm_message *msg, uint32_t ref_id);
 unsigned int msmcomm_message_get_result(struct msmcomm_message *msg);
+unsigned int msmcomm_message_get_message_type(struct msmcomm_message *msg);
 
 /**
  * These are message/response/event specific operations which only should be

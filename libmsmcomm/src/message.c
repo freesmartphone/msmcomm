@@ -83,6 +83,7 @@ struct msmcomm_message *msmcomm_create_message(unsigned int type)
     msg->descriptor = NULL;
     msg->descriptor_type = DESCRIPTOR_TYPE_INVALID;
     msg->result = MSMCOMM_RESULT_OK;
+    msg->type = MSMCOMM_MESSAGE_TYPE_COMMAND;
 
     /* find the right message descriptor and init our message */
     for (n = 0; n < msg_descriptors_size; n++)
@@ -161,3 +162,9 @@ unsigned int msmcomm_message_get_result(struct msmcomm_message *msg)
 {
     return msg->result;
 }
+
+unsigned int msmcomm_message_get_message_type(struct msmcomm_message *msg)
+{
+    return msg->type;
+}
+

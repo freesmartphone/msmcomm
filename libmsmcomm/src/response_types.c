@@ -221,34 +221,45 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t * data, uint32_t l
      * of the descritors gets this out of the msgId set in the response
      * structure.
      */
-	message.group_id = data[0];
-	message.msg_id = data[1] | (data[2] << 8);
-	message.payload = NULL;
-	message.descriptor = NULL;
-	message.result = MSMCOMM_RESULT_OK;
+    message.group_id = data[0];
+    message.msg_id = data[1] | (data[2] << 8);
+    message.payload = NULL;
+    message.descriptor = NULL;
+    message.result = MSMCOMM_RESULT_OK;
+    message.type = MSMCOMM_MESSAGE_TYPE_NONE;
     
-	/* Find the right descriptor for the message s*/
-    if ((message.descriptor = find_descriptor(&message, DESCRIPTOR_TYPE_GROUP, &self_naming)) == NULL &&
-		(message.descriptor = find_descriptor(&message, DESCRIPTOR_TYPE_EVENT, &self_naming)) == NULL &&
-		(message.descriptor = find_descriptor(&message, DESCRIPTOR_TYPE_RESPONSE, &self_naming)) == NULL)
-	{
-		/* could not find any valid descriptor for this message */
-		return 0;
-	}
+    /* Find the right descriptor for the message s*/
+    if ((message.descriptor = find_descriptor(&message, DESCRIPTOR_TYPE_GROUP, &self_naming)) == NULL) {
+        if ((message.descriptor = find_descriptor(&message, DESCRIPTOR_TYPE_EVENT, &self_naming)) == NULL) {
+            if ((message.descriptor = find_descriptor(&message, DESCRIPTOR_TYPE_RESPONSE, &self_naming)) == NULL) {
+                /* could not find any valid descriptor for this message */
+                return 0;
+            }
+            else {
+                message.type = MSMCOMM_MESSAGE_TYPE_RESPONSE;
+            }
+        }
+        else {
+            message.type = MSMCOMM_MESSAGE_TYPE_EVENT;
+        }
+    }
+    else {
+        message.type = MSMCOMM_MESSAGE_TYPE_EVENT;
+    }
     
     
      /* let our descriptor handle the left data */
     message.descriptor->handle_data(&message, data + 3, len - 3);
 
-	
-	if (self_naming) {
-		type = message.descriptor->type;
-	}
-	else {
-		type = message.descriptor->get_type(&message);
-	}
-	
-	/* Tell the user about the received message */
+    
+    if (self_naming) {
+        type = message.descriptor->type;
+    }
+    else {
+        type = message.descriptor->get_type(&message);
+    }
+    
+    /* Tell the user about the received message */
     ctx->event_cb(ctx->event_data, type, &message);
     
     return 1;

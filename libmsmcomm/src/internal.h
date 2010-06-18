@@ -91,6 +91,7 @@ struct msmcomm_message
 	uint16_t msg_id;
 	uint32_t ref_id;
 	uint32_t descriptor_type;
+    uint32_t type;
 	struct descriptor *descriptor;
 	void *payload;
 	unsigned int result;

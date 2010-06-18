@@ -80,6 +80,36 @@ namespace Msmcomm
             get;
         }
     }
+    
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MESSAGE_TYPE_", cheader_filename = "msmcomm.h")]
+    public enum MessageType
+    {
+        NONE,
+        COMMAND,
+        RESPONSE,
+        EVENT,
+    }
+    
+    public string messageTypeToString(MessageType type)
+    {
+        var result = "<unknown>";
+        switch (type)
+        {
+            case MessageType.NONE:
+                result = "NONE";
+                break;
+            case MessageType.COMMAND:
+                result = "COMMAND";
+                break;
+            case MessageType.RESPONSE:
+                result = "RESPONSE";
+                break;
+            case MessageType.EVENT:
+                result = "EVENT";
+                break;
+        }
+        return result;
+    }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_COMMAND_", cheader_filename = "msmcomm.h")]
     public enum CommandType
@@ -814,7 +844,7 @@ namespace Msmcomm
             get;
         }
 
-        public uint32 index {
+        public uint32    {
             [CCode (cname = "msmcomm_message_get_ref_id")]
             get;
             [CCode (cname = "msmcomm_message_set_ref_id")]
@@ -826,12 +856,17 @@ namespace Msmcomm
 			get;
 		}
 
+        public MessageType message_type {
+            [CCode (cname = "msmcomm_message_get_message_type")]
+            get;
+        }
+
         [CCode (cname = "msmcomm_message_make_copy")]
         public Message copy();
 
         public string to_string()
         {
-            var str = "[MSM] rc %s ref %02x len %d : %s".printf( resultTypeToString(result), index, size, Msmcomm.eventTypeToString( type ) );
+            var str = "[MSM] type %s rc %s ref %02x len %d : %s".printf( messageTypeToString(message_type), resultTypeToString(result), index, size, Msmcomm.eventTypeToString( type ) );
             var details = "";
 
             switch ( type )
