@@ -137,12 +137,12 @@ static void base_timer_cb(void *data)
 int main(int argc, char *argv[])
 {
     int retval;
-
     struct msmc_context *ctx;
-
     int option_index;
-
     struct config *cf = NULL;
+    char *config_path[] = { "./msmcommd.conf", "/etc/msmcommd.conf" };
+    int config_path_num = 2;
+    int n = 0;
 
     log_change_target(LOG_TARGET_STDERR);
 
@@ -154,7 +154,13 @@ int main(int argc, char *argv[])
     snprintf(ctx->relay_addr, BUF_SIZE, "127.0.0.1");
     snprintf(ctx->relay_port, 5, "3030");
 
-    cf = config_load("/etc/msmcommd.conf");
+    for (n = 0; n < config_path_num; n++) {
+        cf = config_load(config_path[n]);
+        if (cf != NULL) {
+            break;
+        }
+    }
+
     if (cf == NULL)
     {
         ERROR_MSG("ERROR: could not parse the configuration file at /etc/msmcommd.conf");
