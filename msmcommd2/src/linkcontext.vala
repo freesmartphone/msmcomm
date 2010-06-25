@@ -96,9 +96,9 @@ namespace Msmcomm
 
         public void changeState(LinkStateType new_state)
         {
-            FsoFramework.theLogger.debug(@"leaving $(linkStateTypeToString(state)) state ...");
+            FsoFramework.theLogger.info(@"leaving $(linkStateTypeToString(state)) state ...");
             state = new_state;
-            FsoFramework.theLogger.debug(@"entering $(linkStateTypeToString(state)) state ...");
+            FsoFramework.theLogger.info(@"entering $(linkStateTypeToString(state)) state ...");
         }
     }
     
