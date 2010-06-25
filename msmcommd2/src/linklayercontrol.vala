@@ -50,6 +50,8 @@ public class LinkLayerControl : GLib.Object
 
     public void reset()
     {
+        logger.debug("LinkLayerControl::reset");
+        
         context.reset();
         
         foreach (AbstractLinkHandler handler in handlers)
@@ -117,6 +119,7 @@ public class LinkLayerControl : GLib.Object
     {
         handler.requestSendFrame.connect(handleFrameSendRequest);
         handler.requestReset.connect(handleResetRequest);
+        handlers.add(handler);
     }
     
     private void handleFrameSendRequest(Frame frame)
