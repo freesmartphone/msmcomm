@@ -29,7 +29,7 @@ namespace Msmcomm
         int BYTES_PER_LINE = 16;
 
         uchar* pointer = (uchar*) data;
-        var hexline = new StringBuilder( write? ">>> " : "<<< " );
+        var hexline = new StringBuilder( write? "<<< " : ">>> " );
         var ascline = new StringBuilder();
         uchar b;
         int i;
