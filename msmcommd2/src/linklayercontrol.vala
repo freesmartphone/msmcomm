@@ -28,6 +28,7 @@ public class LinkLayerControl : GLib.Object
     private LinkContext context;
     private Gee.ArrayList<AbstractLinkHandler> handlers;
     private TransmissionHandler transmission_handler;
+    private FsoFramework.SmartKeyFile config;
 
     //
     // public API
@@ -36,6 +37,7 @@ public class LinkLayerControl : GLib.Object
     public LinkLayerControl()
     {
         logger = FsoFramework.theLogger;
+        config = FsoFramework.theConfig;
         context = new LinkContext();
 
         Crc16.setup();
@@ -47,6 +49,8 @@ public class LinkLayerControl : GLib.Object
         
         transmission_handler = new TransmissionHandler(context);
         transmission_handler.requestHandleSendData.connect((data) => { requestHandleSendData(data); });
+        
+        configure();
     }
 
     public void reset()
@@ -74,7 +78,7 @@ public class LinkLayerControl : GLib.Object
             // have found a valid frame
             if (byte == 0x7e)
             {
-                var tmp = data[start:n];
+                // var tmp = data[start:n];
                 // hexdump(false, tmp, tmp.length, FsoFramework.theLogger);
                 
                 // We have found a valid frame, first unpack it 
@@ -98,6 +102,12 @@ public class LinkLayerControl : GLib.Object
     //
     // private API
     //
+    
+    private void configure()
+    {
+        context.window_size = (uint8) config.intValue("flowcontrol", "window_size", 8);
+        context.max_send_attempts = (uint8) config.intValue("flowcontrol", "max_send_attempts", 10);
+    }
 
     private void handleIncommingFrame(Frame frame)
     {

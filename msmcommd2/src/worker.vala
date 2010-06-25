@@ -27,12 +27,9 @@ public class Worker
 {
     private FsoFramework.Transport transport;
     private FsoFramework.Logger logger;
+    private FsoFramework.SmartKeyFile config;
     private LinkLayerControl llc;
-
-    public Worker()
-    {
-        logger = FsoFramework.theLogger;
-    }
+    private Gee.HashMap<string,string> modem_config;
 
     //
     // private API
@@ -47,24 +44,48 @@ public class Worker
         llc.processIncommingData(data);
     }
 
-    public void onTransportHangup(FsoFramework.Transport t)
+    private void onTransportHangup(FsoFramework.Transport t)
     {
         // FIXME
     }
 
-    public void handleSendDataRequest(uint8[] data)
+    private void handleSendDataRequest(uint8[] data)
     {
         // hexdump(true, data, data.length, FsoFramework.theLogger);
         transport.write(data, data.length);
+    }
+    
+    private void configure()
+    {
+        modem_config["connection_type"] = config.stringValue("connection", "type", "serial");
+        
+        if (modem_config["connection_type"] == "serial")
+        {   
+            modem_config["path"] = config.stringValue("connection", "path", "/dev/modemuart");
+        }
+        else if (modem_config["connection_type"] == "network")
+        {
+            modem_config["ip"] = config.stringValue("connection", "ip", "192.168.0.202");
+            modem_config["port"] = config.stringValue("connection", "port", "3001");
+        }
     }
 
     //
     // public API
     //
+    
+    public Worker()
+    {
+        logger = FsoFramework.theLogger;
+        config = FsoFramework.theConfig;
+        modem_config = new Gee.HashMap<string,string>();
+    }
 
     public bool setup()
     {
         logger.info("setup everything we need ...");
+        
+        configure();
 
         // setup transport
         // FIXME read ip + port from configuration
