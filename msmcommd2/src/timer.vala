@@ -28,14 +28,23 @@ namespace Msmcomm
         public int interval { get; set; default = 0; }
         public int priority { get; set; default = GLib.Priority.DEFAULT; }
         public bool running { get { return id > 0; } }
-        
+
         //
         // private API
         //
         
         private bool onTimerEvent()
         {
-            return requestHandleEvent(this);
+            bool result = requestHandleEvent(this);
+            
+            // If user choose to stop the timer through the callback,
+            // reset the saved timer id before
+            if (!result)
+            {
+                id = 0;
+            }
+            
+            return result;
         }
         
         // 
@@ -61,6 +70,7 @@ namespace Msmcomm
             if (id > 0)
             {
                 GLib.Source.remove(id);
+                id = 0;
             }
         }
         
