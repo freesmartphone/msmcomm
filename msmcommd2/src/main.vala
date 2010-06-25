@@ -27,8 +27,6 @@ public static void SIGINT_handler( int signum )
 {
     Posix.signal( signum, null ); // restore original signal handler
     loop.quit();
-    Readline.free_line_state();
-    Readline.cleanup_after_signal();
 }
 
 public int main( string[] args )
@@ -36,7 +34,7 @@ public int main( string[] args )
     loop = new MainLoop( null, false );
     Posix.signal( Posix.SIGINT, SIGINT_handler );
     
-    var worker = Msmcomm.Worker();
+    var worker = new Msmcomm.Worker();
     Idle.add(worker.setup);
 
     loop.run();

@@ -1,6 +1,7 @@
 NULL =
 
 VALAC_ARGS = \
+	--debug \
 	--vapidir ../vapi \
 	--pkg posix \
 	--pkg glib-2.0 \
@@ -25,10 +26,16 @@ msmcommd_VALASOURCES = \
 	main.vala \
 	crc.vala \
 	frame.vala \
-	llc.vala \
 	timer.vala \
+	util.vala \
+	linkcontext.vala \
+	abstractlinkhandler.vala \
+	activelinkhandler.vala \
+	flowcontrolhandler.vala \
+	setuplinkhandler.vala \
+	transmissionhandler.vala \
+	linklayercontrol.vala \
 	worker.vala \
-	transferobject.vala \
 	$(NULL)
 
 msmcommd_SOURCES = \

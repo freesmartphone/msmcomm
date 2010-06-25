@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  **/
- 
+
 namespace Msmcomm
 {
 
@@ -26,47 +26,67 @@ namespace Msmcomm
 public class Worker
 {
     private FsoFramework.Transport transport;
+    private FsoFramework.Logger logger;
     private LinkLayerControl llc;
-    
+
     public Worker()
     {
+        logger = FsoFramework.theLogger;
     }
-    
-    // 
+
+    //
     // private API
     //
-    
-    private void onTransportReadyToRead( FsoFramework.Transport t )
+
+    private void onTransportReadyToRead(FsoFramework.Transport t)
     {
+        int bread = 0;
+        var data = new uint8[4096];
+        
+        bread = t.read(data, data.length);
+        llc.processIncommingData(data);
     }
-    
-    public void onTransportHangup( FsoFramework.Transport t )
+
+    public void onTransportHangup(FsoFramework.Transport t)
     {
+        // FIXME
     }
-    
-    // 
+
+    public void handleDataSendRequest(uint8[] data)
+    {
+        hexdump(false, data, data.length, FsoFramework.theLogger);
+        transport.write(data, data.length);
+    }
+
+    //
     // public API
     //
-    
+
     public bool setup()
     {
+        logger.info("setup everything we need ...");
+        logger.debug("test");
+
         // setup transport
         // FIXME read ip + port from configuration
-        transport = new FsoFramework.SocketTransport("tcp", "192.168.0.202", "3001");
+        transport = new FsoFramework.SocketTransport("tcp", "192.168.0.202", 3001);
         transport.setDelegates(onTransportReadyToRead, onTransportHangup);
-        
-        // Some the transport could not create, log error and abort mainloop 
+
+        // Some the transport could not create, log error and abort mainloop
         if ( !transport.open() )
         {
             logger.error("Could not open transport");
             loop.quit();
             return false;
         }
-        
+
         // setup link layer control
         llc = new LinkLayerControl();
-        // FIXME connect to several events of the link layer control ...
-        
+        llc.handleDataSendRequest.connect(handleDataSendRequest);
+        // FIXME llc.handleFrameContent += ...
+
+        llc.reset();
+
         return false;
     }
 }

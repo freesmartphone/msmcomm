@@ -21,29 +21,67 @@
  
 namespace Msmcomm 
 {
-
-public class Timer : GLib.Object
-{
-    private uint id { get; set; default = 0; }
-    public interval { get; set; default = 0; }
-    public GLib.SourceFunc cb { get; set; }
-    public GLib.Priority priority { get; set; default = GLib.Priority.DEFAULT);
-    
-    public void start()
+    public class Timer : GLib.Object
     {
-        id = GLib.Timeout.add(interval, cb, priority);
+        private uint id { get; set; default = 0; }
+        
+        public int interval { get; set; default = 0; }
+        public int priority { get; set; default = GLib.Priority.DEFAULT; }
+        public bool running { get { return id > 0; } }
+        
+        //
+        // private API
+        //
+        
+        private bool onTimerEvent()
+        {
+            return requestHandleEvent(this);
+        }
+        
+        // 
+        // public API
+        //
+        
+        /**
+        * Starts the timer if it is not already running
+        **/
+        public void start()
+        {
+            if (id == 0) 
+            {
+                id = GLib.Timeout.add_full(priority, interval, onTimerEvent);
+            }
+        }
+        
+        /**
+        * Stops the timer, if it is running
+        **/
+        public void stop()
+        {
+            if (id > 0)
+            {
+                GLib.Source.remove(id);
+            }
+        }
+        
+        /**
+        * Restart the timer. If it is already running, it is stopped before.
+        **/
+        public void restart()
+        {
+            stop();
+            start();
+        }
+        
+        //
+        // Signals
+        //
+        
+        /**
+        * If the timer elapsed, this signal is called.
+        *
+        * @param timer the timer object the event comes from
+        **/
+        public signal bool requestHandleEvent(Timer timer);
     }
-    
-    public void stop()
-    {
-        GLib.Source.remove(id);
-    }
-    
-    public void restart()
-    {
-        stop();
-        start();
-    }
-}
-
 } // namespace Msmcomm
