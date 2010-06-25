@@ -64,7 +64,7 @@ namespace Msmcomm
                         logger.debug("payload is: FIXME");
                         // FIXME implement hexdump
                         var data = frame.pack();
-                        hexdump(true, data, data.length, logger);
+                        //hexdump(true, data, data.length, logger);
 
                         // we have new data for our registered data handlers
                         // FIXME handleFrameContent(frame.payload);

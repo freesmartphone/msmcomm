@@ -46,6 +46,7 @@ public class LinkLayerControl : GLib.Object
         appendAndPrepareLinkHandler(new ActiveLinkHandler(context));
         
         transmission_handler = new TransmissionHandler(context);
+        transmission_handler.requestHandleSendData.connect((data) => { requestHandleSendData(data); });
     }
 
     public void reset()
@@ -64,8 +65,6 @@ public class LinkLayerControl : GLib.Object
     {
         uint n = 0;
         uint start = 0;
-        
-        logger.debug("Start to search for a valid frame in incomming data ...");
 
         // try to find a valid frame within the incomming data
         foreach (uint8 byte in data)
@@ -75,10 +74,8 @@ public class LinkLayerControl : GLib.Object
             // have found a valid frame
             if (byte == 0x7e)
             {
-                logger.debug("Yeah, found a valid frame !!!");
-
                 var tmp = data[start:n];
-                hexdump(false, tmp, tmp.length, FsoFramework.theLogger);
+                // hexdump(false, tmp, tmp.length, FsoFramework.theLogger);
                 
                 // We have found a valid frame, first unpack it 
                 var frame = new Frame();
@@ -104,7 +101,7 @@ public class LinkLayerControl : GLib.Object
 
     private void handleIncommingFrame(Frame frame)
     {
-        logger.debug(@"Got new new $(frameTypeToString(frame.fr_type)) frame");
+        logger.debug(@"Got a $(frameTypeToString(frame.fr_type)) frame from modem");
 
         foreach (AbstractLinkHandler handler in handlers)
         {
@@ -136,8 +133,8 @@ public class LinkLayerControl : GLib.Object
     // Signals
     //
 
-    public signal void handleDataSendRequest(uint8[] data);
-    public signal void handleFrameContent(uint8[] data);
+    public signal void requestHandleSendData(uint8[] data);
+    public signal void requestHandleFrameContent(uint8[] data);
 }
 
 } // namespace Msmcomm
