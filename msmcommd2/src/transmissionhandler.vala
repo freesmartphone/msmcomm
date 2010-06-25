@@ -39,6 +39,7 @@ namespace Msmcomm
             timer = new Timer();
             timer.interval = 50;
             timer.requestHandleEvent.connect(handleFrameTransmissionRequest);
+            queue = new Gee.LinkedList<Frame>();
         }
         
         public void enequeFrame(Frame frame)
