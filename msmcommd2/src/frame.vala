@@ -253,7 +253,7 @@ namespace Msmcomm
 
             // fill header properties from data
             addr = data[0];
-            fr_type = frameTypeFromByte((data[1] & 0xf0 >> 4));
+            fr_type = frameTypeFromByte(((data[1] & 0xf0) >> 4));
             flags = data[1] & 0x0f;
             seq = (data[2] & 0xf0) >> 4;
             ack = data[2] & 0x0f;
