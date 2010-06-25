@@ -70,7 +70,6 @@ namespace Msmcomm
                     if (frame.fr_type == FrameType.SYNC)
                     {
                         createAndSendFrame(FrameType.SYNC_RESP);
-                        sync_timer.stop();
                     }
                     else if (frame.fr_type == FrameType.SYNC_RESP)
                     {
