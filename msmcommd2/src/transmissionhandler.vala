@@ -62,10 +62,13 @@ namespace Msmcomm
             {
                 // FIXME implement different exception for better error handling while
                 // frame packing
-                requestSendData(frame.pack());
-                queue.remove(frame);
-                context.ack_queue.add(frame);
+                requestHandleSendData(frame.pack());
+                
+                if (frame.fr_type == FrameType.DATA)
+                    context.ack_queue.add(frame);
             }
+            
+            queue.clear();
             
             return false;
         }
@@ -74,7 +77,7 @@ namespace Msmcomm
         // Signals
         //
         
-        public signal void requestSendData(uint8[] data);
+        public signal void requestHandleSendData(uint8[] data);
     }
 
 } // namespace Msmcomm

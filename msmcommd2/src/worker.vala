@@ -52,9 +52,9 @@ public class Worker
         // FIXME
     }
 
-    public void handleDataSendRequest(uint8[] data)
+    public void handleSendDataRequest(uint8[] data)
     {
-        hexdump(false, data, data.length, FsoFramework.theLogger);
+        // hexdump(true, data, data.length, FsoFramework.theLogger);
         transport.write(data, data.length);
     }
 
@@ -65,7 +65,6 @@ public class Worker
     public bool setup()
     {
         logger.info("setup everything we need ...");
-        logger.debug("test");
 
         // setup transport
         // FIXME read ip + port from configuration
@@ -82,7 +81,7 @@ public class Worker
 
         // setup link layer control
         llc = new LinkLayerControl();
-        llc.handleDataSendRequest.connect(handleDataSendRequest);
+        llc.requestHandleSendData.connect(handleSendDataRequest);
         // FIXME llc.handleFrameContent += ...
 
         llc.reset();
