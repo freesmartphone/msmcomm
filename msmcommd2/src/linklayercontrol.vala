@@ -26,6 +26,7 @@ public class LinkLayerControl : GLib.Object
 {
     private FsoFramework.Logger logger;
     private LinkContext context;
+    private RemoteClientHandler remote_handler;
     private Gee.ArrayList<AbstractLinkHandler> handlers;
     private TransmissionHandler transmission_handler;
     private FsoFramework.SmartKeyFile config;
@@ -42,10 +43,23 @@ public class LinkLayerControl : GLib.Object
 
         Crc16.setup();
         
+        //
+        // Below we connect all the different handlers together. It will
+        // take some time to understand which handler is connected to
+        // which. Note: All signals starts with requestHandle... and all
+        // signal handlers with handle...Request...
+        // 
+        
+        remote_handler = new RemoteClientHandler();
+        remote_handler.requestHandleSendDataFromClient.connect(handleDataSendRequestFromClient);
+        
         handlers = new Gee.ArrayList<AbstractLinkHandler>();
         appendAndPrepareLinkHandler(new SetupLinkHandler(context));
         appendAndPrepareLinkHandler(new FlowControlHandler(context));
-        appendAndPrepareLinkHandler(new ActiveLinkHandler(context));
+        
+        var activeLinkHandler = new ActiveLinkHandler(context);
+        activeLinkHandler.requestHandleFrameContent.connect(remote_handler.handleFrameContentRequest);
+        appendAndPrepareLinkHandler(activeLinkHandler);
         
         transmission_handler = new TransmissionHandler(context);
         transmission_handler.requestHandleSendData.connect((data) => { requestHandleSendData(data); });
@@ -127,6 +141,14 @@ public class LinkLayerControl : GLib.Object
         handler.requestSendFrame.connect(handleFrameSendRequest);
         handler.requestReset.connect(handleResetRequest);
         handlers.add(handler);
+    }
+    
+    private void handleDataSendRequestFromClient(uint8[] data)
+    {
+        Frame frame = new  Frame();
+        frame.fr_type = FrameType.DATA;
+        frame.payload = data;
+        handleFrameSendRequest(frame);
     }
     
     private void handleFrameSendRequest(Frame frame)

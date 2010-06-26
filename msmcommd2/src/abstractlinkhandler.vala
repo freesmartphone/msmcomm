@@ -92,5 +92,6 @@ namespace Msmcomm
 
         public signal void requestReset();
         public signal void requestSendFrame(Frame frame);
+        public signal void requestHandleFrameContent(uint8[] data);
     }
 } // namespace Msmcomm

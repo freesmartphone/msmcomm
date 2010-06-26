@@ -36,6 +36,7 @@ msmcommd_VALASOURCES = \
 	transmissionhandler.vala \
 	linklayercontrol.vala \
 	worker.vala \
+	remoteclienthandler.vala \
 	$(NULL)
 
 msmcommd_SOURCES = \

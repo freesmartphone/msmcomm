@@ -52,12 +52,6 @@ namespace Msmcomm
                             // FIXME Should we really drop this frame?
                         //    return;
 
-                        // handle received acknowledge and ack this frame
-                        // handleRecievedAck(frame.ack);
-                        // ackLastRecievedFrame();
-                        
-                        // ack_handler.handleFrame(frame);
-
                         // in debug mode we should log the frame for bug
                         // hunting ...
                         logger.debug("receive data from modem (seq=0x%x, ack=0x%x)".printf(frame.seq, frame.ack));
@@ -67,7 +61,7 @@ namespace Msmcomm
                         //hexdump(true, data, data.length, logger);
 
                         // we have new data for our registered data handlers
-                        // FIXME handleFrameContent(frame.payload);
+                        requestHandleFrameContent(frame.payload);
                         
                         frameHandled = true;
                     }
