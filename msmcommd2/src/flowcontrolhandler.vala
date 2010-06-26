@@ -49,50 +49,59 @@ namespace Msmcomm
             int count = 0;
             bool frameHandled = false;
             
-            if (context.state != LinkStateType.ACTIVE)
-                return false;
-            
-            if (frame.fr_type == FrameType.ACK)
-                frameHandled = true;
-
-            // FIXME move this to ack_timer_cb as we only should handle acknowledging of
-            // frames and not resending them!
-
-            // count of frames which are not acknowledged should be less or equal than
-            // the max window size
-            if (context.ack_queue.size > context.window_size)
+            if (context.state == LinkStateType.ACTIVE && 
+                frame.fr_type == FrameType.ACK || frame.fr_type == FrameType.DATA)
             {
-                /* resend and remove them from ack_queue */
+                if (frame.fr_type == FrameType.ACK)
+                {
+                    frameHandled = true;
+                }
+                else if (frame.fr_type == FrameType.DATA)
+                {
+                    // We got a DATA frame which we be add to the ack_queue by the
+                    // ActiveLinkHandler later, we will start the ack timer for it
+                    timer.start();
+                }
+
+                // FIXME move this to ack_timer_cb as we only should handle acknowledging of
+                // frames and not resending them!
+
+                // count of frames which are not acknowledged should be less or equal than
+                // the max window size
+                if (context.ack_queue.size > context.window_size)
+                {
+                    /* resend and remove them from ack_queue */
+                    foreach (Frame fr in context.ack_queue)
+                    {
+                        if (count == context.window_size)
+                            break;
+
+                        context.ack_queue.remove(fr);
+                        requestSendFrame(fr);
+                        
+                        count++;
+                    }
+                }
+
+                // check which frames are acknowledged with this ack
                 foreach (Frame fr in context.ack_queue)
                 {
-                    if (count == context.window_size)
+                    if (!isValidAcknowledge(context.last_ack, fr.seq, frame.ack))
                         break;
-
-                    context.ack_queue.remove(fr);
-                    requestSendFrame(fr);
                     
-                    count++;
+                    // FIXME we should not change ack_queue content while
+                    // iterating over it ...
+                    context.ack_queue.remove(fr);
                 }
-            }
 
-            // check which frames are acknowledged with this ack
-            foreach (Frame fr in context.ack_queue)
-            {
-                if (!isValidAcknowledge(context.last_ack, fr.seq, frame.ack))
-                    break;
-                
-                // FIXME we should not change ack_queue content while
-                // iterating over it ...
-                context.ack_queue.remove(fr);
-            }
+                if (context.ack_queue.size == 0)
+                {
+                     // ack_queue is empty so stop ack timer
+                    timer.stop();
+                }
 
-            if (context.ack_queue.size == 0)
-            {
-                 // ack_queue is empty so stop ack timer
-                timer.stop();
+                context.last_ack = frame.ack;
             }
-
-            context.last_ack = frame.ack;
             
             return frameHandled;
         }
