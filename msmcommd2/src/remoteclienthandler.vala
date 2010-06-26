@@ -19,12 +19,15 @@
  *
  **/
  
+using GLib;
+ 
 namespace Msmcomm
 {
     public class RemoteClientHandler
     {
         private FsoFramework.Logger logger;
         private FsoFramework.SmartKeyFile config;
+        private SocketService socksrv;
         
         //
         // public API
@@ -36,6 +39,55 @@ namespace Msmcomm
             config = FsoFramework.theConfig;
         }
         
+        public bool start()
+        {
+            var name = "127.0.0.1";
+            var port = "3030";
+            
+            logger.info("setup remote client handler ...");
+            
+            // resolve network address
+            var resolver = Resolver.get_default();
+            List<InetAddress> addresses;
+            try
+            {
+                addresses = resolver.lookup_by_name( name, null );
+            }
+            catch ( GLib.Error e )
+            {
+                logger.error( @"Could not resolve $name: $(Posix.strerror(Posix.errno))" );
+                return false;
+            }
+            var address = addresses.nth_data(0);
+            logger.info( @"Resolved $name to $address" );
+            
+            // setup socketservice and connect signal with handler for 
+            // incomming connections
+            logger.debug("Starting socket service ...");
+            try 
+            {
+                socksrv = new SocketService();
+                var socketAddress = new InetSocketAddress (address, (uint16) port.to_int());
+                socksrv.add_address(socketAddress, SocketType.STREAM, SocketProtocol.TCP, null, null);
+                socksrv.incoming.connect(handleIncommingConnection);
+                socksrv.start();
+            }
+            catch (GLib.Error e)
+            {
+                logger.error(@"Could net start socket service: $(e.message)");
+                return false;
+            }
+            
+            return true;
+        }
+        
+        public bool stop()
+        {
+            logger.debug("Attempt to stop socket service ...");
+            socksrv.stop();
+            return true;
+        }
+        
         public void handleFrameContentRequest(uint8[] data)
         {
             // FIXME
@@ -44,6 +96,20 @@ namespace Msmcomm
         //
         // private API
         //
+        
+        private bool handleIncommingConnection(SocketConnection conn, Object? source)
+        {
+            logger.debug("Got new remote client connection !");
+            try 
+            {
+                var conn2 = socksrv.accept(null, null);
+            }
+            catch (GLib.Error e)
+            {
+                logger.error(@"Could not accept new client connection: $(e.message)");
+            }
+            return true;
+        }
         
         //
         // Signals

@@ -65,6 +65,7 @@ public class LinkLayerControl : GLib.Object
         transmission_handler.requestHandleSendData.connect((data) => { requestHandleSendData(data); });
         
         configure();
+        remote_handler.start();
     }
 
     public void reset()
