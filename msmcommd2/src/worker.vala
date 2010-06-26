@@ -83,13 +83,22 @@ public class Worker
 
     public bool setup()
     {
-        logger.info("setup everything we need ...");
-        
         configure();
 
-        // setup transport
-        // FIXME read ip + port from configuration
-        transport = new FsoFramework.SocketTransport("tcp", "192.168.0.202", 3001);
+        if (modem_config["connection_type"] == "network") 
+        {
+            transport = new FsoFramework.SocketTransport("tcp", modem_config["ip"], modem_config["port"].to_int());
+        }
+        else if (modem_config["connection_type"] == "serial") 
+        {
+            transport = new FsoFramework.HsuartTransport(modem_config["path"]);
+        }
+        else
+        {
+            logger.error("Could not create transport. Wrong transport type '%s' specified in configuration. Please go and fix this!".printf(modem_config["connection_type"]));
+            return false;
+        }
+        
         transport.setDelegates(onTransportReadyToRead, onTransportHangup);
 
         // Some the transport could not create, log error and abort mainloop
