@@ -247,7 +247,6 @@ namespace Msmcomm
             crc = Crc16.calculate(data[0:data.length-1]);
             if (crc != crc_result)
             {
-                FsoFramework.theLogger.debug("crc16 checksum is wrong for the frame");
                 return false;
             }
 
