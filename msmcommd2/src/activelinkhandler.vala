@@ -60,7 +60,7 @@ namespace Msmcomm
                         //hexdump(true, data, data.length, logger);
 
                         // we have new data for our registered data handlers
-                        control.handleFrameContent(frame.payload);
+                        control.requestHandleFrameContent(frame.payload);
                         
                         frameHandled = true;
                     }

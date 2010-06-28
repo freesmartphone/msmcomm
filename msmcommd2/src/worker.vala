@@ -30,6 +30,7 @@ public class Worker
     private FsoFramework.SmartKeyFile config;
     private LinkLayerControl llc;
     private Gee.HashMap<string,string> modem_config;
+    private RemoteClientHandler remote_handler;
 
     //
     // private API
@@ -79,6 +80,7 @@ public class Worker
         logger = FsoFramework.theLogger;
         config = FsoFramework.theConfig;
         modem_config = new Gee.HashMap<string,string>();
+        remote_handler = new RemoteClientHandler();
     }
 
     public bool setup()
@@ -112,7 +114,10 @@ public class Worker
         // setup link layer control
         llc = new LinkLayerControl();
         llc.requestHandleSendData.connect(handleSendDataRequest);
+        llc.requestHandleFrameContent.connect(remote_handler.handleDataFromModem);
         llc.reset();
+        
+        remote_handler.start();
 
         return false;
     }

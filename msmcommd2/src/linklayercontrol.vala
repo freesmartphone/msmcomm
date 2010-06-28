@@ -32,14 +32,13 @@ public interface ILinkControl : GLib.Object
     public abstract void sendFrame(Frame frame);
     public abstract void reset();
     
-    public signal void handleFrameContent(uint8[] data);
+    public signal void requestHandleFrameContent(uint8[] data);
 }
 
 public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
 {
     private FsoFramework.Logger logger;
     private LinkContext context;
-    private RemoteClientHandler remote_handler;
     private Gee.ArrayList<AbstractLinkHandler> handlers;
     private TransmissionHandler transmission_handler;
     private FsoFramework.SmartKeyFile config;
@@ -55,9 +54,7 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
         context = new LinkContext();
 
         Crc16.setup();
-        
-        remote_handler = new RemoteClientHandler();
-        
+                
         handlers = new Gee.ArrayList<AbstractLinkHandler>();
         handlers.add(new SetupLinkHandler(context, this));
         handlers.add(new FlowControlHandler(context, this));
@@ -66,7 +63,6 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
         transmission_handler = new TransmissionHandler(context, this);
         
         configure();
-        remote_handler.start();
     }
 
     public void reset()

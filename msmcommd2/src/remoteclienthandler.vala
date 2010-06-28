@@ -90,7 +90,7 @@ namespace Msmcomm
             return true;
         }
         
-        public void handleFrameContentRequest(uint8[] data)
+        public void handleDataFromModem(uint8[] data)
         {
             // FIXME
         }
