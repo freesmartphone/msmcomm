@@ -1,0 +1,3 @@
+*.c
+src/msmcommd
+src/.vala.stamp
