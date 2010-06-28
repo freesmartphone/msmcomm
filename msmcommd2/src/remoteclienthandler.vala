@@ -28,6 +28,7 @@ namespace Msmcomm
         private FsoFramework.Logger logger;
         private FsoFramework.SmartKeyFile config;
         private SocketService socksrv;
+        private Gee.ArrayList<RemoteClient> clients;
         
         //
         // public API
@@ -37,6 +38,7 @@ namespace Msmcomm
         {
             logger = FsoFramework.theLogger;
             config = FsoFramework.theConfig;
+            clients = new Gee.ArrayList<RemoteClient>();
         }
         
         public bool start()
@@ -102,7 +104,10 @@ namespace Msmcomm
             logger.debug("Got new remote client connection !");
             try 
             {
-                var conn2 = socksrv.accept(null, null);
+                var conn2 = socksrv.accept(null, null); 
+                var client = new RemoteClient(conn2); 
+                client.start();
+                clients.add(client);
             }
             catch (GLib.Error e)
             {
