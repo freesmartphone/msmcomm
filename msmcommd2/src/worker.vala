@@ -112,8 +112,6 @@ public class Worker
         // setup link layer control
         llc = new LinkLayerControl();
         llc.requestHandleSendData.connect(handleSendDataRequest);
-        // FIXME llc.handleFrameContent += ...
-
         llc.reset();
 
         return false;

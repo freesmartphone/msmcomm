@@ -27,14 +27,13 @@ namespace Msmcomm
         // public API
         //
 
-        public ActiveLinkHandler(LinkContext context)
+        public ActiveLinkHandler(LinkContext context, ILinkControl control)
         {
-            base(context);
+            base(context, control);
         }
         
         public override void reset()
         {
-            
         }
         
         public override bool handleFrame(Frame frame)
@@ -61,7 +60,7 @@ namespace Msmcomm
                         //hexdump(true, data, data.length, logger);
 
                         // we have new data for our registered data handlers
-                        requestHandleFrameContent(frame.payload);
+                        control.handleFrameContent(frame.payload);
                         
                         frameHandled = true;
                     }

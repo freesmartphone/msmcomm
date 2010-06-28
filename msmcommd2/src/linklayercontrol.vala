@@ -22,7 +22,20 @@
 namespace Msmcomm
 {
 
-public class LinkLayerControl : GLib.Object
+public interface ITransmissionControl : GLib.Object
+{
+    public signal void requestHandleSendData(uint8[] data);
+}
+
+public interface ILinkControl : GLib.Object
+{
+    public abstract void sendFrame(Frame frame);
+    public abstract void reset();
+    
+    public signal void handleFrameContent(uint8[] data);
+}
+
+public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
 {
     private FsoFramework.Logger logger;
     private LinkContext context;
@@ -43,26 +56,14 @@ public class LinkLayerControl : GLib.Object
 
         Crc16.setup();
         
-        //
-        // Below we connect all the different handlers together. It will
-        // take some time to understand which handler is connected to
-        // which. Note: All signals starts with requestHandle... and all
-        // signal handlers with handle...Request...
-        // 
-        
         remote_handler = new RemoteClientHandler();
-        remote_handler.requestHandleSendDataFromClient.connect(handleDataSendRequestFromClient);
         
         handlers = new Gee.ArrayList<AbstractLinkHandler>();
-        appendAndPrepareLinkHandler(new SetupLinkHandler(context));
-        appendAndPrepareLinkHandler(new FlowControlHandler(context));
+        handlers.add(new SetupLinkHandler(context, this));
+        handlers.add(new FlowControlHandler(context, this));
+        handlers.add(new ActiveLinkHandler(context, this));
         
-        var activeLinkHandler = new ActiveLinkHandler(context);
-        activeLinkHandler.requestHandleFrameContent.connect(remote_handler.handleFrameContentRequest);
-        appendAndPrepareLinkHandler(activeLinkHandler);
-        
-        transmission_handler = new TransmissionHandler(context);
-        transmission_handler.requestHandleSendData.connect((data) => { requestHandleSendData(data); });
+        transmission_handler = new TransmissionHandler(context, this);
         
         configure();
         remote_handler.start();
@@ -113,6 +114,19 @@ public class LinkLayerControl : GLib.Object
             }
         }
     }
+    
+    public void sendDataFrame(uint8[] data)
+    {
+        Frame frame = new Frame();
+        frame.fr_type = FrameType.DATA;
+        frame.payload = data;
+        transmission_handler.enequeFrame(frame);
+    }
+    
+    public void sendFrame(Frame frame)
+    {
+        transmission_handler.enequeFrame(frame);
+    }
 
     //
     // private API
@@ -136,38 +150,6 @@ public class LinkLayerControl : GLib.Object
                 break;
         }
     }
-    
-    private void appendAndPrepareLinkHandler(AbstractLinkHandler handler)
-    {
-        handler.requestSendFrame.connect(handleFrameSendRequest);
-        handler.requestReset.connect(handleResetRequest);
-        handlers.add(handler);
-    }
-    
-    private void handleDataSendRequestFromClient(uint8[] data)
-    {
-        Frame frame = new  Frame();
-        frame.fr_type = FrameType.DATA;
-        frame.payload = data;
-        handleFrameSendRequest(frame);
-    }
-    
-    private void handleFrameSendRequest(Frame frame)
-    {
-        transmission_handler.enequeFrame(frame);
-    }
-    
-    private void handleResetRequest()
-    {
-        reset();
-    }
-
-    //
-    // Signals
-    //
-
-    public signal void requestHandleSendData(uint8[] data);
-    public signal void requestHandleFrameContent(uint8[] data);
 }
 
 } // namespace Msmcomm

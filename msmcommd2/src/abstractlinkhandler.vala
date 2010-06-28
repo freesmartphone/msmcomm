@@ -24,15 +24,17 @@ namespace Msmcomm
     public abstract class AbstractLinkHandler
     {
         protected LinkContext context;
+        protected ILinkControl control;
         protected FsoFramework.Logger logger;
 
         //
         // public API
         //
 
-        public AbstractLinkHandler(LinkContext context)
+        public AbstractLinkHandler(LinkContext context, ILinkControl control)
         {
             this.context = context;
+            this.control = control;
             this.logger = FsoFramework.theLogger;
         }
         
@@ -42,10 +44,15 @@ namespace Msmcomm
         //
         // private API
         //
+        
+        protected void requestReset()
+        {
+            control.reset();
+        }
 
         protected void sendFrame(Frame frame)
         {
-            requestSendFrame(frame);
+            control.sendFrame(frame);
             frame.attempts++;
         }
 
@@ -77,7 +84,7 @@ namespace Msmcomm
         protected void prepareAndSendFrame(Frame frame, FrameType type)
         {
             prepareFrame(frame, type);
-            requestSendFrame(frame);
+            control.sendFrame(frame);
         }
 
         protected void createAndSendFrame(FrameType type)
@@ -85,13 +92,5 @@ namespace Msmcomm
             var frame = new Frame();
             prepareAndSendFrame(frame, type);
         }
-
-        //
-        // Signals
-        //
-
-        public signal void requestReset();
-        public signal void requestSendFrame(Frame frame);
-        public signal void requestHandleFrameContent(uint8[] data);
     }
 } // namespace Msmcomm

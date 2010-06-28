@@ -29,9 +29,9 @@ namespace Msmcomm
         // public API
         //
 
-        public FlowControlHandler(LinkContext context)
+        public FlowControlHandler(LinkContext context, ILinkControl control)
         {
-            base(context);
+            base(context, control);
             
             timer = new Timer();
             timer.interval = 1000;
@@ -77,7 +77,7 @@ namespace Msmcomm
                             break;
 
                         context.ack_queue.remove(fr);
-                        requestSendFrame(fr);
+                        sendFrame(fr);
                         
                         count++;
                     }
@@ -122,7 +122,7 @@ namespace Msmcomm
             // in time, so we have to resend these frames
             foreach (Frame frame in context.ack_queue)
             {
-                requestSendFrame(frame);
+                sendFrame(frame);
                 
                 // Remove frame from ack queue, send frame logic will add it again later
                 // FIXME we should not change ack_queue content while

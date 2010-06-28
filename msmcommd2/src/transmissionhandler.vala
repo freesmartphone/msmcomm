@@ -27,14 +27,16 @@ namespace Msmcomm
         private Gee.LinkedList<Frame> queue;
         private FsoFramework.Logger logger;
         private Timer timer;
+        private ITransmissionControl control;
         
         // 
         // public API
         //
         
-        public TransmissionHandler(LinkContext context)
+        public TransmissionHandler(LinkContext context, ITransmissionControl control)
         {
             this.context = context;
+            this.control = control;
             logger = FsoFramework.theLogger;
             timer = new Timer();
             timer.interval = 50;
@@ -62,7 +64,7 @@ namespace Msmcomm
             {
                 // FIXME implement different exception for better error handling while
                 // frame packing
-                requestHandleSendData(frame.pack());
+                control.requestHandleSendData(frame.pack());
                 
                 if (frame.fr_type == FrameType.DATA)
                     context.ack_queue.add(frame);
@@ -72,12 +74,5 @@ namespace Msmcomm
             
             return false;
         }
-        
-        //
-        // Signals
-        //
-        
-        public signal void requestHandleSendData(uint8[] data);
     }
-
 } // namespace Msmcomm

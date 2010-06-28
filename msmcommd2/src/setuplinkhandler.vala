@@ -44,9 +44,9 @@ namespace Msmcomm
         // public API
         //
 
-        public SetupLinkHandler(LinkContext context)
+        public SetupLinkHandler(LinkContext context, ILinkControl control)
         {
-            base(context);
+            base(context, control);
 
             sync_timer = new Timer();
             sync_timer.interval = 1000;
