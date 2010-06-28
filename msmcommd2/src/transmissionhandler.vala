@@ -65,6 +65,7 @@ namespace Msmcomm
                 // FIXME implement different exception for better error handling while
                 // frame packing
                 control.requestHandleSendData(frame.pack());
+                frame.attempts++;
                 
                 if (frame.fr_type == FrameType.DATA)
                     context.ack_queue.add(frame);

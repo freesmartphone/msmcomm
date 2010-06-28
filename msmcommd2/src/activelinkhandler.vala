@@ -45,19 +45,10 @@ namespace Msmcomm
                 case LinkStateType.ACTIVE:
                     if (frame.fr_type == FrameType.DATA)
                     {
-                        // FIXME ack_handler.isSequenceNumberExpected(frame.seq)
-                        // Our frame is not the frame with the expected sequence nr
-                        //if (frame.seq != expected_seq)
-                            // FIXME Should we really drop this frame?
-                        //    return;
-
                         // in debug mode we should log the frame for bug
                         // hunting ...
                         logger.debug("receive data from modem (seq=0x%x, ack=0x%x)".printf(frame.seq, frame.ack));
                         logger.debug("payload is: FIXME");
-                        // FIXME implement hexdump
-                        // var data = frame.pack();
-                        //hexdump(true, data, data.length, logger);
 
                         // we have new data for our registered data handlers
                         control.requestHandleFrameContent(frame.payload);

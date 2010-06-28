@@ -124,8 +124,9 @@ namespace Msmcomm
         public uint16 crc { set; get; }
         public FrameType fr_type { set; get; }
         public uint8 flags { get; set; default = 0x0; }
-        public uint8[] payload { get; set; }
+        public uint8[] payload { get; set; default = null;}
         public uint attempts { get; set; default = 0; }
+        public bool crc_result { get; set; default = true; }
     
         /**
         * Replace all occurences of 0x7d and 0x7e in the byte array with
@@ -207,7 +208,10 @@ namespace Msmcomm
             buffer.append(header);
 
             // append payload
-            buffer.append(payload);
+            if (payload != null)
+            {
+                buffer.append(payload);
+            }
 
             // compute and append crc checksum
             uint8[] tmp = buffer.data;
@@ -247,6 +251,7 @@ namespace Msmcomm
             crc = Crc16.calculate(data[0:data.length-1]);
             if (crc != crc_result)
             {
+                this.crc_result = false;
                 return false;
             }
 

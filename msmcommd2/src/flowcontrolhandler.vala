@@ -60,16 +60,24 @@ namespace Msmcomm
                 }
                 else if (frame.fr_type == FrameType.DATA)
                 {
-                    // We got a DATA frame which we be add to the ack_queue by the
-                    // ActiveLinkHandler later, we will start the ack timer for it
-                    timer.start();
-                    
                     // We should even check if the sequence number of this
                     // data frame is the one we expect to be send from the modem
                     if (frame.seq != context.expected_seq)
                     {
                         // Drop this frame!
                         return true;
+                    }
+                    
+                    // ack the recieved frame so the modem knows we recieved the 
+                    // frame, but only if the frame is valid otherwise we drop it
+                    if (frame.crc_result)
+                    {
+                        var fr = new Frame();
+                        fr.fr_type = FrameType.ACK;
+                        fr.ack = context.nextAcknowledgeNumber();
+                        sendFrame(fr);
+                        
+                        context.expected_seq = fr.ack;
                     }
                 }
                 

@@ -53,7 +53,6 @@ namespace Msmcomm
         protected void sendFrame(Frame frame)
         {
             control.sendFrame(frame);
-            frame.attempts++;
         }
 
         protected void prepareFrame(Frame frame, FrameType type)
