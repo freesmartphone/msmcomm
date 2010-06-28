@@ -52,6 +52,8 @@ namespace Msmcomm
             if (context.state == LinkStateType.ACTIVE && 
                 frame.fr_type == FrameType.ACK || frame.fr_type == FrameType.DATA)
             {
+                // handle both type of frames which includes a acknowledge number
+                // in a different way
                 if (frame.fr_type == FrameType.ACK)
                 {
                     frameHandled = true;
@@ -61,45 +63,57 @@ namespace Msmcomm
                     // We got a DATA frame which we be add to the ack_queue by the
                     // ActiveLinkHandler later, we will start the ack timer for it
                     timer.start();
+                    
+                    // We should even check if the sequence number of this
+                    // data frame is the one we expect to be send from the modem
+                    if (frame.seq != context.expected_seq)
+                    {
+                        // Drop this frame!
+                        return true;
+                    }
                 }
-
-                // FIXME move this to ack_timer_cb as we only should handle acknowledging of
-                // frames and not resending them!
+                
+                // below we do several things, which are the same for every frame
+                // which includes a acknowledge number
 
                 // count of frames which are not acknowledged should be less or equal than
                 // the max window size
                 if (context.ack_queue.size > context.window_size)
                 {
-                    /* resend and remove them from ack_queue */
+                    var framesToRemove = new Gee.ArrayList<Frame>();
                     foreach (Frame fr in context.ack_queue)
                     {
                         if (count == context.window_size)
                             break;
-
-                        context.ack_queue.remove(fr);
-                        sendFrame(fr);
                         
+                        framesToRemove.add(fr);
+                        sendFrame(fr);
                         count++;
                     }
+                    context.ack_queue.remove_all(framesToRemove);
                 }
 
-                // check which frames are acknowledged with this ack
+                // check which frames are acknowledged with this ack and mark
+                // them for a later remove
+                var framesToRemove = new Gee.ArrayList<Frame>();
                 foreach (Frame fr in context.ack_queue)
                 {
                     if (!isValidAcknowledge(context.last_ack, fr.seq, frame.ack))
                         break;
                     
-                    // FIXME we should not change ack_queue content while
-                    // iterating over it ...
-                    context.ack_queue.remove(fr);
+                    framesToRemove.add(frame);
                 }
+                context.ack_queue.remove_all(framesToRemove);
 
+                // check wether ack queue is empty. If it is empty, stop the
+                // ack timer as we recieve a acknowledge for every frame we 
+                // waiting for one
                 if (context.ack_queue.size == 0)
                 {
-                     // ack_queue is empty so stop ack timer
                     timer.stop();
                 }
 
+                // set current frame ack number as the last one we handled
                 context.last_ack = frame.ack;
             }
             
