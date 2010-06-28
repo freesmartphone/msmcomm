@@ -62,6 +62,8 @@ namespace Msmcomm
 
         public Gee.LinkedList<Frame> ack_queue { get; set; }
         
+        public Timer ack_timer { get; set; }
+        
         //
         // public API
         //
@@ -69,6 +71,9 @@ namespace Msmcomm
         public LinkContext()
         {
             ack_queue = new Gee.LinkedList<Frame>();
+            
+            ack_timer = new Timer();
+            ack_timer.interval = 1000;
         }
 
         public void reset()

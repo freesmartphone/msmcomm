@@ -23,8 +23,6 @@ namespace Msmcomm
 {
     public class FlowControlHandler : AbstractLinkHandler
     {
-        private Timer timer;
-
         // 
         // public API
         //
@@ -33,15 +31,13 @@ namespace Msmcomm
         {
             base(context, control);
             
-            timer = new Timer();
-            timer.interval = 1000;
-            timer.requestHandleEvent.connect(handleAckTimerEvent);
+            context.ack_timer.requestHandleEvent.connect(handleAckTimerEvent);
         }
 
         public override void reset()
         {
             context.ack_queue.clear();
-            timer.stop();
+            context.ack_timer.stop();
         }
         
         public override bool handleFrame(Frame frame)
@@ -118,7 +114,7 @@ namespace Msmcomm
                 // waiting for one
                 if (context.ack_queue.size == 0)
                 {
-                    timer.stop();
+                    context.ack_timer.stop();
                 }
 
                 // set current frame ack number as the last one we handled
@@ -154,6 +150,7 @@ namespace Msmcomm
 
             // Reschedule ack timer as we are still waiting for the right acknowledge
             // FIXME Currently the ack timer is running as long as someone stops it
+            
             return true;
         }
     }
