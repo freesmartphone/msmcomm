@@ -208,11 +208,11 @@ namespace Msmcomm
             buffer.append(header);
 
             // append payload
-            if (payload != null)
+            if (payload.length > 0)
             {
                 buffer.append(payload);
             }
-
+            
             // compute and append crc checksum
             uint8[] tmp = buffer.data;
 
