@@ -68,7 +68,13 @@ namespace Msmcomm
                 frame.attempts++;
                 
                 if (frame.fr_type == FrameType.DATA)
+                {
+                    // Current frame is a DATA frame and should be acked by the
+                    // other side, so we add it to the ack queue and start the
+                    // ack timer
                     context.ack_queue.add(frame);
+                    context.ack_timer.start();
+                }
             }
             
             queue.clear();

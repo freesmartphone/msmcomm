@@ -75,10 +75,16 @@ namespace Msmcomm
                         
                         context.expected_seq = fr.ack;
                     }
+                    else 
+                    {
+                        return true;
+                    }
                 }
                 
+                //
                 // below we do several things, which are the same for every frame
                 // which includes a acknowledge number
+                //
 
                 // count of frames which are not acknowledged should be less or equal than
                 // the max window size
