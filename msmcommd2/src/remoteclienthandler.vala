@@ -85,8 +85,16 @@ namespace Msmcomm
         
         public bool stop()
         {
+            // stop all remote clients
+            foreach (var client in clients)
+            {
+                client.stop();
+            }
+            
+            // stop main socket service
             logger.debug("Attempt to stop socket service ...");
             socksrv.stop();
+            
             return true;
         }
         

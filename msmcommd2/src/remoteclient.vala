@@ -53,6 +53,11 @@ namespace Msmcomm
             }
         }
         
+        public void stop()
+        {
+        
+        }
+        
         //
         // private API
         //
