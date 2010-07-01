@@ -46,12 +46,13 @@ namespace Msmcomm
             bool frameHandled = false;
             
             if (context.state == LinkStateType.ACTIVE && 
-                frame.fr_type == FrameType.ACK || frame.fr_type == FrameType.DATA)
+                (frame.fr_type == FrameType.ACK || frame.fr_type == FrameType.DATA))
             {
                 // handle both type of frames which includes a acknowledge number
                 // in a different way
                 if (frame.fr_type == FrameType.ACK)
                 {
+                    logger.debug("Recieve ACK frame in ACTIVE state => frame handled!");
                     frameHandled = true;
                 }
                 else if (frame.fr_type == FrameType.DATA)
@@ -90,6 +91,7 @@ namespace Msmcomm
                 // the max window size
                 if (context.ack_queue.size > context.window_size)
                 {
+                    logger.debug("Resending all frames stored in ack queue cause ack_queue.size > window_size");
                     var framesToRemove = new Gee.ArrayList<Frame>();
                     foreach (Frame fr in context.ack_queue)
                     {
@@ -100,19 +102,31 @@ namespace Msmcomm
                         sendFrame(fr);
                         count++;
                     }
-                    context.ack_queue.remove_all(framesToRemove);
+                    
+                    foreach (Frame fr in framesToRemove)
+                    {
+                        context.ack_queue.remove(fr);
+                    }
                 }
 
                 // check which frames are acknowledged with this ack and mark
                 // them for a later remove
+                logger.debug(@"FlowControlHandler: check which frames are acknowledged with this ack");
+                logger.debug(@"ack_queue.size = $(context.ack_queue.size)");
                 var framesToRemove = new Gee.ArrayList<Frame>();
                 foreach (Frame fr in context.ack_queue)
                 {
-                    if (!isValidAcknowledge(context.last_ack, fr.seq, frame.ack))
+                    logger.debug(@"last_ack = $(context.last_ack) fr.seq = $(fr.seq) frame.ack = $(frame.ack)");
+                    if (!isValidAcknowledge(context.last_ack, fr.seq, frame.ack)) 
+                    {   
                         break;
+                    }   
                     
-                    framesToRemove.add(frame);
+                    logger.debug("Found frame which is aknowledged with this ack");
+                    framesToRemove.add(fr);
+
                 }
+                logger.debug(@"framesToRemove.size $(framesToRemove.size)");
                 context.ack_queue.remove_all(framesToRemove);
 
                 // check wether ack queue is empty. If it is empty, stop the
@@ -142,17 +156,20 @@ namespace Msmcomm
 
         private bool handleAckTimerEvent()
         {
+            logger.debug("ack timer event occured => resend all frames in ack queue");
+            
             // ack timer event occured, so one or more frames are not acknowledged
             // in time, so we have to resend these frames
+            var framesToRemove = new Gee.ArrayList<Frame>();
             foreach (Frame frame in context.ack_queue)
             {
                 sendFrame(frame);
                 
                 // Remove frame from ack queue, send frame logic will add it again later
-                // FIXME we should not change ack_queue content while
-                // iterating over it ...
-                context.ack_queue.remove(frame);
+                framesToRemove.add(frame);
             }
+            
+            context.ack_queue.remove_all(framesToRemove);
 
             // Reschedule ack timer as we are still waiting for the right acknowledge
             // FIXME Currently the ack timer is running as long as someone stops it

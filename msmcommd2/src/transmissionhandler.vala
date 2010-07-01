@@ -64,6 +64,14 @@ namespace Msmcomm
             {
                 // FIXME implement different exception for better error handling while
                 // frame packing
+                logger.debug(@"Send a $(frameTypeToString(frame.fr_type)) frame to modem");
+                
+                if (frame.fr_type == FrameType.DATA)
+                {
+                    frame.seq = context.nextSequenceNumber();
+                    frame.ack = context.next_ack;
+                }
+                
                 control.requestHandleSendData(frame.pack());
                 frame.attempts++;
                 

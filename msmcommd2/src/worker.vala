@@ -52,7 +52,7 @@ public class Worker
 
     private void handleSendDataRequest(uint8[] data)
     {
-        // hexdump(true, data, data.length, FsoFramework.theLogger);
+        hexdump(true, data, data.length, FsoFramework.theLogger);
         transport.write(data, data.length);
     }
     
@@ -69,6 +69,11 @@ public class Worker
             modem_config["ip"] = config.stringValue("connection", "ip", "192.168.0.202");
             modem_config["port"] = config.stringValue("connection", "port", "3001");
         }
+    }
+    
+    private void handleDataFromClient(uint8[] data, int size)
+    {
+        llc.sendDataFrame(data, size);
     }
 
     //
@@ -117,7 +122,8 @@ public class Worker
         llc.requestHandleFrameContent.connect(remote_handler.handleDataFromModem);
         llc.reset();
         
-        remote_handler.start();
+        remote_handler.requestHandleDataFromClient.connect(handleDataFromClient);
+        remote_handler.setup();
 
         return false;
     }

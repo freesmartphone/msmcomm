@@ -41,7 +41,7 @@ namespace Msmcomm
             clients = new Gee.ArrayList<RemoteClient>();
         }
         
-        public bool start()
+        public bool setup()
         {
             var name = "127.0.0.1";
             var port = "3030";
@@ -85,12 +85,6 @@ namespace Msmcomm
         
         public bool stop()
         {
-            // stop all remote clients
-            foreach (var client in clients)
-            {
-                client.stop();
-            }
-            
             // stop main socket service
             logger.debug("Attempt to stop socket service ...");
             socksrv.stop();
@@ -100,27 +94,28 @@ namespace Msmcomm
         
         public void handleDataFromModem(uint8[] data)
         {
-            // FIXME
+            foreach(RemoteClient client in clients)
+            {
+                client.handleDataFromModem(data);
+            }
         }
         
         //
         // private API
         //
         
+        private void removeClient(RemoteClient client)
+        {
+            clients.remove(client);
+        }
+        
         private bool handleIncommingConnection(SocketConnection conn, Object? source)
         {
             logger.debug("Got new remote client connection !");
-            try 
-            {
-                var conn2 = socksrv.accept(null, null); 
-                var client = new RemoteClient(conn2); 
-                client.start();
-                clients.add(client);
-            }
-            catch (GLib.Error e)
-            {
-                logger.error(@"Could not accept new client connection: $(e.message)");
-            }
+            var client = new RemoteClient(conn);
+            client.requestRemove.connect(removeClient); 
+            client.requestHandleDataFromClient.connect((data, size) => requestHandleDataFromClient(data, size));
+            clients.add(client);
             return true;
         }
         
@@ -128,7 +123,7 @@ namespace Msmcomm
         // Signals
         //
         
-        public signal void requestHandleSendDataFromClient(uint8[] data);
+        public signal void requestHandleDataFromClient(uint8[] data, int size);
         
     }
 } // namespace Msmcomm

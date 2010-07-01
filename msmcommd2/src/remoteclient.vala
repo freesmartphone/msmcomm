@@ -27,6 +27,10 @@ namespace Msmcomm
     {
         private SocketConnection connection;
         private FsoFramework.Logger logger;
+        private IOChannel channel;
+        private uint readwatch;
+        private uint writewatch;
+        protected ByteArray buffer;
         
         //
         // public API
@@ -36,37 +40,120 @@ namespace Msmcomm
         {
             connection = conn;
             logger = FsoFramework.theLogger;
+            buffer = new ByteArray();
+            
+            // create our channel to watch the client connection for incomming data
+            var sock = connection.socket;
+            channel = new IOChannel.unix_new(sock.fd);
+            
+            readwatch = channel.add_watch(IOCondition.IN | IOCondition.HUP, channelActionCallback);
+            
+            logger.debug("created io watching channel for new remote client");
         }
         
-        public async void start()
+        public void handleDataFromModem(uint8[] data)
         {
-            try 
-            {
-                uint8[] buffer = new uint8[4096];
-                ssize_t bread = yield connection.input_stream.read_async(buffer, buffer.length, GLib.Priority.DEFAULT, null);
-                
-                logger.debug(@"Got data from client: length = $(bread)");
-            }
-            catch (GLib.Error e)
-            {
-                logger.error(@"Failed to read from input stream: $(e.message)");
-            }
-        }
-        
-        public void stop()
-        {
-        
+            logger.debug(@"Writing $(data.length) bytes to client");
+            
+            var restart = buffer.len == 0;
+            var temp = new uint8[data.length];
+            Memory.copy( temp, data, data.length );
+            buffer.append( temp );
+            
+            if (restart)
+                restartWriter();
         }
         
         //
         // private API
         //
         
+        private void restartWriter()
+        {
+            writewatch = channel.add_watch(IOCondition.OUT, channelWriteCallback);
+        }
+        
+        private bool channelWriteCallback(IOChannel? source, IOCondition condition)
+        {
+            if ((condition & IOCondition.OUT) == IOCondition.OUT)
+            {
+                return writeToChannel() != 0;
+            }
+            
+            logger.critical(@"channelWriteCallback called with unknown condition %d".printf(condition));
+            return false;
+        }
+        
+        private bool channelActionCallback(IOChannel? source, IOCondition condition)
+        {
+            if ((condition & IOCondition.IN) == IOCondition.IN)
+            {
+                readFromChannel();
+                return true;
+            }
+            else if ((condition & IOCondition.HUP) == IOCondition.HUP)
+            {
+                logger.error( "HUP => closing channel" );
+                requestRemove(this);
+                return false;
+            }
+            
+            logger.critical(@"channelActionCallback called with unknown condition %d".printf(condition));
+            return false;
+        }
+        
+        private void readFromChannel()
+        {
+            try
+            {
+                InputStream input_stream = connection.input_stream;
+                uint8[] buffer = new uint8[4096];
+                ssize_t bread = input_stream.read(buffer, buffer.length, null);
+                
+                if (bread == 0)
+                {
+                    logger.error(@"Read 0 bytes => synthesizing channelActionCallback w/ HUP.");
+                    channelActionCallback(channel, IOCondition.HUP);
+                }
+                else
+                {
+                    logger.debug(@"Read $(bread) bytes => commit to connected handlers");
+                    uint8[] tmp = new uint8[bread];
+                    Memory.copy(tmp, buffer, bread);
+                    requestHandleDataFromClient(tmp, (int) bread);
+                }
+            }
+            catch (GLib.Error err)
+            {
+                logger.error(@"Could not read from client channel input stream: $(err.message)");
+            }
+        }
+        
+        private uint writeToChannel()
+        {
+            uint byteswritten = 0;
+            
+            try
+            {
+                OutputStream output = connection.output_stream;
+                byteswritten = (uint)output.write(buffer.data, buffer.len, null);
+                logger.debug("channelWriteCallback wrote %d bytes".printf((int)byteswritten));
+                buffer.remove_range(0, (uint) byteswritten);
+                
+            }
+            catch (GLib.Error err)
+            {
+                logger.error(@"Could not write to client channel output stream: $(err.message)");
+            }
+            
+            return (uint) byteswritten;
+        }
+        
         //
         // Signals
         //
         
-        public signal void requestRemoveClient(RemoteClient client);
-        public signal void requestHandleIncommingData(uint8[] data);
+        public signal void requestRemove(RemoteClient client);
+        public signal void requestHandleDataFromClient(uint8[] data, int size);
     }
 } // namespace Msmcomm

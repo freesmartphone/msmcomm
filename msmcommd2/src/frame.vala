@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  **/
+ 
+using GLib;
 
 namespace Msmcomm
 {
@@ -118,15 +120,22 @@ namespace Msmcomm
     **/
     public class Frame
     {
+        private ByteArray _payload;
+        
         public uint8 addr { get; set; default = 0xfa; }
         public uint8 seq { set; get; default = 0x0; }
         public uint8 ack { set; get; default = 0x0; }
         public uint16 crc { set; get; }
         public FrameType fr_type { set; get; }
         public uint8 flags { get; set; default = 0x0; }
-        public uint8[] payload { get; set; default = null;}
+        public ByteArray payload { get { return _payload; } }
         public uint attempts { get; set; default = 0; }
         public bool crc_result { get; set; default = true; }
+        
+        public Frame()
+        {
+            _payload = new ByteArray();
+        }
     
         /**
         * Replace all occurences of 0x7d and 0x7e in the byte array with
@@ -197,7 +206,7 @@ namespace Msmcomm
         // FIXME add better error handling through different exceptions
         public uint8[] pack()
         {
-            var buffer = new GLib.ByteArray.sized(3 + payload.length + 2 + 1);
+            var buffer = new GLib.ByteArray.sized(3 + payload.len + 2 + 1);
             uint16 crc = 0x0;
 
             // create header for this frame
@@ -208,9 +217,11 @@ namespace Msmcomm
             buffer.append(header);
 
             // append payload
-            if (payload.length > 0)
+            FsoFramework.theLogger.debug(@"payload.len = $(payload.len)");
+            hexdump(false, payload.data, (int) payload.len, FsoFramework.theLogger);
+            if (payload.len > 0)
             {
-                buffer.append(payload);
+                buffer.append(payload.data);
             }
             
             // compute and append crc checksum
@@ -261,6 +272,16 @@ namespace Msmcomm
             flags = data[1] & 0x0f;
             seq = (data[2] & 0xf0) >> 4;
             ack = data[2] & 0x0f;
+            
+            if (data.length > 5)
+            {
+                FsoFramework.theLogger.debug("add payload to buffer ...");
+                var tmp = new uint8[data.length-6];
+                Memory.copy(tmp, data[3:data.length-6], data.length-6);
+                payload.append(tmp);
+            }
+            
+            FsoFramework.theLogger.debug(@"Frame.unpack: type = $(frameTypeToString(fr_type)) seq = $(seq) ack = $(ack) payload.len = $(payload.len)");
 
             return true;
         }

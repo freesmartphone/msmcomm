@@ -111,11 +111,16 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
         }
     }
     
-    public void sendDataFrame(uint8[] data)
+    public void sendDataFrame(uint8[] data, int size)
     {
         Frame frame = new Frame();
         frame.fr_type = FrameType.DATA;
-        frame.payload = data;
+        
+        frame.payload.append(data);
+        logger.debug(@"sendDataFrame: data.length = $(size)");
+        logger.debug(@"sendDataFrame: frame.payload.length = $(frame.payload.len)");
+        hexdump(false, frame.payload.data, (int) frame.payload.len, logger);
+    
         transmission_handler.enequeFrame(frame);
     }
     
@@ -143,7 +148,10 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
             // If the handler decides that no other handler should take a look at this
             // frame, we stop iterating over the last handlers.
             if (handler.handleFrame(frame))
+            {   
+                logger.debug("Call handler::handleFrame(frame)");
                 break;
+            }
         }
     }
 }

@@ -113,7 +113,7 @@ namespace Msmcomm
                     }
                     else
                     {
-                        logger.debug(@"recieve $(frameTypeToString(frame.fr_type)) frame in ACTIVE state ... discarding frame!");
+                        logger.debug(@"SetupLinkHandler: recieve $(frameTypeToString(frame.fr_type)) frame in ACTIVE state ... discarding frame!");
                         frameHandled = false;
                     }
                     break;

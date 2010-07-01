@@ -72,8 +72,7 @@ namespace Msmcomm
             // Handle different frame types
             if (type == FrameType.CONFIG_RESP)
             {
-                frame.payload = new uint8[1];
-                frame.payload[0] = 0x11;
+                frame.payload.append(new uint8[] { 0x11 });
             }
     
             
