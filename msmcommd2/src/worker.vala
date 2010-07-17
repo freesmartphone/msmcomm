@@ -42,7 +42,11 @@ public class Worker
         var data = new uint8[4096];
         
         bread = t.read(data, data.length);
-        llc.processIncommingData(data);
+        
+        logger.debug(@"onTransportReadyToRead: Read $(bread) bytes from modem");
+        hexdump(false, data[0:bread], bread, logger);
+        
+        llc.processIncommingData(data[0:bread]);
     }
 
     private void onTransportHangup(FsoFramework.Transport t)

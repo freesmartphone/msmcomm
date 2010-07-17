@@ -42,6 +42,7 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
     private Gee.ArrayList<AbstractLinkHandler> handlers;
     private TransmissionHandler transmission_handler;
     private FsoFramework.SmartKeyFile config;
+    private ByteArray in_buffer;
 
     //
     // public API
@@ -62,6 +63,8 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
         
         transmission_handler = new TransmissionHandler(context, this);
         
+        in_buffer = new ByteArray();
+        
         configure();
     }
 
@@ -79,36 +82,49 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
 
     public void processIncommingData(uint8[] data)
     {
-        uint n = 0;
         uint start = 0;
-
+        uint n = 0;
+        
+        in_buffer.append(data);
+        
+        var tmp = new uint8[in_buffer.len];
+        Memory.copy(tmp, in_buffer.data, in_buffer.len);
+        
         // try to find a valid frame within the incomming data
-        foreach (uint8 byte in data)
+        foreach (var byte in tmp)
         {
             n++;
+            
             // search for the frame end byte, if we found it then we
             // have found a valid frame
             if (byte == 0x7e)
             {
-                // var tmp = data[start:n];
-                // hexdump(false, tmp, tmp.length, FsoFramework.theLogger);
-                
                 // We have found a valid frame, first unpack it 
                 var frame = new Frame();
                 // FIXME implement exception to get a better error handling
-                if (!frame.unpack(data[start:n]))
+                if (!frame.unpack(tmp[start:n]))
                 {
-                    logger.error("Could not unpack valid frame frame! crc error?");
+                    logger.error("processIncommingData: Could not unpack valid frame frame! crc error?");
 
                     // Continue with searching for next valid frame in buffer
                     start = n + 1;
                     continue;
                 }
-
+                
                 handleIncommingFrame(frame);
                 start = n + 1;
             }
         }
+        
+        // Append not handled bytes to input buffer so we can handle 
+        // them later together with some additional arrived data
+        in_buffer = new ByteArray();
+        if (start < tmp.length)
+        {
+			// FIXME vala does not like sth. like in_buffer.append(tmp[start:tmp.length]). Why?
+			var tmp2 = tmp[start:tmp.length];
+			in_buffer.append(tmp2);
+		}
     }
     
     public void sendDataFrame(uint8[] data, int size)
