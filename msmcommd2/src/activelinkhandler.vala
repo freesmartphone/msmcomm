@@ -48,9 +48,7 @@ namespace Msmcomm
                         // in debug mode we should log the frame for bug
                         // hunting ...
                         logger.debug("receive DATA frame with data from modem (seq=0x%x, ack=0x%x)".printf(frame.seq, frame.ack));
-                        logger.debug("payload is: ");
-                        hexdump(false, frame.payload.data, (int) frame.payload.len, logger);
-
+                        
                         // we have new data for our registered data handlers
                         control.requestHandleFrameContent(frame.payload.data);
                         

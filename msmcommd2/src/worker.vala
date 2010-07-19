@@ -43,9 +43,6 @@ public class Worker
         
         bread = t.read(data, data.length);
         
-        logger.debug(@"onTransportReadyToRead: Read $(bread) bytes from modem");
-        hexdump(false, data[0:bread], bread, logger);
-        
         llc.processIncommingData(data[0:bread]);
     }
 
@@ -56,7 +53,6 @@ public class Worker
 
     private void handleSendDataRequest(uint8[] data)
     {
-        hexdump(true, data, data.length, FsoFramework.theLogger);
         transport.write(data, data.length);
     }
     

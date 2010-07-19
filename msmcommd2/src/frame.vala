@@ -228,8 +228,6 @@ namespace Msmcomm
             buffer.append(header);
 
             // append payload
-            FsoFramework.theLogger.debug(@"payload.len = $(payload.len)");
-            hexdump(false, payload.data, (int) payload.len, FsoFramework.theLogger);
             if (payload.len > 0)
             {
                 buffer.append(payload.data);

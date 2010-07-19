@@ -70,8 +70,6 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
 
     public void reset()
     {
-        logger.debug("LinkLayerControl::reset");
-        
         context.reset();
         
         foreach (AbstractLinkHandler handler in handlers)
@@ -104,7 +102,7 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
                 // FIXME implement exception to get a better error handling
                 if (!frame.unpack(tmp[start:n]))
                 {
-                    logger.error("processIncommingData: Could not unpack valid frame frame! crc error?");
+                    logger.error("processIncommingData: Could not unpack valid frame! crc error?");
 
                     // Continue with searching for next valid frame in buffer
                     start = n + 1;
@@ -133,9 +131,7 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
         frame.fr_type = FrameType.DATA;
         
         frame.payload.append(data);
-        logger.debug(@"sendDataFrame: data.length = $(size)");
-        logger.debug(@"sendDataFrame: frame.payload.length = $(frame.payload.len)");
-        hexdump(false, frame.payload.data, (int) frame.payload.len, logger);
+        logger.debug(@"send a DATA frame to modem (length = $(size))");
     
         transmission_handler.enequeFrame(frame);
     }
@@ -165,7 +161,6 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
             // frame, we stop iterating over the last handlers.
             if (handler.handleFrame(frame))
             {   
-                logger.debug("Call handler::handleFrame(frame)");
                 break;
             }
         }

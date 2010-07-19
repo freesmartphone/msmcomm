@@ -33,8 +33,6 @@ namespace Msmcomm
 		var ascline = new StringBuilder();
 		int i = 0;
 		
-		logger.debug("hexdump2: data[len-1] = %02x".printf(data[data.length-1]));
-		
 		foreach (uint8 byte in data)
 		{
 			i++;
