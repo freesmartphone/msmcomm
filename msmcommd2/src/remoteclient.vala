@@ -135,11 +135,12 @@ namespace Msmcomm
             
             try
             {
-                OutputStream output = connection.output_stream;
-                byteswritten = (uint)output.write(buffer.data, buffer.len, null);
-                logger.debug("channelWriteCallback wrote %d bytes".printf((int)byteswritten));
-                buffer.remove_range(0, (uint) byteswritten);
-                
+                if (buffer.len > 0)
+                {
+                    OutputStream output = connection.output_stream;
+                    byteswritten = (uint)output.write(buffer.data, buffer.len, null);
+                    buffer.remove_range(0, (uint) byteswritten);
+                }
             }
             catch (GLib.Error err)
             {
