@@ -176,23 +176,34 @@ namespace Msmcomm
         {
             var data = buffer.data;
             uint n = 0;
+            bool not_add_next = false;
 
             buffer.remove_range(0, buffer.len);
     
             foreach (uint8 byte in data)
             {
+				if (not_add_next)
+				{
+					not_add_next = false;
+					n++;
+					continue;
+				}
+				
                 if (byte == 0x7d && (n+1 < data.length && data[n+1] == 0x5d))
                 {
                     buffer.append(new uint8[] { 0x7d });
+                    not_add_next = true;
                 }
                 else if (byte == 0x7d && (n+1 < data.length && data[n+1] == 0x5e))
                 {
                     buffer.append(new uint8[] { 0x7e });
+                    not_add_next = true;
                 }
                 else
                 {
                     buffer.append(new uint8[] { byte });
                 }
+                
                 n++;
             }
         }
@@ -255,11 +266,11 @@ namespace Msmcomm
             // decode frame data first!
             var buffer = new GLib.ByteArray();
             buffer.append(data);
+            
             decode(buffer);
-            data = buffer.data;
 
             // calculate crc16 checksum
-            crc = Crc16.calculate(data[0:data.length-1]);
+            crc = Crc16.calculate(buffer.data[0:buffer.len-1]);
             if (crc != crc_result)
             {
                 this.crc_result = false;
@@ -268,16 +279,15 @@ namespace Msmcomm
 
             // fill header properties from data
             addr = data[0];
-            fr_type = frameTypeFromByte(((data[1] & 0xf0) >> 4));
-            flags = data[1] & 0x0f;
-            seq = (data[2] & 0xf0) >> 4;
-            ack = data[2] & 0x0f;
+            fr_type = frameTypeFromByte(((buffer.data[1] & 0xf0) >> 4));
+            flags = buffer.data[1] & 0x0f;
+            seq = (buffer.data[2] & 0xf0) >> 4;
+            ack = buffer.data[2] & 0x0f;
             
-            if (data.length > 5)
+            if (buffer.len > 5)
             {
-                FsoFramework.theLogger.debug("add payload to buffer ...");
-                var tmp = new uint8[data.length-6];
-                Memory.copy(tmp, data[3:data.length-6], data.length-6);
+                var tmp = new uint8[buffer.len-6];
+                Memory.copy(tmp, buffer.data[3:buffer.len-6], buffer.len-6);
                 payload.append(tmp);
             }
             

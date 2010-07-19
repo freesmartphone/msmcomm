@@ -23,6 +23,46 @@ using GLib;
 
 namespace Msmcomm
 {
+	internal void hexdump2(bool write, uint8[] data, FsoFramework.Logger logger)
+	{
+		if (data.length < 1)
+			return;
+			
+		int BYTES_PER_LINE = 16;
+		var hexline = new StringBuilder(write ? "<<< " : ">>> ");
+		var ascline = new StringBuilder();
+		int i = 0;
+		
+		logger.debug("hexdump2: data[len-1] = %02x".printf(data[data.length-1]));
+		
+		foreach (uint8 byte in data)
+		{
+			i++;
+			
+			hexline.append_printf("%02x ", byte);
+			if (31 < byte && byte < 128)
+				ascline.append_printf("%c", byte);
+			else
+				ascline.append_printf(".");
+			
+			if (i % BYTES_PER_LINE + 1 == BYTES_PER_LINE)
+			{
+				hexline.append(ascline.str);
+				logger.debug(hexline.str);
+				hexline = new StringBuilder(write ? ">>> " : "<<< ");
+				ascline = new StringBuilder();
+			}
+		}
+		
+		if (i % BYTES_PER_LINE + 1 != BYTES_PER_LINE)
+		{
+			while (hexline.len < 52)
+				hexline.append_c(' ');
+			hexline.append(ascline.str);
+			logger.debug(hexline.str);
+		}
+	}
+	
     internal void hexdump( bool write, void* data, int len, FsoFramework.Logger logger )
     {
         if ( len < 1 )
@@ -30,10 +70,10 @@ namespace Msmcomm
 
         int BYTES_PER_LINE = 16;
 
-        uchar* pointer = (uchar*) data;
+        uint8* pointer = (uchar*) data;
         var hexline = new StringBuilder( write? "<<< " : ">>> " );
         var ascline = new StringBuilder();
-        uchar b;
+        uint8 b;
         int i;
 
         for ( i = 0; i < len; ++i )
