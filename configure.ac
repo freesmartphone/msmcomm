@@ -87,6 +87,9 @@ AC_CONFIG_FILES([
 	libmsmcomm/tests/Makefile
 	msmvterm/Makefile
 	msmvterm/src/Makefile
+	msmlogd/Makefile
+	msmlogd/src/Makefile
+	msmlogd/conf/Makefile
 ])
 
 AC_OUTPUT

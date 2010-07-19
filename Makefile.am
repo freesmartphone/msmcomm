@@ -4,6 +4,7 @@ SUBDIRS = \
 	msmcommd \
 	libmsmcomm \
 	msmvterm \
+	msmlogd \
 	$(NULL)
 	
 MAINTAINERCLEANFILES = aclocal.m4 compile config.guess config.sub \
