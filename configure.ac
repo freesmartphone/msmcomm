@@ -80,7 +80,6 @@ AC_CONFIG_FILES([
 	msmcommd/Makefile
 	msmcommd/conf/Makefile
 	msmcommd/src/Makefile
-	msmcommd/tests/Makefile
 	libmsmcomm/Makefile
 	libmsmcomm/msmcomm-1.0.pc
 	libmsmcomm/src/Makefile
