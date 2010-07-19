@@ -25,62 +25,6 @@
 [CCode (cheader_filename = "msmcomm.h")]
 namespace Msmcomm
 {
-    [Compact]
-    [CCode (cname = "struct msmcomm_frame", free_function = "msmcomm_frame_free", cheader_filename = "msmcomm.h")]
-    public class LowLevel.Frame
-    {
-        [CCode (cname = "msmcomm_frame_new")]
-        public Frame();
-
-        [CCode (cname = "msmcomm_frame_new_from_buffer")]
-        public Frame.new_from_buffer(uint8 *buffer, uint size);
-
-        public uint8[] payload {
-            [CCode (cname = "msmcomm_frame_set_payload")]
-            set;
-            [CCode (cname = "msmcomm_frame_get_payload")]
-            get;
-        }
-
-        public uint payload_size {
-            [CCode (cname = "msmcomm_frame_get_payload_length")]
-            get;
-        }
-
-        public uint8 addr {
-            [CCode (cname = "msmcomm_frame_get_address")]
-            get;
-            [CCode (cname = "msmcomm_frame_set_address")]
-            set;
-        }
-
-        public uint8 type {
-            [CCode (cname = "msmcomm_frame_get_type")]
-            get;
-            [CCode (cname = "msmcomm_frame_set_type")]
-            set;
-        }
-
-        public uint8 seq {
-            [CCode (cname = "msmcomm_frame_get_sequence_nr")]
-            get;
-            [CCode (cname = "msmcomm_frame_set_sequence_nr")]
-            set;
-        }
-
-        public uint8 ack {
-            [CCode (cname = "msmcomm_frame_get_acknowledge_nr")]
-            get;
-            [CCode (cname = "msmcomm_frame_set_acknowledge_nr")]
-            set;
-        }
-
-        public uint8 is_valid {
-            [CCode (cname = "msmcomm_frame_is_valid")]
-            get;
-        }
-    }
-    
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MESSAGE_TYPE_", cheader_filename = "msmcomm.h")]
     public enum MessageType
     {
@@ -791,15 +735,6 @@ namespace Msmcomm
 
     [CCode (cname = "msmcomm_check_hci_version", cheader_filename = "msmcomm.h")]
     public bool checkHciVersion(uint version);
-
-    [CCode (cname = "msmcomm_launch_daemon", cheader_filename = "msmcomm.h")]
-    public bool launchDaemon(string workdir);
-
-    [CCode (cname = "msmcomm_is_daemon_running", cheader_filename = "msmcomm.h")]
-    public bool isDaemonRunning();
-
-    [CCode (cname = "msmcomm_shutdown_daemon", cheader_filename = "msmcomm.h")]
-    public bool shutdownDaemon();
 
     [Compact]
     [CCode (cname = "struct msmcomm_context", free_function = "msmcomm_shutdown", cheader_filename = "msmcomm.h")]
