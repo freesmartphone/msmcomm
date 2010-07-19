@@ -345,12 +345,6 @@ typedef void (*msmcomm_error_handler_cb)
 typedef void (*msmcomm_network_state_info_changed_field_type_cb) 
     (void *user_data, struct msmcomm_message * msg, int type);
 
-int msmcomm_launch_daemon(const char *workdir);
-
-int msmcomm_is_daemon_running();
-
-int msmcomm_shutdown_daemon();
-
 int msmcomm_init(struct msmcomm_context *ctx);
 
 int msmcomm_shutdown(struct msmcomm_context *ctx);
