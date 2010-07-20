@@ -22,19 +22,6 @@
 namespace Msmcomm
 {
 
-public interface ITransmissionControl : GLib.Object
-{
-    public signal void requestHandleSendData(uint8[] data);
-}
-
-public interface ILinkControl : GLib.Object
-{
-    public abstract void sendFrame(Frame frame);
-    public abstract void reset();
-    
-    public signal void requestHandleFrameContent(uint8[] data);
-}
-
 public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
 {
     private FsoFramework.Logger logger;

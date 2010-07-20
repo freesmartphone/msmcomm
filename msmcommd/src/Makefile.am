@@ -23,6 +23,7 @@ BUILT_SOURCES = .vala.stamp
 sbin_PROGRAMS = msmcommd
 
 msmcommd_VALASOURCES = \
+	contract.vala \
 	main.vala \
 	crc.vala \
 	frame.vala \

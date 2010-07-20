@@ -22,7 +22,7 @@
 namespace Msmcomm
 {
     
-    public class LowLevelControl
+    public class LowLevelControl : GLib.Object, ILowLevelControl
     {
         private FsoFramework.SmartKeyFile config;
         private FsoFramework.Logger logger;
@@ -63,12 +63,12 @@ namespace Msmcomm
             FsoFramework.FileHandling.write("1", sysfsnodes[SysfsNodeType.WAKEUP_MODEM]);
         }
         
-        public void poweron()
+        public void powerOn()
         {
             FsoFramework.FileHandling.write("1", sysfsnodes[SysfsNodeType.POWER_ON]);
         }
         
-        public void poweroff()
+        public void powerOff()
         {
             FsoFramework.FileHandling.write("0", sysfsnodes[SysfsNodeType.BOOT_MODE]);
             FsoFramework.FileHandling.write("0", sysfsnodes[SysfsNodeType.POWER_ON]);
