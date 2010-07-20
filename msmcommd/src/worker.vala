@@ -31,6 +31,7 @@ public class Worker
     private LinkLayerControl llc;
     private Gee.HashMap<string,string> modem_config;
     private RemoteClientHandler remote_handler;
+    private LowLevelControl lowlevel;
 
     //
     // private API
@@ -86,6 +87,7 @@ public class Worker
         config = FsoFramework.theConfig;
         modem_config = new Gee.HashMap<string,string>();
         remote_handler = new RemoteClientHandler();
+        lowlevel = new LowLevelControl();
     }
 
     public bool setup()

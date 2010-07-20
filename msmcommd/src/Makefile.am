@@ -38,6 +38,7 @@ msmcommd_VALASOURCES = \
 	worker.vala \
 	remoteclienthandler.vala \
 	remoteclient.vala \
+	lowlevelcontrol.vala \
 	$(NULL)
 
 msmcommd_SOURCES = \
