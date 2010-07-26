@@ -325,14 +325,6 @@ struct cm_ph_event
 } __attribute__ ((packed));
 
 
-struct set_network_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0[22];
-	uint8_t plmn[3];
-} __attribute__ ((packed));
-
-
 struct cm_ph_info_available_event
 {
 } __attribute__ ((packed));
@@ -392,8 +384,7 @@ struct change_operation_mode_msg
 
 struct test_alive_msg
 {
-	uint8_t some_value0;
-	uint8_t unknown0[3];
+	uint32_t ref_id;
 	uint8_t some_value1;
 } __attribute__ ((packed));
 
@@ -434,6 +425,8 @@ struct charging_msg
 
 struct test_alive_resp
 {
+	uint32_t ref_id;
+	uint8_t unknown0;
 } __attribute__ ((packed));
 
 

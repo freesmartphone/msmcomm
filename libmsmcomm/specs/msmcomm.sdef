@@ -202,11 +202,6 @@ start cm_ph_event 4098
 [1226-1228] uint8_t plmn_9
 end
 
-start set_network_msg 29
-[0-3] uint32_t ref_id
-[26-28] uint8_t plmn
-end
-
 #-------------------------------------------------------------------
 # SYSTEM
 #-------------------------------------------------------------------
@@ -246,7 +241,7 @@ start change_operation_mode_msg 5
 end
 
 start test_alive_msg 5
-[0] uint8_t some_value0
+[0-3] uint32_t ref_id
 [4] uint8_t some_value1
 end
 
@@ -272,7 +267,8 @@ start charging_msg 9
 [8] uint8_t rc
 end
 
-start test_alive_resp 0
+start test_alive_resp 5
+[0-3] uint32_t ref_id
 end
 
 start set_system_time_msg 26

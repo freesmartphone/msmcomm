@@ -76,8 +76,6 @@ void msg_test_alive_init(struct msmcomm_message *msg)
 
     msg->payload = talloc_zero(talloc_msmc_ctx, struct test_alive_msg);
 
-    MESSAGE_CAST(msg, struct test_alive_msg)->some_value0 = 0x5;
-
     MESSAGE_CAST(msg, struct test_alive_msg)->some_value1 = 0x1;
 }
 
@@ -93,6 +91,7 @@ void msg_test_alive_free(struct msmcomm_message *msg)
 
 uint8_t *msg_test_alive_prepare_data(struct msmcomm_message *msg)
 {
+    MESSAGE_CAST(msg, struct test_alive_msg)->ref_id = msg->ref_id;
     return msg->payload;
 }
 

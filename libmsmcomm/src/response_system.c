@@ -37,12 +37,18 @@ unsigned int resp_test_alive_is_valid(struct msmcomm_message *msg)
 
 void resp_test_alive_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-    /* FIXME */
+    if (len != sizeof (struct test_alive_resp))
+    {
+        return;
+    }
+    
+    msg->payload = data;
+    msg->ref_id = MESSAGE_CAST(msg, struct test_alive_resp)->ref_id;
 }
 
 uint32_t resp_test_alive_get_size(struct msmcomm_message *msg)
 {
-    return 0;
+    return sizeof(struct test_alive_resp);
 }
 
 /*

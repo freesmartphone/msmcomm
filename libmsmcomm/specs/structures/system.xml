@@ -43,7 +43,7 @@
 			</field>
 		</structure>
 		<structure name="test_alive_msg" length="5">
-			<field name="some_value0" start="0" type="uint8_t"/>
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="some_value1" start="4" type="uint8_t"/>
 		</structure>
 		<structure name="get_firmware_msg" length="4">
@@ -64,7 +64,8 @@
 			<field name="voltage" start="6" end="7" type="uint16_t"/>
 			<field name="rc" start="8" type="uint8_t"/>
 		</structure>
-		<structure name="test_alive_resp" length="0">
+		<structure name="test_alive_resp" length="5">
+            <field name="ref_id" start="0" end="3" type="uint32_t"/>
 		</structure>
 		<structure name="set_system_time_msg" length="26">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
