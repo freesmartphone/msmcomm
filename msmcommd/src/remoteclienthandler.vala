@@ -28,7 +28,7 @@ namespace Msmcomm
         private FsoFramework.Logger logger;
         private FsoFramework.SmartKeyFile config;
         private SocketService socksrv;
-        private Gee.ArrayList<RemoteClient> clients;
+        private GLib.List<RemoteClient> clients;
         
         //
         // public API
@@ -38,7 +38,7 @@ namespace Msmcomm
         {
             logger = FsoFramework.theLogger;
             config = FsoFramework.theConfig;
-            clients = new Gee.ArrayList<RemoteClient>();
+            clients = new GLib.List<RemoteClient>();
         }
         
         public bool setup()
@@ -100,22 +100,25 @@ namespace Msmcomm
             }
         }
         
+        public void removeClient(RemoteClient client)
+        {
+            logger.debug("Attempting to remove client ...");
+            client.close();
+            clients.remove(client);
+        }
+        
         //
         // private API
         //
         
-        private void removeClient(RemoteClient client)
-        {
-            clients.remove(client);
-        }
+        
         
         private bool handleIncommingConnection(SocketConnection conn, Object? source)
         {
             logger.debug("Got new remote client connection !");
-            var client = new RemoteClient(conn);
-            client.requestRemove.connect(removeClient); 
-            client.requestHandleDataFromClient.connect((data, size) => requestHandleDataFromClient(data, size));
-            clients.add(client);
+            logger.debug(@"clients.size = $(clients.length())");
+            var client = new RemoteClient(conn, this);
+            clients.append(client);
             return true;
         }
         

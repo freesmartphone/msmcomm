@@ -23,7 +23,7 @@ using GLib;
  
 namespace Msmcomm
 {
-    public class RemoteClient
+    public class RemoteClient : Object
     {
         private SocketConnection connection;
         private FsoFramework.Logger logger;
@@ -31,14 +31,16 @@ namespace Msmcomm
         private uint readwatch;
         private uint writewatch;
         protected ByteArray buffer;
+        private RemoteClientHandler handler;
         
         //
         // public API
         //
         
-        public RemoteClient(SocketConnection conn)
+        public RemoteClient(SocketConnection conn, RemoteClientHandler handler)
         {
             connection = conn;
+            this.handler = handler;
             logger = FsoFramework.theLogger;
             buffer = new ByteArray();
             
@@ -49,6 +51,20 @@ namespace Msmcomm
             readwatch = channel.add_watch(IOCondition.IN | IOCondition.HUP, channelActionCallback);
             
             logger.debug("created io watching channel for new remote client");
+        }
+
+        public void close()
+        {
+            try 
+            {
+                logger.debug("RemoteClient: Closing channel and connection ...");
+                
+                connection.close(null);
+            }
+            catch (GLib.Error err)
+            {
+                logger.error(@"RemoteClient: Could not close channel/connection: $(err.message)");
+            }
         }
         
         public void handleDataFromModem(uint8[] data)
@@ -94,7 +110,7 @@ namespace Msmcomm
             else if ((condition & IOCondition.HUP) == IOCondition.HUP)
             {
                 logger.error( "HUP => closing channel" );
-                requestRemove(this);
+                handler.removeClient(this);
                 return false;
             }
             
@@ -106,7 +122,13 @@ namespace Msmcomm
         {
             try
             {
+                if (connection == null || connection.is_closed())
+                {
+                    return;
+                }
+                
                 InputStream input_stream = connection.input_stream;
+                
                 uint8[] buffer = new uint8[4096];
                 ssize_t bread = input_stream.read(buffer, buffer.length, null);
                 
@@ -120,7 +142,7 @@ namespace Msmcomm
                     logger.debug(@"Read $(bread) bytes => commit to connected handlers");
                     uint8[] tmp = new uint8[bread];
                     Memory.copy(tmp, buffer, bread);
-                    requestHandleDataFromClient(tmp, (int) bread);
+                    handler.requestHandleDataFromClient(tmp, (int) bread);
                 }
             }
             catch (GLib.Error err)
@@ -149,12 +171,5 @@ namespace Msmcomm
             
             return (uint) byteswritten;
         }
-        
-        //
-        // Signals
-        //
-        
-        public signal void requestRemove(RemoteClient client);
-        public signal void requestHandleDataFromClient(uint8[] data, int size);
     }
 } // namespace Msmcomm
