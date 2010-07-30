@@ -55,16 +55,10 @@ namespace Msmcomm
 
         public void close()
         {
-            try 
-            {
-                logger.debug("RemoteClient: Closing channel and connection ...");
-                
-                connection.close(null);
-            }
-            catch (GLib.Error err)
-            {
-                logger.error(@"RemoteClient: Could not close channel/connection: $(err.message)");
-            }
+            if (readwatch > 0)
+                Source.remove(readwatch);
+            channel = null;
+            connection = null;
         }
         
         public void handleDataFromModem(uint8[] data)

@@ -91,6 +91,11 @@ namespace Msmcomm
             
             return true;
         }
+
+        public void reset()
+        {
+            // FIXME
+        }
         
         public void handleDataFromModem(uint8[] data)
         {
