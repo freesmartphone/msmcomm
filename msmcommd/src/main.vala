@@ -35,7 +35,21 @@ public int main( string[] args )
     Posix.signal( Posix.SIGINT, SIGINT_handler );
     
     var worker = new Msmcomm.Worker();
-    Idle.add(worker.setup);
+    Idle.add(() => {
+        if (!worker.setup())
+        {
+            FsoFramework.theLogger.error("Could not setup the worker process!");
+            loop.quit();
+        }
+
+        return false;
+    });
+
+    var service = new Msmcomm.DBusService(worker);
+    if (!service.register())
+    {
+        return -1;
+    }
 
     loop.run();
 

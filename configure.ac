@@ -58,6 +58,8 @@ VALA_REQUIRED=0.7.10
 GLIB_REQUIRED=2.12.0
 GEE_REQUIRED=0.5
 FSOT_REQUIRED=0.9
+DBUS_REQUIRED=1.2.16
+DBUS_GLIB_REQUIRED=0.84
 
 PKG_CHECK_MODULES(VALA,
   vala-1.0 >= $VALA_REQUIRED)
@@ -70,6 +72,8 @@ PKG_CHECK_MODULES(DEPS,
   gobject-2.0 >= $GLIB_REQUIRED
   gthread-2.0 >= $GLIB_REQUIRED
   gee-1.0 >= $GEE_REQUIRED
+  dbus-1 >= $DBUS_REQUIRED
+  dbus-glib-1 >= $DBUS_GLIB_REQUIRED
   fsotransport-2.0 >= $FSOT_REQUIRED)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
@@ -79,6 +83,8 @@ AC_CONFIG_FILES([
 	Makefile
 	msmcommd/Makefile
 	msmcommd/conf/Makefile
+	msmcommd/data/Makefile
+	msmcommd/data/org.msmcomm.service
 	msmcommd/src/Makefile
 	libmsmcomm/Makefile
 	libmsmcomm/msmcomm-1.0.pc

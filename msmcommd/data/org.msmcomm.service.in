@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.msmcomm
+Exec=@prefix@/sbin/msmcommd
+User=root

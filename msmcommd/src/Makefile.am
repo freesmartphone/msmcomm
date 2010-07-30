@@ -9,6 +9,7 @@ VALAC_ARGS = \
 	--pkg gee-1.0 \
 	--pkg fsotransport-2.0 \
 	--pkg config \
+	--pkg dbus-glib-1 \
 	--thread \
 	--save-temps \
 	--basedir $(top_srcdir)
@@ -40,6 +41,7 @@ msmcommd_VALASOURCES = \
 	remoteclienthandler.vala \
 	remoteclient.vala \
 	lowlevelcontrol.vala \
+	dbusservice.vala \
 	$(NULL)
 
 msmcommd_SOURCES = \

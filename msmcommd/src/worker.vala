@@ -33,6 +33,8 @@ public class Worker
     private RemoteClientHandler remote_handler;
     private LowLevelControl lowlevel;
 
+    public bool active { get; private set; default = false; }
+
     //
     // private API
     //
@@ -44,16 +46,23 @@ public class Worker
         
         bread = t.read(data, data.length);
         
+        if (active)
+            return;
+
         llc.processIncommingData(data[0:bread]);
     }
 
     private void onTransportHangup(FsoFramework.Transport t)
     {
-        // FIXME
+        logger.error("[HUP] Modem transport closed from other side");
+        // FIXME block everything until modem transport comes back
     }
 
     private void handleSendDataRequest(uint8[] data)
     {
+        if (active)
+            return;
+
         transport.write(data, data.length);
     }
     
@@ -74,26 +83,14 @@ public class Worker
     
     private void handleDataFromClient(uint8[] data, int size)
     {
+        if (!active)
+            return;
+
         llc.sendDataFrame(data, size);
     }
 
-    //
-    // public API
-    //
-    
-    public Worker()
+    private bool setupModemTransport()
     {
-        logger = FsoFramework.theLogger;
-        config = FsoFramework.theConfig;
-        modem_config = new Gee.HashMap<string,string>();
-        remote_handler = new RemoteClientHandler();
-        lowlevel = new LowLevelControl();
-    }
-
-    public bool setup()
-    {
-        configure();
-
         if (modem_config["connection_type"] == "network") 
         {
             transport = new FsoFramework.SocketTransport("tcp", modem_config["ip"], modem_config["port"].to_int());
@@ -110,25 +107,111 @@ public class Worker
         
         transport.setDelegates(onTransportReadyToRead, onTransportHangup);
 
-        // Some the transport could not create, log error and abort mainloop
-        if ( !transport.open() )
+        return true;
+    }
+
+    private bool openModemTransport()
+    {
+        if (!transport.isOpen())
         {
-            logger.error("Could not open transport");
-            loop.quit();
-            return false;
+            // Some the transport could not create, log error and abort mainloop
+            if ( !transport.open() )
+            {
+                logger.error("Could not open transport");
+                return false;
+            }
         }
 
+        return true;
+    }
+
+    private void closeModemTransport()
+    {
+        if (transport.isOpen())
+        {
+            transport.close();
+        }
+    }
+
+    private void handleDataFromModem(uint8[] data)
+    {
+        if (!active)
+            return;
+
+        remote_handler.handleDataFromModem(data);
+    }
+
+    //
+    // public API
+    //
+    
+    public Worker()
+    {
+        logger = FsoFramework.theLogger;
+        config = FsoFramework.theConfig;
+        modem_config = new Gee.HashMap<string,string>();
+        lowlevel = new LowLevelControl();
+    }
+
+    public bool setup()
+    {
+        logger.debug("Setup the daemon ...");
+
+        configure();
+        if (!setupModemTransport())
+            return false;
+
         // setup link layer control
+        logger.debug("Initialize link layer control ...");
         llc = new LinkLayerControl();
         llc.requestHandleSendData.connect(handleSendDataRequest);
-        llc.requestHandleFrameContent.connect(remote_handler.handleDataFromModem);
-        llc.reset();
+        llc.requestHandleFrameContent.connect(handleDataFromModem);
         
+        // setup remote client handler
+        logger.debug("Initialize remote client handler ...");
+        remote_handler = new RemoteClientHandler();
         remote_handler.requestHandleDataFromClient.connect(handleDataFromClient);
+
+        // We are starting the remote service already here as we are accepting incomming
+        // connections already while we don't have an connection to the modem. The clients
+        // can already register but should wait until the start/reset dbus functions
+        // returns without an error
+        logger.debug("Start accepting incomming client connections ...");
         remote_handler.setup();
 
-        return false;
+        logger.debug("Worker setup finished ... waiting for start command!");
+
+        return true; 
     }
+
+    public bool start()
+    {
+        // FIXME try more than one time to open the modem port. Do that in a specific time
+        // interval
+        if (!openModemTransport()) 
+            return false;
+
+        llc.reset();
+        remote_handler.reset();
+
+        active = true;
+
+        return true;
+    }
+    
+
+    public void stop()
+    {
+        active = false;
+        closeModemTransport();
+    }
+
+    public bool reset()
+    {
+        stop();
+        return start();
+    }
+
 }
 
 } // namespace Msmcomm
