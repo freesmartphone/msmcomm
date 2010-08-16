@@ -721,6 +721,116 @@ namespace Msmcomm
 		}
 		return result;
 	}
+    
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_NETWORK_STATE_INFO_CHANGED_FIELD_TYPE_", cheader_filename = "msmcomm.h")]
+    public enum ChangedFieldType
+    {
+        INVALID,
+        SID,
+        NID,
+        PACKET_ZONE,
+        REGISTRATION_ZONE,
+        BASESTATION_P_REV,
+        SERVICE_DOMAIN,
+        CONCURRENT_SERVICES_SUPPORTED,
+        P_REV_IN_USE,
+        SERVING_STATUS,
+        SYSTEM_SERVICE_CAPABILITY,
+        SYSTEM_MODE,
+        ROADMING_STATUS,
+        SYSTEM_ID,
+        SERVICE_INDICATOR,
+        MOBILITY_MANAGEMENT,
+        HDR,
+        SIM_CARD_STATUS,
+        PLMN,
+        PS_DATA_SUSPEND_MASK,
+        UZ,
+        BCMS,
+        BASE_STATION_PARAMETERS_CHANGED,
+        ORIGINATION_STATUS,
+    }
+    
+    public string changedFieldTypeToString(ChangedFieldType type)
+	{
+		var result = "<unknown>";
+		switch (type)
+		{
+            case ChangedFieldType.INVALID:
+                result = "INVALID";
+                break;
+            case ChangedFieldType.NID:
+                result = "NID";
+                break;
+            case ChangedFieldType.SID:
+                result = "SID";
+                break;
+            case ChangedFieldType.PACKET_ZONE:
+                result = "PACKET_ZONE";
+                break;
+            case ChangedFieldType.REGISTRATION_ZONE:
+                result = "REGISTRATION_ZONE";
+                break;
+            case ChangedFieldType.BASESTATION_P_REV:
+                result = "INVALID";
+                break;
+            case ChangedFieldType.SERVICE_DOMAIN:
+                result = "SERVICE_DOMAIN";
+                break;
+            case ChangedFieldType.CONCURRENT_SERVICES_SUPPORTED:
+                result = "CONCURRENT_SERVICES_SUPPORTED";
+                break;
+            case ChangedFieldType.P_REV_IN_USE:
+                result = "P_REV_IN_USE";
+                break;
+            case ChangedFieldType.SERVING_STATUS:
+                result = "SERVING_STATUS";
+                break;
+            case ChangedFieldType.SYSTEM_SERVICE_CAPABILITY:
+                result = "SYSTEM_SERVICE_CAPABILITY";
+                break;
+            case ChangedFieldType.SYSTEM_MODE:
+                result = "SYSTEM_MODE";
+                break;
+            case ChangedFieldType.ROADMING_STATUS:
+                result = "ROADMING_STATUS";
+                break;
+            case ChangedFieldType.SYSTEM_ID:
+                result = "SYSTEM_ID";
+                break;
+            case ChangedFieldType.SERVICE_INDICATOR:
+                result = "SERVICE_INDICATOR";
+                break;
+            case ChangedFieldType.MOBILITY_MANAGEMENT:
+                result = "MOBILITY_MANAGEMENT";
+                break;
+            case ChangedFieldType.HDR:
+                result = "HDR";
+                break;
+            case ChangedFieldType.SIM_CARD_STATUS:
+                result = "SIM_CARD_STATUS";
+                break;
+            case ChangedFieldType.PLMN:
+                result = "PLMN";
+                break;
+            case ChangedFieldType.PS_DATA_SUSPEND_MASK:
+                result = "PS_DATA_SUSPEND_MASK";
+                break;
+            case ChangedFieldType.UZ:
+                result = "UZ";
+                break;
+            case ChangedFieldType.BCMS:
+                result = "INVALID";
+                break;
+            case ChangedFieldType.BASE_STATION_PARAMETERS_CHANGED:
+                result = "BASE_STATION_PARAMETERS_CHANGED";
+                break;
+            case ChangedFieldType.ORIGINATION_STATUS:
+                result = "ORIGINATION_STATUS";
+                break;
+        }
+		return result;
+	}
 
     [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void EventHandlerCb(int event, Message message);
@@ -729,7 +839,7 @@ namespace Msmcomm
     [CCode (cname = "msmcomm_read_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void ReadHandlerCb(void *data, int len);
     [CCode (cname = "msmcomm_network_state_info_changed_field_type_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
-    public delegate void ChangedFieldTypeCb(void *data, int type);
+    public delegate void ChangedFieldTypeCb(Message message, ChangedFieldType type);
     [CCode (cname = "msmcomm_error_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void ErrorHandlerCb(int error, void *data);
 
@@ -868,6 +978,13 @@ namespace Msmcomm
 						details += @"service_capabilitiy = $(msg.service_capabilitiy) ";
 						details += @"gprs_attached = $(msg.gprs_attached) ";
 						details += @"roam = $(msg.roam)";
+                        
+                        msg.traceChanges( ( msg, type ) => {
+                            Msmcomm.Unsolicited.NetworkStateInfo networkStateInfoMessage = 
+                                (Msmcomm.Unsolicited.NetworkStateInfo) msg;
+                            details += @" changed_field [ type =  $(changedFieldTypeToString(type)) ";
+                            details += "value = %02x ]".printf( networkStateInfoMessage.new_value );
+                        });
 					}
 					break;
 				case Msmcomm.EventType.SMS_WMS_READ_TEMPLATE:
