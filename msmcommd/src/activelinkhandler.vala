@@ -32,10 +32,6 @@ namespace Msmcomm
             base(context, control);
         }
         
-        public override void reset()
-        {
-        }
-        
         public override bool handleFrame(Frame frame)
         {
             bool frameHandled = false;

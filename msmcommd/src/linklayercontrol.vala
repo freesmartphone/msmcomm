@@ -54,14 +54,21 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
         
         configure();
     }
-
-    public void reset()
+    
+    public void start()
     {
         context.reset();
-        
         foreach (AbstractLinkHandler handler in handlers)
         {
-            handler.reset();
+            handler.start();
+        }
+    }
+
+    public void stop()
+    {
+        foreach (AbstractLinkHandler handler in handlers)
+        {
+            handler.stop();
         }
     }
 

@@ -39,7 +39,20 @@ namespace Msmcomm
         }
         
         public abstract bool handleFrame(Frame frame);
-        public abstract void reset();
+        
+        public virtual void reset()
+        {
+            stop();
+            start();
+        }
+        
+        public virtual void start()
+        {
+        }
+        
+        public virtual void stop()
+        {
+        }
 
         //
         // private API
@@ -47,7 +60,7 @@ namespace Msmcomm
         
         protected void requestReset()
         {
-            control.reset();
+            control.requestModemReset();
         }
 
         protected void sendFrame(Frame frame)

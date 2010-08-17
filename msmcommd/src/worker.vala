@@ -46,8 +46,11 @@ public class Worker
         
         bread = t.read(data, data.length);
         
-        if (active)
+        if (!active)
+        {
+            logger.debug("Could not read to any data from modem, as we are in in-active mode!");
             return;
+        }
 
         llc.processIncommingData(data[0:bread]);
     }
@@ -60,9 +63,12 @@ public class Worker
 
     private void handleSendDataRequest(uint8[] data)
     {
-        if (active)
+        if (!active) 
+        {
+            logger.debug("Could not send to any data to modem, as we are in in-active mode!");
             return;
-
+        }
+        
         transport.write(data, data.length);
     }
     
@@ -114,6 +120,8 @@ public class Worker
     {
         if (!transport.isOpen())
         {
+            logger.debug("Trying to open modem transport ...");
+            
             // Some the transport could not create, log error and abort mainloop
             if ( !transport.open() )
             {
@@ -127,6 +135,7 @@ public class Worker
 
     private void closeModemTransport()
     {
+        logger.debug("Trying to close modem transport ...");
         if (transport.isOpen())
         {
             transport.close();
@@ -139,6 +148,15 @@ public class Worker
             return;
 
         remote_handler.handleDataFromModem(data);
+    }
+    
+    private void handleModemResetRequest()
+    {
+        // FIXME use lowlevel reset here!
+        /*
+        closeModemTransport();
+        openModemTransport();
+        */
     }
 
     //
@@ -159,13 +177,17 @@ public class Worker
 
         configure();
         if (!setupModemTransport())
+        {
+            logger.error("Setup modem transport failed!");
             return false;
+        }
 
         // setup link layer control
         logger.debug("Initialize link layer control ...");
         llc = new LinkLayerControl();
         llc.requestHandleSendData.connect(handleSendDataRequest);
         llc.requestHandleFrameContent.connect(handleDataFromModem);
+        llc.requestModemReset.connect(handleModemResetRequest);
         
         // setup remote client handler
         logger.debug("Initialize remote client handler ...");
@@ -186,13 +208,16 @@ public class Worker
 
     public bool start()
     {
+        logger.debug("Worker::start()");
         // FIXME try more than one time to open the modem port. Do that in a specific time
         // interval
         if (!openModemTransport()) 
+        {
+            logger.debug("Worker::openModemTransport() failed!");
             return false;
-
-        llc.reset();
-        remote_handler.reset();
+        }
+        
+        llc.start();
 
         active = true;
 
@@ -202,12 +227,16 @@ public class Worker
 
     public void stop()
     {
+        logger.debug("Worker::stop()");
         active = false;
         closeModemTransport();
+        llc.stop();
+        remote_handler.reset();
     }
 
     public bool reset()
     {
+        logger.debug("Worker::reset()");
         stop();
         return start();
     }

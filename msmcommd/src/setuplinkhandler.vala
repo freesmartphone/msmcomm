@@ -52,8 +52,13 @@ namespace Msmcomm
             sync_timer.interval = 1000;
             sync_timer.requestHandleEvent.connect(syncTimerCallback);
         }
+        
+        public override void stop()
+        {
+            sync_timer.stop();
+        }
 
-        public override void reset()
+        public override void start()
         {
             sync_timer.start();
         }

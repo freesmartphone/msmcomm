@@ -34,7 +34,7 @@ namespace Msmcomm
             context.ack_timer.requestHandleEvent.connect(handleAckTimerEvent);
         }
 
-        public override void reset()
+        public override void stop()
         {
             context.ack_queue.clear();
             context.ack_timer.stop();
