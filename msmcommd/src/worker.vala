@@ -30,7 +30,6 @@ public class Worker
     private FsoFramework.SmartKeyFile config;
     private LinkLayerControl llc;
     private Gee.HashMap<string,string> modem_config;
-    private RemoteClientHandler remote_handler;
     private LowLevelControl lowlevel;
 
     public bool active { get; private set; default = false; }
@@ -144,10 +143,9 @@ public class Worker
 
     private void handleDataFromModem(uint8[] data)
     {
-        if (!active)
-            return;
-
-        remote_handler.handleDataFromModem(data);
+        if (active)
+        {
+        }
     }
     
     private void handleModemResetRequest()
@@ -189,18 +187,6 @@ public class Worker
         llc.requestHandleFrameContent.connect(handleDataFromModem);
         llc.requestModemReset.connect(handleModemResetRequest);
         
-        // setup remote client handler
-        logger.debug("Initialize remote client handler ...");
-        remote_handler = new RemoteClientHandler();
-        remote_handler.requestHandleDataFromClient.connect(handleDataFromClient);
-
-        // We are starting the remote service already here as we are accepting incomming
-        // connections already while we don't have an connection to the modem. The clients
-        // can already register but should wait until the start/reset dbus functions
-        // returns without an error
-        logger.debug("Start accepting incomming client connections ...");
-        remote_handler.setup();
-
         logger.debug("Worker setup finished ... waiting for start command!");
 
         return true; 
@@ -209,6 +195,7 @@ public class Worker
     public bool start()
     {
         logger.debug("Worker::start()");
+        
         // FIXME try more than one time to open the modem port. Do that in a specific time
         // interval
         if (!openModemTransport()) 
@@ -231,7 +218,6 @@ public class Worker
         active = false;
         closeModemTransport();
         llc.stop();
-        remote_handler.reset();
     }
 
     public bool reset()
