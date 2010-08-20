@@ -170,13 +170,13 @@ public class Commands
         switch ( params[0] )
         {
             case "reset":
-                msg.setOperationMode( Msmcomm.OperationMode.RESET );
+                msg.mode = Msmcomm.OperationMode.RESET;
                 break;
             case "online":
-                msg.setOperationMode( Msmcomm.OperationMode.ONLINE );
+                msg.mode = Msmcomm.OperationMode.ONLINE;
                 break;
             case "offline":
-                msg.setOperationMode( Msmcomm.OperationMode.OFFLINE );
+                msg.mode = Msmcomm.OperationMode.OFFLINE;
                 break;
             default:
                 ERR( @"Unknown operation mode $(params[0])" );

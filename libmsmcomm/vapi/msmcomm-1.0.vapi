@@ -978,13 +978,15 @@ namespace Msmcomm
 						details += @"service_capabilitiy = $(msg.service_capabilitiy) ";
 						details += @"gprs_attached = $(msg.gprs_attached) ";
 						details += @"roam = $(msg.roam)";
-                        
+                    
+                        /*
                         msg.traceChanges( ( msg, type ) => {
-                            Msmcomm.Unsolicited.NetworkStateInfo networkStateInfoMessage = 
+                            unowned Msmcomm.Unsolicited.NetworkStateInfo networkStateInfoMessage = 
                                 (Msmcomm.Unsolicited.NetworkStateInfo) msg;
                             details += @" changed_field [ type =  $(changedFieldTypeToString(type)) ";
                             details += "value = %02x ]".printf( networkStateInfoMessage.new_value );
                         });
+                        */
 					}
 					break;
 				case Msmcomm.EventType.SMS_WMS_READ_TEMPLATE:
@@ -1085,8 +1087,11 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_create_message")]
             public ChangeOperationMode(CommandType t = CommandType.CHANGE_OPERATION_MODE);
 
-            [CCode (cname = "msmcomm_message_change_operation_mode_set_operation_mode")]
-            public void setOperationMode(OperationMode oprtMode);
+            public OperationMode mode
+            {
+                [CCode (cname = "msmcomm_message_change_operation_mode_set_operation_mode")]
+                set;
+            }
         }
 
         [Compact]
