@@ -71,6 +71,12 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
             handler.stop();
         }
     }
+    
+    public void reset()
+    {
+        stop();
+        start();
+    }
 
     public void processIncommingData(uint8[] data)
     {

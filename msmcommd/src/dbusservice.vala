@@ -25,20 +25,23 @@ namespace Msmcomm
     private const string DBUS_PATH_DBUS                 = "/org/freedesktop/DBus";
     private const string DBUS_INTERFACE_DBUS            = "org.freedesktop.DBus";
     
-    [DBus (name = "org.msmcomm.Daemon")]
+    [DBus (name = "org.msmcomm.Management")]
     public interface IDaemonService : GLib.Object
     {
         public abstract async void start() throws DBus.Error;
         public abstract async void stop() throws DBus.Error;
         public abstract async void reset() throws DBus.Error;
         public abstract async bool get_active() throws DBus.Error;
+        
+        public abstract async void TestAlive() throws DBus.Error, Msmcomm.CommandError;
+        public abstract async void ChangeOperationMode(string mode) throws DBus.Error, Msmcomm.CommandError;
     }
 
-    [Dbus (name = "org.msmcomm.Daemon")]
+    [Dbus (name = "org.msmcomm.Management")]
     public class DBusService : GLib.Object, IDaemonService
     {
         private FsoFramework.Logger logger;
-        private Worker worker;
+        private ModemControl modem;
         private DBus.Connection dbusconn;
         private dynamic DBus.Object dbusobj;
         private string servicename;
@@ -48,10 +51,10 @@ namespace Msmcomm
         // public API
         //
 
-        public DBusService(Worker worker)
+        public DBusService(ModemControl modem)
         {
             logger = FsoFramework.theLogger;
-            this.worker = worker;
+            this.modem = modem;
             servicename = "org.msmcomm";
             objectpath = "/org/msmcomm";
         }
@@ -85,13 +88,13 @@ namespace Msmcomm
         }
    
         //
-        // DBUS (org.freesmartphone.MSM.Communication.*)
+        // DBUS (org.msmcomm.Management)
         //
 
         public async void start() throws DBus.Error
         {
             logger.debug("SERVICE: start()");
-            if (!worker.start())
+            if (!modem.start())
             {
                 // FIXME throw some exception ...
             }
@@ -100,13 +103,13 @@ namespace Msmcomm
         public async void stop() throws DBus.Error
         {
             logger.debug("SERVICE: stop()");
-            worker.stop();
+            modem.stop();
         }
 
         public async void reset() throws DBus.Error
         {
             logger.debug("SERVICE: reset()");
-            if(!worker.reset())
+            if(!modem.reset())
             {
                 // FIXME throw some exception ...
             }
@@ -115,7 +118,20 @@ namespace Msmcomm
         public async bool get_active() throws DBus.Error
         {
             logger.debug("SERVICE: get_active()");
-            return worker.active;
+            return modem.active;
+        }
+        
+        public async void TestAlive() throws DBus.Error, Msmcomm.CommandError
+        {
+            var cmd = new TestAliveCommand();
+            yield modem.processCommand(cmd);
+        }
+        
+        public async void ChangeOperationMode(string mode) throws DBus.Error, Msmcomm.CommandError
+        {
+            var cmd = new ChangeOperationModeCommand();
+            cmd.mode = mode;
+            yield modem.processCommand(cmd);
         }
     }
 } // namespace Msmcomm

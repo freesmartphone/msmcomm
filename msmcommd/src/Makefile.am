@@ -10,6 +10,7 @@ VALAC_ARGS = \
 	--pkg fsotransport-2.0 \
 	--pkg config \
 	--pkg dbus-glib-1 \
+	--pkg msmcomm-1.0 \
 	--thread \
 	--save-temps \
 	--basedir $(top_srcdir)
@@ -30,6 +31,8 @@ msmcommd_VALASOURCES = \
 	frame.vala \
 	timer.vala \
 	util.vala \
+	error.vala \
+	abstractobject.vala \
 	linkcontext.vala \
 	abstractlinkhandler.vala \
 	activelinkhandler.vala \
@@ -37,9 +40,13 @@ msmcommd_VALASOURCES = \
 	setuplinkhandler.vala \
 	transmissionhandler.vala \
 	linklayercontrol.vala \
-	worker.vala \
+	modemcontrol.vala \
 	lowlevelcontrol.vala \
 	dbusservice.vala \
+	commandhandler.vala \
+	commands.vala \
+	modemchannel.vala \
+	commandworker.vala \
 	$(NULL)
 
 msmcommd_SOURCES = \

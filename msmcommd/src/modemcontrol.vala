@@ -21,212 +21,252 @@
 
 namespace Msmcomm
 {
-
-// FIXME rename this class, as we need a more impressive name
-public class Worker
-{
-    private FsoFramework.Transport transport;
-    private FsoFramework.Logger logger;
-    private FsoFramework.SmartKeyFile config;
-    private LinkLayerControl llc;
-    private Gee.HashMap<string,string> modem_config;
-    private LowLevelControl lowlevel;
-
-    public bool active { get; private set; default = false; }
-
-    //
-    // private API
-    //
-
-    private void onTransportReadyToRead(FsoFramework.Transport t)
+    public class ModemControl : AbstractObject
     {
-        int bread = 0;
-        var data = new uint8[4096];
+        private FsoFramework.Transport transport;
+        private LinkLayerControl llc;
+        private Gee.HashMap<string,string> modem_config;
+        private LowLevelControl lowlevel;
+        private GLib.ByteArray in_buffer;
+        private ModemChannel channel;
         
-        bread = t.read(data, data.length);
-        
-        if (!active)
-        {
-            logger.debug("Could not read to any data from modem, as we are in in-active mode!");
-            return;
-        }
+        public bool active { get; private set; default = false; }
 
-        llc.processIncommingData(data[0:bread]);
-    }
+        //
+        // private API
+        //
 
-    private void onTransportHangup(FsoFramework.Transport t)
-    {
-        logger.error("[HUP] Modem transport closed from other side");
-        // FIXME block everything until modem transport comes back
-    }
-
-    private void handleSendDataRequest(uint8[] data)
-    {
-        if (!active) 
+        private void onTransportReadyToRead(FsoFramework.Transport t)
         {
-            logger.debug("Could not send to any data to modem, as we are in in-active mode!");
-            return;
-        }
-        
-        transport.write(data, data.length);
-    }
-    
-    private void configure()
-    {
-        modem_config["connection_type"] = config.stringValue("connection", "type", "serial");
-        
-        if (modem_config["connection_type"] == "serial")
-        {   
-            modem_config["path"] = config.stringValue("connection", "path", "/dev/modemuart");
-        }
-        else if (modem_config["connection_type"] == "network")
-        {
-            modem_config["ip"] = config.stringValue("connection", "ip", "192.168.0.202");
-            modem_config["port"] = config.stringValue("connection", "port", "3001");
-        }
-    }
-    
-    private void handleDataFromClient(uint8[] data, int size)
-    {
-        if (!active)
-            return;
-
-        llc.sendDataFrame(data, size);
-    }
-
-    private bool setupModemTransport()
-    {
-        if (modem_config["connection_type"] == "network") 
-        {
-            transport = new FsoFramework.SocketTransport("tcp", modem_config["ip"], modem_config["port"].to_int());
-        }
-        else if (modem_config["connection_type"] == "serial") 
-        {
-            transport = new FsoFramework.HsuartTransport(modem_config["path"]);
-        }
-        else
-        {
-            logger.error("Could not create transport. Wrong transport type '%s' specified in configuration. Please go and fix this!".printf(modem_config["connection_type"]));
-            return false;
-        }
-        
-        transport.setDelegates(onTransportReadyToRead, onTransportHangup);
-
-        return true;
-    }
-
-    private bool openModemTransport()
-    {
-        if (!transport.isOpen())
-        {
-            logger.debug("Trying to open modem transport ...");
+            int bread = 0;
+            var data = new uint8[4096];
             
-            // Some the transport could not create, log error and abort mainloop
-            if ( !transport.open() )
+            bread = t.read(data, data.length);
+            
+            if (!active)
             {
-                logger.error("Could not open transport");
-                return false;
+                logger.debug("Could not read to any data from modem, as we are in in-active mode!");
+                return;
+            }
+
+            llc.processIncommingData(data[0:bread]);
+        }
+
+        private void onTransportHangup(FsoFramework.Transport t)
+        {
+            logger.error("[HUP] Modem transport closed from other side");
+            // FIXME block everything until modem transport comes back
+        }
+        
+        private void configure()
+        {
+            modem_config["connection_type"] = config.stringValue("connection", "type", "serial");
+            
+            if (modem_config["connection_type"] == "serial")
+            {   
+                modem_config["path"] = config.stringValue("connection", "path", "/dev/modemuart");
+            }
+            else if (modem_config["connection_type"] == "network")
+            {
+                modem_config["ip"] = config.stringValue("connection", "ip", "192.168.0.202");
+                modem_config["port"] = config.stringValue("connection", "port", "3001");
             }
         }
 
-        return true;
-    }
-
-    private void closeModemTransport()
-    {
-        logger.debug("Trying to close modem transport ...");
-        if (transport.isOpen())
+        private bool setupModemTransport()
         {
-            transport.close();
-        }
-    }
+            if (modem_config["connection_type"] == "network") 
+            {
+                transport = new FsoFramework.SocketTransport("tcp", modem_config["ip"], modem_config["port"].to_int());
+            }
+            else if (modem_config["connection_type"] == "serial") 
+            {
+                transport = new FsoFramework.HsuartTransport(modem_config["path"]);
+            }
+            else
+            {
+                logger.error("Could not create transport. Wrong transport type '%s' specified in configuration. Please go and fix this!".printf(modem_config["connection_type"]));
+                return false;
+            }
+            
+            transport.setDelegates(onTransportReadyToRead, onTransportHangup);
 
-    private void handleDataFromModem(uint8[] data)
-    {
-        if (active)
-        {
+            return true;
         }
-    }
-    
-    private void handleModemResetRequest()
-    {
-        // FIXME use lowlevel reset here!
+
+        private bool openModemTransport()
+        {
+            if (!transport.isOpen())
+            {
+                logger.debug("Trying to open modem transport ...");
+                
+                // Some the transport could not create, log error and abort mainloop
+                if ( !transport.open() )
+                {
+                    logger.error("Could not open transport");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void closeModemTransport()
+        {
+            logger.debug("Trying to close modem transport ...");
+            if (transport.isOpen())
+            {
+                transport.close();
+            }
+        }
+
         /*
-        closeModemTransport();
-        openModemTransport();
-        */
-    }
-
-    //
-    // public API
-    //
-    
-    public Worker()
-    {
-        logger = FsoFramework.theLogger;
-        config = FsoFramework.theConfig;
-        modem_config = new Gee.HashMap<string,string>();
-        lowlevel = new LowLevelControl();
-    }
-
-    public bool setup()
-    {
-        logger.debug("Setup the daemon ...");
-
-        configure();
-        if (!setupModemTransport())
+         * Take data from llc and send it to the user
+         */ 
+        private void handleModemRequestFrameContent(uint8[] data)
         {
-            logger.error("Setup modem transport failed!");
-            return false;
-        }
-
-        // setup link layer control
-        logger.debug("Initialize link layer control ...");
-        llc = new LinkLayerControl();
-        llc.requestHandleSendData.connect(handleSendDataRequest);
-        llc.requestHandleFrameContent.connect(handleDataFromModem);
-        llc.requestModemReset.connect(handleModemResetRequest);
-        
-        logger.debug("Worker setup finished ... waiting for start command!");
-
-        return true; 
-    }
-
-    public bool start()
-    {
-        logger.debug("Worker::start()");
-        
-        // FIXME try more than one time to open the modem port. Do that in a specific time
-        // interval
-        if (!openModemTransport()) 
-        {
-            logger.debug("Worker::openModemTransport() failed!");
-            return false;
+            if (active)
+            {
+                channel.handleIncommingData(data);
+            }
         }
         
-        llc.start();
+        /*
+         * Take data from llc and send it to the modem
+         */
+        private void handleModemRequestSendData(uint8[] data)
+        {
+            if (!active) 
+            {
+                logger.debug("Could not send to any data to modem, as we are in in-active mode!");
+                return;
+            }
+            
+            transport.write(data, data.length);
+        }
+        
+        /*
+         * Something within the link layer went wrong and we should restart 
+         * the whole link layer stack.
+         */
+        private void handleModemRequestReset()
+        {
+            // FIXME use lowlevel reset here!
+            /*
+            closeModemTransport();
+            openModemTransport();
+            */
+            
+            llc.reset();
+        }
 
-        active = true;
+        //
+        // public API
+        //
+        
+        public ModemControl()
+        {
+            modem_config = new Gee.HashMap<string,string>();
+            lowlevel = new LowLevelControl();
+            in_buffer = new GLib.ByteArray();
+        }
 
-        return true;
+        /*
+         * Setup every other component we need to work probably
+         */
+        public bool setup()
+        {
+            logger.debug("Setup the daemon ...");
+
+            configure();
+            if (!setupModemTransport())
+            {
+                logger.error("Setup modem transport failed!");
+                return false;
+            }
+            
+            
+            /* setup our link layer control and connect our handlers for different
+             * signals provided by the llc */
+            logger.debug("Initialize link layer control ...");
+            llc = new LinkLayerControl();
+            llc.requestHandleSendData.connect(handleModemRequestSendData);
+            llc.requestHandleFrameContent.connect(handleModemRequestFrameContent);
+            llc.requestModemReset.connect(handleModemRequestReset);
+            
+            logger.debug("Worker setup finished!");
+
+            return true; 
+        }
+        
+        /*
+         * Send a data package to the attached modem
+         */
+        public void send(uint8[] data, int length)
+        {
+            if (active)
+            {
+                llc.sendDataFrame(data, length);
+            }
+        }
+
+        /*
+         * Start the modem controller: opens the modem transport and 
+         * starts the link layer control.
+         */ 
+        public bool start()
+        {
+            // FIXME try more than one time to open the modem port. Do that in a specific time
+            // interval
+            if (!openModemTransport()) 
+            {
+                logger.debug("Worker::openModemTransport() failed!");
+                return false;
+            }
+            
+            llc.start();
+
+            active = true;
+
+            return true;
+        }
+
+        /*
+         * Stop modem controller: closes the modem transport and stops
+         * the link layer control
+         */
+        public void stop()
+        {
+            logger.debug("Worker::stop()");
+            active = false;
+            closeModemTransport();
+            llc.stop();
+        }
+
+        /*
+         * Combines start and stop methods
+         */
+        public bool reset()
+        {
+            logger.debug("Worker::reset()");
+            stop();
+            return start();
+        }
+        
+        public void registerChannel(ModemChannel channel)
+        {
+            this.channel = channel;
+        }
+        
+        public async void processCommand(BaseCommand command) throws CommandError
+        {
+            command.channel = channel;
+            yield command.run();
+        }
+        
+        public override string repr()
+        {
+            return "<>";
+        }
     }
-    
-
-    public void stop()
-    {
-        logger.debug("Worker::stop()");
-        active = false;
-        closeModemTransport();
-        llc.stop();
-    }
-
-    public bool reset()
-    {
-        logger.debug("Worker::reset()");
-        stop();
-        return start();
-    }
-
-}
-
 } // namespace Msmcomm

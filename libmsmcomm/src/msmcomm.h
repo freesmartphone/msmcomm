@@ -350,6 +350,7 @@ int msmcomm_init(struct msmcomm_context *ctx);
 int msmcomm_shutdown(struct msmcomm_context *ctx);
 
 int msmcomm_read_from_modem(struct msmcomm_context *ctx);
+int msmcomm_process_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t length);
 
 int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *msg);
 

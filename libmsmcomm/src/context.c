@@ -57,6 +57,16 @@ int msmcomm_read_from_modem(struct msmcomm_context *ctx)
     return len;
 }
 
+int msmcomm_process_data(struct msmcomm_context *ctx, uint8_t *buf, uint32_t length)
+{
+    if (length <= 0)
+        return length;
+    
+    handle_response_data(ctx, buf, length);
+    
+    return length;
+}
+
 void msmcomm_register_event_handler
     (struct msmcomm_context *ctx, msmcomm_event_handler_cb event_handler, void *data)
 {

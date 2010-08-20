@@ -18,43 +18,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  **/
-
-using GLib;
-
-public MainLoop loop;
-
-public static void SIGINT_handler( int signum )
+ 
+namespace Msmcomm
 {
-    Posix.signal( signum, null ); // restore original signal handler
-    loop.quit();
-}
-
-public int main( string[] args )
-{
-    loop = new MainLoop( null, false );
-    Posix.signal( Posix.SIGINT, SIGINT_handler );
-    
-    var modem = new Msmcomm.ModemControl();
-    var channel = new Msmcomm.ModemChannel(modem);
-    Idle.add(() => {
-        if (!modem.setup())
-        {
-            FsoFramework.theLogger.error("Could not setup the modem process!");
-            loop.quit();
-        }
-        
-        channel.open();
-    
-        return false;
-    });
-
-    var service = new Msmcomm.DBusService(modem);
-    if (!service.register())
+    [DBus (name = "org.msmcomm.Management")]
+    public errordomain CommandError
     {
-        return -1;
+        INVALID_ARGUMENTS,
+        FAILED,
     }
-
-    loop.run();
-
-    return 0;
-}
+} // namespace Msmcomm

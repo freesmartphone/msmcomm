@@ -835,9 +835,9 @@ namespace Msmcomm
     [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void EventHandlerCb(int event, Message message);
     [CCode (cname = "msmcomm_write_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
-    public delegate void WriteHandlerCb(void *data, int len);
+    public delegate void WriteHandlerCb(uint8[] data);
     [CCode (cname = "msmcomm_read_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
-    public delegate void ReadHandlerCb(void *data, int len);
+    public delegate void ReadHandlerCb(uint8[] data);
     [CCode (cname = "msmcomm_network_state_info_changed_field_type_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void ChangedFieldTypeCb(Message message, ChangedFieldType type);
     [CCode (cname = "msmcomm_error_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
@@ -855,6 +855,9 @@ namespace Msmcomm
 
         [CCode (cname = "msmcomm_read_from_modem")]
         public bool readFromModem();
+
+        [CCode (cname = "msmcomm_process_data")]
+        public bool processData(void *data, int len);
 
         [CCode (cname = "msmcomm_send_message")]
         public void sendMessage(Message message);

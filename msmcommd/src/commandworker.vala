@@ -21,40 +21,24 @@
 
 using GLib;
 
-public MainLoop loop;
-
-public static void SIGINT_handler( int signum )
+namespace Msmcomm
 {
-    Posix.signal( signum, null ); // restore original signal handler
-    loop.quit();
-}
-
-public int main( string[] args )
-{
-    loop = new MainLoop( null, false );
-    Posix.signal( Posix.SIGINT, SIGINT_handler );
-    
-    var modem = new Msmcomm.ModemControl();
-    var channel = new Msmcomm.ModemChannel(modem);
-    Idle.add(() => {
-        if (!modem.setup())
-        {
-            FsoFramework.theLogger.error("Could not setup the modem process!");
-            loop.quit();
-        }
-        
-        channel.open();
-    
-        return false;
-    });
-
-    var service = new Msmcomm.DBusService(modem);
-    if (!service.register())
+    public class CommandWorker : AbstractObject
     {
-        return -1;
+        private ModemChannel channel;
+        
+        //
+        // public API
+        //
+        
+        public CommandWorker(ModemControl modem)
+        {
+            channel = new ModemChannel(modem);
+        }
+
+        public override string repr()
+        {
+            return "<>";
+        }
     }
-
-    loop.run();
-
-    return 0;
-}
+} // namespace Msmcomm
