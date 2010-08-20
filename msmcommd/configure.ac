@@ -1,4 +1,4 @@
-AC_INIT([msmcomm], [0.5.0], [morphis@gravedo.de], [msmcomm])
+AC_INIT([msmcommd], [0.5.0], [morphis@gravedo.de], [msmcommd])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])
@@ -16,34 +16,6 @@ AC_SUBST(VALAC)
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
-
-################################################################################
-# Check for libreadline and/or libhistory
-#
-AC_CHECK_LIB(readline, rl_bind_key,
-             [LIBREADLINE=-lreadline
-              AC_DEFINE(HAVE_LIBREADLINE, 1,
-               [Define to one if you have -lreadline])],
-             [LIBREADLINE=], "$LIBTERMCAP")
-AC_SUBST(LIBREADLINE)
-AC_SUBST(LIBTERMCAP)
-
-AC_CHECK_LIB(history, add_history,
-             [LIBHISTORY=-lhistory
-              AC_DEFINE(HAVE_LIBHISTORY, 1,
-               [Define to one if you have -lhistory])],
-             [LIBHISTORY=])
-
-# If libhistory does not provide add_history check if libreadline has it.
-if test -z "$LIBHISTORY" && test -n "$LIBREADLINE"; then
-  AC_CHECK_LIB(readline, add_history,
-               [LIBHISTORY=-lreadline
-                AC_DEFINE(HAVE_LIBHISTORY, 1,
-                     [Define to one if you have -lhistory])],
-               [LIBHISTORY=])
-fi
-
-AC_SUBST(LIBHISTORY)
 
 ################################################################################
 # check for debugging
@@ -81,21 +53,10 @@ AC_SUBST(DEPS_LIBS)
 ################################################################################
 AC_CONFIG_FILES([
 	Makefile
-	msmcommd/Makefile
-	msmcommd/conf/Makefile
-	msmcommd/data/Makefile
-	msmcommd/data/org.msmcomm.service
-	msmcommd/src/Makefile
-	libmsmcomm/Makefile
-	libmsmcomm/msmcomm-1.0.pc
-	libmsmcomm/src/Makefile
-	libmsmcomm/vapi/Makefile
-	libmsmcomm/tests/Makefile
-	msmvterm/Makefile
-	msmvterm/src/Makefile
-	msmlogd/Makefile
-	msmlogd/src/Makefile
-	msmlogd/conf/Makefile
+	conf/Makefile
+	data/Makefile
+	data/org.msmcomm.service
+	src/Makefile
 ])
 
 AC_OUTPUT

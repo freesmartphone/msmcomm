@@ -1,8 +1,0 @@
-msmcommd:
-- connection hangup (0 bytes read)
-
-libmsmcomm:
-- restart/shutdown daemon
-
-msmvterm:
-
