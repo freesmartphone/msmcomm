@@ -323,10 +323,14 @@ namespace Msmcomm
         {
             try 
             {
-                dbusconn = DBus.Bus.get(DBus.BusType.SESSION);
+                dbusconn = DBus.Bus.get(DBus.BusType.SYSTEM);
+                
+                
                 dbusobj = dbusconn.get_object(DBUS_SERVICE_BUS, 
                                               DBUS_PATH_DBUS,
                                               DBUS_INTERFACE_DBUS);
+                                              
+                logger.debug("TEST");
 
                 uint res = dbusobj.RequestName(servicename, (uint) 0);
 
