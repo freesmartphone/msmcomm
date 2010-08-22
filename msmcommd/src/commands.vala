@@ -117,7 +117,7 @@ namespace Msmcomm
             checkResponse(response);
             
             result.insert("info", response.info);
-            result.insert("hci", @"response.hci");
+            result.insert("hci", @"$(response.hci)");
         }
     }
     
@@ -476,9 +476,9 @@ namespace Msmcomm
             checkResponse(response);
             
             result.insert("slot_count", @"$(response.slot_count)");
-            result.insert("slot_count", @"$(response.slots_used)");
-            result.insert("slot_count", @"$(response.max_chars_per_title)");
-            result.insert("slot_count", @"$(response.max_chars_per_number)");
+            result.insert("slots_used", @"$(response.slots_used)");
+            result.insert("max_chars_per_title", @"$(response.max_chars_per_title)");
+            result.insert("max_chars_per_number", @"$(response.max_chars_per_number)");
         }
     }
     

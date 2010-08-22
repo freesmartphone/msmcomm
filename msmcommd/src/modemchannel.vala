@@ -33,6 +33,7 @@ namespace Msmcomm
         private Gee.LinkedList<CommandHandler> q;
         private uint timeoutWatch;
         protected CommandHandler current;
+        private int current_event_type;
         
         public ModemControl modem;
         public static Msmcomm.Context context;
@@ -131,6 +132,7 @@ namespace Msmcomm
 
         protected void reset()
         {
+            logger.debug("Reseting command queue ...");
             current = null;
             q.clear();
         }
@@ -142,7 +144,16 @@ namespace Msmcomm
 
         private bool checkResponseForCommandHandler(Msmcomm.Message response, CommandHandler bundle)
         {
-            return response.index == bundle.command.index;
+            bool result = false;
+            
+            // Ugly, ugly hack: As the GET_PHONEBOOK_PROPERTIES response does not
+            // has a ref_id field, we disable the check for only this response !!!
+            if (current_event_type != Msmcomm.ResponseType.GET_PHONEBOOK_PROPERTIES)
+            {
+                result = response.index == bundle.command.index;
+            }
+            
+            return true;
         }
 
         private uint32 nextValidMessageIndex()
@@ -165,7 +176,7 @@ namespace Msmcomm
             }
             else
             {
-                logger.error( @"got response for current command with wrong ref id!" );
+                logger.error( @"got response for current command with wrong ref id ($(response.index), $(bundle.command.index))!" );
             }
         }
 
@@ -200,6 +211,8 @@ namespace Msmcomm
         {
             var et = Msmcomm.eventTypeToString( event );
             logger.debug( et );
+            
+            current_event_type = event;
 
             if ( message.type == Msmcomm.EventType.RESET_RADIO_IND )
             {
@@ -210,7 +223,13 @@ namespace Msmcomm
             
             if ( message.message_type == Msmcomm.MessageType.RESPONSE )
             {
-                assert( current != null );
+                if (current == null)
+                {
+                    logger.error("Got response while not expecting one! Maybe out of sync!?");
+                    reset();
+                    return;
+                }
+                
                 onSolicitedResponse( (CommandHandler)current, message );
                 current = null;
                 Idle.add( checkRestartingQueue );

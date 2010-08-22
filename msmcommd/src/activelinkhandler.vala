@@ -45,6 +45,9 @@ namespace Msmcomm
                         // hunting ...
                         logger.debug("receive DATA frame with data from modem (seq=0x%x, ack=0x%x)".printf(frame.seq, frame.ack));
                         
+                        logger.debug("frame.payload size = %i".printf(frame.payload.data.length));
+                        hexdump2(true, frame.payload.data, logger);
+                        
                         // we have new data for our registered data handlers
                         control.requestHandleFrameContent(frame.payload.data);
                         
