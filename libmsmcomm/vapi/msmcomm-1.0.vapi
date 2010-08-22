@@ -508,7 +508,7 @@ namespace Msmcomm
         BUCS2,
     }
 
-    public string ecodingTypeToString(EncodingType type)
+    public string encodingTypeToString(EncodingType type)
     {
 		var result = "<unknown>";
 		switch (type)
@@ -968,7 +968,7 @@ namespace Msmcomm
                     break;
                 case Msmcomm.EventType.NETWORK_STATE_INFO:
 					var msg = (Msmcomm.Unsolicited.NetworkStateInfo) this.copy();
-					if (msg.onlyRssiUpdate) {
+					if (msg.only_rssi_update) {
 						details += @"rssi = $(msg.rssi) ";
 					}
 					else {
@@ -978,7 +978,7 @@ namespace Msmcomm
 						details += @"rssi = $(msg.rssi) ";
 						details += @"ecio = $(msg.ecio) ";
 						details += @"service_domain = $(msg.service_domain) ";
-						details += @"service_capabilitiy = $(msg.service_capabilitiy) ";
+						details += @"service_capabilitiy = $(msg.service_capability) ";
 						details += @"gprs_attached = $(msg.gprs_attached) ";
 						details += @"roam = $(msg.roam)";
                     
@@ -1005,7 +1005,7 @@ namespace Msmcomm
 					details += @"position = $(msg.position) ";
 					details += @"number = '$(msg.number)' ";
 					details += @"title = '$(msg.title)' ";
-					details += @"encoding_type = $(ecodingTypeToString(msg.encoding_type))";
+					details += @"encoding_type = $(encodingTypeToString(msg.encoding_type))";
 					break;
 				case Msmcomm.EventType.GET_NETWORKLIST:
 					var msg = (Msmcomm.Unsolicited.GetNetworkList) this.copy();
@@ -1037,9 +1037,9 @@ namespace Msmcomm
 				case Msmcomm.EventType.CALL_END:
 				case Msmcomm.EventType.CALL_STATUS:
 					var msg = (Msmcomm.Unsolicited.CallStatus) this.copy();
-					details = @"caller_id = '$(msg.caller_id)' ";
-					details += @"call_id = $(msg.call_id) ";
-                    details += @"call_type = $(callTypeToString(msg.call_type)) ";
+					details = @"caller_id = '$(msg.number)' ";
+					details += @"call_id = $(msg.id) ";
+                    details += @"call_type = $(callTypeToString(msg.type)) ";
 					details += @"reject_type = $(msg.reject_type) ";
 					details += @"reject_value = $(msg.reject_value) ";
                     break;
@@ -1209,9 +1209,12 @@ namespace Msmcomm
             [CCode (cname = "msmcomm_message_dial_call_set_caller_id")]
             private void _setCallerId(string callerId, uint length);
 
-            public void setCallerId(string caller_id)
+            public string number 
             {
-                _setCallerId(caller_id, (uint)caller_id.length);
+                set
+                {
+                    _setCallerId(value, (uint)value.length);
+                }
             }
 
             public bool block {
@@ -1622,34 +1625,41 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class PowerState : Message
         {
-            [CCode (cname = "msmcomm_event_power_state_get_state")]
-            public uint8 getState();
+            public uint8 state
+            {
+                [CCode (cname = "msmcomm_event_power_state_get_state")]
+                get;
+            }
         }
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class ChargerStatus : Message
         {
-            [CCode (cname = "msmcomm_event_charger_status_get_voltage")]
-            public uint getVoltage();
+            
+            public uint voltage
+            {
+                [CCode (cname = "msmcomm_event_charger_status_get_voltage")]
+                get;
+            }
         }
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public abstract class CallStatus : Message
         {
-            public string caller_id
+            public string number
             {
 				[CCode (cname = "msmcomm_event_call_status_get_caller_id")]
 				get;
             }
 
-            public CallType call_type {
+            public CallType type {
                 [CCode (cname = "msmcomm_event_call_status_get_call_type")]
 				get;
             }
 
-            public uint call_id {
+            public uint id {
 				[CCode (cname = "msmcomm_event_call_status_get_call_id")]
 				get;
 			}
@@ -1710,7 +1720,7 @@ namespace Msmcomm
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class NetworkStateInfo : Message
         {
-			public bool onlyRssiUpdate {
+			public bool only_rssi_update {
 				[CCode (cname = "msmcomm_event_network_state_info_is_only_rssi_update")]
 				get;
 			}
@@ -1747,7 +1757,7 @@ namespace Msmcomm
 				get;
 			}
 
-			public uint8 service_capabilitiy {
+			public uint8 service_capability {
 				[CCode (cname = "msmcomm_event_network_state_info_get_service_capability")]
 				get;
 			}
