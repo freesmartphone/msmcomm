@@ -25,101 +25,6 @@ namespace Msmcomm
     private const string DBUS_PATH_DBUS                 = "/org/freedesktop/DBus";
     private const string DBUS_INTERFACE_DBUS            = "org.freedesktop.DBus";
     
-    [DBus (name = "org.msmcomm.Management")]
-    public errordomain Error
-    {
-        INVALID_ARGUMENTS,
-        FAILED,
-        MODEM_INACTIVE,
-    }
- 
-    [DBus (timeout = 120000, name = "org.msmcomm.Management")]
-    public interface Management : GLib.Object
-    {
-        public abstract async void start() throws DBus.Error, Msmcomm.Error;
-        public abstract async void stop() throws DBus.Error, Msmcomm.Error;
-        public abstract async void reset() throws DBus.Error, Msmcomm.Error;
-        public abstract async bool get_active() throws DBus.Error, Msmcomm.Error;
-    }
-    
-    [DBus (timeout = 120000, name = "org.msmcomm.Commands")]
-    public interface Commands : GLib.Object
-    {
-        public abstract async void TestAlive() throws DBus.Error, Msmcomm.Error;
-        public abstract async void ChangeOperationMode(string mode) throws DBus.Error, Msmcomm.Error;
-        public abstract async void GetPhoneStateInfo() throws DBus.Error, Msmcomm.Error;
-        public abstract async void Reset() throws DBus.Error, Msmcomm.Error;
-        public abstract async GLib.HashTable<string,string> GetFirmwareInfo() throws DBus.Error, Msmcomm.Error;
-        public abstract async string GetImei() throws DBus.Error, Msmcomm.Error;
-       
-        public abstract async void Charging(string mode, string voltage) throws DBus.Error, Msmcomm.Error;
-        public abstract async GLib.HashTable<string,string> GetChargerStatus() throws DBus.Error, Msmcomm.Error;
-        
-        public abstract async void VerifyPin(string pin_type, string pin) throws DBus.Error, Msmcomm.Error;
-        public abstract async void ChangePin(string old_pin, string new_pin) throws DBus.Error, Msmcomm.Error;
-        public abstract async void EnablePin(string pin) throws DBus.Error, Msmcomm.Error;
-        public abstract async void DisablePin(string pin) throws DBus.Error, Msmcomm.Error;
-        
-        public abstract async void EndCall(int call_id) throws DBus.Error, Msmcomm.Error;
-        public abstract async void AnswerCall(int call_id) throws DBus.Error, Msmcomm.Error;
-        public abstract async void DialCall(string number, bool block) throws DBus.Error, Msmcomm.Error;
-        
-        public abstract async void SetSystemTime(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset) throws DBus.Error, Msmcomm.Error;
-        public abstract async void RssiStatus(bool status) throws DBus.Error, Msmcomm.Error;
-        
-        public abstract async GLib.HashTable<string,string> GetPhonebookProperties(string book_type) throws DBus.Error, Msmcomm.Error;
-        public abstract async GLib.HashTable<string,string> ReadPhonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error;
-        public abstract async uint WritePhonebook(string book_type, string number, string title) throws DBus.Error, Msmcomm.Error;
-        public abstract async void DeletePhonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error;
-        
-        public abstract async void GetNetworkList() throws DBus.Error, Msmcomm.Error;
-        public abstract async void SetModePreference(string mode) throws DBus.Error, Msmcomm.Error;
-        public abstract async string SimInfo(string field_type) throws DBus.Error, Msmcomm.Error;
-        public abstract async uint[] GetAudioModemTuningParams() throws DBus.Error, Msmcomm.Error;
-        public abstract async void SetAudioProfile(uint class, uint sub_class) throws DBus.Error, Msmcomm.Error;
-    }
-    
-    [DBus (timeout = 120000, name = "org.msmcomm.Unsolicited")]
-    public interface ResponseUnsolicited : GLib.Object
-    {
-        public signal void PowerState(uint state);
-        public signal void ChargerStatus(uint voltage);
-        public signal void CallIncoming(string number, string type, uint id, uint reject_type, uint reject_value);
-        public signal void CallConnect(string number, string type, uint id, uint reject_type, uint reject_value);
-        public signal void CallEnd(string number, string type, uint id, uint reject_type, uint reject_value);
-        public signal void CallOrigination(string number, string type, uint id, uint reject_type, uint reject_value);
-        public signal void NetworkList(GLib.HashTable<string,string> networks);
-        public signal void NetworkStateInfo(bool only_rssi_update, uint change_field, uint new_value, string operator_name, uint rssi, uint ecio, uint service_domain, uint service_capability, bool gprs_attached, uint roam);
-        public signal void PhonebookReady(string book_type);
-        public signal void PhonebookModified(string book_type, uint position);
-        public signal void CmPh(string[] plmns);
-        
-        public signal void ResetRadioInd();
-        public signal void OperationMode();
-        public signal void CmPhInfoAvailable();
-        
-        public signal void SimInserted();
-        public signal void SimRemoved();
-        public signal void SimNotAvailable();
-        
-        public signal void Pin1Verified();
-        public signal void Pin1Blocked();
-        public signal void Pin1Unblocked();
-        public signal void Pin1Enabled();
-        public signal void Pin1Disabled();
-        public signal void Pin1Changed();
-        public signal void Pin1PermBlocked();
-        
-        public signal void Pin2Verified();
-        public signal void Pin2Blocked();
-        public signal void Pin2Unblocked();
-        public signal void Pin2Enabled();
-        public signal void Pin2Disabled();
-        public signal void Pin2Changed();
-        public signal void Pin2PermBlocked();
-        
-    }
-    
     public delegate void UnsolicitedResponseHandler(Msmcomm.Message msg);
     
     public class UnsolicitedResponseHandlerWrapper
@@ -211,26 +116,26 @@ namespace Msmcomm
         private void registerUnsolicitedResponseHandlers()
         {
             urc_handlers[Msmcomm.EventType.RESET_RADIO_IND] = createUnsolicitedResponseHandler((msg) => { 
-                ResetRadioInd(); 
+                reset_radio_ind(); 
             });
             
             urc_handlers[Msmcomm.EventType.CHARGER_STATUS] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.ChargerStatus chargerStatusMsg = (Msmcomm.Unsolicited.ChargerStatus) msg;
-                ChargerStatus(chargerStatusMsg.voltage);
+                charger_status(chargerStatusMsg.voltage);
             });
             
             urc_handlers[Msmcomm.EventType.OPERATION_MODE] = createUnsolicitedResponseHandler((msg) => {
-                OperationMode();
+                operation_mode();
             });
             
             urc_handlers[Msmcomm.EventType.CM_PH_INFO_AVAILABLE] = createUnsolicitedResponseHandler((msg) => {
-                CmPhInfoAvailable();
+                cm_ph_info_available();
             });
             
             urc_handlers[Msmcomm.EventType.NETWORK_STATE_INFO] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.NetworkStateInfo networkStateInfoMsg = (Msmcomm.Unsolicited.NetworkStateInfo) msg;
                 
-                NetworkStateInfo(networkStateInfoMsg.only_rssi_update, 
+                network_state_info(networkStateInfoMsg.only_rssi_update, 
                                  networkStateInfoMsg.change_field,
                                  networkStateInfoMsg.new_value,
                                  networkStateInfoMsg.operator_name,
@@ -245,7 +150,7 @@ namespace Msmcomm
             urc_handlers[Msmcomm.EventType.CALL_INCOMMING] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
-                CallIncoming(callStatusMsg.number, 
+                call_incomming(callStatusMsg.number, 
                              callTypeToString(callStatusMsg.type), 
                              callStatusMsg.id, 
                              callStatusMsg.reject_type, 
@@ -255,7 +160,7 @@ namespace Msmcomm
             urc_handlers[Msmcomm.EventType.CALL_END] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
-                CallEnd(callStatusMsg.number, 
+                call_end(callStatusMsg.number, 
                         callTypeToString(callStatusMsg.type), 
                         callStatusMsg.id, 
                         callStatusMsg.reject_type, 
@@ -265,7 +170,7 @@ namespace Msmcomm
             urc_handlers[Msmcomm.EventType.CALL_CONNECT] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
-                CallConnect(callStatusMsg.number, 
+                call_connect(callStatusMsg.number, 
                             callTypeToString(callStatusMsg.type), 
                             callStatusMsg.id, 
                             callStatusMsg.reject_type, 
@@ -275,7 +180,7 @@ namespace Msmcomm
             urc_handlers[Msmcomm.EventType.CALL_ORIGINATION] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
-                CallOrigination(callStatusMsg.number, 
+                call_origination(callStatusMsg.number, 
                                 callTypeToString(callStatusMsg.type), 
                                 callStatusMsg.id, 
                                 callStatusMsg.reject_type, 
@@ -291,19 +196,19 @@ namespace Msmcomm
                     networks.insert(@"$(networkListMsg.getPlmn(n))", @"$(networkListMsg.getNetworkName(n))");
                 }
                 
-                NetworkList(networks);
+                network_list(networks);
             });
             
             urc_handlers[Msmcomm.EventType.PHONEBOOK_READY] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.PhonebookReady phonebookReadyMsg = (Msmcomm.Unsolicited.PhonebookReady) msg;
                 
-                PhonebookReady(phonebookTypeToString(phonebookReadyMsg.book_type));
+                phonebook_ready(phonebookTypeToString(phonebookReadyMsg.book_type));
             });
             
             urc_handlers[Msmcomm.EventType.PHONEBOOK_MODIFIED] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.PhonebookModified phonebookModifiedMsg = (Msmcomm.Unsolicited.PhonebookModified) msg;
                 
-                PhonebookModified(phonebookTypeToString(phonebookModifiedMsg.book_type), phonebookModifiedMsg.position);
+                phonebook_modified(phonebookTypeToString(phonebookModifiedMsg.book_type), phonebookModifiedMsg.position);
             });
             
             /**
@@ -311,15 +216,15 @@ namespace Msmcomm
              **/
             
             urc_handlers[Msmcomm.EventType.SIM_INSERTED] = createUnsolicitedResponseHandler((msg) => {
-                SimInserted();
+                sim_inserted();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_REMOVED] = createUnsolicitedResponseHandler((msg) => {
-                SimRemoved();
+                sim_removed();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_NO_SIM] = createUnsolicitedResponseHandler((msg) => {
-                SimNotAvailable();
+                sim_not_available();
             });
             
             /**
@@ -327,31 +232,31 @@ namespace Msmcomm
              **/
             
             urc_handlers[Msmcomm.EventType.SIM_PIN1_VERIFIED] = createUnsolicitedResponseHandler((msg) => {
-                Pin1Verified();
+                pin1_verified();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN1_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
-                Pin1Blocked();
+                pin1_blocked();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN1_UNBLOCKED] = createUnsolicitedResponseHandler((msg) => {
-                Pin1Unblocked();
+                pin1_unblocked();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN1_ENABLED] = createUnsolicitedResponseHandler((msg) => {
-                Pin1Enabled();
+                pin1_enabled();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN1_DISABLED] = createUnsolicitedResponseHandler((msg) => {
-                Pin1Disabled();
+                pin1_disabled();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN1_CHANGED] = createUnsolicitedResponseHandler((msg) => {
-                Pin1Changed();
+                pin1_changed();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN1_PERM_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
-                Pin1PermBlocked();
+                pin1_perm_blocked();
             });
             
             /**
@@ -359,31 +264,31 @@ namespace Msmcomm
              **/
             
             urc_handlers[Msmcomm.EventType.SIM_PIN2_VERIFIED] = createUnsolicitedResponseHandler((msg) => {
-                Pin2Verified();
+                pin2_verified();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN2_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
-                Pin2Blocked();
+                pin2_blocked();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN2_UNBLOCKED] = createUnsolicitedResponseHandler((msg) => {
-                Pin2Unblocked();
+                pin2_unblocked();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN2_ENABLED] = createUnsolicitedResponseHandler((msg) => {
-                Pin2Enabled();
+                pin2_enabled();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN2_DISABLED] = createUnsolicitedResponseHandler((msg) => {
-                Pin2Disabled();
+                pin2_disabled();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN2_CHANGED] = createUnsolicitedResponseHandler((msg) => {
-                Pin2Changed();
+                pin2_changed();
             });
             
             urc_handlers[Msmcomm.EventType.SIM_PIN2_PERM_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
-                Pin2PermBlocked();
+                pin2_perm_blocked();
             });
         }
         
@@ -480,7 +385,7 @@ namespace Msmcomm
         // DBUS (org.msmcomm.Commands)
         //
         
-        public async void TestAlive() throws DBus.Error, Msmcomm.Error
+        public async void test_alive() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -488,7 +393,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void ChangeOperationMode(string mode) throws DBus.Error, Msmcomm.Error
+        public async void change_operation_mode(string mode) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -497,7 +402,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async string GetImei() throws DBus.Error, Msmcomm.Error
+        public async string get_imei() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -506,7 +411,7 @@ namespace Msmcomm
             return cmd.imei;
         }
         
-        public async GLib.HashTable<string,string> GetFirmwareInfo() throws DBus.Error, Msmcomm.Error
+        public async GLib.HashTable<string,string> get_firmware_info() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -515,7 +420,7 @@ namespace Msmcomm
             return cmd.result;
         }
         
-        public async void Charging(string mode, string voltage) throws DBus.Error, Msmcomm.Error
+        public async void charging(string mode, string voltage) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -525,7 +430,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async GLib.HashTable<string,string> GetChargerStatus() throws DBus.Error, Msmcomm.Error
+        public async GLib.HashTable<string,string> get_charger_status() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -535,7 +440,7 @@ namespace Msmcomm
             return cmd.result;
         }
         
-        public async void Reset() throws DBus.Error, Msmcomm.Error
+        public async void reset_modem() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -543,7 +448,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void GetPhoneStateInfo() throws DBus.Error, Msmcomm.Error
+        public async void get_phone_state_info() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -551,7 +456,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void VerifyPin(string pin_type, string pin) throws DBus.Error, Msmcomm.Error
+        public async void verify_pin(string pin_type, string pin) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -561,7 +466,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void EndCall(int call_id) throws DBus.Error, Msmcomm.Error
+        public async void end_call(int call_id) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -570,7 +475,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void AnswerCall(int call_id) throws DBus.Error, Msmcomm.Error
+        public async void answer_call(int call_id) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -579,7 +484,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void DialCall(string number, bool block) throws DBus.Error, Msmcomm.Error
+        public async void dial_call(string number, bool block) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -589,7 +494,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void ChangePin(string old_pin, string new_pin) throws DBus.Error, Msmcomm.Error
+        public async void change_pin(string old_pin, string new_pin) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -599,7 +504,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void EnablePin(string pin) throws DBus.Error, Msmcomm.Error
+        public async void enable_pin(string pin) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -608,7 +513,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void DisablePin(string pin) throws DBus.Error, Msmcomm.Error
+        public async void disable_pin(string pin) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -617,7 +522,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void SetSystemTime(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset) throws DBus.Error, Msmcomm.Error
+        public async void set_system_time(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -632,7 +537,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void RssiStatus(bool status) throws DBus.Error, Msmcomm.Error
+        public async void rssi_status(bool status) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -641,7 +546,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async GLib.HashTable<string,string> GetPhonebookProperties(string book_type) throws DBus.Error, Msmcomm.Error
+        public async GLib.HashTable<string,string> get_phonebook_properties(string book_type) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -652,7 +557,7 @@ namespace Msmcomm
             return cmd.result;
         }
         
-        public async GLib.HashTable<string,string> ReadPhonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error
+        public async GLib.HashTable<string,string> read_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -664,7 +569,7 @@ namespace Msmcomm
             return cmd.result;
         }
         
-        public async uint WritePhonebook(string book_type, string number, string title) throws DBus.Error, Msmcomm.Error
+        public async uint write_phonebook(string book_type, string number, string title) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -677,7 +582,7 @@ namespace Msmcomm
             return cmd.modify_id;
         }
         
-        public async void DeletePhonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error
+        public async void delete_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -687,7 +592,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void GetNetworkList() throws DBus.Error, Msmcomm.Error
+        public async void get_network_list() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -695,7 +600,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void SetModePreference(string mode) throws DBus.Error, Msmcomm.Error
+        public async void set_mode_preference(string mode) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -704,7 +609,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async string SimInfo(string field_type) throws DBus.Error, Msmcomm.Error
+        public async string sim_info(string field_type) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -715,7 +620,7 @@ namespace Msmcomm
             return cmd.field_data;
         }
         
-        public async uint[] GetAudioModemTuningParams() throws DBus.Error, Msmcomm.Error
+        public async uint[] get_audio_modem_tuning_params() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -726,7 +631,7 @@ namespace Msmcomm
             return tmp;
         }
         
-        public async void SetAudioProfile(uint _class, uint sub_class) throws DBus.Error, Msmcomm.Error
+        public async void set_audio_profile(uint _class, uint sub_class) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             

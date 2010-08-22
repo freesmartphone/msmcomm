@@ -11,6 +11,7 @@ VALAC_ARGS = \
 	--pkg config \
 	--pkg dbus-glib-1 \
 	--pkg msmcomm-1.0 \
+	--pkg msmcommd-1.0 \
 	--thread \
 	--save-temps \
 	--basedir $(top_srcdir)
