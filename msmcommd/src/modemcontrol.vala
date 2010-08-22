@@ -256,9 +256,10 @@ namespace Msmcomm
         public void registerChannel(ModemChannel channel)
         {
             this.channel = channel;
+            channel.requestHandleUnsolicitedResponse.connect((type, msg) => { requestHandleUnsolicitedResponse(type, msg); } );
         }
         
-        public async void processCommand(BaseCommand command) throws CommandError
+        public async void processCommand(BaseCommand command) throws Msmcomm.Error
         {
             command.channel = channel;
             yield command.run();
@@ -268,5 +269,7 @@ namespace Msmcomm
         {
             return "<>";
         }
+        
+        public signal void requestHandleUnsolicitedResponse(Msmcomm.EventType type, Msmcomm.Message message);
     }
 } // namespace Msmcomm

@@ -31,7 +31,6 @@ msmcommd_VALASOURCES = \
 	frame.vala \
 	timer.vala \
 	util.vala \
-	error.vala \
 	abstractobject.vala \
 	linkcontext.vala \
 	abstractlinkhandler.vala \
@@ -52,7 +51,7 @@ msmcommd_VALASOURCES = \
 msmcommd_SOURCES = \
 	$(msmcommd_VALASOURCES:.vala=.c) \
 	$(NULL)
-
+	
 .vala.stamp: $(msmcommd_VALASOURCES)
 	$(VALAC) -C $(VALAC_ARGS) $^
 	touch $@
