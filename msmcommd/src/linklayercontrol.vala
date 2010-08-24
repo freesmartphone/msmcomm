@@ -40,6 +40,7 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
         logger = FsoFramework.theLogger;
         config = FsoFramework.theConfig;
         context = new LinkContext();
+        context.stateChanged.connect(onStateChanged);
 
         Crc16.setup();
                 
@@ -140,10 +141,18 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
     {
         transmission_handler.enequeFrame(frame);
     }
-
+    
     //
     // private API
     //
+    
+    private void onStateChanged(LinkStateType new_state)
+    {
+        if (new_state == LinkStateType.ACTIVE)
+        {
+            requestHandleLinkSetupComplete();
+        }
+    }
     
     private void configure()
     {

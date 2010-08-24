@@ -33,7 +33,8 @@ namespace Msmcomm
     }
 
     public class DBusService : 
-        GLib.Object, 
+        GLib.Object,
+        FreeSmartphone.Resource,
         Msmcomm.Management,
         Msmcomm.Commands,
         Msmcomm.ResponseUnsolicited
@@ -44,6 +45,7 @@ namespace Msmcomm
         private dynamic DBus.Object dbusobj;
         private string servicename;
         private string objectpath;
+        private dynamic DBus.Object usage;
         
         private Gee.HashMap<Msmcomm.EventType,UnsolicitedResponseHandlerWrapper> urc_handlers;
         
@@ -302,6 +304,30 @@ namespace Msmcomm
                 handler.func(message);
             }
         }
+        
+        private bool registerWithResource()
+        {
+            usage = dbusconn.get_object( "org.freesmartphone.ousaged",
+                                         "/org/freesmartphone/Usage",
+                                         "org.freesmartphone.Usage" ); /* dynamic for async */
+                
+            var path =  new DBus.ObjectPath("/org/msmcomm");
+            usage.register_resource( "Modem", path, onRegisterResourceReply );
+            return false;
+        }
+        
+        private void onRegisterResourceReply(GLib.Error err)
+        {
+            if (err != null)
+            {
+                logger.error(@"Error: $(err.message): Can't register resource with org.freesmartphone.ousaged, enabling unconditionally...");
+                enable();
+            }
+            else
+            {
+                logger.info("Ok. Registered with org.freesmartphone.ousaged");
+            }
+        }
 
         //
         // public API
@@ -312,6 +338,7 @@ namespace Msmcomm
             logger = FsoFramework.theLogger;
             this.modem = modem;
             this.modem.requestHandleUnsolicitedResponse.connect(dispatchUnsolicitedResponse);
+            this.modem.statusUpdate.connect((status) => { status_update(status); });
             servicename = "org.msmcomm";
             objectpath = "/org/msmcomm";
             
@@ -330,8 +357,6 @@ namespace Msmcomm
                                               DBUS_PATH_DBUS,
                                               DBUS_INTERFACE_DBUS);
                                               
-                logger.debug("TEST");
-
                 uint res = dbusobj.RequestName(servicename, (uint) 0);
 
                 if (res != DBus.RequestNameReply.PRIMARY_OWNER)
@@ -341,6 +366,8 @@ namespace Msmcomm
                 }
 
                 dbusconn.register_object(objectpath, this);
+                
+                Idle.add(registerWithResource);
             }
             catch (DBus.Error err)
             {
@@ -350,29 +377,42 @@ namespace Msmcomm
 
             return true;
         }
+
+        //
+        // DBUS (org.freesmartphone.Resource)
+        //
+
+        public async void disable() throws FreeSmartphone.ResourceError, DBus.Error
+        {
+            modem.stop();
+        }
+
+        public async void enable() throws FreeSmartphone.ResourceError, DBus.Error
+        {
+            logger.info("Starting modem ...");
+            if (!modem.start())
+            {
+                var msg = @"Could not startup connected modem";
+                throw new FreeSmartphone.ResourceError.UNABLE_TO_ENABLE(msg);   
+            }
+        }
+
+        public async void resume() throws FreeSmartphone.ResourceError, DBus.Error
+        {
+            // FIXME
+        }
+        
+        public async void suspend() throws FreeSmartphone.ResourceError, DBus.Error
+        {
+            // FIXME
+        }
    
         //
         // DBUS (org.msmcomm.Management)
         //
 
-        public async void start() throws DBus.Error, Msmcomm.Error
-        {
-            logger.debug("SERVICE: start()");
-            if (!modem.start())
-            {
-                // FIXME throw some exception ...
-            }
-        }
-
-        public async void stop() throws DBus.Error, Msmcomm.Error
-        {
-            logger.debug("SERVICE: stop()");
-            modem.stop();
-        }
-
         public async void reset() throws DBus.Error, Msmcomm.Error
         {
-            logger.debug("SERVICE: reset()");
             if(!modem.reset())
             {
                 // FIXME throw some exception ...
@@ -381,7 +421,6 @@ namespace Msmcomm
 
         public async bool get_active() throws DBus.Error, Msmcomm.Error
         {
-            logger.debug("SERVICE: get_active()");
             return modem.active;
         }
         

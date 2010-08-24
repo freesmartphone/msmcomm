@@ -35,6 +35,7 @@ public interface ILinkControl : GLib.Object
     
     public signal void requestModemReset();
     public signal void requestHandleFrameContent(uint8[] data);
+    public signal void requestHandleLinkSetupComplete();
 }
 
 public interface ILowLevelControl : GLib.Object

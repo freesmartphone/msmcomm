@@ -103,8 +103,11 @@ namespace Msmcomm
         {
             FsoFramework.theLogger.info(@"leaving $(linkStateTypeToString(state)) state ...");
             state = new_state;
+            stateChanged(new_state);
             FsoFramework.theLogger.info(@"entering $(linkStateTypeToString(state)) state ...");
         }
+        
+        public signal void stateChanged(LinkStateType new_state);
     }
     
 } // namespace Msmcomm

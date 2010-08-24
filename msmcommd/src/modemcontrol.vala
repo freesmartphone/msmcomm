@@ -159,6 +159,11 @@ namespace Msmcomm
             
             llc.reset();
         }
+        
+        private void handleLinkSetupComplete()
+        {
+            statusUpdate(Msmcomm.ModemControlStatus.ACTIVE);
+        }
 
         //
         // public API
@@ -193,6 +198,7 @@ namespace Msmcomm
             llc.requestHandleSendData.connect(handleModemRequestSendData);
             llc.requestHandleFrameContent.connect(handleModemRequestFrameContent);
             llc.requestModemReset.connect(handleModemRequestReset);
+            llc.requestHandleLinkSetupComplete.connect(() => { handleLinkSetupComplete(); });
             
             logger.debug("Worker setup finished!");
 
@@ -216,6 +222,12 @@ namespace Msmcomm
          */ 
         public bool start()
         {
+            if (active) 
+            {
+                logger.debug("Modem was started, but it is already in active mode! We ignore this ...");
+                return false;
+            }
+            
             // FIXME try more than one time to open the modem port. Do that in a specific time
             // interval
             if (!openModemTransport()) 
@@ -225,9 +237,8 @@ namespace Msmcomm
             }
             
             llc.start();
-
             active = true;
-
+        
             return true;
         }
 
@@ -237,10 +248,16 @@ namespace Msmcomm
          */
         public void stop()
         {
-            logger.debug("Worker::stop()");
+            if (!active)
+            {
+                logger.debug("Modem should be stopped but is not in active mode.");
+                return;
+            }
+                
             active = false;
             closeModemTransport();
             llc.stop();
+            statusUpdate(Msmcomm.ModemControlStatus.INACTIVE);
         }
 
         /*
@@ -248,7 +265,6 @@ namespace Msmcomm
          */
         public bool reset()
         {
-            logger.debug("Worker::reset()");
             stop();
             return start();
         }
@@ -271,5 +287,6 @@ namespace Msmcomm
         }
         
         public signal void requestHandleUnsolicitedResponse(Msmcomm.EventType type, Msmcomm.Message message);
+        public signal void statusUpdate(Msmcomm.ModemControlStatus status);
     }
 } // namespace Msmcomm
