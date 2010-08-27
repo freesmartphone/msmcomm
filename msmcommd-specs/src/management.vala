@@ -21,12 +21,20 @@
 
 namespace Msmcomm
 {
+    [DBus (use_string_marshalling = true)]
+    public enum ModemControlStatus
+    {
+        INACTIVE,
+        ACTIVE,
+        UNKNOWN,
+    }
+    
     [DBus (timeout = 120000, name = "org.msmcomm.Management")]
     public interface Management : GLib.Object
     {
-        public abstract async void start() throws DBus.Error, Msmcomm.Error;
-        public abstract async void stop() throws DBus.Error, Msmcomm.Error;
         public abstract async void reset() throws DBus.Error, Msmcomm.Error;
         public abstract async bool get_active() throws DBus.Error, Msmcomm.Error;
+        
+        public signal void status_update(ModemControlStatus status);
     }
 }
