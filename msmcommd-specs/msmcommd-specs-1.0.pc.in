@@ -9,5 +9,5 @@ Name: msmcommd-specs
 Description: dbus interface specification of the msmcomm daemon
 Version: @VERSION@
 Requires: glib-2.0 gobject-2.0 dbus-glib-1
-Libs: -L${libdir} -lmsmcommd-specs
+Libs: -L${libdir} -lmsmcommd
 Cflags: -I${includedir}/msmcommd-1.0
