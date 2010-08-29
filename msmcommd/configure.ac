@@ -26,7 +26,7 @@ AC_ARG_ENABLE(debug,
 AM_CONDITIONAL( [WANT_DEBUG], [test x"$debug" = x"yes"])
 
 ################################################################################
-VALA_REQUIRED=0.9.3.2
+VALA_REQUIRED=0.9.6.1
 GLIB_REQUIRED=2.12.0
 GEE_REQUIRED=0.5
 FSOT_REQUIRED=0.9
@@ -37,7 +37,7 @@ MSMCOMM_REQUIRED=0.5.0
 MSMCOMM_SPECS_REQUIRED=0.1.0
 
 PKG_CHECK_MODULES(VALA,
-  vala-1.0 >= $VALA_REQUIRED)
+  vala-0.10 >= $VALA_REQUIRED)
 AC_SUBST(VALA_CFLAGS)
 AC_SUBST(VALA_LIBS)
 
