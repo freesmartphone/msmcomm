@@ -406,6 +406,12 @@ namespace Msmcomm
         {
             // FIXME
         }
+        
+        public async GLib.HashTable<string,GLib.Value?> get_dependencies () throws FreeSmartphone.ResourceError, DBus.Error
+        {
+            GLib.HashTable<string,GLib.Value?> result = new GLib.HashTable<string,string>(str_hash, str_equal);
+            return result;
+        }
    
         //
         // DBUS (org.msmcomm.Management)
