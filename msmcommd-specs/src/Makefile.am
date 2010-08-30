@@ -1,5 +1,7 @@
 AUTOMAKE_OPTIONS =
 
+NULL = 
+
 AM_CFLAGS = \
 	$(DEPS_CFLAGS) \
 	-include $(CONFIG_HEADER)
@@ -19,7 +21,9 @@ libmsmcommd_la_VALASOURCES = \
 	management.vala \
 	commands.vala \
 	unsolicited.vala \
-	error.vala
+	error.vala \
+	structs.vala \
+	$(NULL)
 
 libmsmcommddir = $(includedir)/msmcommd-1.0
 libmsmcommd_HEADERS = \

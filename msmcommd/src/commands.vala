@@ -103,12 +103,7 @@ namespace Msmcomm
     
     public class GetFirmwareInfoCommand : BaseCommand
     {
-        public HashTable<string,string> result { get; set; }
-        
-        public GetFirmwareInfoCommand()
-        {
-            result = new HashTable<string,string>(str_hash, str_equal);
-        }
+        public FirmwareInfo result { get; set; }
         
         public override async void run() throws Msmcomm.Error
         {  
@@ -116,8 +111,7 @@ namespace Msmcomm
             unowned Msmcomm.Reply.GetFirmwareInfo response = (Msmcomm.Reply.GetFirmwareInfo)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
             
-            result.insert("info", response.info);
-            result.insert("hci", @"$(response.hci)");
+            result = FirmwareInfo(response.info, response.hci);
         }
     }
     
@@ -168,12 +162,7 @@ namespace Msmcomm
     public class GetChargerStatusCommand : BaseCommand
     {
         // OUT
-        public GLib.HashTable<string,string> result;
-        
-        public GetChargerStatusCommand()
-        {
-            result = new HashTable<string,string>(str_hash, str_equal);
-        }
+        public ChargerStatus result;
     
         public override async void run() throws Msmcomm.Error
         { 
@@ -184,29 +173,29 @@ namespace Msmcomm
             switch (response.mode)
             {
                 case Msmcomm.ChargingMode.USB:
-                    result.insert("mode", "usb");
+                    result.mode = ChargerStatusMode.USB;
                     break;
                 case Msmcomm.ChargingMode.INDUCTIVE:
-                    result.insert("mode", "inductive");
+                    result.mode = ChargerStatusMode.INDUCTIVE;
                     break;
                 default:
-                    result.insert("mode", "unknown");
+                    result.mode = ChargerStatusMode.UNKNOWN;
                     break;
             }
             
             switch (response.voltage)
             {
                 case Msmcomm.UsbVoltageMode.MODE_250mA:
-                    result.insert("voltage", "250mA");
+                    result.voltage = ChargerStatusVoltage.VOLTAGE_250mA;
                     break;
                 case Msmcomm.UsbVoltageMode.MODE_500mA:
-                    result.insert("voltage", "500mA");
+                    result.voltage = ChargerStatusVoltage.VOLTAGE_500mA;
                     break;
                 case Msmcomm.UsbVoltageMode.MODE_1A:
-                    result.insert("voltage", "1A");
+                    result.voltage = ChargerStatusVoltage.VOLTAGE_1A;
                     break;
                 default: 
-                    result.insert("voltage", "unknown");
+                    result.voltage = ChargerStatusVoltage.VOLTAGE_UNKNOWN;;
                     break;
             }
         }
@@ -214,12 +203,16 @@ namespace Msmcomm
     
     public class GetPhoneStateInfoCommand : BaseCommand
     {
+        public PhoneStateInfo result;
+        
         public override async void run() throws Msmcomm.Error
         { 
             var cmd = new Msmcomm.Command.GetPhoneStateInfo();
             // FIXME find the right response!          
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
+            
+            result = PhoneStateInfo(0);
         }
     }
     
@@ -386,12 +379,7 @@ namespace Msmcomm
         public uint8 position { get; set; }
         
         // OUT
-        public GLib.HashTable<string,string> result { get; set; }
-        
-        public ReadPhonebookCommand()
-        {
-            result = new HashTable<string,string>(str_hash, str_equal);
-        }
+        public PhonebookEntry result { get; set; }
         
         public override async void run() throws Msmcomm.Error
         {
@@ -403,11 +391,11 @@ namespace Msmcomm
             unowned Msmcomm.Reply.Phonebook response = (Msmcomm.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
             
-            result.insert("book_type", @"$(phonebookTypeToString(response.book_type))");
-            result.insert("position", @"$(response.position)");
-            result.insert("number", @"$(response.number)");
-            result.insert("title", @"$(response.title)");
-            result.insert("encoding_type", @"$(encodingTypeToString(response.encoding_type))");
+            result = PhonebookEntry(phonebookTypeToString(response.book_type),
+                                    response.position,
+                                    response.number,
+                                    response.title,
+                                    encodingTypeToString(response.encoding_type));
         }
     }
     
@@ -459,12 +447,7 @@ namespace Msmcomm
         public string book_type { get; set; }
         
         // OUT
-        public GLib.HashTable<string,string> result { get; set; }
-        
-        public GetPhonebookPropertiesCommand()
-        {
-            result = new HashTable<string,string>(str_hash, str_equal);
-        }
+        public PhonebookProperties result { get; set; }
         
         public override async void run() throws Msmcomm.Error
         {
@@ -475,10 +458,10 @@ namespace Msmcomm
             unowned Msmcomm.Reply.GetPhonebookProperties response = (Msmcomm.Reply.GetPhonebookProperties)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
             
-            result.insert("slot_count", @"$(response.slot_count)");
-            result.insert("slots_used", @"$(response.slots_used)");
-            result.insert("max_chars_per_title", @"$(response.max_chars_per_title)");
-            result.insert("max_chars_per_number", @"$(response.max_chars_per_number)");
+            result = PhonebookProperties(response.slot_count,
+                                         response.slots_used,
+                                         response.max_chars_per_title,
+                                         response.max_chars_per_number);
         }
     }
     

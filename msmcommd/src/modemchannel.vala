@@ -21,13 +21,6 @@
 
 namespace Msmcomm
 {
-    public delegate void WaitForUnsolicitedResponseHandlerFunc( Msmcomm.Message urc );
-
-    class WaitForUnsolicitedResponseHandlerFuncWrapper
-    {
-        public WaitForUnsolicitedResponseHandlerFunc func;
-    }
-
     public class ModemChannel : AbstractObject
     {
         private Gee.LinkedList<CommandHandler> q;
@@ -195,11 +188,6 @@ namespace Msmcomm
             command.index = nextValidMessageIndex();
             var handler = new CommandHandler( command, 0 );
             enqueueCommand( handler );
-        }
-        
-        public async void waitForUnsolicitedResponse( Msmcomm.EventType urc_type, WaitForUnsolicitedResponseHandlerFunc handler )
-        {
-            // FIXME
         }
         
         public void handleIncommingData(uint8[] data)

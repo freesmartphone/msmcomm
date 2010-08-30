@@ -26,13 +26,13 @@ namespace Msmcomm
     {
         public abstract async void test_alive() throws DBus.Error, Msmcomm.Error;
         public abstract async void change_operation_mode(string mode) throws DBus.Error, Msmcomm.Error;
-        public abstract async void get_phone_state_info() throws DBus.Error, Msmcomm.Error;
+        public abstract async PhoneStateInfo get_phone_state_info() throws DBus.Error, Msmcomm.Error;
         public abstract async void reset_modem() throws DBus.Error, Msmcomm.Error;
-        public abstract async GLib.HashTable<string,string> get_firmware_info() throws DBus.Error, Msmcomm.Error;
+        public abstract async FirmwareInfo get_firmware_info() throws DBus.Error, Msmcomm.Error;
         public abstract async string get_imei() throws DBus.Error, Msmcomm.Error;
        
         public abstract async void charging(string mode, string voltage) throws DBus.Error, Msmcomm.Error;
-        public abstract async GLib.HashTable<string,string> get_charger_status() throws DBus.Error, Msmcomm.Error;
+        public abstract async ChargerStatus get_charger_status() throws DBus.Error, Msmcomm.Error;
         
         public abstract async void verify_pin(string pin_type, string pin) throws DBus.Error, Msmcomm.Error;
         public abstract async void change_pin(string old_pin, string new_pin) throws DBus.Error, Msmcomm.Error;
@@ -46,8 +46,8 @@ namespace Msmcomm
         public abstract async void set_system_time(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset) throws DBus.Error, Msmcomm.Error;
         public abstract async void rssi_status(bool status) throws DBus.Error, Msmcomm.Error;
         
-        public abstract async GLib.HashTable<string,string> get_phonebook_properties(string book_type) throws DBus.Error, Msmcomm.Error;
-        public abstract async GLib.HashTable<string,string> read_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error;
+        public abstract async PhonebookProperties get_phonebook_properties(string book_type) throws DBus.Error, Msmcomm.Error;
+        public abstract async PhonebookEntry read_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error;
         public abstract async uint write_phonebook(string book_type, string number, string title) throws DBus.Error, Msmcomm.Error;
         public abstract async void delete_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error;
         

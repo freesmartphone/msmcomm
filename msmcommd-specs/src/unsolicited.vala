@@ -26,12 +26,12 @@ namespace Msmcomm
     {
         public signal void power_state(uint state);
         public signal void charger_status(uint voltage);
-        public signal void call_incomming(string number, string type, uint id, uint reject_type, uint reject_value);
-        public signal void call_connect(string number, string type, uint id, uint reject_type, uint reject_value);
-        public signal void call_end(string number, string type, uint id, uint reject_type, uint reject_value);
-        public signal void call_origination(string number, string type, uint id, uint reject_type, uint reject_value);
-        public signal void network_list(GLib.HashTable<string,string> networks);
-        public signal void network_state_info(bool only_rssi_update, uint change_field, uint new_value, string operator_name, uint rssi, uint ecio, uint service_domain, uint service_capability, bool gprs_attached, uint roam);
+        public signal void call_incomming(CallInfo info);
+        public signal void call_connect(CallInfo info);
+        public signal void call_end(CallInfo info);
+        public signal void call_origination(CallInfo info);
+        public signal void network_list(NetworkProvider[] networks);
+        public signal void network_state_info(NetworkStateInfo state_info);
         public signal void phonebook_ready(string book_type);
         public signal void phonebook_modified(string book_type, uint position);
         public signal void cm_ph(string[] plmns);

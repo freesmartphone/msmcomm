@@ -137,65 +137,73 @@ namespace Msmcomm
             urc_handlers[Msmcomm.EventType.NETWORK_STATE_INFO] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.NetworkStateInfo networkStateInfoMsg = (Msmcomm.Unsolicited.NetworkStateInfo) msg;
                 
-                network_state_info(networkStateInfoMsg.only_rssi_update, 
-                                 networkStateInfoMsg.change_field,
-                                 networkStateInfoMsg.new_value,
-                                 networkStateInfoMsg.operator_name,
-                                 networkStateInfoMsg.rssi,
-                                 networkStateInfoMsg.ecio,
-                                 networkStateInfoMsg.service_domain,
-                                 networkStateInfoMsg.service_capability,
-                                 (bool) networkStateInfoMsg.gprs_attached,
-                                 networkStateInfoMsg.roam);
+                var ns_info = NetworkStateInfo(networkStateInfoMsg.only_rssi_update, 
+                                               networkStateInfoMsg.change_field,
+                                               networkStateInfoMsg.new_value,
+                                               networkStateInfoMsg.operator_name,
+                                               networkStateInfoMsg.rssi,
+                                               networkStateInfoMsg.ecio,
+                                               networkStateInfoMsg.service_domain,
+                                               networkStateInfoMsg.service_capability,
+                                               (bool) networkStateInfoMsg.gprs_attached,
+                                               networkStateInfoMsg.roam);
+                
+                network_state_info(ns_info);
             });
             
             urc_handlers[Msmcomm.EventType.CALL_INCOMMING] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
-                call_incomming(callStatusMsg.number, 
-                             callTypeToString(callStatusMsg.type), 
-                             callStatusMsg.id, 
-                             callStatusMsg.reject_type, 
-                             callStatusMsg.reject_value);
+                var info = CallInfo(callStatusMsg.number, 
+                                    callTypeToString(callStatusMsg.type), 
+                                    callStatusMsg.id, 
+                                    callStatusMsg.reject_type, 
+                                    callStatusMsg.reject_value);
+                call_incomming(info);
             });
             
             urc_handlers[Msmcomm.EventType.CALL_END] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
-                call_end(callStatusMsg.number, 
-                        callTypeToString(callStatusMsg.type), 
-                        callStatusMsg.id, 
-                        callStatusMsg.reject_type, 
-                        callStatusMsg.reject_value);
+                var info = CallInfo(callStatusMsg.number, 
+                                    callTypeToString(callStatusMsg.type), 
+                                    callStatusMsg.id, 
+                                    callStatusMsg.reject_type, 
+                                    callStatusMsg.reject_value);                
+                call_end(info);
             });
             
             urc_handlers[Msmcomm.EventType.CALL_CONNECT] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
-                call_connect(callStatusMsg.number, 
-                            callTypeToString(callStatusMsg.type), 
-                            callStatusMsg.id, 
-                            callStatusMsg.reject_type, 
-                            callStatusMsg.reject_value);
+                var info = CallInfo(callStatusMsg.number, 
+                                    callTypeToString(callStatusMsg.type), 
+                                    callStatusMsg.id, 
+                                    callStatusMsg.reject_type, 
+                                    callStatusMsg.reject_value);
+                call_connect(info);
             });
             
             urc_handlers[Msmcomm.EventType.CALL_ORIGINATION] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
-                call_origination(callStatusMsg.number, 
-                                callTypeToString(callStatusMsg.type), 
-                                callStatusMsg.id, 
-                                callStatusMsg.reject_type, 
-                                callStatusMsg.reject_value);
+                var info = CallInfo(callStatusMsg.number, 
+                                    callTypeToString(callStatusMsg.type), 
+                                    callStatusMsg.id, 
+                                    callStatusMsg.reject_type, 
+                                    callStatusMsg.reject_value);
+                call_origination(info);
             });
             
             urc_handlers[Msmcomm.EventType.GET_NETWORKLIST] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.GetNetworkList networkListMsg = (Msmcomm.Unsolicited.GetNetworkList) msg;
-                GLib.HashTable<string,string> networks = new HashTable<string,string>(str_hash, str_equal);
+                NetworkProvider[] networks = { };
                 
                 for(int n = 0; n < networkListMsg.network_count; n++)
                 {
-                    networks.insert(@"$(networkListMsg.getPlmn(n))", @"$(networkListMsg.getNetworkName(n))");
+                    var np = NetworkProvider(networkListMsg.getNetworkName(n),
+                                             networkListMsg.getPlmn(n));
+                    networks += np;
                 }
                 
                 network_list(networks);
@@ -460,13 +468,22 @@ namespace Msmcomm
             return cmd.imei;
         }
         
-        public async GLib.HashTable<string,string> get_firmware_info() throws DBus.Error, Msmcomm.Error
+        public async FirmwareInfo get_firmware_info() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
             var cmd = new GetFirmwareInfoCommand();
             yield modem.processCommand(cmd);
-            return cmd.result;
+            
+            // WORKAROUND a nasty vala bug with structs ...
+            // try: return cmd.result; and you will get this error:
+            // dbusservice.c: In function ‘msmcomm_dbus_service_real_get_firmware_info_co’:
+            // dbusservice.c:3539: error: lvalue required as unary ‘&’ operand
+            
+            // NOTE Need to fix this error, when I have a little bit more time !!  
+            
+            return FirmwareInfo(cmd.result.version_string, 
+                                cmd.result.hci_version);
         }
         
         public async void charging(string mode, string voltage) throws DBus.Error, Msmcomm.Error
@@ -479,7 +496,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async GLib.HashTable<string,string> get_charger_status() throws DBus.Error, Msmcomm.Error
+        public async ChargerStatus get_charger_status() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -497,12 +514,14 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void get_phone_state_info() throws DBus.Error, Msmcomm.Error
+        public async PhoneStateInfo get_phone_state_info() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
             var cmd = new GetPhoneStateInfoCommand();
             yield modem.processCommand(cmd);
+            
+            return cmd.result;
         }
         
         public async void verify_pin(string pin_type, string pin) throws DBus.Error, Msmcomm.Error
@@ -595,7 +614,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async GLib.HashTable<string,string> get_phonebook_properties(string book_type) throws DBus.Error, Msmcomm.Error
+        public async PhonebookProperties get_phonebook_properties(string book_type) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -606,7 +625,7 @@ namespace Msmcomm
             return cmd.result;
         }
         
-        public async GLib.HashTable<string,string> read_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error
+        public async PhonebookEntry read_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -615,7 +634,13 @@ namespace Msmcomm
             cmd.position = (uint8) position;
             yield modem.processCommand(cmd);
             
-            return cmd.result;
+            // NOTE Seed get_firmware_info method for description of this
+            // workaround ...
+            return new PhonebookEntry(cmd.result.book_type,
+                                      cmd.result.position,
+                                      cmd.result.number,
+                                      cmd.result.title,
+                                      cmd.result.encoding_type);
         }
         
         public async uint write_phonebook(string book_type, string number, string title) throws DBus.Error, Msmcomm.Error
