@@ -1,4 +1,4 @@
-AC_INIT([msmcommd-specs], [0.1.0], [smartphones-standards@linuxtogo.org], [msmcommd-specs])
+AC_INIT([msmcommd-specs], [0.5.0], [smartphones-standards@linuxtogo.org], [msmcommd-specs])
 AC_CONFIG_SRCDIR([src/Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])
