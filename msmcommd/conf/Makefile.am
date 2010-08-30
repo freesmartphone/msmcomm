@@ -1,8 +1,6 @@
 NULL=
 
-THISDIR = `basename $$PWD`
-
-confdir = $(sysconfdir)/$(THISDIR)
+confdir = $(sysconfdir)/
 dist_conf_DATA = \
 	msmcommd.conf \
 	$(NULL)
