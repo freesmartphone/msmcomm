@@ -125,6 +125,7 @@ EVENT_TYPE(power_state)
 EVENT_TYPE(network_state_info)
 EVENT_TYPE(phonebook_ready) 
 EVENT_TYPE(phonebook_modified)
+EVENT_TYPE(sms_recieved_message)
 
 struct descriptor event_descriptors[] = {
     EVENT_DATA(MSMCOMM_EVENT_RESET_RADIO_IND, radio_reset_ind),
@@ -136,6 +137,7 @@ struct descriptor event_descriptors[] = {
     EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_READY, phonebook_ready),
     EVENT_DATA(MSMCOMM_EVENT_PHONEBOOK_MODIFIED, phonebook_modified),
     EVENT_DATA(MSMCOMM_EVENT_CM_PH, cm_ph),
+    EVENT_DATA(MSMCOMM_EVENT_SMS_RECEIVED_MESSAGE, sms_recieved_message),
 };
 
 const unsigned int event_descriptors_count = sizeof (event_descriptors) / sizeof (struct descriptor);

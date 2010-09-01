@@ -183,19 +183,19 @@
 #define MSMCOMM_EVENT_SMS_WMS_CFG_MEMORY_STATUS                     285
 #define MSMCOMM_EVENT_SMS_WMS_CFG_MEMORY_STATUS_SET                 286
 #define MSMCOMM_EVENT_SMS_WMS_CFG_GW_READY                          287
-
-#define MSMCOMM_EVENT_SMS_WMS_READ_TEMPLATE                         288
+#define MSMCOMM_EVENT_SMS_RECEIVED_MESSAGE                          388
+#define MSMCOMM_EVENT_SMS_WMS_READ_TEMPLATE                         289
 
 #define MSMCOMM_EVENT_GET_NETWORKLIST                               289
 
 /*
  * Phonebook events
  */
-#define MSMCOMM_EVENT_PHONEBOOK_READY                               290
-#define MSMCOMM_EVENT_PHONEBOOK_MODIFIED                            291
+#define MSMCOMM_EVENT_PHONEBOOK_READY                               300
+#define MSMCOMM_EVENT_PHONEBOOK_MODIFIED                            301
 
-#define MSMCOMM_EVENT_CM_PH                                         292
-#define MSMCOMM_EVENT_SMS_RECEIVED_MESSAGE                          291
+#define MSMCOMM_EVENT_CM_PH                                         302
+
 
 /*
  * Phonebook types
@@ -346,14 +346,10 @@ typedef void (*msmcomm_network_state_info_changed_field_type_cb)
     (void *user_data, struct msmcomm_message * msg, int type);
 
 int msmcomm_init(struct msmcomm_context *ctx);
-
 int msmcomm_shutdown(struct msmcomm_context *ctx);
-
 int msmcomm_read_from_modem(struct msmcomm_context *ctx);
 int msmcomm_process_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t length);
-
 int msmcomm_send_message(struct msmcomm_context *ctx, struct msmcomm_message *msg);
-
 unsigned int msmcomm_check_hci_version(unsigned int hci_version);
 
 void msmcomm_register_event_handler(struct msmcomm_context *ctx, 
@@ -530,7 +526,7 @@ unsigned int msmcomm_event_cm_ph_get_plmn(struct msmcomm_message *msg, unsigned 
  * MSMCOMM_EVENT_SMS_RECEIVED_MESSAGE methods
  */
 
-char* msmcomm_event_sms_received_message_event_get_sender(struct msmcomm_message *msg);
-uint8_t* msmcomm_event_sms_received_message_event_get_pdu(struct msmcomm_message *msg, unsigned int *len);
+char* msmcomm_event_sms_recieved_message_get_sender(struct msmcomm_message *msg);
+uint8_t* msmcomm_event_sms_recieved_message_get_pdu(struct msmcomm_message *msg, unsigned int *len);
 
 #endif

@@ -70,14 +70,14 @@ uint8_t msmcomm_event_sms_wms_read_template_get_number_plan(struct msmcomm_messa
  * MSMCOMM_EVENT_SMS_RECEIVED_MESSAGE
  */
 
-unsigned int event_sms_received_message_is_valid(struct msmcomm_message *msg)
+unsigned int event_sms_recieved_message_is_valid(struct msmcomm_message *msg)
 {
     return (msg->group_id == 0x17) && 
            (SUBSYSTEM_ID(msg) == 0x2) && 
            ((MSG_ID(msg) == 0xf) || MSG_ID(msg) == 0x11);
 }
 
-void event_sms_received_message_handle_data(struct msmcomm_message *msg, uint8_t * data,
+void event_sms_recieved_message_handle_data(struct msmcomm_message *msg, uint8_t * data,
                                              uint32_t len)
 {
     if (len != sizeof (struct sms_received_message_event))
@@ -86,12 +86,12 @@ void event_sms_received_message_handle_data(struct msmcomm_message *msg, uint8_t
     msg->payload = data;
 }
 
-uint32_t event_sms_received_message_get_size(struct msmcomm_message * msg)
+uint32_t event_sms_recieved_message_get_size(struct msmcomm_message * msg)
 {
     return sizeof (struct sms_received_message_event);
 }
 
-char* msmcomm_event_sms_received_message_event_get_sender(struct msmcomm_message *msg)
+char* msmcomm_event_sms_recieved_message_get_sender(struct msmcomm_message *msg)
 {
     struct sms_received_message_event *evt = MESSAGE_CAST(msg, struct sms_received_message_event);
     unsigned int len = evt->sender_length + 1;
@@ -115,7 +115,7 @@ char* msmcomm_event_sms_received_message_event_get_sender(struct msmcomm_message
     return sender;
 } 
 
-uint8_t* msmcomm_event_sms_received_message_event_get_pdu(struct msmcomm_message *msg, 
+uint8_t* msmcomm_event_sms_recieved_message_get_pdu(struct msmcomm_message *msg, 
                                                           unsigned int *length)
 {
     uint8_t *pdu = NULL;
