@@ -175,5 +175,14 @@ namespace Msmcomm
             this.voltage = voltage;
         }
     }
+
+    [CCode (cprefix = "MSMCOMMD_MODEM_OPERATION_MODE_", cheader_filename = "msmcommd.h")]
+    [DBus (use_string_marshalling = true)]    
+    public enum ModemOperationMode
+    {
+        OFFLINE,
+        ONLINE,
+        UNKNOWN,
+    }
     
 } // namespace Msmcomm

@@ -450,7 +450,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void change_operation_mode(string mode) throws DBus.Error, Msmcomm.Error
+        public async void change_operation_mode(ModemOperationMode mode) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -486,7 +486,7 @@ namespace Msmcomm
                                 cmd.result.hci_version);
         }
         
-        public async void charging(string mode, string voltage) throws DBus.Error, Msmcomm.Error
+        public async void charging(ChargerStatusMode mode, ChargerStatusVoltage voltage) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             

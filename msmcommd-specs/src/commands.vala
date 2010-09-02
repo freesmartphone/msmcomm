@@ -25,13 +25,13 @@ namespace Msmcomm
     public interface Commands : GLib.Object
     {
         public abstract async void test_alive() throws DBus.Error, Msmcomm.Error;
-        public abstract async void change_operation_mode(string mode) throws DBus.Error, Msmcomm.Error;
+        public abstract async void change_operation_mode(ModemOperationMode mode) throws DBus.Error, Msmcomm.Error;
         public abstract async PhoneStateInfo get_phone_state_info() throws DBus.Error, Msmcomm.Error;
         public abstract async void reset_modem() throws DBus.Error, Msmcomm.Error;
         public abstract async FirmwareInfo get_firmware_info() throws DBus.Error, Msmcomm.Error;
         public abstract async string get_imei() throws DBus.Error, Msmcomm.Error;
        
-        public abstract async void charging(string mode, string voltage) throws DBus.Error, Msmcomm.Error;
+        public abstract async void charging(ChargerStatusMode mode, ChargerStatusVoltage voltage) throws DBus.Error, Msmcomm.Error;
         public abstract async ChargerStatus get_charger_status() throws DBus.Error, Msmcomm.Error;
         
         public abstract async void verify_pin(string pin_type, string pin) throws DBus.Error, Msmcomm.Error;

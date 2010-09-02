@@ -41,7 +41,7 @@ namespace Msmcomm
     
     public class ChangeOperationModeCommand : BaseCommand
     {
-        public string mode { get; set; }
+        public ModemOperationMode mode { get; set; }
         
         public override async void run() throws Msmcomm.Error
         {
@@ -49,10 +49,10 @@ namespace Msmcomm
             
             switch (mode)
             {
-                case "offline":
+                case ModemOperationMode.OFFLINE:
                     cmd.mode = Msmcomm.OperationMode.OFFLINE;
                     break;
-                case "online":
+                case ModemOperationMode.ONLINE:
                     cmd.mode = Msmcomm.OperationMode.ONLINE;
                     break;
                 default:
@@ -117,8 +117,8 @@ namespace Msmcomm
     
     public class ChargingCommand : BaseCommand
     {
-        public string mode { get; set; }
-        public string voltage { get; set; }
+        public ChargerStatusMode mode { get; set; }
+        public ChargerStatusVoltage voltage { get; set; }
     
         public override async void run() throws Msmcomm.Error
         {  
@@ -127,10 +127,10 @@ namespace Msmcomm
             
             switch (mode)
             {
-                case "usb":
+                case ChargerStatusMode.USB:
                     cmd.mode = Msmcomm.ChargingMode.USB;
                     break;
-                case "inductive":
+                case ChargerStatusMode.INDUCTIVE:
                     cmd.mode = Msmcomm.ChargingMode.INDUCTIVE;
                     break;
                 default:
@@ -140,13 +140,13 @@ namespace Msmcomm
             
             switch (voltage)
             {
-                case "250mA":
+                case ChargerStatusVoltage.VOLTAGE_250mA:
                     cmd.voltage = Msmcomm.UsbVoltageMode.MODE_250mA;
                     break;
-                case "500mA":
+                case ChargerStatusVoltage.VOLTAGE_500mA:
                     cmd.voltage = Msmcomm.UsbVoltageMode.MODE_500mA;
                     break;
-                case "1A":
+                case ChargerStatusVoltage.VOLTAGE_1A:
                     cmd.voltage = Msmcomm.UsbVoltageMode.MODE_1A;
                     break;
                 default:
