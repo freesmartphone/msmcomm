@@ -186,7 +186,7 @@
 #define MSMCOMM_EVENT_SMS_RECEIVED_MESSAGE                          388
 #define MSMCOMM_EVENT_SMS_WMS_READ_TEMPLATE                         289
 
-#define MSMCOMM_EVENT_GET_NETWORKLIST                               289
+#define MSMCOMM_EVENT_GET_NETWORKLIST                               290
 
 /*
  * Phonebook events
