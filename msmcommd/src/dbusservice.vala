@@ -300,6 +300,17 @@ namespace Msmcomm
             urc_handlers[Msmcomm.EventType.SIM_PIN2_PERM_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
                 pin2_perm_blocked();
             });
+            
+            /**
+             * SMS
+             **/
+            urc_handlers[Msmcomm.EventType.SMS_RECEIVED_MESSAGE] = createUnsolicitedResponseHandler((msg) => {
+                unowned Msmcomm.Unsolicited.SMS.SmsRecieved smsRecievedMsg = (Msmcomm.Unsolicited.SMS.SmsRecieved) msg;
+                
+                Msmcomm.SmsInfo info = Msmcomm.SmsInfo(smsRecievedMsg.sender_number, smsRecievedMsg.pdu);
+                sms_message_recieved(info); 
+            });
+    
         }
         
         private void dispatchUnsolicitedResponse(Msmcomm.EventType type, Msmcomm.Message message)

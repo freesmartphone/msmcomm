@@ -59,5 +59,7 @@ namespace Msmcomm
         public signal void pin2_disabled();
         public signal void pin2_changed();
         public signal void pin2_perm_blocked();
+        
+        public signal void sms_message_recieved(SmsInfo info);
     }
 }

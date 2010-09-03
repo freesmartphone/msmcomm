@@ -197,6 +197,7 @@ namespace Msmcomm
         SMS_WMS_CFG_MEMORY_STATUS_SET,
         SMS_WMS_CFG_GW_READY,
         SMS_WMS_READ_TEMPLATE,
+        SMS_RECEIVED_MESSAGE,
         GET_NETWORKLIST,
         PHONEBOOK_READY,
         PHONEBOOK_MODIFIED,
@@ -472,6 +473,8 @@ namespace Msmcomm
             return "URC_PHONEBOOK_MODIFIED";
             case EventType.CM_PH:
             return "URC_CM_PH";
+            case EventType.SMS_RECEIVED_MESSAGE:
+            return "URC_SMS_RECIEVED_MESSAGE";
             default:
 			return "%d (unknown)".printf( t );
         }
@@ -1837,6 +1840,24 @@ namespace Msmcomm
 					get;
 				}
 			}
+            
+            [Compact]
+            [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+            public class SmsRecieved : Message
+            {
+                public string sender_number 
+                {
+                    [CCode (cname = "msmcomm_event_sms_recieved_message_get_sender")]
+                    get;
+                }
+                
+                public uint8[] pdu 
+                {
+                    [CCode (cname = "msmcomm_event_sms_recieved_message_get_pdu")]
+                    get;
+                }
+            }
+            
 		} /* namespace SMS */
     } /* namespace Unsolicited */
 }

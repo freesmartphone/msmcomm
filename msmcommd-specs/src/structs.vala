@@ -185,4 +185,17 @@ namespace Msmcomm
         UNKNOWN,
     }
     
+    [CCode (type_id = "MSMCOMMD_SMS_INFO", cheader_filename = "msmcommd.h")]
+    public struct SmsInfo
+    {
+        public string sender_number { get; set; }
+        public uint8[] pdu { get; set; }
+        
+        public SmsInfo(string sender_number, uint8[] pdu)
+        {
+            this.sender_number = sender_number;
+            this.pdu = pdu;
+        }
+    }
+    
 } // namespace Msmcomm
