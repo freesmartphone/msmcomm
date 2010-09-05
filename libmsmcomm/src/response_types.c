@@ -63,11 +63,13 @@
 GROUP_TYPE(sim) 
 GROUP_TYPE(call) 
 GROUP_TYPE(sups)
+GROUP_TYPE(sms)
 
 struct descriptor group_descriptors[] = {
     GROUP_DATA(sim),
     GROUP_DATA(call),
     GROUP_DATA(sups),
+    GROUP_DATA(sms),
 };
 
 const unsigned int group_descriptors_count = sizeof (group_descriptors)
@@ -181,11 +183,18 @@ struct descriptor * find_descriptor(struct msmcomm_message *message, unsigned in
             continue;
         
         /* if we have a descriptor set which provides get_type callback, check it! */
+        if (d->get_type != NULL) 
+        {
+            *self_naming = 0;
+        }
+        
+        #if 0
         if (!*self_naming)
         {
             if (d->get_type == NULL)
                 continue;
         } 
+        #endif
         
         /* check if message is valid for this descriptor */
         if (d->is_valid(message))

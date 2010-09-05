@@ -304,11 +304,41 @@ namespace Msmcomm
             /**
              * SMS
              **/
+             
             urc_handlers[Msmcomm.EventType.SMS_RECEIVED_MESSAGE] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.SMS.SmsRecieved smsRecievedMsg = (Msmcomm.Unsolicited.SMS.SmsRecieved) msg;
                 
                 Msmcomm.SmsInfo info = Msmcomm.SmsInfo(smsRecievedMsg.sender_number, smsRecievedMsg.pdu);
                 sms_message_recieved(info); 
+            });
+            
+            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_MESSAGE_LIST] = createUnsolicitedResponseHandler((msg) => {
+                sms_wms_cfg_message_list();
+            });
+            
+            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_GW_DOMAIN_PREF] = createUnsolicitedResponseHandler((msg) => {
+                sms_wms_cfg_gw_domain_pref();
+            });
+            
+            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_EVENT_ROUTES] = createUnsolicitedResponseHandler((msg) => {
+                sms_wms_cfg_event_routes();
+            });
+            
+            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_MEMORY_STATUS] = createUnsolicitedResponseHandler((msg) => {
+                sms_wms_cfg_memory_status();
+            });
+            
+            
+            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_MEMORY_STATUS_SET] = createUnsolicitedResponseHandler((msg) => {
+                sms_wms_cfg_memory_status_set();
+            });
+            
+            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_GW_READY] = createUnsolicitedResponseHandler((msg) => {
+                sms_wms_cfg_gw_ready();
+            });
+            
+            urc_handlers[Msmcomm.EventType.SMS_WMS_READ_TEMPLATE] = createUnsolicitedResponseHandler((msg) => {
+                sms_wms_read_template();
             });
     
         }

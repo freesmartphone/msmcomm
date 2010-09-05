@@ -61,5 +61,12 @@ namespace Msmcomm
         public signal void pin2_perm_blocked();
         
         public signal void sms_message_recieved(SmsInfo info);
+        public signal void sms_wms_cfg_message_list();
+        public signal void sms_wms_cfg_gw_domain_pref();
+        public signal void sms_wms_cfg_event_routes();
+        public signal void sms_wms_cfg_memory_status();
+        public signal void sms_wms_cfg_memory_status_set();
+        public signal void sms_wms_cfg_gw_ready();
+        public signal void sms_wms_read_template();
     }
 }

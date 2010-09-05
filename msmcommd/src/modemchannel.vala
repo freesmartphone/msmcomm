@@ -162,6 +162,7 @@ namespace Msmcomm
 
         protected void onSolicitedResponse( CommandHandler bundle, Msmcomm.Message response )
         {
+            
             if ( checkResponseForCommandHandler( response, bundle ) )
             {
                 bundle.response = response;

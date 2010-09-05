@@ -28,7 +28,7 @@ extern void *talloc_msmc_ctx;
 
 unsigned int group_sms_is_valid(struct msmcomm_message *msg)
 {
-    return (msg->group_id == 0x17 && SUBSYSTEM_ID(msg) == 0x1);
+    return (msg->group_id == 0x17);
 }
 
 void group_sms_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
@@ -41,7 +41,8 @@ void group_sms_free(struct msmcomm_message *msg)
 
 unsigned int group_sms_get_type(struct msmcomm_message *msg)
 {
-
+    printf("subsystem id = %02x, msg id = %02x\n", SUBSYSTEM_ID(msg), MSG_ID(msg));
+    
     switch (MSG_ID(msg))
     {
         case 0x0:
