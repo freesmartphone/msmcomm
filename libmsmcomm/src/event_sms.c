@@ -131,3 +131,49 @@ uint8_t* msmcomm_event_sms_recieved_message_get_pdu(struct msmcomm_message *msg,
     
     return pdu;
 }
+
+/*
+ * SMS status events
+ */
+
+unsigned int event_sms_status_is_valid(struct msmcomm_message *msg)
+{
+    return (msg->group_id == 0x17 && 
+                ((msg->msg_id == 0x1) ||
+                 (msg->msg_id == 0x2)));
+}
+
+void event_sms_status_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
+{
+}
+
+void event_sms_status_free(struct msmcomm_message *msg)
+{
+}
+
+unsigned int event_sms_status_get_type(struct msmcomm_message *msg)
+{    
+    #if 0
+    switch ()
+    {
+        case 0x0:
+            return MSMCOMM_EVENT_SMS_WMS_CFG_GW_READY;
+        case 0x2:
+            return MSMCOMM_EVENT_SMS_WMS_CFG_EVENT_ROUTES;
+        case 0x3:
+            return MSMCOMM_EVENT_SMS_WMS_CFG_MEMORY_STATUS;
+        case 0x4:
+            return MSMCOMM_EVENT_SMS_WMS_CFG_MESSAGE_LIST;
+        case 0x6:
+            return MSMCOMM_EVENT_SMS_WMS_CFG_GW_DOMAIN_PREF;
+        case 0x8:
+            /* FIXME seems to have no realy use */
+            return MSMCOMM_MESSAGE_NOT_USED;
+        case 0x9:
+            return MSMCOMM_EVENT_SMS_WMS_CFG_MEMORY_STATUS_SET;
+    }
+    #endif
+    
+    return MSMCOMM_MESSAGE_INVALID;
+}
+

@@ -60,6 +60,8 @@
 #define MSMCOMM_COMMAND_SIM_INFO                                    36
 #define MSMCOMM_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS               37
 #define MSMCOMM_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE           38
+#define MSMCOMM_COMMAND_SMS_GET_SMS_CENTER_NUMBER                   39
+
 
 #define MSMCOMM_RESPONSE_TEST_ALIVE                                 101
 #define MSMCOMM_RESPONSE_GET_FIRMWARE_INFO                          102

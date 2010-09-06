@@ -24,15 +24,15 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * Call event group handler
+ * Call status events
  */
 
-unsigned int group_call_is_valid(struct msmcomm_message *msg)
+unsigned int event_call_status_is_valid(struct msmcomm_message *msg)
 {
     return msg->group_id == 0x2;
 }
 
-void group_call_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
+void event_call_status_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
     if (len != sizeof (struct call_status_event))
         return;
@@ -40,11 +40,11 @@ void group_call_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_
     msg->payload = data;
 }
 
-void group_call_free(struct msmcomm_message *msg)
+void event_call_status_free(struct msmcomm_message *msg)
 {
 }
 
-unsigned int group_call_get_type(struct msmcomm_message *msg)
+unsigned int event_call_status_get_type(struct msmcomm_message *msg)
 {
     switch (msg->msg_id)
     {

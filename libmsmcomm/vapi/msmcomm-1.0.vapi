@@ -85,6 +85,8 @@ namespace Msmcomm
         DISABLE_PIN,
         SIM_INFO,
         GET_AUDIO_MODEM_TUNING_PARAMS,
+        SMS_GET_SMS_CENTER_NUMBER,
+        SMS_ACKNOWLDEGE_INCOMMING_MESSAGE,
     }
 
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
@@ -257,6 +259,10 @@ namespace Msmcomm
             return "COMMAND_SIM_INFO";
             case CommandType.GET_AUDIO_MODEM_TUNING_PARAMS:
             return "COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS";
+            case CommandType.SMS_GET_SMS_CENTER_NUMBER:
+            return "COMMAND_SMS_GET_SMS_CENTER_NUMBER";
+            case CommandType.SMS_ACKNOWLDEGE_INCOMMING_MESSAGE:
+            return "COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE";
 
             // ResponseType
             case ResponseType.TEST_ALIVE:
@@ -1450,6 +1456,22 @@ namespace Msmcomm
                 [CCode (cname = "msmcomm_message_set_audio_profile_set_sub_class")]
                 set;
             }
+        }
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class SmsAcknowledgeIncommingMessage : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public SmsAcknowledgeIncommingMessage(CommandType t = CommandType.SMS_ACKNOWLDEGE_INCOMMING_MESSAGE);
+        }
+        
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class SmsGetSmsCenterNumber : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public SmsGetSmsCenterNumber(CommandType t = CommandType.SMS_GET_SMS_CENTER_NUMBER);
         }
     }
 

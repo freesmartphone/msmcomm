@@ -589,6 +589,12 @@ struct sms_received_message_event
 } __attribute__ ((packed));
 
 
+struct sms_message_send_event
+{
+	uint8_t unknown0[2083];
+} __attribute__ ((packed));
+
+
 struct sms_ack_msg
 {
 	uint32_t ref_id;
@@ -596,6 +602,32 @@ struct sms_ack_msg
 	uint8_t value0;
 	uint8_t value1;
 	uint8_t unknown1[1891];
+} __attribute__ ((packed));
+
+
+struct send_sms_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[17];
+	uint8_t recipient_length;
+	uint8_t recipient[36];
+	uint8_t unknown1[2];
+	uint32_t pdu_length;
+	uint8_t pdu[255];
+} __attribute__ ((packed));
+
+
+struct sms_get_info_msg
+{
+	uint32_t ref_id;
+	uint8_t value0;
+	uint8_t value1;
+	uint8_t unknown0[3];
+} __attribute__ ((packed));
+
+
+struct wms_resp
+{
 } __attribute__ ((packed));
 
 #endif

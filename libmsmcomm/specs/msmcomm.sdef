@@ -379,9 +379,29 @@ start sms_received_message_event 2083
 [67-2082] uint8_t pdu
 end
 
+start sms_message_send_event 2083
+end
+
 start sms_ack_msg 1901
 [0-3] uint32_t ref_id
 [8] uint8_t value0
 [9] uint8_t value1
+end
+
+start send_sms_msg 319
+[0-3] uint32_t ref_id
+[21] uint8_t recipient_length
+[22-57] uint8_t recipient
+[60-63] uint32_t pdu_length
+[64-318] uint8_t pdu
+end
+
+start sms_get_info_msg 9
+[0-3] uint32_t ref_id
+[4] uint8_t value0
+[5] uint8_t value1
+end
+
+start wms_resp 0
 end
 

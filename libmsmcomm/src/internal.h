@@ -89,6 +89,7 @@ struct msmcomm_message
 {
 	uint8_t group_id;
 	uint16_t msg_id;
+    uint8_t submsg_id;
 	uint32_t ref_id;
 	uint32_t descriptor_type;
     uint32_t type;
@@ -109,6 +110,8 @@ typedef unsigned int (*msmcomm_group_get_type_t)(struct msmcomm_message *msg);
 struct descriptor
 {
 	unsigned int type;
+	unsigned int descriptor_type;
+    unsigned int has_submsg_id;
 
 	/* all descriptors */
 	msmcomm_message_get_size_t get_size;

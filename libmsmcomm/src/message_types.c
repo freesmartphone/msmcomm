@@ -29,6 +29,8 @@
 
 #define MESSAGE_DATA(type, name) \
 	{	type, \
+	    DESCRIPTOR_TYPE_MESSAGE, \
+        0, \
 		msg_##name##_get_size, \
 		msg_##name##_init, \
 		msg_##name##_free, \
@@ -62,6 +64,7 @@ MESSAGE_TYPE(set_mode_preference)
 MESSAGE_TYPE(get_phonebook_properties)
 MESSAGE_TYPE(get_audio_modem_tuning_params)
 MESSAGE_TYPE(sms_acknowledge_incommming_message)
+//MESSAGE_TYPE(sms_get_sms_center_number)
 
 struct descriptor msg_descriptors[] = {
     MESSAGE_DATA(MSMCOMM_COMMAND_CHANGE_OPERATION_MODE, change_operation_mode),
@@ -91,7 +94,9 @@ struct descriptor msg_descriptors[] = {
     MESSAGE_DATA(MSMCOMM_COMMAND_SIM_INFO, sim_info),
     MESSAGE_DATA(MSMCOMM_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS, get_audio_modem_tuning_params),
     MESSAGE_DATA(MSMCOMM_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE, sms_acknowledge_incommming_message),
+   //MESSAGE_DATA(MSMCOMM_COMMAND_SMS_GET_SMS_CENTER_NUMBER, sms_get_sms_center_number),
 };
 
 unsigned int msg_descriptors_size =
     (unsigned int)(sizeof (msg_descriptors) / sizeof (struct descriptor));
+    

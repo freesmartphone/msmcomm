@@ -56,5 +56,7 @@ namespace Msmcomm
         public abstract async string sim_info(string field_type) throws DBus.Error, Msmcomm.Error;
         public abstract async uint[] get_audio_modem_tuning_params() throws DBus.Error, Msmcomm.Error;
         public abstract async void set_audio_profile(uint class, uint sub_class) throws DBus.Error, Msmcomm.Error;
+        
+        public abstract async void get_sms_center_number() throws DBus.Error, Msmcomm.Error;
     }
 }

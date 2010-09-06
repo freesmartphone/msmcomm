@@ -755,6 +755,14 @@ namespace Msmcomm
             cmd.sub_class = (uint8) sub_class;
             yield modem.processCommand(cmd);
         }
+        
+        public async void get_sms_center_number() throws DBus.Error, Msmcomm.Error
+        {
+            checkModemActivity();
+            
+            var cmd = new GetSmsCenterNumberCommand();
+            yield modem.processCommand(cmd);
+        }
     }
 } // namespace Msmcomm
 

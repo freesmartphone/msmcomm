@@ -611,4 +611,15 @@ namespace Msmcomm
             checkResponse(response);
         }
     }
+    
+    public class GetSmsCenterNumber : BaseCommand
+    {
+        public override async void run() throws Msmcomm.Error
+        {
+            var cmd = new Msmcomm.Command.SmsGetSmsCenterNumber();
+            
+            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            checkResponse(response);
+        }
+    }
 }

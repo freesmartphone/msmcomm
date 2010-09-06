@@ -32,11 +32,8 @@ event_system.c \
 event_network.c \
 event_sms.c \
 event_sim.c \
-group_sim_event.c \
-group_call_event.c \
-group_gps_event.c \
-group_sups_event.c \
-group_sms_event.c \
+event_call.c \
+event_sups.c \
 msmcomm.h \
 internal.h \
 linuxlist.h \
