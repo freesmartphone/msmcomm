@@ -347,6 +347,8 @@ namespace Msmcomm
         {
             UnsolicitedResponseHandlerWrapper handler = null;
             
+            logger.debug(@"Got message: $(message.to_string())");
+            
             if (urc_handlers.has_key(type))
             {
                 handler = urc_handlers[type];
