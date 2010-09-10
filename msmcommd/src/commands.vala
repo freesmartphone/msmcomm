@@ -341,41 +341,13 @@ namespace Msmcomm
     
     public abstract class BasePhonebookCommand : BaseCommand
     {
-        protected Msmcomm.PhonebookType parsePhonebookType(string book_type) throws Msmcomm.Error
-        {
-            Msmcomm.PhonebookType result = Msmcomm.PhonebookType.NONE;
-            switch (book_type)
-            {
-                case "adn":
-                    result = Msmcomm.PhonebookType.ADN;
-                    break;
-                case "fdn":
-                    result = Msmcomm.PhonebookType.FDN;
-                    break;
-                case "sdn":
-                    result = Msmcomm.PhonebookType.SDN;
-                    break;
-                case "mbdn":
-                    result = Msmcomm.PhonebookType.MBDN;
-                    break;
-                case "mdn":
-                    result = Msmcomm.PhonebookType.MBN;
-                    break;
-                case "efecc":
-                    result = Msmcomm.PhonebookType.EFECC;
-                    break;
-                default:
-                    var msg = "Invalid argument supplied for book_type parameter for ReadPhonebook command";
-                    throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
-            }
-            return result;
-        }
+        
     }
     
     public class ReadPhonebookCommand : BasePhonebookCommand
     {
         // IN
-        public string book_type { get; set; }
+        public PhonebookBookType book_type { get; set; }
         public uint8 position { get; set; }
         
         // OUT
@@ -385,13 +357,13 @@ namespace Msmcomm
         {
             var cmd = new Msmcomm.Command.ReadPhonebook();
             
-            cmd.book_type = parsePhonebookType(book_type);
+            cmd.book_type = convertPhonebookBookType(book_type);
             cmd.position = position;
             
             unowned Msmcomm.Reply.Phonebook response = (Msmcomm.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
             
-            result = PhonebookEntry(phonebookTypeToString(response.book_type),
+            result = PhonebookEntry(convertPhonebookType(response.book_type),
                                     response.position,
                                     response.number,
                                     response.title,
@@ -402,7 +374,7 @@ namespace Msmcomm
     public class WritePhonebookCommand : BasePhonebookCommand
     {
         // IN
-        public string book_type { get; set; }
+        public PhonebookBookType book_type { get; set; }
         public string number { get; set; }
         public string title { get; set; }
         
@@ -413,7 +385,7 @@ namespace Msmcomm
         {
             var cmd = new Msmcomm.Command.WritePhonebook();
             
-            cmd.book_type = parsePhonebookType(book_type);
+            cmd.book_type = convertPhonebookBookType(book_type);
             cmd.number = number;
             cmd.title = title;
             
@@ -426,14 +398,14 @@ namespace Msmcomm
     
     public class DeletePhonebookCommand : BasePhonebookCommand
     {
-        public string book_type { get; set; }
+        public PhonebookBookType book_type { get; set; }
         public uint8 position { get; set; }
         
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.DeletePhonebook();
             
-            cmd.book_type = parsePhonebookType(book_type);
+            cmd.book_type = convertPhonebookBookType(book_type);
             cmd.position = position;
             
             unowned Msmcomm.Reply.Phonebook response = (Msmcomm.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
@@ -444,7 +416,7 @@ namespace Msmcomm
     public class GetPhonebookPropertiesCommand : BasePhonebookCommand 
     {
         // IN
-        public string book_type { get; set; }
+        public PhonebookBookType book_type { get; set; }
         
         // OUT
         public PhonebookProperties result { get; set; }
@@ -453,7 +425,7 @@ namespace Msmcomm
         {
             var cmd = new Msmcomm.Command.GetPhonebookProperties();
             
-            cmd.book_type = parsePhonebookType(book_type);
+            cmd.book_type = convertPhonebookBookType(book_type);
             
             unowned Msmcomm.Reply.GetPhonebookProperties response = (Msmcomm.Reply.GetPhonebookProperties)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
@@ -616,12 +588,10 @@ namespace Msmcomm
     {
         public override async void run() throws Msmcomm.Error
         {
-            /*
             var cmd = new Msmcomm.Command.SmsGetSmsCenterNumber();
             
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
-            */
         }
     }
 }

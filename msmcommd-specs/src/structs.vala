@@ -23,6 +23,18 @@
 
 namespace Msmcomm
 {
+    [CCode (cprefix = "MSMCOMMD_PHONEBOOK_BOOK_TYPE_", cheader_filename = "msmcommd.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum PhonebookBookType
+    {
+        ADN,
+        SDN,
+        FDN,
+        MBDN,
+        MBN,
+        UNKNOWN,
+    }
+    
     [CCode (type_id = "MSMCOMMD_PHONEBOOK_PROPERTIES", cheader_filename = "msmcommd.h")]
     public struct PhonebookProperties
     {
@@ -43,13 +55,13 @@ namespace Msmcomm
     [CCode (type_id = "MSMCOMMD_PHONEBOOK_ENTRY", cheader_filename = "msmcommd.h")]
     public struct PhonebookEntry
     {
-        public string book_type;
+        public PhonebookBookType book_type;
         public int position;
         public string number;
         public string title;
         public string encoding_type;
         
-        public PhonebookEntry(string book_type, int position, string number, string title, string encoding_type)
+        public PhonebookEntry(PhonebookBookType book_type, int position, string number, string title, string encoding_type)
         {
             this.book_type = book_type;
             this.position = position;

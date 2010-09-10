@@ -62,52 +62,6 @@ namespace Msmcomm
             }
         }
         
-        private string phonebookTypeToString(Msmcomm.PhonebookType book_type)
-        {
-            string result = "unknown";
-            
-            switch (book_type)
-            {
-                case Msmcomm.PhonebookType.ADN:
-                    result = "adn";
-                    break;
-                case Msmcomm.PhonebookType.FDN:
-                    result = "fdn";
-                    break;
-                case Msmcomm.PhonebookType.SDN:
-                    result = "SDN";
-                    break;
-                case Msmcomm.PhonebookType.MBN:
-                    result = "mbn";
-                    break;
-                case Msmcomm.PhonebookType.MBDN:
-                    result = "mbdn";
-                    break;
-                case Msmcomm.PhonebookType.EFECC:
-                    result = "efecc";
-                    break;
-            }
-            
-            return result;
-        }
-        
-        private string callTypeToString(Msmcomm.CallType type)
-        {
-            string result = "unknown";
-            
-            switch (type)
-            {
-                case Msmcomm.CallType.AUDIO:
-                    result = "audio";
-                    break;
-                case Msmcomm.CallType.DATA:
-                    result = "data";
-                    break;
-            }
-            
-            return result;
-        }
-        
         private UnsolicitedResponseHandlerWrapper createUnsolicitedResponseHandler(UnsolicitedResponseHandler func)
         {
             UnsolicitedResponseHandlerWrapper handler = new UnsolicitedResponseHandlerWrapper();
@@ -212,13 +166,13 @@ namespace Msmcomm
             urc_handlers[Msmcomm.EventType.PHONEBOOK_READY] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.PhonebookReady phonebookReadyMsg = (Msmcomm.Unsolicited.PhonebookReady) msg;
                 
-                phonebook_ready(phonebookTypeToString(phonebookReadyMsg.book_type));
+                phonebook_ready(convertPhonebookType(phonebookReadyMsg.book_type));    
             });
             
             urc_handlers[Msmcomm.EventType.PHONEBOOK_MODIFIED] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.PhonebookModified phonebookModifiedMsg = (Msmcomm.Unsolicited.PhonebookModified) msg;
                 
-                phonebook_modified(phonebookTypeToString(phonebookModifiedMsg.book_type), phonebookModifiedMsg.position);
+                phonebook_modified(convertPhonebookType(phonebookModifiedMsg.book_type), phonebookModifiedMsg.position);
             });
             
             /**
@@ -657,7 +611,7 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async PhonebookProperties get_phonebook_properties(string book_type) throws DBus.Error, Msmcomm.Error
+        public async PhonebookProperties get_phonebook_properties(PhonebookBookType book_type) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -668,7 +622,7 @@ namespace Msmcomm
             return cmd.result;
         }
         
-        public async PhonebookEntry read_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error
+        public async PhonebookEntry read_phonebook(PhonebookBookType book_type, uint position) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -686,7 +640,7 @@ namespace Msmcomm
                                       cmd.result.encoding_type);
         }
         
-        public async uint write_phonebook(string book_type, string number, string title) throws DBus.Error, Msmcomm.Error
+        public async uint write_phonebook(PhonebookBookType book_type, string number, string title) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
@@ -699,7 +653,7 @@ namespace Msmcomm
             return cmd.modify_id;
         }
         
-        public async void delete_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error
+        public async void delete_phonebook(PhonebookBookType book_type, uint position) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             

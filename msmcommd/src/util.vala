@@ -100,4 +100,56 @@ namespace Msmcomm
             logger.debug( hexline.str );
         }
     }
+    
+    public Msmcomm.PhonebookType convertPhonebookBookType(PhonebookBookType book_type)
+    {
+        Msmcomm.PhonebookType result = Msmcomm.PhonebookType.ADN;
+            
+        switch (book_type)
+        {
+            case PhonebookBookType.FDN:
+                result = Msmcomm.PhonebookType.FDN;
+                break;
+            case PhonebookBookType.SDN:
+                result = Msmcomm.PhonebookType.SDN;
+                break;
+            case PhonebookBookType.ADN:
+                result = Msmcomm.PhonebookType.ADN;
+                break;
+            case PhonebookBookType.MBDN:
+                result = Msmcomm.PhonebookType.MBDN;
+                break;
+            case PhonebookBookType.MBN:
+                result = Msmcomm.PhonebookType.MBN;
+                break;
+        }
+            
+        return result;
+    }
+    
+    public PhonebookBookType convertPhonebookType(Msmcomm.PhonebookType book_type)
+    {
+        PhonebookBookType result = PhonebookBookType.UNKNOWN;
+        
+        switch (book_type)
+        {
+            case Msmcomm.PhonebookType.FDN:
+                result = PhonebookBookType.FDN;
+                break;
+            case Msmcomm.PhonebookType.SDN:
+                result = PhonebookBookType.SDN;
+                break;
+            case Msmcomm.PhonebookType.ADN:
+                result = PhonebookBookType.ADN;
+                break;
+            case Msmcomm.PhonebookType.MBDN:
+                result = PhonebookBookType.MBDN;
+                break;
+            case Msmcomm.PhonebookType.MBN:
+                result = PhonebookBookType.MBN;
+                break;
+        }
+        
+        return result;
+    }
 } // namespace Msmcomm

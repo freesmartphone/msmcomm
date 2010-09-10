@@ -32,8 +32,8 @@ namespace Msmcomm
         public signal void call_origination(CallInfo info);
         public signal void network_list(NetworkProvider[] networks);
         public signal void network_state_info(NetworkStateInfo state_info);
-        public signal void phonebook_ready(string book_type);
-        public signal void phonebook_modified(string book_type, uint position);
+        public signal void phonebook_ready(PhonebookBookType book_type);
+        public signal void phonebook_modified(PhonebookBookType book_type, uint position);
         public signal void cm_ph(string[] plmns);
         
         public signal void reset_radio_ind();

@@ -46,10 +46,10 @@ namespace Msmcomm
         public abstract async void set_system_time(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset) throws DBus.Error, Msmcomm.Error;
         public abstract async void rssi_status(bool status) throws DBus.Error, Msmcomm.Error;
         
-        public abstract async PhonebookProperties get_phonebook_properties(string book_type) throws DBus.Error, Msmcomm.Error;
-        public abstract async PhonebookEntry read_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error;
-        public abstract async uint write_phonebook(string book_type, string number, string title) throws DBus.Error, Msmcomm.Error;
-        public abstract async void delete_phonebook(string book_type, uint position) throws DBus.Error, Msmcomm.Error;
+        public abstract async PhonebookProperties get_phonebook_properties(PhonebookBookType book_type) throws DBus.Error, Msmcomm.Error;
+        public abstract async PhonebookEntry read_phonebook(PhonebookBookType book_type, uint position) throws DBus.Error, Msmcomm.Error;
+        public abstract async uint write_phonebook(PhonebookBookType book_type, string number, string title) throws DBus.Error, Msmcomm.Error;
+        public abstract async void delete_phonebook(PhonebookBookType book_type, uint position) throws DBus.Error, Msmcomm.Error;
         
         public abstract async void get_network_list() throws DBus.Error, Msmcomm.Error;
         public abstract async void set_mode_preference(string mode) throws DBus.Error, Msmcomm.Error;
