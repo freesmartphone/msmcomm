@@ -31,9 +31,9 @@ namespace Msmcomm
             config = FsoFramework.SmartKeyFile.defaultKeyFile();
             logger = FsoFramework.Logger.createFromKeyFile( config, "logging", classname );
             logger.setReprDelegate( repr );
-    #if DEBUG
+    		#if DEBUG
             debug( @"Msmcomm.AbstractObject: created logger for domain $classname" );
-    #endif
+    		#endif
         }
 
         public abstract string repr();

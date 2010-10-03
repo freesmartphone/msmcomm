@@ -27,6 +27,7 @@ namespace Msmcomm
         private LinkLayerControl llc;
         private Gee.HashMap<string,string> modem_config;
         private LowLevelControl lowlevel;
+        private bool use_lowlevel;
         private GLib.ByteArray in_buffer;
         private ModemChannel channel;
         
@@ -71,6 +72,8 @@ namespace Msmcomm
                 modem_config["ip"] = config.stringValue("connection", "ip", "192.168.0.202");
                 modem_config["port"] = config.stringValue("connection", "port", "3001");
             }
+            
+            use_lowlevel = config.hasSection("lowlevel");
         }
 
         private bool setupModemTransport()
@@ -152,6 +155,12 @@ namespace Msmcomm
         private void handleModemRequestReset()
         {
             // FIXME use lowlevel reset here!
+            
+            if (use_lowlevel)
+            {
+                lowlevel.reset();
+            }
+            
             /*
             closeModemTransport();
             openModemTransport();
@@ -226,7 +235,11 @@ namespace Msmcomm
             {
                 logger.debug("Modem was started, but it is already in active mode! We ignore this ...");
                 return false;
-            }
+            }   
+            
+            // low-level reset of the modem
+            if (use_lowlevel)
+                lowlevel.reset();
             
             // FIXME try more than one time to open the modem port. Do that in a specific time
             // interval

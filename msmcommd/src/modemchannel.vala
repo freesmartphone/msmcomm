@@ -32,7 +32,6 @@ namespace Msmcomm
         public static Msmcomm.Context context;
         public uint32 current_index;
         
-
         //
         // public API
         //
