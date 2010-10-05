@@ -10,8 +10,10 @@ AM_PROG_CC_C_O
 AC_PROG_LIBTOOL
 
 ################################################################################
+VALA_REQUIRED=0.9.7
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
+m4_ifdef([AM_PROG_VALAC], [AM_PROG_VALAC([$VALA_REQUIRED])])
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
@@ -26,7 +28,6 @@ AC_ARG_ENABLE(debug,
 AM_CONDITIONAL( [WANT_DEBUG], [test x"$debug" = x"yes"])
 
 ################################################################################
-VALA_REQUIRED=0.9.6.1
 GLIB_REQUIRED=2.12.0
 GEE_REQUIRED=0.5
 FSOT_REQUIRED=0.9
@@ -35,11 +36,6 @@ DBUS_REQUIRED=1.2.16
 DBUS_GLIB_REQUIRED=0.84
 MSMCOMM_REQUIRED=0.5.0
 MSMCOMM_SPECS_REQUIRED=0.1.0
-
-PKG_CHECK_MODULES(VALA,
-  vala-0.10 >= $VALA_REQUIRED)
-AC_SUBST(VALA_CFLAGS)
-AC_SUBST(VALA_LIBS)
 
 PKG_CHECK_MODULES(DEPS,
   glib-2.0 >= $GLIB_REQUIRED
