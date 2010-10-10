@@ -43,7 +43,7 @@ int test_copy_message()
 	TEST;
 	
 	struct msmcomm_message *msg0 = 
-		msmcomm_create_message(MSMCOMM_COMMAND_CHANGE_OPERATION_MODE);
+		msmcomm_create_message(MSMCOMM_MESSAGE_TYPE_COMMAND_CHANGE_OPERATION_MODE);
 	msmcomm_message_change_operation_mode_set_operation_mode(msg0, MSMCOMM_OPERATION_MODE_OFFLINE);
 	
 	msmcomm_message_set_ref_id(msg0, 0x42);
@@ -60,9 +60,9 @@ int test_copy_message()
 			==,
 			((struct change_operation_mode_msg*)msg1->payload)->operation_mode);
 	COMPARE(msmcomm_message_get_type(msg1), ==,
-			MSMCOMM_COMMAND_CHANGE_OPERATION_MODE);
+			MSMCOMM_MESSAGE_TYPE_COMMAND_CHANGE_OPERATION_MODE);
 	COMPARE(msmcomm_message_get_type(msg0), ==,
-			MSMCOMM_COMMAND_CHANGE_OPERATION_MODE);
+			MSMCOMM_MESSAGE_TYPE_COMMAND_CHANGE_OPERATION_MODE);
 	
 	PASSED;
 }

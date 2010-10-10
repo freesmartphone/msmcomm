@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_RESPONSE_CM_CALL
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_CALL
  */
 
 unsigned int resp_cm_call_is_valid(struct msmcomm_message *msg)

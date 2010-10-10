@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_COMMAND_RSSI_STATUS
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_RSSI_STATUS
  */
 
 void msg_rssi_status_init(struct msmcomm_message *msg)
@@ -58,7 +58,7 @@ void msmcomm_message_rssi_status_set_status(struct msmcomm_message *msg, uint8_t
 }
 
 /*
- * MSMCOMM_COMMAND_SET_MODE_PREFERENCE
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_SET_MODE_PREFERENCE
  */
 
 void msg_set_mode_preference_init(struct msmcomm_message *msg)
@@ -100,7 +100,7 @@ uint8_t *msg_set_mode_preference_prepare_data(struct msmcomm_message *msg)
 }
 
 void msmcomm_message_set_mode_preference_status_set_mode(struct msmcomm_message *msg,
-                                                         unsigned int mode)
+                                                         msmcomm_network_mode_t mode)
 {
     uint8_t mode_value = 0x0;
 
@@ -124,7 +124,7 @@ void msmcomm_message_set_mode_preference_status_set_mode(struct msmcomm_message 
 }
 
 /*
- * MSMCOMM_COMMAND_GET_NETWORKLIST
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_GET_NETWORKLIST
  */
 
 void msg_get_networklist_init(struct msmcomm_message *msg)

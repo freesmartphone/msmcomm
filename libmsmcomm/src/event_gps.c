@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_EVENT_PDSM_PD_DONE
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_PDSM_PD_DONE
  */
 
 unsigned int event_pdsm_pd_done_is_valid(struct msmcomm_message *msg)
@@ -38,7 +38,7 @@ void event_pdsm_pd_done_handle_data(struct msmcomm_message *msg, uint8_t * data,
 }
 
 /*
- * MSMCOMM_EVENT_PD_POSITION_DATA
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_PD_POSITION_DATA
  */
 
 unsigned int event_pd_position_data_is_valid(struct msmcomm_message *msg)
@@ -53,7 +53,7 @@ void event_pd_position_data_handle_data(struct msmcomm_message *msg, uint8_t * d
 }
 
 /*
- * MSMCOMM_EVENT_PD_PARAMTER_CHANGE
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_PD_PARAMTER_CHANGE
  */
 
 unsigned int event_pd_parameter_change_is_valid(struct msmcomm_message *msg)
@@ -69,7 +69,7 @@ void event_pd_parameter_change_handle_data(struct msmcomm_message *msg, uint8_t 
 }
 
 /*
- * MSMCOMM_EVENT_PDSM_LCS
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_PDSM_LCS
  */
 
 unsigned int event_pdsm_lcs_is_valid(struct msmcomm_message *msg)
@@ -84,7 +84,7 @@ void event_pdsm_lcs_handle_data(struct msmcomm_message *msg, uint8_t * data, uin
 }
 
 /*
- * MSMCOMM_EVENT_PDSM_XTRA
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_PDSM_XTRA
  */
 
 unsigned int event_pdsm_xtra_is_valid(struct msmcomm_message *msg)

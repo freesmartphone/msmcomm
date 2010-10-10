@@ -22,7 +22,7 @@
 #include "internal.h"
 
 /*
- * MSMCOMM_RESPONSE_SIM
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_SIM
  */
 
 /* Notes:
@@ -59,7 +59,7 @@ uint32_t resp_sim_get_size(struct msmcomm_message *msg)
 
 unsigned int msmcomm_resp_sim_info_get_field_type(struct msmcomm_message *msg)
 {
-    unsigned int type = MSMCOMM_SIM_INFO_FIELD_TYPE_NONE;
+    msmcomm_sim_info_field_type_t type = MSMCOMM_SIM_INFO_FIELD_TYPE_NONE;
     
     if (MESSAGE_CAST(msg, struct sim_resp)->field_type_0 == 0x1 &&
         MESSAGE_CAST(msg, struct sim_resp)->field_type_1 == 0x4) 
@@ -110,7 +110,7 @@ char* msmcomm_resp_sim_get_field_data(struct msmcomm_message *msg)
 }
  
 /*
- * MSMCOMM_RESPONSE_READ_PHONEBOOK
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_READ_PHONEBOOK
  */
 
 unsigned int resp_phonebook_is_valid(struct msmcomm_message *msg)
@@ -213,7 +213,7 @@ uint8_t msmcomm_resp_phonebook_get_modify_id(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_GET_PHONEBOOK_PROPERTIES
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_PHONEBOOK_PROPERTIES
  */
 
 unsigned int resp_get_phonebook_properties_is_valid(struct msmcomm_message *msg)

@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /* 
- * MSMCOMM_COMMAND_CHANGE_OPERATION_MODE
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_CHANGE_OPERATION_MODE
  */
 
 void msg_change_operation_mode_init(struct msmcomm_message *msg)
@@ -46,7 +46,7 @@ void msg_change_operation_mode_free(struct msmcomm_message *msg)
 }
 
 void msmcomm_message_change_operation_mode_set_operation_mode(struct msmcomm_message *msg,
-                                                              uint8_t operation_mode)
+                                                              msmcomm_operation_mode_t operation_mode)
 {
     if (operation_mode == MSMCOMM_OPERATION_MODE_RESET)
         MESSAGE_CAST(msg, struct change_operation_mode_msg)->operation_mode = 0x7;
@@ -66,7 +66,7 @@ uint8_t *msg_change_operation_mode_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_COMMAND_TEST_ALIVE
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_TEST_ALIVE
  */
 
 void msg_test_alive_init(struct msmcomm_message *msg)
@@ -96,7 +96,7 @@ uint8_t *msg_test_alive_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_COMMAND_GET_FIRMWARE_INFO
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_GET_FIRMWARE_INFO
  */
 
 void msg_get_firmware_info_init(struct msmcomm_message *msg)
@@ -125,7 +125,7 @@ uint8_t *msg_get_firmware_info_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_COMMAND_GET_PHONE_STATE_INFO
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_GET_PHONE_STATE_INFO
  */
 
 void msg_get_phone_state_info_init(struct msmcomm_message *msg)
@@ -154,7 +154,7 @@ uint8_t *msg_get_phone_state_info_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_COMMAND_GET_CHARGER_STATUS
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_GET_CHARGER_STATUS
  */
 
 void msg_get_charger_status_init(struct msmcomm_message *msg)
@@ -183,7 +183,7 @@ uint8_t *msg_get_charger_status_prepare_data(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_COMMAND_CHARGING
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_CHARGING
  */
 
 void msg_charging_init(struct msmcomm_message *msg)
@@ -211,7 +211,7 @@ uint8_t *msg_charging_prepare_data(struct msmcomm_message *msg)
     return msg->payload;
 }
 
-void msmcomm_message_charging_set_mode(struct msmcomm_message *msg, unsigned int mode)
+void msmcomm_message_charging_set_mode(struct msmcomm_message *msg, msmcomm_charging_mode_t mode)
 {
     uint8_t new_mode;
 
@@ -230,7 +230,7 @@ void msmcomm_message_charging_set_mode(struct msmcomm_message *msg, unsigned int
     MESSAGE_CAST(msg, struct charging_msg)->mode = new_mode;
 }
 
-void msmcomm_message_charging_set_voltage(struct msmcomm_message *msg, unsigned int voltage)
+void msmcomm_message_charging_set_voltage(struct msmcomm_message *msg, msmcomm_charging_voltage_t voltage)
 {
     uint16_t new_voltage = 0;
 
@@ -255,7 +255,7 @@ void msmcomm_message_charging_set_voltage(struct msmcomm_message *msg, unsigned 
 }
 
 /*
- * MSMCOMM_COMMAND_SET_SYSTEM_TIME
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_SET_SYSTEM_TIME
  */
 void msg_set_system_time_init(struct msmcomm_message *msg)
 {
@@ -291,23 +291,17 @@ void msmcomm_message_set_system_time_set(struct msmcomm_message *msg,
                                          int32_t timezone_offset)
 {
     MESSAGE_CAST(msg, struct set_system_time_msg)->year = year;
-
     MESSAGE_CAST(msg, struct set_system_time_msg)->month = month;
-
     MESSAGE_CAST(msg, struct set_system_time_msg)->day = day;
-
     MESSAGE_CAST(msg, struct set_system_time_msg)->hour = hour;
-
     MESSAGE_CAST(msg, struct set_system_time_msg)->minutes = minutes;
-
     MESSAGE_CAST(msg, struct set_system_time_msg)->seconds = seconds;
-
     MESSAGE_CAST(msg, struct set_system_time_msg)->timezone_offset = timezone_offset;
 }
 
 
 /*
- * MSMCOMM_COMMAND_GET_IMEI
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_GET_IMEI
  */
 
 void msg_get_imei_init(struct msmcomm_message *msg)

@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_RESPONSE_PDSM_PD_GET_POS
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_PDSM_PD_GET_POS
  */
 
 unsigned int resp_pdsm_pd_get_pos_is_valid(struct msmcomm_message *msg)
@@ -44,7 +44,7 @@ uint32_t resp_pdsm_pd_get_pos_get_size(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_PDSM_PD_END_SESSION
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_PDSM_PD_END_SESSION
  */
 
 unsigned int resp_pdsm_pd_end_session_is_valid(struct msmcomm_message *msg)
@@ -64,7 +64,7 @@ uint32_t resp_pdsm_pd_end_session_pos_get_size(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_PA_SET_PARAM
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_PA_SET_PARAM
  */
 
 unsigned int resp_pa_set_param_is_valid(struct msmcomm_message *msg)
@@ -84,7 +84,7 @@ uint32_t resp_pa_set_param_get_size(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_LCS_AGENT_CLIENT_RSP
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_LCS_AGENT_CLIENT_RSP
  */
 
 unsigned int resp_lcs_agent_client_rsp_is_valid(struct msmcomm_message *msg)
@@ -105,7 +105,7 @@ uint32_t resp_lcs_agent_client_rsp_get_size(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_XTRA_SET_DATA
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_XTRA_SET_DATA
  */
 
 unsigned int resp_xtra_set_data_is_valid(struct msmcomm_message *msg)

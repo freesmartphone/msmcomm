@@ -25,7 +25,7 @@
 extern void *talloc_msmc_ctx;
 
 /* 
- * MSMCOMM_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS
  */
 
 void msg_get_audio_modem_tuning_params_init(struct msmcomm_message *msg)
@@ -53,7 +53,7 @@ uint8_t *msg_get_audio_modem_tuning_params_prepare_data(struct msmcomm_message *
 }
 
 /*
- * MSMCOMM_COMMAND_SET_AUDIO_PROFILE
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_SET_AUDIO_PROFILE
  */
 
 /* [CMD] tel.setaudioprofile 0 0

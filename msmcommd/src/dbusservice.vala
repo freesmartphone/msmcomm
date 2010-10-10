@@ -47,7 +47,7 @@ namespace Msmcomm
         private string objectpath;
         private dynamic DBus.Object usage;
         
-        private Gee.HashMap<Msmcomm.EventType,UnsolicitedResponseHandlerWrapper> urc_handlers;
+        private Gee.HashMap<Msmcomm.MessageType,UnsolicitedResponseHandlerWrapper> urc_handlers;
         
         // 
         // private API
@@ -71,24 +71,24 @@ namespace Msmcomm
         
         private void registerUnsolicitedResponseHandlers()
         {
-            urc_handlers[Msmcomm.EventType.RESET_RADIO_IND] = createUnsolicitedResponseHandler((msg) => { 
+            urc_handlers[Msmcomm.MessageType.EVENT_RESET_RADIO_IND] = createUnsolicitedResponseHandler((msg) => { 
                 reset_radio_ind(); 
             });
             
-            urc_handlers[Msmcomm.EventType.CHARGER_STATUS] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_CHARGER_STATUS] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.ChargerStatus chargerStatusMsg = (Msmcomm.Unsolicited.ChargerStatus) msg;
                 charger_status(chargerStatusMsg.voltage);
             });
             
-            urc_handlers[Msmcomm.EventType.OPERATION_MODE] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_OPERATION_MODE] = createUnsolicitedResponseHandler((msg) => {
                 operation_mode();
             });
             
-            urc_handlers[Msmcomm.EventType.CM_PH_INFO_AVAILABLE] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_CM_PH_INFO_AVAILABLE] = createUnsolicitedResponseHandler((msg) => {
                 cm_ph_info_available();
             });
             
-            urc_handlers[Msmcomm.EventType.NETWORK_STATE_INFO] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_NETWORK_STATE_INFO] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.NetworkStateInfo networkStateInfoMsg = (Msmcomm.Unsolicited.NetworkStateInfo) msg;
                 
                 var ns_info = NetworkStateInfo(networkStateInfoMsg.only_rssi_update, 
@@ -105,7 +105,7 @@ namespace Msmcomm
                 network_state_info(ns_info);
             });
             
-            urc_handlers[Msmcomm.EventType.CALL_INCOMMING] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_CALL_INCOMMING] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
                 var info = CallInfo(callStatusMsg.number, 
@@ -116,7 +116,7 @@ namespace Msmcomm
                 call_incomming(info);
             });
             
-            urc_handlers[Msmcomm.EventType.CALL_END] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_CALL_END] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
                 var info = CallInfo(callStatusMsg.number, 
@@ -127,7 +127,7 @@ namespace Msmcomm
                 call_end(info);
             });
             
-            urc_handlers[Msmcomm.EventType.CALL_CONNECT] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_CALL_CONNECT] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
                 var info = CallInfo(callStatusMsg.number, 
@@ -138,7 +138,7 @@ namespace Msmcomm
                 call_connect(info);
             });
             
-            urc_handlers[Msmcomm.EventType.CALL_ORIGINATION] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_CALL_ORIGINATION] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
                 
                 var info = CallInfo(callStatusMsg.number, 
@@ -149,7 +149,7 @@ namespace Msmcomm
                 call_origination(info);
             });
             
-            urc_handlers[Msmcomm.EventType.GET_NETWORKLIST] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_GET_NETWORKLIST] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.GetNetworkList networkListMsg = (Msmcomm.Unsolicited.GetNetworkList) msg;
                 NetworkProvider[] networks = { };
                 
@@ -163,13 +163,13 @@ namespace Msmcomm
                 network_list(networks);
             });
             
-            urc_handlers[Msmcomm.EventType.PHONEBOOK_READY] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_PHONEBOOK_READY] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.PhonebookReady phonebookReadyMsg = (Msmcomm.Unsolicited.PhonebookReady) msg;
                 
                 phonebook_ready(convertPhonebookType(phonebookReadyMsg.book_type));    
             });
             
-            urc_handlers[Msmcomm.EventType.PHONEBOOK_MODIFIED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_PHONEBOOK_MODIFIED] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.PhonebookModified phonebookModifiedMsg = (Msmcomm.Unsolicited.PhonebookModified) msg;
                 
                 phonebook_modified(convertPhonebookType(phonebookModifiedMsg.book_type), phonebookModifiedMsg.position);
@@ -179,15 +179,15 @@ namespace Msmcomm
              * SIM
              **/
             
-            urc_handlers[Msmcomm.EventType.SIM_INSERTED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_INSERTED] = createUnsolicitedResponseHandler((msg) => {
                 sim_inserted();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_REMOVED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_REMOVED] = createUnsolicitedResponseHandler((msg) => {
                 sim_removed();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_NO_SIM] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_NO_SIM] = createUnsolicitedResponseHandler((msg) => {
                 sim_not_available();
             });
             
@@ -195,31 +195,31 @@ namespace Msmcomm
              * PIN1
              **/
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN1_VERIFIED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN1_VERIFIED] = createUnsolicitedResponseHandler((msg) => {
                 pin1_verified();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN1_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN1_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
                 pin1_blocked();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN1_UNBLOCKED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN1_UNBLOCKED] = createUnsolicitedResponseHandler((msg) => {
                 pin1_unblocked();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN1_ENABLED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN1_ENABLED] = createUnsolicitedResponseHandler((msg) => {
                 pin1_enabled();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN1_DISABLED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN1_DISABLED] = createUnsolicitedResponseHandler((msg) => {
                 pin1_disabled();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN1_CHANGED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN1_CHANGED] = createUnsolicitedResponseHandler((msg) => {
                 pin1_changed();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN1_PERM_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN1_PERM_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
                 pin1_perm_blocked();
             });
             
@@ -227,31 +227,31 @@ namespace Msmcomm
              * PIN2
              **/
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN2_VERIFIED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN2_VERIFIED] = createUnsolicitedResponseHandler((msg) => {
                 pin2_verified();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN2_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN2_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
                 pin2_blocked();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN2_UNBLOCKED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN2_UNBLOCKED] = createUnsolicitedResponseHandler((msg) => {
                 pin2_unblocked();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN2_ENABLED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN2_ENABLED] = createUnsolicitedResponseHandler((msg) => {
                 pin2_enabled();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN2_DISABLED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN2_DISABLED] = createUnsolicitedResponseHandler((msg) => {
                 pin2_disabled();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN2_CHANGED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN2_CHANGED] = createUnsolicitedResponseHandler((msg) => {
                 pin2_changed();
             });
             
-            urc_handlers[Msmcomm.EventType.SIM_PIN2_PERM_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SIM_PIN2_PERM_BLOCKED] = createUnsolicitedResponseHandler((msg) => {
                 pin2_perm_blocked();
             });
             
@@ -259,45 +259,45 @@ namespace Msmcomm
              * SMS
              **/
              
-            urc_handlers[Msmcomm.EventType.SMS_RECEIVED_MESSAGE] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SMS_RECEIVED_MESSAGE] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.SMS.SmsRecieved smsRecievedMsg = (Msmcomm.Unsolicited.SMS.SmsRecieved) msg;
                 
                 Msmcomm.SmsInfo info = Msmcomm.SmsInfo(smsRecievedMsg.sender_number, smsRecievedMsg.pdu);
                 sms_message_recieved(info); 
             });
             
-            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_MESSAGE_LIST] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SMS_WMS_CFG_MESSAGE_LIST] = createUnsolicitedResponseHandler((msg) => {
                 sms_wms_cfg_message_list();
             });
             
-            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_GW_DOMAIN_PREF] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SMS_WMS_CFG_GW_DOMAIN_PREF] = createUnsolicitedResponseHandler((msg) => {
                 sms_wms_cfg_gw_domain_pref();
             });
             
-            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_EVENT_ROUTES] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SMS_WMS_CFG_EVENT_ROUTES] = createUnsolicitedResponseHandler((msg) => {
                 sms_wms_cfg_event_routes();
             });
             
-            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_MEMORY_STATUS] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SMS_WMS_CFG_MEMORY_STATUS] = createUnsolicitedResponseHandler((msg) => {
                 sms_wms_cfg_memory_status();
             });
             
             
-            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_MEMORY_STATUS_SET] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SMS_WMS_CFG_MEMORY_STATUS_SET] = createUnsolicitedResponseHandler((msg) => {
                 sms_wms_cfg_memory_status_set();
             });
             
-            urc_handlers[Msmcomm.EventType.SMS_WMS_CFG_GW_READY] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SMS_WMS_CFG_GW_READY] = createUnsolicitedResponseHandler((msg) => {
                 sms_wms_cfg_gw_ready();
             });
             
-            urc_handlers[Msmcomm.EventType.SMS_WMS_READ_TEMPLATE] = createUnsolicitedResponseHandler((msg) => {
+            urc_handlers[Msmcomm.MessageType.EVENT_SMS_WMS_READ_TEMPLATE] = createUnsolicitedResponseHandler((msg) => {
                 sms_wms_read_template();
             });
     
         }
         
-        private void dispatchUnsolicitedResponse(Msmcomm.EventType type, Msmcomm.Message message)
+        private void dispatchUnsolicitedResponse(Msmcomm.MessageType type, Msmcomm.Message message)
         {
             UnsolicitedResponseHandlerWrapper handler = null;
             
@@ -347,7 +347,7 @@ namespace Msmcomm
             servicename = "org.msmcomm";
             objectpath = "/org/msmcomm";
             
-            urc_handlers = new Gee.HashMap<Msmcomm.EventType,UnsolicitedResponseHandlerWrapper>();
+            urc_handlers = new Gee.HashMap<Msmcomm.MessageType,UnsolicitedResponseHandlerWrapper>();
             registerUnsolicitedResponseHandlers();
         }
 

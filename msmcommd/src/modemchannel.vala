@@ -48,7 +48,7 @@ namespace Msmcomm
 
         public async bool open()
         {
-            context.registerEventHandler( handleMsmcommEvent );
+            context.registerResponseHandler( handleMsmcommEvent );
             context.registerWriteHandler( handleMsmcommWriteRequest );
             return true;
         }
@@ -57,7 +57,7 @@ namespace Msmcomm
         // signals
         //
         
-        public signal void requestHandleUnsolicitedResponse(Msmcomm.EventType type, Msmcomm.Message message);
+        public signal void requestHandleUnsolicitedResponse(Msmcomm.MessageType type, Msmcomm.Message message);
         
         //
         // private API
@@ -140,7 +140,7 @@ namespace Msmcomm
             
             // Ugly, ugly hack: As the GET_PHONEBOOK_PROPERTIES response does not
             // has a ref_id field, we disable the check for only this response !!!
-            if (current_event_type != Msmcomm.ResponseType.GET_PHONEBOOK_PROPERTIES)
+            if (current_event_type != Msmcomm.MessageType.RESPONSE_GET_PHONEBOOK_PROPERTIES)
             {
                 result = response.index == bundle.command.index;
             }
@@ -195,21 +195,21 @@ namespace Msmcomm
             context.processData((void*) data, data.length);
         }
 
-        public void handleMsmcommEvent( int event, Msmcomm.Message message )
+        public void handleMsmcommEvent( Msmcomm.MessageType event, Msmcomm.Message message )
         {
-            var et = Msmcomm.eventTypeToString( event );
+            var et = Msmcomm.messageTypeToString( event );
             logger.debug( et );
             
             current_event_type = event;
 
-            if ( message.type == Msmcomm.EventType.RESET_RADIO_IND )
+            if ( message.type == Msmcomm.MessageType.EVENT_RESET_RADIO_IND )
             {
                 /* Modem was reseted, we should do the same */
                 logger.debug( "Modem was reseted, we should do the same ..." );
                 reset();
             }
             
-            if ( message.message_type == Msmcomm.MessageType.RESPONSE )
+            if ( message.class == Msmcomm.MessageClass.RESPONSE )
             {
                 if (current == null)
                 {
@@ -222,9 +222,9 @@ namespace Msmcomm
                 current = null;
                 Idle.add( checkRestartingQueue );
             }
-            else if ( message.message_type == Msmcomm.MessageType.EVENT )
+            else if ( message.class == Msmcomm.MessageClass.EVENT )
             {
-                requestHandleUnsolicitedResponse((Msmcomm.EventType) event, message);
+                requestHandleUnsolicitedResponse(event, message);
             }
         }
         

@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_EVENT_SMS_WMS_READ_TEMPLATE
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_SMS_WMS_READ_TEMPLATE
  */
 
 unsigned int event_sms_wms_read_template_is_valid(struct msmcomm_message *msg)
@@ -67,7 +67,7 @@ uint8_t msmcomm_event_sms_wms_read_template_get_number_plan(struct msmcomm_messa
 }
 
 /*
- * MSMCOMM_EVENT_SMS_RECEIVED_MESSAGE
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_SMS_RECEIVED_MESSAGE
  */
 
 unsigned int event_sms_recieved_message_is_valid(struct msmcomm_message *msg)
@@ -151,29 +151,29 @@ void event_sms_status_free(struct msmcomm_message *msg)
 {
 }
 
-unsigned int event_sms_status_get_type(struct msmcomm_message *msg)
+msmcomm_message_type_t event_sms_status_get_type(struct msmcomm_message *msg)
 {    
     #if 0
     switch ()
     {
         case 0x0:
-            return MSMCOMM_EVENT_SMS_WMS_CFG_GW_READY;
+            return MSMCOMM_MESSAGE_TYPE_RESPONSE_SMS_WMS_CFG_GW_READY;
         case 0x2:
-            return MSMCOMM_EVENT_SMS_WMS_CFG_EVENT_ROUTES;
+            return MSMCOMM_MESSAGE_TYPE_RESPONSE_SMS_WMS_CFG_EVENT_ROUTES;
         case 0x3:
-            return MSMCOMM_EVENT_SMS_WMS_CFG_MEMORY_STATUS;
+            return MSMCOMM_MESSAGE_TYPE_RESPONSE_SMS_WMS_CFG_MEMORY_STATUS;
         case 0x4:
-            return MSMCOMM_EVENT_SMS_WMS_CFG_MESSAGE_LIST;
+            return MSMCOMM_MESSAGE_TYPE_RESPONSE_SMS_WMS_CFG_MESSAGE_LIST;
         case 0x6:
-            return MSMCOMM_EVENT_SMS_WMS_CFG_GW_DOMAIN_PREF;
+            return MSMCOMM_MESSAGE_TYPE_RESPONSE_SMS_WMS_CFG_GW_DOMAIN_PREF;
         case 0x8:
             /* FIXME seems to have no realy use */
             return MSMCOMM_MESSAGE_NOT_USED;
         case 0x9:
-            return MSMCOMM_EVENT_SMS_WMS_CFG_MEMORY_STATUS_SET;
+            return MSMCOMM_MESSAGE_TYPE_RESPONSE_SMS_WMS_CFG_MEMORY_STATUS_SET;
     }
     #endif
     
-    return MSMCOMM_MESSAGE_INVALID;
+    return MSMCOMM_MESSAGE_TYPE_INVALID;
 }
 

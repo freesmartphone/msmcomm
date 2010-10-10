@@ -33,7 +33,7 @@ namespace Msmcomm
         {
             if (response.result != Msmcomm.ResultType.OK)
             {
-                var msg = @"$(eventTypeToString(response.type)) command failed with: $(resultTypeToString(response.result))";
+                var msg = @"$(messageTypeToString(response.type)) command failed with: $(resultTypeToString(response.result))";
                 throw new Msmcomm.Error.FAILED(msg);
             }
         }

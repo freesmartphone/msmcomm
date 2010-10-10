@@ -49,18 +49,18 @@ unsigned int event_call_status_get_type(struct msmcomm_message *msg)
     switch (msg->msg_id)
     {
         case 0:
-            return MSMCOMM_EVENT_CALL_ORIGINATION;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_CALL_ORIGINATION;
         case 3:
-            return MSMCOMM_EVENT_CALL_END;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_CALL_END;
         case 5:
-            return MSMCOMM_EVENT_CALL_INCOMMING;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_CALL_INCOMMING;
         case 6:
-            return MSMCOMM_EVENT_CALL_CONNECT;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_CALL_CONNECT;
         default:
             break;
     }
 
-    return MSMCOMM_MESSAGE_INVALID;
+    return MSMCOMM_MESSAGE_TYPE_INVALID;
 }
 
 uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message * msg)

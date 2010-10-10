@@ -40,51 +40,51 @@ void event_sups_status_free(struct msmcomm_message *msg)
 {
 }
 
-unsigned int event_sups_status_get_type(struct msmcomm_message *msg)
+msmcomm_message_type_t event_sups_status_get_type(struct msmcomm_message *msg)
 {
     switch (msg->msg_id)
     {
         case 12:
-            return MSMCOMM_EVENT_SUPS_PROCESS_USS;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_PROCESS_USS;
         case 13:
-            return MSMCOMM_EVENT_SUPS_PROCESS_USS_CONF;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_PROCESS_USS_CONF;
         case 20:
-            return MSMCOMM_EVENT_SUPS_USS_RES;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_USS_RES;
         case 21:
-            return MSMCOMM_EVENT_SUPS_RELEASE_USS_IND;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_RELEASE_USS_IND;
         case 17:
-            return MSMCOMM_EVENT_SUPS_USS_NOTIFY_IND;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_USS_NOTIFY_IND;
         case 18:
-            return MSMCOMM_EVENT_SUPS_USS_NOTIFY_RES;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_USS_NOTIFY_RES;
         case 14:
-            return MSMCOMM_EVENT_SUPS_RELEASE;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_RELEASE;
         case 15:
-            return MSMCOMM_EVENT_SUPS_ABORT;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_ABORT;
         case 2:
-            return MSMCOMM_EVENT_SUPS_ERASE;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_ERASE;
         case 0:
-            return MSMCOMM_EVENT_SUPS_REGISTER;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_REGISTER;
         case 1:
-            return MSMCOMM_EVENT_SUPS_REGISTER_CONF;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_REGISTER_CONF;
         case 22:
-            return MSMCOMM_EVENT_SUPS_GET_PASSWORD_IN;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_GET_PASSWORD_IN;
         case 23:
-            return MSMCOMM_EVENT_SUPS_GET_PASSWORD_RES;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_GET_PASSWORD_RES;
         case 8:
-            return MSMCOMM_EVENT_SUPS_INTERROGATE;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_INTERROGATE;
         case 9:
-            return MSMCOMM_EVENT_SUPS_INTERROGATE_CONF;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_INTERROGATE_CONF;
         case 4:
-            return MSMCOMM_EVENT_SUPS_ACTIVATE;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_ACTIVATE;
         case 5:
-            return MSMCOMM_EVENT_SUPS_ACTIVATE_CONF;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_ACTIVATE_CONF;
         case 6:
-            return MSMCOMM_EVENT_SUPS_DEACTIVATE;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_DEACTIVATE;
         case 7:
-            return MSMCOMM_EVENT_SUPS_DEACTIVATE_CONF;
+            return MSMCOMM_MESSAGE_TYPE_EVENT_SUPS_DEACTIVATE_CONF;
         default:
             break;
     }
 
-    return MSMCOMM_MESSAGE_INVALID;
+    return MSMCOMM_MESSAGE_TYPE_INVALID;
 }

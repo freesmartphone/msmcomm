@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_EVENT_LINK_ESTABLISHED
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_LINK_ESTABLISHED
  */
 
 unsigned int event_link_established_is_valid(struct msmcomm_message *msg)
@@ -43,7 +43,7 @@ uint32_t event_link_established_ind_get_size(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_EVENT_RESET_RADIO_IND
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_RESET_RADIO_IND
  */
 
 unsigned int event_radio_reset_ind_is_valid(struct msmcomm_message *msg)
@@ -64,7 +64,7 @@ uint32_t event_radio_reset_ind_get_size(struct msmcomm_message * msg)
 }
 
 /*
- * MSMCOMM_EVENT_CHARGER_STATUS
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_CHARGER_STATUS
  */
 
 unsigned int event_charger_status_is_valid(struct msmcomm_message *msg)
@@ -92,7 +92,7 @@ uint32_t event_charger_status_get_size(struct msmcomm_message * msg)
 }
 
 /*
- * MSMCOMM_EVENT_OPERATION_MODE
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_OPERATION_MODE
  */
 
 unsigned int event_operator_mode_is_valid(struct msmcomm_message *msg)

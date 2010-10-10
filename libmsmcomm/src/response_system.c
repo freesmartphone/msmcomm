@@ -27,7 +27,7 @@ extern void *talloc_msmc_ctx;
 #define LIBMSMCOMM_RESP_FIRMWARE_LEN         20
 
 /*
- * MSMCOMM_RESPONSE_TEST_ALIVE
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_TEST_ALIVE
  */
 
 unsigned int resp_test_alive_is_valid(struct msmcomm_message *msg)
@@ -52,7 +52,7 @@ uint32_t resp_test_alive_get_size(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_GET_FIRMWARE_INFO
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_FIRMWARE_INFO
  */
 
 unsigned int resp_get_firmware_info_is_valid(struct msmcomm_message *msg)
@@ -93,7 +93,7 @@ char *msmcomm_resp_get_firmware_info_get_info(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_GET_IMEI
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_IMEI
  */
 
 unsigned int resp_get_imei_is_valid(struct msmcomm_message *msg)
@@ -139,7 +139,7 @@ char *msmcomm_resp_get_imei_get_imei(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_CHARGER_STATUS
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_CHARGER_STATUS
  */
 
 unsigned int resp_charger_status_is_valid(struct msmcomm_message *msg)
@@ -186,11 +186,11 @@ unsigned int msmcomm_resp_charger_status_get_voltage(struct msmcomm_message *msg
             return MSMCOMM_CHARGING_VOLTAGE_MODE_1A;
     }
 
-    return MSMCOMM_MESSAGE_INVALID;
+    return MSMCOMM_MESSAGE_TYPE_INVALID;
 }
 
 /*
- * MSMCOMM_RESPONSE_CARGE_USB
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_CARGE_USB
  */
 
 unsigned int resp_charging_is_valid(struct msmcomm_message *msg)
@@ -237,12 +237,12 @@ unsigned int msmcomm_resp_charging_get_voltage(struct msmcomm_message *msg)
             return MSMCOMM_CHARGING_VOLTAGE_MODE_1A;
     }
 
-    return MSMCOMM_MESSAGE_INVALID;
+    return MSMCOMM_MESSAGE_TYPE_INVALID;
 
 }
 
 /*
- * MSMCOMM_RESPONSE_CM_PH
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_PH
  */
 
 unsigned int resp_cm_ph_is_valid(struct msmcomm_message *msg)
@@ -281,7 +281,7 @@ uint8_t msmcomm_resp_cm_ph_get_result(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_SET_SYSTEM_TIME
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_SET_SYSTEM_TIME
  */
 
 unsigned int resp_set_system_time_is_valid(struct msmcomm_message *msg)

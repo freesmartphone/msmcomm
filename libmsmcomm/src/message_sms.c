@@ -23,7 +23,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE
  */
 
 void msg_sms_acknowledge_incommming_message_init(struct msmcomm_message *msg)
@@ -55,7 +55,7 @@ uint8_t *msg_sms_acknowledge_incommming_message_prepare_data(struct msmcomm_mess
 }
 
 /*
- * MSMCOMM_COMMAND_SMS_GET_SMS_CENTER_NUMBER
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_GET_SMS_CENTER_NUMBER
  */
 #if 0
 void msg_sms_get_sms_center_number_init(struct msmcomm_message *msg)

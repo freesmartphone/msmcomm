@@ -299,7 +299,7 @@ namespace Msmcomm
             return "<>";
         }
         
-        public signal void requestHandleUnsolicitedResponse(Msmcomm.EventType type, Msmcomm.Message message);
+        public signal void requestHandleUnsolicitedResponse(Msmcomm.MessageType type, Msmcomm.Message message);
         public signal void statusUpdate(Msmcomm.ModemControlStatus status);
     }
 } // namespace Msmcomm

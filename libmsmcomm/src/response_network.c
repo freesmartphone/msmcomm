@@ -22,7 +22,7 @@
 #include "internal.h"
 
 /*
- * MSMCOMM_RESPONSE_RSSI_STATUS
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_RSSI_STATUS
  */
 
 unsigned int resp_rssi_status_is_valid(struct msmcomm_message *msg)

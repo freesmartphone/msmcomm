@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_RESPONSE_SOUND
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_SOUND
  */
 
 unsigned int resp_sound_is_valid(struct msmcomm_message *msg)
@@ -58,7 +58,7 @@ uint32_t resp_sound_get_size(struct msmcomm_message * msg)
 }
 
 /*
- * MSMCOMM_RESPONSE_AUDIO_MODEM_TUNING_PARAMS
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_AUDIO_MODEM_TUNING_PARAMS
  */
 
 unsigned int resp_audio_modem_tuning_params_is_valid(struct msmcomm_message *msg)

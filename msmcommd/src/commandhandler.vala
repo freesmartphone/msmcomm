@@ -46,11 +46,11 @@ namespace Msmcomm
         {
             if ( response != null )
             {
-                return "\"%s\" -> %s".printf( Msmcomm.eventTypeToString( command.type ), Msmcomm.eventTypeToString( response.type ) );
+                return "\"%s\" -> %s".printf( Msmcomm.messageTypeToString( command.type ), Msmcomm.messageTypeToString( response.type ) );
             }
             else
             {
-                return Msmcomm.eventTypeToString( command.type );
+                return Msmcomm.messageTypeToString( command.type );
             }
         }
     }

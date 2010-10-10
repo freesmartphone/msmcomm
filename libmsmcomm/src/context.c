@@ -36,7 +36,7 @@ int msmcomm_init(struct msmcomm_context *ctx)
 {
     talloc_msmc_ctx = talloc_named_const(talloc_msmc_ctx, 0, "msmcomm");
     ctx->write_cb = NULL;
-    ctx->event_cb = NULL;
+    ctx->resp_cb = NULL;
     return 0;
 }
 
@@ -67,11 +67,11 @@ int msmcomm_process_data(struct msmcomm_context *ctx, uint8_t *buf, uint32_t len
     return length;
 }
 
-void msmcomm_register_event_handler
-    (struct msmcomm_context *ctx, msmcomm_event_handler_cb event_handler, void *data)
+void msmcomm_register_response_handler
+    (struct msmcomm_context *ctx, msmcomm_response_handler_cb resp_handler, void *data)
 {
-    ctx->event_cb = event_handler;
-    ctx->event_data = data;
+    ctx->resp_cb = resp_handler;
+    ctx->resp_data = data;
 }
 
 void msmcomm_register_write_handler
@@ -102,7 +102,7 @@ void msmcomm_register_log_handler
     ctx->log_data = data;
 }
 
-void report_error(struct msmcomm_context *ctx, int error, void *data)
+void report_error(struct msmcomm_context *ctx, msmcomm_error_t error, void *data)
 {
     if (ctx->error_cb)
         ctx->error_cb(ctx->error_data, error, data);

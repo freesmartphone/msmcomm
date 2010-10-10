@@ -22,7 +22,7 @@
 #include "internal.h"
 
 /*
- * MSMCOMM_EVENT_network_state_info
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_network_state_info
  */
 
 unsigned int event_network_state_info_is_valid(struct msmcomm_message *msg)
@@ -212,7 +212,7 @@ uint16_t msmcomm_event_network_state_info_get_roam(struct msmcomm_message *msg)
 }
 
 /*
- * MSMCOMM_EVENT_GET_NETWORKLIST
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_NETWORKLIST
  */
 
 unsigned int event_get_networklist_is_valid(struct msmcomm_message *msg)
@@ -354,7 +354,7 @@ char *msmcomm_event_get_networklist_get_network_name(struct msmcomm_message *msg
 }
 
 /*
- * MSMCOMM_EVENT_CM_PH
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_PH
  */
 
 unsigned int event_cm_ph_is_valid(struct msmcomm_message *msg)
@@ -428,7 +428,7 @@ unsigned int msmcomm_event_cm_ph_get_plmn(struct msmcomm_message *msg, unsigned 
 }
 
 /*
- * MSMCOMM_EVENT_CM_PH_INFO_AVAILABLE
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_PH_INFO_AVAILABLE
  */
 
 unsigned int event_cm_ph_info_available_is_valid(struct msmcomm_message *msg)

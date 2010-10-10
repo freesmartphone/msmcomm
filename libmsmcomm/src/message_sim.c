@@ -45,7 +45,7 @@ void _message_pin_status_set_pin(struct msmcomm_message *msg, const char *pin)
     memcpy(MESSAGE_CAST(msg, struct pin_status_msg)->pin, pin, bytes);
 }
 
-void _message_pin_status_set_pin_type(struct msmcomm_message *msg, unsigned int pin_type)
+void _message_pin_status_set_pin_type(struct msmcomm_message *msg, msmcomm_sim_pin_type_t pin_type)
 {
     unsigned int type = 0x0;
     switch (pin_type) 
@@ -61,7 +61,7 @@ void _message_pin_status_set_pin_type(struct msmcomm_message *msg, unsigned int 
 }
 
 /*
- * MSMCOMM_COMMAND_VERIFY_PIN
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_VERIFY_PIN
  */
 
 void msg_verify_pin_init(struct msmcomm_message *msg)
@@ -93,13 +93,13 @@ void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char 
     _message_pin_status_set_pin(msg, pin);
 }
 
-void msmcomm_message_verify_pin_set_pin_type(struct msmcomm_message *msg, unsigned int pin_type)
+void msmcomm_message_verify_pin_set_pin_type(struct msmcomm_message *msg, msmcomm_sim_pin_type_t pin_type)
 {
     _message_pin_status_set_pin_type(msg, pin_type);
 }
 
 /*
- * MSMCOMM_COMMAND_READ_PHONEBOOK
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_READ_PHONEBOOK
  */
 
 void msg_read_phonebook_init(struct msmcomm_message *msg)
@@ -127,7 +127,7 @@ uint8_t *msg_read_phonebook_prepare_data(struct msmcomm_message *msg)
     return msg->payload;
 }
 
-uint8_t book_type_to_magic(unsigned int book_type)
+uint8_t book_type_to_magic(msmcomm_phonebook_type_t book_type)
 {
    uint8_t magic = 0x0;
 
@@ -154,7 +154,7 @@ uint8_t book_type_to_magic(unsigned int book_type)
     return magic;
 }
 
-void msmcomm_message_read_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type)
+void msmcomm_message_read_phonebook_set_book_type(struct msmcomm_message *msg, msmcomm_phonebook_type_t book_type)
 {
     MESSAGE_CAST(msg, struct read_phonebook_msg)->book_type = book_type_to_magic(book_type);
 }
@@ -165,7 +165,7 @@ void msmcomm_message_read_phonebook_set_position(struct msmcomm_message *msg, ui
 }
 
 /*
- * MSMCOMM_COMMAND_GET_PHONEBOOK_PROPERTIES
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_GET_PHONEBOOK_PROPERTIES
  */
 
 void msg_get_phonebook_properties_init(struct msmcomm_message *msg)
@@ -194,7 +194,7 @@ uint8_t *msg_get_phonebook_properties_prepare_data(struct msmcomm_message *msg)
 }
 
 void msmcomm_message_get_phonebook_properties_set_book_type(struct msmcomm_message *msg,
-                                                            unsigned int book_type)
+                                                            msmcomm_phonebook_type_t book_type)
 {
     uint8_t value = 0x0;
 
@@ -224,7 +224,7 @@ void msmcomm_message_get_phonebook_properties_set_book_type(struct msmcomm_messa
 }
 
 /*
- * MSMCOMM_COMMAND_WRITE_PHONEBOOK
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_WRITE_PHONEBOOK
  */
 
 void msg_write_phonebook_init(struct msmcomm_message *msg)
@@ -268,13 +268,13 @@ void msmcomm_message_write_phonebook_set_title(struct msmcomm_message *msg, cons
     memcpy(MESSAGE_CAST(msg, struct modify_phonebook_msg)->title, title, len);
 }
 
-void msmcomm_message_write_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type)
+void msmcomm_message_write_phonebook_set_book_type(struct msmcomm_message *msg, msmcomm_phonebook_type_t book_type)
 {
     MESSAGE_CAST(msg, struct modify_phonebook_msg)->book_type = book_type_to_magic(book_type);
 }
 
 /*
- * MSMCOMM_COMMAND_DELETE_PHONEBOOK
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_DELETE_PHONEBOOK
  */
 
 void msg_delete_phonebook_init(struct msmcomm_message *msg)
@@ -308,13 +308,13 @@ void msmcomm_message_delete_phonebook_set_position(struct msmcomm_message *msg, 
     MESSAGE_CAST(msg, struct modify_phonebook_msg)->position = position;
 }
 
-void msmcomm_message_delete_phonebook_set_book_type(struct msmcomm_message *msg, unsigned int book_type)
+void msmcomm_message_delete_phonebook_set_book_type(struct msmcomm_message *msg, msmcomm_phonebook_type_t book_type)
 {
     MESSAGE_CAST(msg, struct modify_phonebook_msg)->book_type = book_type_to_magic(book_type);
 }
 
 /*
- * MSMCOMM_COMMAND_CHANGE_PIN
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_CHANGE_PIN
  */
 
 void msg_change_pin_init(struct msmcomm_message *msg)
@@ -377,7 +377,7 @@ void msmcomm_message_change_pin_set_new_pin(struct msmcomm_message *msg, const c
 }
 
 /*
- * MSMCOMM_COMMAND_ENABLE_PIN
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_ENABLE_PIN
  */
 
 void msg_enable_pin_init(struct msmcomm_message *msg)
@@ -410,7 +410,7 @@ void msmcomm_message_enable_pin_set_pin(struct msmcomm_message *msg, const char 
 }
 
 /*
- * MSMCOMM_COMMAND_DISABLE_PIN
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_DISABLE_PIN
  */
 
 void msg_disable_pin_init(struct msmcomm_message *msg)
@@ -443,7 +443,7 @@ void msmcomm_message_disable_pin_set_pin(struct msmcomm_message *msg, const char
 }
 
 /*
- * MSMCOMM_COMMAND_SIM_INFO
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_SIM_INFO
  */
 
 void msg_sim_info_init(struct msmcomm_message *msg)
@@ -470,7 +470,7 @@ uint8_t *msg_sim_info_prepare_data(struct msmcomm_message *msg)
     return msg->payload;
 }
 
-void msmcomm_message_sim_info_set_field_type(struct msmcomm_message *msg, unsigned int field_type)
+void msmcomm_message_sim_info_set_field_type(struct msmcomm_message *msg, msmcomm_sim_info_field_type_t field_type)
 {
     switch (field_type)
     {

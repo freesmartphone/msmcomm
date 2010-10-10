@@ -18,468 +18,457 @@
  *
  */
 
-// FIXME: copy does not seem to work
-// FIXME: Change 'EVENT' to 'URC' to match telephony taxonomy
-// FIXME: Map properties as such
-
 [CCode (cheader_filename = "msmcomm.h")]
 namespace Msmcomm
 {
-    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MESSAGE_TYPE_", cheader_filename = "msmcomm.h")]
-    public enum MessageType
-    {
-        NONE,
-        COMMAND,
-        RESPONSE,
-        EVENT,
-    }
-    
-    public string messageTypeToString(MessageType type)
-    {
-        var result = "<unknown>";
-        switch (type)
-        {
-            case MessageType.NONE:
-                result = "NONE";
+	[CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MESSAGE_CLASS_", cheader_filename = "msmcomm.h")]
+	public enum MessageClass
+	{
+		NONE,
+		COMMAND,
+		RESPONSE,
+		EVENT,
+	}
+
+	public string messageClassToString(MessageClass class)
+	{
+		var result = "<unknown>";
+		switch (class)
+		{
+			case MessageClass.NONE:
+				result = "NONE";
+				break;
+			case MessageClass.COMMAND:
+				result = "COMMAND";
                 break;
-            case MessageType.COMMAND:
-                result = "COMMAND";
-                break;
-            case MessageType.RESPONSE:
+            case MessageClass.RESPONSE:
                 result = "RESPONSE";
                 break;
-            case MessageType.EVENT:
+            case MessageClass.EVENT:
                 result = "EVENT";
                 break;
         }
         return result;
     }
+    
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MESSAGE_TYPE_", cheader_filename = "msmcomm.h")]
+	public enum MessageType
+	{
+		INVALID,
+		NOT_USED,
+		COMMAND_CHANGE_OPERATION_MODE,
+		COMMAND_GET_IMEI,
+		COMMAND_GET_FIRMWARE_INFO,
+		COMMAND_TEST_ALIVE,
+		COMMAND_GET_PHONE_STATE_INFO,
+		COMMAND_VERIFY_PIN,
+		COMMAND_GET_VOICEMAIL_NR,
+		COMMAND_GET_LOCATION_PRIV_PREF,
+		COMMAND_ANSWER_CALL,
+		COMMAND_SET_AUDIO_PROFILE,
+		COMMAND_END_CALL,
+		COMMAND_GET_CHARGER_STATUS,
+		COMMAND_CHARGING,
+		COMMAND_DIAL_CALL,
+		COMMAND_SET_SYSTEM_TIME,
+		COMMAND_RSSI_STATUS,
+		COMMAND_READ_PHONEBOOK,
+		COMMAND_GET_NETWORKLIST,
+		COMMAND_SET_MODE_PREFERENCE,
+		COMMAND_GET_PHONEBOOK_PROPERTIES,
+		COMMAND_WRITE_PHONEBOOK,
+		COMMAND_DELETE_PHONEBOOK,
+		COMMAND_CHANGE_PIN,
+		COMMAND_ENABLE_PIN,
+		COMMAND_DISABLE_PIN,
+		COMMAND_SIM_INFO,
+		COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS,
+		COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE,
+		COMMAND_SMS_GET_SMS_CENTER_NUMBER,
+		RESPONSE_TEST_ALIVE,
+		RESPONSE_GET_FIRMWARE_INFO,
+		RESPONSE_GET_IMEI,
+		RESPONSE_PDSM_PD_GET_POS,
+		RESPONSE_PDSM_PD_END_SESSION,
+		RESPONSE_PA_SET_PARAM,
+		RESPONSE_LCS_AGENT_CLIENT_RSP,
+		RESPONSE_XTRA_SET_DATA,
+		RESPONSE_SIM,
+		RESPONSE_GET_VOICEMAIL_NR,
+		RESPONSE_SOUND,
+		RESPONSE_CM_CALL,
+		RESPONSE_CHARGER_STATUS,
+		RESPONSE_CHARGING,
+		RESPONSE_CM_PH,
+		RESPONSE_SET_SYSTEM_TIME,
+		RESPONSE_RSSI_STATUS,
+		RESPONSE_PHONEBOOK,
+		RESPONSE_GET_PHONEBOOK_PROPERTIES,
+		RESPONSE_AUDIO_MODEM_TUNING_PARAMS,
+		RESPONSE_SMS_WMS,
+		EVENT_RESET_RADIO_IND,
+		EVENT_CHARGER_STATUS,
+		EVENT_OPERATION_MODE,
+		EVENT_CM_PH_INFO_AVAILABLE,
+		EVENT_NETWORK_STATE_INFO,
+		EVENT_PDSM_PD_DONE,
+		EVENT_PD_POSITION_DATA,
+		EVENT_PD_PARAMETER_CHANGE,
+		EVENT_PDSM_LCS,
+		EVENT_PDSM_XTRA,
+		EVENT_CALL_STATUS,
+		EVENT_CALL_INCOMMING,
+		EVENT_CALL_ORIGINATION,
+		EVENT_CALL_CONNECT,
+		EVENT_CALL_END,
+		EVENT_SIM_INSERTED,
+		EVENT_SIM_PIN1_VERIFIED,
+		EVENT_SIM_PIN1_BLOCKED,
+		EVENT_SIM_PIN1_UNBLOCKED,
+		EVENT_SIM_PIN1_ENABLED,
+		EVENT_SIM_PIN1_DISABLED,
+		EVENT_SIM_PIN1_CHANGED,
+		EVENT_SIM_PIN1_PERM_BLOCKED,
+		EVENT_SIM_PIN2_VERIFIED,
+		EVENT_SIM_PIN2_BLOCKED,
+		EVENT_SIM_PIN2_UNBLOCKED,
+		EVENT_SIM_PIN2_ENABLED,
+		EVENT_SIM_PIN2_DISABLED,
+		EVENT_SIM_PIN2_CHANGED,
+		EVENT_SIM_PIN2_PERM_BLOCKED,
+		EVENT_SIM_REFRESH_RESET,
+		EVENT_SIM_REFRESH_INIT,
+		EVENT_SIM_REFRESH_INIT_FCN,
+		EVENT_SIM_REFRESH_FAILED,
+		EVENT_SIM_FDN_ENABLE,
+		EVENT_SIM_FDN_DISABLE,
+		EVENT_SIM_ILLEGAL,
+		EVENT_SIM_REMOVED,
+		EVENT_SIM_NO_SIM_EVENT,
+		EVENT_SIM_NO_SIM,
+		EVENT_SIM_DRIVER_ERROR,
+		EVENT_SIM_INTERNAL_RESET,
+		EVENT_SIM_OK_FOR_TERMINAL_PROFILE_DL,
+		EVENT_SIM_NOT_OK_FOR_TERMINAL_PROFILE_DL,
+		EVENT_SIM_INIT_COMPLETED_NO_PROV,
+		EVENT_SIM_MEMORY_WARNING,
+		EVENT_SIM_SIM2_EVENT,
+		EVENT_SIM_REAL_RESET_FAILURE,
+		EVENT_SIM_CARD_ERROR,
+		EVENT_SIM_NO_EVENT,
+		EVENT_SIM_GET_PERSO_NW_FAILURE,
+		EVENT_SIM_GET_PERSO_NW_BLOCKED,
+		EVENT_SIM_REFRESH_APP_RESET,
+		EVENT_SIM_REFRESH_3G_SESSION_RESET,
+		EVENT_SIM_APP_SELECTED,
+		EVENT_SIM_DEFAULT,
+		EVENT_SUPS_PROCESS_USS,
+		EVENT_SUPS_PROCESS_USS_CONF,
+		EVENT_SUPS_USS_RES,
+		EVENT_SUPS_RELEASE_USS_IND,
+		EVENT_SUPS_USS_NOTIFY_IND,
+		EVENT_SUPS_USS_NOTIFY_RES,
+		EVENT_SUPS_RELEASE,
+		EVENT_SUPS_ABORT,
+		EVENT_SUPS_ERASE,
+		EVENT_SUPS_REGISTER,
+		EVENT_SUPS_REGISTER_CONF,
+		EVENT_SUPS_GET_PASSWORD_IN,
+		EVENT_SUPS_GET_PASSWORD_RES,
+		EVENT_SUPS_INTERROGATE,
+		EVENT_SUPS_INTERROGATE_CONF,
+		EVENT_SUPS_ACTIVATE,
+		EVENT_SUPS_ACTIVATE_CONF,
+		EVENT_SUPS_DEACTIVATE,
+		EVENT_SUPS_DEACTIVATE_CONF,
+		EVENT_SMS_WMS_CFG_MESSAGE_LIST,
+		EVENT_SMS_WMS_CFG_GW_DOMAIN_PREF,
+		EVENT_SMS_WMS_CFG_EVENT_ROUTES,
+		EVENT_SMS_WMS_CFG_MEMORY_STATUS,
+		EVENT_SMS_WMS_CFG_MEMORY_STATUS_SET,
+		EVENT_SMS_WMS_CFG_GW_READY,
+		EVENT_SMS_RECEIVED_MESSAGE,
+		EVENT_SMS_WMS_READ_TEMPLATE,
+		EVENT_SMS_INFO,
+		EVENT_PHONEBOOK_READY,
+		EVENT_PHONEBOOK_MODIFIED,
+		EVENT_CM_PH,
+		EVENT_GET_NETWORKLIST,
+	}
 
-    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_COMMAND_", cheader_filename = "msmcomm.h")]
-    public enum CommandType
-    {
-        CHANGE_OPERATION_MODE,
-        GET_IMEI,
-        GET_FIRMWARE_INFO,
-        TEST_ALIVE,
-        GET_PHONE_STATE_INFO,
-        VERIFY_PIN,
-        GET_VOICEMAIL_NR,
-        GET_LOCATION_PRIV_PREF,
-        ANSWER_CALL,
-        SET_AUDIO_PROFILE,
-        END_CALL,
-        GET_CHARGER_STATUS,
-        CHARGING,
-        DIAL_CALL,
-        SET_SYSTEM_TIME,
-        RSSI_STATUS,
-        READ_PHONEBOOK,
-        GET_NETWORKLIST,
-        SET_MODE_PREFERENCE,
-        GET_PHONEBOOK_PROPERTIES,
-        WRITE_PHONEBOOK,
-        DELETE_PHONEBOOK,
-        CHANGE_PIN,
-        ENABLE_PIN,
-        DISABLE_PIN,
-        SIM_INFO,
-        GET_AUDIO_MODEM_TUNING_PARAMS,
-        SMS_GET_SMS_CENTER_NUMBER,
-        SMS_ACKNOWLDEGE_INCOMMING_MESSAGE,
-    }
-
-    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_RESPONSE_", cheader_filename = "msmcomm.h")]
-    public enum ResponseType
-    {
-        TEST_ALIVE,
-        GET_FIRMWARE_INFO,
-        GET_IMEI,
-        PDSM_PD_GET_POS,
-        PDSM_PD_END_SESSION,
-        PA_SET_PARAM,
-        LCS_AGENT_CLIENT_RSP,
-        XTRA_SET_DATA,
-        SIM,
-        GET_VOICEMAIL_NR,
-        SOUND,
-        CM_CALL,
-        CHARGER_STATUS,
-        CHARGING,
-        CM_PH,
-        SET_SYSTEM_TIME,
-        RSSI_STATUS,
-        PHONEBOOK,
-        GET_PHONEBOOK_PROPERTIES,
-        AUDIO_MODEM_TUNING_PARAMS,
-    }
-
-    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_EVENT_", cheader_filename = "msmcomm.h")]
-    public enum EventType
-    {
-        RESET_RADIO_IND,
-        CHARGER_STATUS,
-        OPERATION_MODE,
-        CM_PH_INFO_AVAILABLE,
-        NETWORK_STATE_INFO,
-        PDSM_PD_DONE,
-        PD_POSITION_DATA,
-        PD_PARAMETER_CHANGE,
-        PDSM_LCS,
-        PDSM_XTRA,
-        CALL_STATUS,
-        CALL_INCOMMING,
-        CALL_ORIGINATION,
-        CALL_CONNECT,
-        CALL_END,
-        SIM_INSERTED,
-        SIM_PIN1_VERIFIED,
-        SIM_PIN1_BLOCKED,
-        SIM_PIN1_UNBLOCKED,
-        SIM_PIN1_ENABLED,
-        SIM_PIN1_DISABLED,
-        SIM_PIN1_CHANGED,
-        SIM_PIN1_PERM_BLOCKED,
-        SIM_PIN2_VERIFIED,
-        SIM_PIN2_BLOCKED,
-        SIM_PIN2_UNBLOCKED,
-        SIM_PIN2_ENABLED,
-        SIM_PIN2_DISABLED,
-        SIM_PIN2_CHANGED,
-        SIM_PIN2_PERM_BLOCKED,
-        SIM_REFRESH_RESET,
-        SIM_REFRESH_INIT,
-        SIM_REFRESH_INIT_FCN,
-        SIM_REFRESH_FAILED,
-        SIM_FDN_ENABLE,
-        SIM_FDN_DISABLE,
-        SIM_ILLEGAL,
-        SIM_REMOVED,
-        SIM_NO_SIM_EVENT,
-        SIM_NO_SIM,
-        SIM_DRIVER_ERROR,
-        SIM_INTERNAL_RESET,
-        SIM_OK_FOR_TERMINAL_PROFILE_DL,
-        SIM_NOT_OK_FOR_TERMINAL_PROFILE_DL,
-        SIM_INIT_COMPLETED_NO_PROV,
-        SIM_MEMORY_WARNING,
-        SIM_SIM2_EVENT,
-        SIM_REAL_RESET_FAILURE,
-        SIM_CARD_ERROR,
-        SIM_NO_EVENT,
-        SIM_GET_PERSO_NW_FAILURE,
-        SIM_GET_PERSO_NW_BLOCKED,
-        SIM_REFRESH_APP_RESET,
-        SIM_REFRESH_3G_SESSION_RESET,
-        SIM_APP_SELECTED,
-        SIM_DEFAULT,
-        SUPS_PROCESS_USS,
-        SUPS_PROCESS_USS_CONF,
-        SUPS_USS_RES,
-        SUPS_RELEASE_USS_IND,
-        SUPS_USS_NOTIFY_IND,
-        SUPS_USS_NOTIFY_RES,
-        SUPS_RELEASE,
-        SUPS_ABORT,
-        SUPS_ERASE,
-        SUPS_REGISTER,
-        SUPS_REGISTER_CONF,
-        SUPS_GET_PASSWORD_IN,
-        SUPS_GET_PASSWORD_RES,
-        SUPS_INTERROGATE,
-        SUPS_INTERROGATE_CONF,
-        SUPS_ACTIVATE,
-        SUPS_ACTIVATE_CONF,
-        SUPS_DEACTIVATE,
-        SUPS_DEACTIVATE_CONF,
-        SMS_WMS_CFG_MESSAGE_LIST,
-        SMS_WMS_CFG_GW_DOMAIN_PREF,
-        SMS_WMS_CFG_EVENT_ROUTES,
-        SMS_WMS_CFG_MEMORY_STATUS,
-        SMS_WMS_CFG_MEMORY_STATUS_SET,
-        SMS_WMS_CFG_GW_READY,
-        SMS_WMS_READ_TEMPLATE,
-        SMS_RECEIVED_MESSAGE,
-        GET_NETWORKLIST,
-        PHONEBOOK_READY,
-        PHONEBOOK_MODIFIED,
-        CM_PH,
-    }
-
-    public string eventTypeToString( int t )
+    public string messageTypeToString( MessageType t )
     {
         switch ( t )
         {
             case 0:
             return "INVALID";
             // CommandType
-            case CommandType.CHANGE_OPERATION_MODE:
+            case MessageType.COMMAND_CHANGE_OPERATION_MODE:
             return "COMMAND_CHANGE_OPERATION_MODE";
-            case CommandType.GET_IMEI:
+            case MessageType.COMMAND_GET_IMEI:
             return "COMMAND_GET_IMEI";
-            case CommandType.GET_FIRMWARE_INFO:
+            case MessageType.COMMAND_GET_FIRMWARE_INFO:
             return "COMMAND_GET_FIRMWARE_INFO";
-            case CommandType.TEST_ALIVE:
+            case MessageType.COMMAND_TEST_ALIVE:
             return "COMMAND_TEST_ALIVE";
-            case CommandType.GET_PHONE_STATE_INFO:
+            case MessageType.COMMAND_GET_PHONE_STATE_INFO:
             return "COMMAND_GET_PHONE_STATE_INFO";
-            case CommandType.VERIFY_PIN:
+            case MessageType.COMMAND_VERIFY_PIN:
             return "COMMAND_VERIFY_PIN";
-            case CommandType.GET_VOICEMAIL_NR:
+            case MessageType.COMMAND_GET_VOICEMAIL_NR:
             return "COMMAND_GET_VOICEMAIL_NR";
-            case CommandType.GET_LOCATION_PRIV_PREF:
+            case MessageType.COMMAND_GET_LOCATION_PRIV_PREF:
             return "COMMAND_GET_LOCATION_PRIV_PREF";
-            case CommandType.ANSWER_CALL:
+            case MessageType.COMMAND_ANSWER_CALL:
             return "COMMAND_ANSWER_CALL";
-            case CommandType.SET_AUDIO_PROFILE:
+            case MessageType.COMMAND_SET_AUDIO_PROFILE:
             return "COMMAND_SET_AUDIO_PROFILE";
-            case CommandType.END_CALL:
+            case MessageType.COMMAND_END_CALL:
             return "COMMAND_END_CALL";
-            case CommandType.GET_CHARGER_STATUS:
+            case MessageType.COMMAND_GET_CHARGER_STATUS:
             return "COMMAND_GET_CHARGER_STATUS";
-            case CommandType.CHARGING:
+            case MessageType.COMMAND_CHARGING:
             return "COMMAND_CHARGING";
-            case CommandType.DIAL_CALL:
+            case MessageType.COMMAND_DIAL_CALL:
             return "COMMAND_DIAL_CALL";
-            case CommandType.SET_SYSTEM_TIME:
+            case MessageType.COMMAND_SET_SYSTEM_TIME:
             return "COMMAND_SET_SYSTEM_TIME";
-            case CommandType.RSSI_STATUS:
+            case MessageType.COMMAND_RSSI_STATUS:
             return "COMMAND_RSSI_STATUS";
-            case CommandType.READ_PHONEBOOK:
+            case MessageType.COMMAND_READ_PHONEBOOK:
             return "COMMAND_READ_PHONEBOOK";
-            case CommandType.GET_NETWORKLIST:
+            case MessageType.COMMAND_GET_NETWORKLIST:
             return "COMMAND_GET_NETWORKLIST";
-            case CommandType.SET_MODE_PREFERENCE:
+            case MessageType.COMMAND_SET_MODE_PREFERENCE:
             return "COMMAND_SET_MODE_PREFERENCE";
-            case CommandType.ENABLE_PIN:
+            case MessageType.COMMAND_ENABLE_PIN:
             return "COMMAND_ENABLE_PIN";
-            case CommandType.DISABLE_PIN:
+            case MessageType.COMMAND_DISABLE_PIN:
             return "COMMAND_DISABLE_PIN";
-            case CommandType.SIM_INFO:
+            case MessageType.COMMAND_SIM_INFO:
             return "COMMAND_SIM_INFO";
-            case CommandType.GET_AUDIO_MODEM_TUNING_PARAMS:
+            case MessageType.COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS:
             return "COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS";
-            case CommandType.SMS_GET_SMS_CENTER_NUMBER:
+            case MessageType.COMMAND_SMS_GET_SMS_CENTER_NUMBER:
             return "COMMAND_SMS_GET_SMS_CENTER_NUMBER";
-            case CommandType.SMS_ACKNOWLDEGE_INCOMMING_MESSAGE:
+            case MessageType.COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE:
             return "COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE";
 
-            // ResponseType
-            case ResponseType.TEST_ALIVE:
+            case MessageType.RESPONSE_TEST_ALIVE:
             return "RESPONSE_TEST_ALIVE";
-            case ResponseType.GET_FIRMWARE_INFO:
+            case MessageType.RESPONSE_GET_FIRMWARE_INFO:
 			return "RESPONSE_GET_FIRMWARE_INFO";
-            case ResponseType.GET_IMEI:
+            case MessageType.RESPONSE_GET_IMEI:
 			return "RESPONSE_GET_IMEI";
-            case ResponseType.PDSM_PD_GET_POS:
+            case MessageType.RESPONSE_PDSM_PD_GET_POS:
 			return "RESPONSE_PDSM_PD_GET_POS";
-            case ResponseType.PDSM_PD_END_SESSION:
+            case MessageType.RESPONSE_PDSM_PD_END_SESSION:
 			return "RESPONSE_PDSM_PD_END_SESSION";
-            case ResponseType.PA_SET_PARAM:
+            case MessageType.RESPONSE_PA_SET_PARAM:
 			return "RESPONSE_PA_SET_PARAM";
-            case ResponseType.LCS_AGENT_CLIENT_RSP:
+            case MessageType.RESPONSE_LCS_AGENT_CLIENT_RSP:
 			return "RESPONSE_LCS_AGENT_CLIENT_RSP";
-            case ResponseType.XTRA_SET_DATA:
+            case MessageType.RESPONSE_XTRA_SET_DATA:
 			return "RESPONSE_XTRA_SET_DATA";
-            case ResponseType.SIM:
+            case MessageType.RESPONSE_SIM:
 			return "RESPONSE_SIM";
-            case ResponseType.GET_VOICEMAIL_NR:
+            case MessageType.RESPONSE_GET_VOICEMAIL_NR:
 			return "RESPONSE_GET_VOICEMAIL_NR";
-            case ResponseType.SOUND:
+            case MessageType.RESPONSE_SOUND:
 			return "RESPONSE_SOUND";
-            case ResponseType.CM_CALL:
+            case MessageType.RESPONSE_CM_CALL:
 			return "RESPONSE_CM_CALL";
-            case ResponseType.CHARGER_STATUS:
+            case MessageType.RESPONSE_CHARGER_STATUS:
 			return "RESPONSE_CHARGER_STATUS";
-            case ResponseType.CHARGING:
+            case MessageType.RESPONSE_CHARGING:
             return "RESPONSE_CHARGING";
-            case ResponseType.CM_PH:
+            case MessageType.RESPONSE_CM_PH:
             return "RESPONSE_CM_PH";
-			case ResponseType.SET_SYSTEM_TIME:
+			case MessageType.RESPONSE_SET_SYSTEM_TIME:
 			return "RESPONSE_SET_SYSTEM_TIME";
-			case ResponseType.RSSI_STATUS:
+			case MessageType.RESPONSE_RSSI_STATUS:
 			return "RESPONSE_RSSI_STATUS";
-			case ResponseType.PHONEBOOK:
+			case MessageType.RESPONSE_PHONEBOOK:
 			return "RESPONSE_PHONEBOOK";
-			case ResponseType.GET_PHONEBOOK_PROPERTIES:
+			case MessageType.RESPONSE_GET_PHONEBOOK_PROPERTIES:
 			return "RESPONSE_GET_PHONEBOOK_PROPERTIES";
-            case ResponseType.AUDIO_MODEM_TUNING_PARAMS:
+            case MessageType.RESPONSE_AUDIO_MODEM_TUNING_PARAMS:
             return "RESPONSE_AUDIO_MODEM_TUNING_PARAMS";
 
             // EventType
-        	case EventType.RESET_RADIO_IND:
+        	case MessageType.EVENT_RESET_RADIO_IND:
 			return "URC_RESET_RADIO_IND";
-        	case EventType.CHARGER_STATUS:
+        	case MessageType.EVENT_CHARGER_STATUS:
 			return "URC_CHARGER_STATUS";
-        	case EventType.OPERATION_MODE:
+        	case MessageType.EVENT_OPERATION_MODE:
 			return "URC_OPERATION_MODE";
-        	case EventType.CM_PH_INFO_AVAILABLE:
+        	case MessageType.EVENT_CM_PH_INFO_AVAILABLE:
 			return "URC_CM_PH_INFO_AVAILABLE";
-        	case EventType.NETWORK_STATE_INFO:
+        	case MessageType.EVENT_NETWORK_STATE_INFO:
 			return "URC_NETWORK_STATE_INFO";
-        	case EventType.PDSM_PD_DONE:
+        	case MessageType.EVENT_PDSM_PD_DONE:
 			return "URC_PDSM_PD_DONE";
-        	case EventType.PD_POSITION_DATA:
+        	case MessageType.EVENT_PD_POSITION_DATA:
 			return "URC_PD_POSITION_DATA";
-        	case EventType.PD_PARAMETER_CHANGE:
+        	case MessageType.EVENT_PD_PARAMETER_CHANGE:
 			return "URC_PD_PARAMETER_CHANGE";
-        	case EventType.PDSM_LCS:
+        	case MessageType.EVENT_PDSM_LCS:
 			return "URC_PDSM_LCS";
-        	case EventType.PDSM_XTRA:
+        	case MessageType.EVENT_PDSM_XTRA:
 			return "URC_PDSM_XTRA";
-        	case EventType.CALL_STATUS:
+        	case MessageType.EVENT_CALL_STATUS:
 			return "URC_CALL_STATUS";
-        	case EventType.CALL_INCOMMING:
+        	case MessageType.EVENT_CALL_INCOMMING:
 			return "URC_CALL_INCOMMING";
-        	case EventType.CALL_ORIGINATION:
+        	case MessageType.EVENT_CALL_ORIGINATION:
 			return "URC_CALL_ORIGINATION";
-        	case EventType.CALL_CONNECT:
+        	case MessageType.EVENT_CALL_CONNECT:
 			return "URC_CALL_CONNECT";
-        	case EventType.CALL_END:
+        	case MessageType.EVENT_CALL_END:
 			return "URC_CALL_END";
-        	case EventType.SIM_INSERTED:
+        	case MessageType.EVENT_SIM_INSERTED:
 			return "URC_SIM_INSERTED";
-        	case EventType.SIM_PIN1_VERIFIED:
+        	case MessageType.EVENT_SIM_PIN1_VERIFIED:
 			return "URC_SIM_PIN1_VERIFIED";
-        	case EventType.SIM_PIN1_BLOCKED:
+        	case MessageType.EVENT_SIM_PIN1_BLOCKED:
 			return "URC_SIM_PIN1_BLOCKED";
-        	case EventType.SIM_PIN1_UNBLOCKED:
+        	case MessageType.EVENT_SIM_PIN1_UNBLOCKED:
 			return "URC_SIM_PIN1_UNBLOCKED";
-        	case EventType.SIM_PIN1_ENABLED:
+        	case MessageType.EVENT_SIM_PIN1_ENABLED:
 			return "URC_SIM_PIN1_ENABLED";
-        	case EventType.SIM_PIN1_DISABLED:
+        	case MessageType.EVENT_SIM_PIN1_DISABLED:
 			return "URC_SIM_PIN1_DISABLED";
-        	case EventType.SIM_PIN1_CHANGED:
+        	case MessageType.EVENT_SIM_PIN1_CHANGED:
 			return "URC_SIM_PIN1_CHANGED";
-        	case EventType.SIM_PIN1_PERM_BLOCKED:
+        	case MessageType.EVENT_SIM_PIN1_PERM_BLOCKED:
 			return "URC_SIM_PIN1_PERM_BLOCKED";
-        	case EventType.SIM_PIN2_VERIFIED:
+        	case MessageType.EVENT_SIM_PIN2_VERIFIED:
 			return "URC_SIM_PIN2_VERIFIED";
-        	case EventType.SIM_PIN2_BLOCKED:
+        	case MessageType.EVENT_SIM_PIN2_BLOCKED:
 			return "URC_SIM_PIN2_BLOCKED";
-        	case EventType.SIM_PIN2_UNBLOCKED:
+        	case MessageType.EVENT_SIM_PIN2_UNBLOCKED:
 			return "URC_SIM_PIN2_UNBLOCKED";
-        	case EventType.SIM_PIN2_ENABLED:
+        	case MessageType.EVENT_SIM_PIN2_ENABLED:
 			return "URC_SIM_PIN2_ENABLED";
-        	case EventType.SIM_PIN2_DISABLED:
+        	case MessageType.EVENT_SIM_PIN2_DISABLED:
 			return "URC_SIM_PIN2_DISABLED";
-        	case EventType.SIM_PIN2_CHANGED:
+        	case MessageType.EVENT_SIM_PIN2_CHANGED:
 			return "URC_SIM_PIN2_CHANGED";
-        	case EventType.SIM_PIN2_PERM_BLOCKED:
+        	case MessageType.EVENT_SIM_PIN2_PERM_BLOCKED:
 			return "URC_SIM_PIN2_PERM_BLOCKED";
-        	case EventType.SIM_REFRESH_RESET:
+        	case MessageType.EVENT_SIM_REFRESH_RESET:
 			return "URC_SIM_REFRESH_RESET";
-        	case EventType.SIM_REFRESH_INIT:
+        	case MessageType.EVENT_SIM_REFRESH_INIT:
 			return "URC_SIM_REFRESH_INIT";
-        	case EventType.SIM_REFRESH_INIT_FCN:
+        	case MessageType.EVENT_SIM_REFRESH_INIT_FCN:
 			return "URC_SIM_REFRESH_INIT_FCN";
-        	case EventType.SIM_REFRESH_FAILED:
+        	case MessageType.EVENT_SIM_REFRESH_FAILED:
 			return "URC_SIM_REFRESH_FAILED";
-        	case EventType.SIM_FDN_ENABLE:
+        	case MessageType.EVENT_SIM_FDN_ENABLE:
 			return "URC_SIM_FDN_ENABLE";
-        	case EventType.SIM_FDN_DISABLE:
+        	case MessageType.EVENT_SIM_FDN_DISABLE:
 			return "URC_SIM_FDN_DISABLE";
-        	case EventType.SIM_ILLEGAL:
+        	case MessageType.EVENT_SIM_ILLEGAL:
 			return "URC_SIM_ILLEGAL";
-        	case EventType.SIM_REMOVED:
+        	case MessageType.EVENT_SIM_REMOVED:
 			return "URC_SIM_REMOVED";
-        	case EventType.SIM_NO_SIM_EVENT:
+        	case MessageType.EVENT_SIM_NO_SIM_EVENT:
 			return "URC_SIM_NO_SIM_EVENT";
-        	case EventType.SIM_NO_SIM:
+        	case MessageType.EVENT_SIM_NO_SIM:
 			return "URC_SIM_NO_SIM";
-        	case EventType.SIM_DRIVER_ERROR:
+        	case MessageType.EVENT_SIM_DRIVER_ERROR:
 			return "URC_SIM_DRIVER_ERROR";
-        	case EventType.SIM_INTERNAL_RESET:
+        	case MessageType.EVENT_SIM_INTERNAL_RESET:
 			return "URC_SIM_INTERNAL_RESET";
-        	case EventType.SIM_OK_FOR_TERMINAL_PROFILE_DL:
+        	case MessageType.EVENT_SIM_OK_FOR_TERMINAL_PROFILE_DL:
 			return "URC_SIM_OK_FOR_TERMINAL_PROFILE_DL";
-        	case EventType.SIM_NOT_OK_FOR_TERMINAL_PROFILE_DL:
+        	case MessageType.EVENT_SIM_NOT_OK_FOR_TERMINAL_PROFILE_DL:
 			return "URC_SIM_NOT_OK_FOR_TERMINAL_PROFILE_DL";
-        	case EventType.SIM_INIT_COMPLETED_NO_PROV:
+        	case MessageType.EVENT_SIM_INIT_COMPLETED_NO_PROV:
 			return "URC_SIM_INIT_COMPLETED_NO_PROV";
-        	case EventType.SIM_MEMORY_WARNING:
+        	case MessageType.EVENT_SIM_MEMORY_WARNING:
 			return "URC_SIM_MEMORY_WARNING";
-        	case EventType.SIM_SIM2_EVENT:
+        	case MessageType.EVENT_SIM_SIM2_EVENT:
 			return "URC_SIM_SIM2_EVENT";
-        	case EventType.SIM_REAL_RESET_FAILURE:
+        	case MessageType.EVENT_SIM_REAL_RESET_FAILURE:
 			return "URC_SIM_REAL_RESET_FAILURE";
-        	case EventType.SIM_CARD_ERROR:
+        	case MessageType.EVENT_SIM_CARD_ERROR:
 			return "URC_SIM_CARD_ERROR";
-        	case EventType.SIM_NO_EVENT:
+        	case MessageType.EVENT_SIM_NO_EVENT:
 			return "URC_SIM_NO_EVENT";
-        	case EventType.SIM_GET_PERSO_NW_FAILURE:
+        	case MessageType.EVENT_SIM_GET_PERSO_NW_FAILURE:
 			return "URC_SIM_GET_PERSO_NW_FAILURE";
-        	case EventType.SIM_GET_PERSO_NW_BLOCKED:
+        	case MessageType.EVENT_SIM_GET_PERSO_NW_BLOCKED:
 			return "URC_SIM_GET_PERSO_NW_BLOCKED";
-        	case EventType.SIM_REFRESH_APP_RESET:
+        	case MessageType.EVENT_SIM_REFRESH_APP_RESET:
 			return "URC_SIM_REFRESH_APP_RESET";
-        	case EventType.SIM_REFRESH_3G_SESSION_RESET:
+        	case MessageType.EVENT_SIM_REFRESH_3G_SESSION_RESET:
 			return "URC_SIM_REFRESH_3G_SESSION_RESET";
-        	case EventType.SIM_APP_SELECTED:
+        	case MessageType.EVENT_SIM_APP_SELECTED:
 			return "URC_SIM_APP_SELECTED";
-        	case EventType.SIM_DEFAULT:
+        	case MessageType.EVENT_SIM_DEFAULT:
 			return "URC_SIM_DEFAULT";
-            case EventType.SUPS_PROCESS_USS:
+            case MessageType.EVENT_SUPS_PROCESS_USS:
             return "SUPS_PROCESS_USS";
-            case EventType.SUPS_PROCESS_USS_CONF:
+            case MessageType.EVENT_SUPS_PROCESS_USS_CONF:
             return "SUPS_PROCESS_USS_CONF";
-            case EventType.SUPS_USS_RES:
+            case MessageType.EVENT_SUPS_USS_RES:
             return "SUPS_USS_RES";
-            case EventType.SUPS_RELEASE_USS_IND:
+            case MessageType.EVENT_SUPS_RELEASE_USS_IND:
             return "SUPS_RELEASE_USS_IND";
-            case EventType.SUPS_USS_NOTIFY_IND:
+            case MessageType.EVENT_SUPS_USS_NOTIFY_IND:
             return "SUPS_USS_NOTIFY_IND";
-            case EventType.SUPS_USS_NOTIFY_RES:
+            case MessageType.EVENT_SUPS_USS_NOTIFY_RES:
             return "SUPS_USS_NOTIFY_RES";
-            case EventType.SUPS_RELEASE:
+            case MessageType.EVENT_SUPS_RELEASE:
             return "SUPS_RELEASE";
-            case EventType.SUPS_ABORT:
+            case MessageType.EVENT_SUPS_ABORT:
             return "SUPS_ABORT";
-            case EventType.SUPS_ERASE:
+            case MessageType.EVENT_SUPS_ERASE:
             return "SUPS_ERASE";
-            case EventType.SUPS_REGISTER:
+            case MessageType.EVENT_SUPS_REGISTER:
             return "SUPS_REGISTER";
-            case EventType.SUPS_REGISTER_CONF:
+            case MessageType.EVENT_SUPS_REGISTER_CONF:
             return "SUPS_REGISTER_CONF";
-            case EventType.SUPS_GET_PASSWORD_IN:
+            case MessageType.EVENT_SUPS_GET_PASSWORD_IN:
             return "SUPS_GET_PASSWORD_IN";
-            case EventType.SUPS_GET_PASSWORD_RES:
+            case MessageType.EVENT_SUPS_GET_PASSWORD_RES:
             return "SUPS_GET_PASSWORD_RES";
-            case EventType.SUPS_INTERROGATE:
+            case MessageType.EVENT_SUPS_INTERROGATE:
             return "SUPS_INTERROGATE";
-            case EventType.SUPS_INTERROGATE_CONF:
+            case MessageType.EVENT_SUPS_INTERROGATE_CONF:
             return "SUPS_INTERROGATE_CONF";
-            case EventType.SUPS_ACTIVATE:
+            case MessageType.EVENT_SUPS_ACTIVATE:
             return "SUPS_ACTIVATE";
-            case EventType.SUPS_ACTIVATE_CONF:
+            case MessageType.EVENT_SUPS_ACTIVATE_CONF:
             return "SUPS_ACTIVATE_CONF";
-            case EventType.SUPS_DEACTIVATE:
+            case MessageType.EVENT_SUPS_DEACTIVATE:
             return "SUPS_DEACTIVATE";
-            case EventType.SUPS_DEACTIVATE_CONF:
+            case MessageType.EVENT_SUPS_DEACTIVATE_CONF:
             return "SUPS_DEACTIVATE_CONF";
-			case EventType.SMS_WMS_CFG_MESSAGE_LIST:
+			case MessageType.EVENT_SMS_WMS_CFG_MESSAGE_LIST:
 			return "SMS_WMS_CFG_MESSAGE_LIST";
-			case EventType.SMS_WMS_CFG_GW_DOMAIN_PREF:
+			case MessageType.EVENT_SMS_WMS_CFG_GW_DOMAIN_PREF:
 			return "SMS_WMS_CFG_GW_DOMAIN_PREF";
-			case EventType.SMS_WMS_CFG_EVENT_ROUTES:
+			case MessageType.EVENT_SMS_WMS_CFG_EVENT_ROUTES:
 			return "SMS_WMS_CFG_EVENT_ROUTES";
-			case EventType.SMS_WMS_CFG_MEMORY_STATUS:
+			case MessageType.EVENT_SMS_WMS_CFG_MEMORY_STATUS:
 			return "SMS_WMS_CFG_MEMORY_STATUS";
-			case EventType.SMS_WMS_CFG_MEMORY_STATUS_SET:
+			case MessageType.EVENT_SMS_WMS_CFG_MEMORY_STATUS_SET:
 			return "SMS_WMS_CFG_MEMORY_STATUS_SET";
-			case EventType.SMS_WMS_CFG_GW_READY:
+			case MessageType.EVENT_SMS_WMS_CFG_GW_READY:
 			return "SMS_WMS_CFG_GW_READY";
-			case EventType.SMS_WMS_READ_TEMPLATE:
+			case MessageType.EVENT_SMS_WMS_READ_TEMPLATE:
 			return "SMS_WMS_READ_TEMPLATE";
-			case EventType.GET_NETWORKLIST:
+			case MessageType.EVENT_GET_NETWORKLIST:
 			return "URC_GET_NETWORKLIST";
-			case EventType.PHONEBOOK_READY:
+			case MessageType.EVENT_PHONEBOOK_READY:
 			return "URC_PHONEBOOK_READY";
-            case EventType.PHONEBOOK_MODIFIED:
+            case MessageType.EVENT_PHONEBOOK_MODIFIED:
             return "URC_PHONEBOOK_MODIFIED";
-            case EventType.CM_PH:
+            case MessageType.EVENT_CM_PH:
             return "URC_CM_PH";
-            case EventType.SMS_RECEIVED_MESSAGE:
+            case MessageType.EVENT_SMS_RECEIVED_MESSAGE:
             return "URC_SMS_RECIEVED_MESSAGE";
             default:
 			return "%d (unknown)".printf( t );
@@ -841,16 +830,19 @@ namespace Msmcomm
 		return result;
 	}
 
-    [CCode (cname = "msmcomm_event_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
-    public delegate void EventHandlerCb(int event, Message message);
+	// FIXME public enum ErrorType ...
+
+    [CCode (cname = "msmcomm_response_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
+    public delegate void ResponseHandlerCb(MessageType event, Message message);
     [CCode (cname = "msmcomm_write_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void WriteHandlerCb(uint8[] data);
     [CCode (cname = "msmcomm_read_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void ReadHandlerCb(uint8[] data);
     [CCode (cname = "msmcomm_network_state_info_changed_field_type_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
     public delegate void ChangedFieldTypeCb(Message message, ChangedFieldType type);
-    [CCode (cname = "msmcomm_error_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
-    public delegate void ErrorHandlerCb(int error, void *data);
+    // FIXME
+	//[CCode (cname = "msmcomm_error_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
+    // public delegate void ErrorHandlerCb(ErrorType error, void *data);
 
     [CCode (cname = "msmcomm_check_hci_version", cheader_filename = "msmcomm.h")]
     public bool checkHciVersion(uint version);
@@ -871,8 +863,8 @@ namespace Msmcomm
         [CCode (cname = "msmcomm_send_message")]
         public void sendMessage(Message message);
 
-        [CCode (cname = "msmcomm_register_event_handler")]
-        public void registerEventHandler(EventHandlerCb eventHandlerCb);
+        [CCode (cname = "msmcomm_register_response_handler")]
+        public void registerResponseHandler(ResponseHandlerCb responseHandlerCb);
 
         [CCode (cname = "msmcomm_register_write_handler")]
         public void registerWriteHandler(WriteHandlerCb writeHandlerCb);
@@ -880,8 +872,9 @@ namespace Msmcomm
         [CCode (cname = "msmcomm_register_read_handler")]
         public void registerReadHandler(ReadHandlerCb readHandlerCb);
 
-        [CCode (cname = "msmcomm_register_error_handler")]
-        public void registerErrorHandler(ErrorHandlerCb errorHandlerCb);
+		// FIXME
+        //[CCode (cname = "msmcomm_register_error_handler")]
+        //public void registerErrorHandler(ErrorHandlerCb errorHandlerCb);
     }
 
     [Compact]
@@ -889,14 +882,14 @@ namespace Msmcomm
     public abstract class Message
     {
         [CCode (cname = "msmcomm_create_message")]
-        public Message(int type);
+        public Message(MessageType type);
 
         public int size {
             [CCode (cname = "msmcomm_message_get_size")]
             get;
         }
 
-        public int type {
+        public MessageType type {
             [CCode (cname = "msmcomm_message_get_type")]
             get;
         }
@@ -913,8 +906,8 @@ namespace Msmcomm
 			get;
 		}
 
-        public MessageType message_type {
-            [CCode (cname = "msmcomm_message_get_message_type")]
+        public MessageClass class {
+            [CCode (cname = "msmcomm_message_get_class")]
             get;
         }
 
@@ -923,24 +916,24 @@ namespace Msmcomm
 
         public string to_string()
         {
-            var str = "[MSM] type %s rc %s ref %02x len %d : %s".printf( messageTypeToString(message_type), resultTypeToString(result), index, size, Msmcomm.eventTypeToString( type ) );
+            var str = "[MSM] type %s rc %s ref %02x len %d : %s".printf( messageClassToString(class), resultTypeToString(result), index, size, Msmcomm.messageTypeToString( type ) );
             var details = "";
 
             switch ( type )
             {
-                case Msmcomm.ResponseType.GET_IMEI:
+                case Msmcomm.MessageType.RESPONSE_GET_IMEI:
                     var msg = (Msmcomm.Reply.GetImei) this.copy();
                     details = @"IMEI = $(msg.imei)";
                     break;
-                case Msmcomm.ResponseType.GET_FIRMWARE_INFO:
+                case Msmcomm.MessageType.RESPONSE_GET_FIRMWARE_INFO:
                     var msg = (Msmcomm.Reply.GetFirmwareInfo) this.copy();
                     details = @"FIRMWARE = $(msg.info) | HCI = $(msg.hci)";
                     break;
-                case Msmcomm.ResponseType.CM_CALL:
+                case Msmcomm.MessageType.RESPONSE_CM_CALL:
                     var msg = (Msmcomm.Reply.Call) this.copy();
                     details = @"cmd = $(msg.cmd_type)";
                     break;
-                case Msmcomm.ResponseType.CHARGER_STATUS:
+                case Msmcomm.MessageType.RESPONSE_CHARGER_STATUS:
                     var msg = (Msmcomm.Reply.ChargerStatus) this.copy();
                     string mode = "<unknown>", voltage = "<unknown>";
 
@@ -975,7 +968,7 @@ namespace Msmcomm
 
                     details = @"mode = $(mode) voltage = $(voltage)";
                     break;
-                case Msmcomm.EventType.NETWORK_STATE_INFO:
+                case Msmcomm.MessageType.EVENT_NETWORK_STATE_INFO:
 					var msg = (Msmcomm.Unsolicited.NetworkStateInfo) this.copy();
 					if (msg.only_rssi_update) {
 						details += @"rssi = $(msg.rssi) ";
@@ -1001,14 +994,14 @@ namespace Msmcomm
                         */
 					}
 					break;
-				case Msmcomm.EventType.SMS_WMS_READ_TEMPLATE:
+				case Msmcomm.MessageType.EVENT_SMS_WMS_READ_TEMPLATE:
 					var msg = (Msmcomm.Unsolicited.SMS.WmsReadTemplate) this.copy();
 					details = @"digit_mode = $(msg.digit_mode) ";
 					details += @"number_mode = $(msg.number_mode) ";
 					details += @"number_type = $(msg.number_type) ";
 					details += @"number_plan = $(msg.number_plan) ";
 					break;
-				case Msmcomm.ResponseType.PHONEBOOK:
+				case Msmcomm.MessageType.RESPONSE_PHONEBOOK:
 					var msg = (Msmcomm.Reply.Phonebook) this.copy();
 					details = @"book_type = $(phonebookTypeToString(msg.book_type)) ";
 					details += @"position = $(msg.position) ";
@@ -1016,7 +1009,7 @@ namespace Msmcomm
 					details += @"title = '$(msg.title)' ";
 					details += @"encoding_type = $(encodingTypeToString(msg.encoding_type))";
 					break;
-				case Msmcomm.EventType.GET_NETWORKLIST:
+				case Msmcomm.MessageType.EVENT_GET_NETWORKLIST:
 					var msg = (Msmcomm.Unsolicited.GetNetworkList) this.copy();
 					var count = msg.network_count;
 					details = @"network_count = $(count) ";
@@ -1027,24 +1020,24 @@ namespace Msmcomm
 						details += @"name = '$(name)' ] ";
 					}
 					break;
-				case Msmcomm.ResponseType.CM_PH:
+				case Msmcomm.MessageType.RESPONSE_CM_PH:
 					var msg = (Msmcomm.Reply.CmPh) this.copy();
 					details = @"result = $(msg.result)";
 					break;
-				case Msmcomm.EventType.PHONEBOOK_READY:
+				case Msmcomm.MessageType.EVENT_PHONEBOOK_READY:
 					var msg = (Msmcomm.Unsolicited.PhonebookReady) this.copy();
 					details = @"book_type = $(phonebookTypeToString(msg.book_type))";
 					break;
-				case Msmcomm.ResponseType.GET_PHONEBOOK_PROPERTIES:
+				case Msmcomm.MessageType.RESPONSE_GET_PHONEBOOK_PROPERTIES:
 					var msg= (Msmcomm.Reply.GetPhonebookProperties) this.copy();
 					details = @"slot_count = $(msg.slot_count) slots_used = $(msg.slots_used) ";
 					details += @"max_chars_per_title = $(msg.max_chars_per_title) max_chars_per_number = $(msg.max_chars_per_number)";
 					break;
-				case Msmcomm.EventType.CALL_INCOMMING:
-				case Msmcomm.EventType.CALL_ORIGINATION:
-				case Msmcomm.EventType.CALL_CONNECT:
-				case Msmcomm.EventType.CALL_END:
-				case Msmcomm.EventType.CALL_STATUS:
+				case Msmcomm.MessageType.EVENT_CALL_INCOMMING:
+				case Msmcomm.MessageType.EVENT_CALL_ORIGINATION:
+				case Msmcomm.MessageType.EVENT_CALL_CONNECT:
+				case Msmcomm.MessageType.EVENT_CALL_END:
+				case Msmcomm.MessageType.EVENT_CALL_STATUS:
 					var msg = (Msmcomm.Unsolicited.CallStatus) this.copy();
 					details = @"caller_id = '$(msg.number)' ";
 					details += @"call_id = $(msg.id) ";
@@ -1052,18 +1045,18 @@ namespace Msmcomm
 					details += @"reject_type = $(msg.reject_type) ";
 					details += @"reject_value = $(msg.reject_value) ";
                     break;
-                case Msmcomm.EventType.PHONEBOOK_MODIFIED:
+                case Msmcomm.MessageType.EVENT_PHONEBOOK_MODIFIED:
                     var msg = (Msmcomm.Unsolicited.PhonebookModified) this.copy();
                     details = @"book_type = $(phonebookTypeToString(msg.book_type)) ";
                     details += @"position = $(msg.position)";
                     break;
-                case Msmcomm.ResponseType.SIM:
+                case Msmcomm.MessageType.RESPONSE_SIM:
                     var msg = (Msmcomm.Reply.Sim) this.copy();
                     details = @"field_type = $(simInfoTypeToString(msg.field_type)) ";
                     if (msg.field_data != null)
                         details += @"field_data = '$(msg.field_data)'";
                     break;
-                case Msmcomm.ResponseType.AUDIO_MODEM_TUNING_PARAMS:
+                case Msmcomm.MessageType.RESPONSE_AUDIO_MODEM_TUNING_PARAMS:
                     var msg = (Msmcomm.Reply.AudioModemTuningParams) this.copy();
                     details = "params [ ";
                     var params = msg.params;
@@ -1071,7 +1064,7 @@ namespace Msmcomm
                         details += "%02x ".printf(params[n]);
                     details += "]";
                     break;
-                case Msmcomm.EventType.CM_PH:
+                case Msmcomm.MessageType.EVENT_CM_PH:
                     var msg = (Msmcomm.Unsolicited.CmPh) this.copy();
                     var count = msg.plmn_count;
                     details = @"plmn_count = $(count) plmns [ ";
@@ -1097,7 +1090,7 @@ namespace Msmcomm
         public class ChangeOperationMode : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public ChangeOperationMode(CommandType t = CommandType.CHANGE_OPERATION_MODE);
+            public ChangeOperationMode(MessageType t = MessageType.COMMAND_CHANGE_OPERATION_MODE);
 
             public OperationMode mode
             {
@@ -1111,7 +1104,7 @@ namespace Msmcomm
         public class Charging : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public Charging(CommandType t = CommandType.CHARGING);
+            public Charging(MessageType t = MessageType.COMMAND_CHARGING);
 
             public UsbVoltageMode voltage {
                 [CCode (cname = "msmcomm_message_charging_set_voltage")]
@@ -1129,7 +1122,7 @@ namespace Msmcomm
         public class GetImei : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public GetImei(CommandType t = CommandType.GET_IMEI);
+            public GetImei(MessageType t = MessageType.COMMAND_GET_IMEI);
         }
 
         [Compact]
@@ -1137,7 +1130,7 @@ namespace Msmcomm
         public class GetChargerStatus : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public GetChargerStatus(CommandType t = CommandType.GET_CHARGER_STATUS);
+            public GetChargerStatus(MessageType t = MessageType.COMMAND_GET_CHARGER_STATUS);
         }
 
         [Compact]
@@ -1145,7 +1138,7 @@ namespace Msmcomm
         public class GetFirmwareInfo : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public GetFirmwareInfo(CommandType t = CommandType.GET_FIRMWARE_INFO);
+            public GetFirmwareInfo(MessageType t = MessageType.COMMAND_GET_FIRMWARE_INFO);
         }
 
         [Compact]
@@ -1153,7 +1146,7 @@ namespace Msmcomm
         public class GetPhoneStateInfo : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public GetPhoneStateInfo(CommandType t = CommandType.GET_PHONE_STATE_INFO);
+            public GetPhoneStateInfo(MessageType t = MessageType.COMMAND_GET_PHONE_STATE_INFO);
         }
 
         [Compact]
@@ -1161,7 +1154,7 @@ namespace Msmcomm
         public class TestAlive : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public TestAlive(CommandType t = CommandType.TEST_ALIVE);
+            public TestAlive(MessageType t = MessageType.COMMAND_TEST_ALIVE);
         }
 
         [Compact]
@@ -1169,7 +1162,7 @@ namespace Msmcomm
         public class VerifyPin : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public VerifyPin(CommandType t = CommandType.VERIFY_PIN);
+            public VerifyPin(MessageType t = MessageType.COMMAND_VERIFY_PIN);
 
             public string pin {
                 [CCode (cname = "msmcomm_message_verify_pin_set_pin")]
@@ -1187,7 +1180,7 @@ namespace Msmcomm
         public class EndCall : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public EndCall(CommandType t = CommandType.END_CALL);
+            public EndCall(MessageType t = MessageType.COMMAND_END_CALL);
 
             public uint8 call_id {
                 [CCode (cname = "msmcomm_message_end_call_set_call_id")]
@@ -1200,7 +1193,7 @@ namespace Msmcomm
         public class AnswerCall : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public AnswerCall(CommandType t = CommandType.ANSWER_CALL);
+            public AnswerCall(MessageType t = MessageType.COMMAND_ANSWER_CALL);
 
             public uint8 call_id {
                 [CCode (cname = "msmcomm_message_answer_call_set_call_id")]
@@ -1213,7 +1206,7 @@ namespace Msmcomm
         public class DialCall : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public DialCall(CommandType t = CommandType.DIAL_CALL);
+            public DialCall(MessageType t = MessageType.COMMAND_DIAL_CALL);
 
             [CCode (cname = "msmcomm_message_dial_call_set_caller_id")]
             private void _setCallerId(string callerId, uint length);
@@ -1237,7 +1230,7 @@ namespace Msmcomm
         public class SetSystemTime : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
-            public SetSystemTime(CommandType t = CommandType.SET_SYSTEM_TIME);
+            public SetSystemTime(MessageType t = MessageType.COMMAND_SET_SYSTEM_TIME);
 
 			[CCode (cname = "msmcomm_message_set_system_time_set")]
 			public void setData(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset);
@@ -1248,7 +1241,7 @@ namespace Msmcomm
         public class RssiStatus : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
-            public RssiStatus(CommandType t = CommandType.RSSI_STATUS);
+            public RssiStatus(MessageType t = MessageType.COMMAND_RSSI_STATUS);
 
 			[CCode (cname = "msmcomm_message_rssi_status_set_status")]
 			private void _setStatus(uint8 status);
@@ -1266,7 +1259,7 @@ namespace Msmcomm
         public class ReadPhonebook : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
-            public ReadPhonebook(CommandType t = CommandType.READ_PHONEBOOK);
+            public ReadPhonebook(MessageType t = MessageType.COMMAND_READ_PHONEBOOK);
 
 
 			public PhonebookType book_type {
@@ -1285,7 +1278,7 @@ namespace Msmcomm
         public class WritePhonebook : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
-            public WritePhonebook(CommandType t = CommandType.WRITE_PHONEBOOK);
+            public WritePhonebook(MessageType t = MessageType.COMMAND_WRITE_PHONEBOOK);
 
             [CCode (cname = "msmcomm_message_write_phonebook_set_number")]
             private void _setNumber(string number, uint length);
@@ -1318,7 +1311,7 @@ namespace Msmcomm
         public class DeletePhonebook : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
-            public DeletePhonebook(CommandType t = CommandType.DELETE_PHONEBOOK);
+            public DeletePhonebook(MessageType t = MessageType.COMMAND_DELETE_PHONEBOOK);
 
             public uint8 position {
                 [CCode (cname = "msmcomm_message_delete_phonebook_set_position")]
@@ -1336,7 +1329,7 @@ namespace Msmcomm
         public class GetNetworkList : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
-            public GetNetworkList(CommandType t = CommandType.GET_NETWORKLIST);
+            public GetNetworkList(MessageType t = MessageType.COMMAND_GET_NETWORKLIST);
 		}
 
 		[Compact]
@@ -1344,7 +1337,7 @@ namespace Msmcomm
         public class SetModePreference : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
-            public SetModePreference(CommandType t = CommandType.SET_MODE_PREFERENCE);
+            public SetModePreference(MessageType t = MessageType.COMMAND_SET_MODE_PREFERENCE);
 
 			public NetworkMode mode {
 				[CCode (cname = "msmcomm_message_set_mode_preference_status_set_mode")]
@@ -1357,7 +1350,7 @@ namespace Msmcomm
         public class GetPhonebookProperties : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
-            public GetPhonebookProperties(CommandType t = CommandType.GET_PHONEBOOK_PROPERTIES);
+            public GetPhonebookProperties(MessageType t = MessageType.COMMAND_GET_PHONEBOOK_PROPERTIES);
 
 			public PhonebookType book_type {
 				[CCode (cname = "msmcomm_message_get_phonebook_properties_set_book_type")]
@@ -1370,7 +1363,7 @@ namespace Msmcomm
         public class ChangePin : Message
 		{
 			[CCode (cname = "msmcomm_create_message")]
-            public ChangePin(CommandType t = CommandType.CHANGE_PIN);
+            public ChangePin(MessageType t = MessageType.COMMAND_CHANGE_PIN);
 
             [CCode (cname = "msmcomm_message_change_pin_set_new_pin")]
             private void _setNewPin(string new_pin, uint len);
@@ -1398,7 +1391,7 @@ namespace Msmcomm
         public class EnablePin : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public EnablePin(CommandType t = CommandType.ENABLE_PIN);
+            public EnablePin(MessageType t = MessageType.COMMAND_ENABLE_PIN);
 
             public string pin {
                 [CCode (cname = "msmcomm_message_enable_pin_set_pin")]
@@ -1411,7 +1404,7 @@ namespace Msmcomm
         public class DisablePin : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public DisablePin(CommandType t = CommandType.DISABLE_PIN);
+            public DisablePin(MessageType t = MessageType.COMMAND_DISABLE_PIN);
 
             public string pin {
                 [CCode (cname = "msmcomm_message_disable_pin_set_pin")]
@@ -1424,7 +1417,7 @@ namespace Msmcomm
         public class SimInfo : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public SimInfo(CommandType t = CommandType.SIM_INFO);
+            public SimInfo(MessageType t = MessageType.COMMAND_SIM_INFO);
 
             public SimInfoFieldType field_type {
                 [CCode (cname = "msmcomm_message_sim_info_set_field_type")]
@@ -1437,7 +1430,7 @@ namespace Msmcomm
         public class GetAudioModemTuningParams : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public GetAudioModemTuningParams(CommandType t = CommandType.GET_AUDIO_MODEM_TUNING_PARAMS);
+            public GetAudioModemTuningParams(MessageType t = MessageType.COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS);
         }
 
         [Compact]
@@ -1445,7 +1438,7 @@ namespace Msmcomm
         public class SetAudioProfile : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public SetAudioProfile(CommandType t = CommandType.SET_AUDIO_PROFILE);
+            public SetAudioProfile(MessageType t = MessageType.COMMAND_SET_AUDIO_PROFILE);
 
             public uint8 class {
                 [CCode (cname = "msmcomm_message_set_audio_profile_set_class")]
@@ -1463,7 +1456,7 @@ namespace Msmcomm
         public class SmsAcknowledgeIncommingMessage : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public SmsAcknowledgeIncommingMessage(CommandType t = CommandType.SMS_ACKNOWLDEGE_INCOMMING_MESSAGE);
+            public SmsAcknowledgeIncommingMessage(MessageType t = MessageType.COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE);
         }
         
         [Compact]
@@ -1471,7 +1464,7 @@ namespace Msmcomm
         public class SmsGetSmsCenterNumber : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public SmsGetSmsCenterNumber(CommandType t = CommandType.SMS_GET_SMS_CENTER_NUMBER);
+            public SmsGetSmsCenterNumber(MessageType t = MessageType.COMMAND_SMS_GET_SMS_CENTER_NUMBER);
         }
     }
 

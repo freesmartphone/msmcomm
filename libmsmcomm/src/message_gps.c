@@ -24,7 +24,7 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_COMMAND_GET_LOCATION_PRIV_PREF
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_GET_LOCATION_PRIV_PREF
  */
 
 void msg_get_location_priv_pref_init(struct msmcomm_message *msg)

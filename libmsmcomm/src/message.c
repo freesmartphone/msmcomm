@@ -71,7 +71,7 @@ uint32_t msmcomm_message_get_size(struct msmcomm_message * msg)
     return 0;
 }
 
-struct msmcomm_message *msmcomm_create_message(unsigned int type)
+struct msmcomm_message *msmcomm_create_message(msmcomm_message_type_t type)
 {
     unsigned int found = 0;
 
@@ -83,12 +83,12 @@ struct msmcomm_message *msmcomm_create_message(unsigned int type)
     msg->descriptor = NULL;
     msg->descriptor_type = DESCRIPTOR_TYPE_INVALID;
     msg->result = MSMCOMM_RESULT_OK;
-    msg->type = MSMCOMM_MESSAGE_TYPE_COMMAND;
+    msg->class = MSMCOMM_MESSAGE_CLASS_COMMAND;
 
     /* find the right message descriptor and init our message */
     for (n = 0; n < msg_descriptors_size; n++)
     {
-        if (msg_descriptors[n].type == type)
+        if (msg_descriptors[n].message_type == type)
         {
             if (msg_descriptors[n].init)
                 msg_descriptors[n].init(msg);
@@ -101,6 +101,7 @@ struct msmcomm_message *msmcomm_create_message(unsigned int type)
 
     if (!found)
     {
+		printf("ERROR: Did not found any valid descriptor for supplied type!\n");
         talloc_free(msg);
         msg = NULL;
     }
@@ -136,16 +137,16 @@ uint32_t msmcomm_message_get_type(struct msmcomm_message * msg)
 {
     if (msg && msg->descriptor)
     {
-        if (msg->descriptor->type != MSMCOMM_MESSAGE_INVALID)
+        if (msg->descriptor->message_type != MSMCOMM_MESSAGE_TYPE_INVALID)
         {
-            return msg->descriptor->type;
+            return msg->descriptor->message_type;
         }
         else if (msg->descriptor->get_type != NULL)
         {
             return msg->descriptor->get_type(msg);
         }
     }
-    return MSMCOMM_MESSAGE_INVALID;
+    return MSMCOMM_MESSAGE_TYPE_INVALID;
 }
 
 uint32_t msmcomm_message_get_ref_id(struct msmcomm_message * msg)
@@ -163,8 +164,8 @@ unsigned int msmcomm_message_get_result(struct msmcomm_message *msg)
     return msg->result;
 }
 
-unsigned int msmcomm_message_get_message_type(struct msmcomm_message *msg)
+unsigned int msmcomm_message_get_class(struct msmcomm_message *msg)
 {
-    return msg->type;
+    return msg->class;
 }
 
