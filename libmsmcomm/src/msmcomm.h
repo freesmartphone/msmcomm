@@ -357,6 +357,16 @@ typedef enum
 	MSMCOMM_SIM_INFO_FIELD_TYPE_MSISDN,
 } msmcomm_sim_info_field_type_t;
 
+typedef enum
+{
+	MSMCOMM_NETWORK_REGISTRATION_STATUS_INVALID,
+	MSMCOMM_NETWORK_REGISTRATION_STATUS_NO_SERVICE,
+	MSMCOMM_NETWORK_REGISTRATION_STATUS_HOME,
+	MSMCOMM_NETWORK_REGISTRATION_STATUS_SEARCHING,
+	MSMCOMM_NETWORK_REGISTRATION_STATUS_DENIED,
+	MSMCOMM_NETWORK_REGISTRATION_STATUS_ROAMING,
+} msmcomm_network_registration_status_t;
+
 /*
  * Some constants
  */
@@ -503,6 +513,7 @@ uint8_t msmcomm_event_network_state_info_get_service_domain(struct msmcomm_messa
 uint8_t msmcomm_event_network_state_info_get_service_capability(struct msmcomm_message *msg);
 uint8_t msmcomm_event_network_state_info_get_gprs_attached(struct msmcomm_message *msg);
 uint16_t msmcomm_event_network_state_info_get_roam(struct msmcomm_message *msg);
+msmcomm_network_registration_status_t msmcomm_event_network_state_info_get_registration_status(struct msmcomm_message *msg);
 
 unsigned int msmcomm_event_get_networklist_get_network_count(struct msmcomm_message *msg);
 unsigned int msmcomm_event_get_networklist_get_plmn(struct msmcomm_message *msg, int nnum);

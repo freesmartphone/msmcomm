@@ -211,6 +211,35 @@ uint16_t msmcomm_event_network_state_info_get_roam(struct msmcomm_message *msg)
     return MESSAGE_CAST(msg, struct network_state_info_event)->roam;
 }
 
+msmcomm_network_registration_status_t msmcomm_event_network_state_info_get_registration_status(struct msmcomm_message *msg)
+{
+    msmcomm_network_registration_status_t result = MSMCOMM_NETWORK_REGISTRATION_STATUS_INVALID;
+
+    if (msg->payload == NULL)
+        return MSMCOMM_NETWORK_REGISTRATION_STATUS_INVALID;
+
+    switch (MESSAGE_CAST(msg, struct network_state_info_event)->reg_status)
+    {
+        case 0:
+            result = MSMCOMM_NETWORK_REGISTRATION_STATUS_NO_SERVICE;
+            break;
+        case 1:
+            result = MSMCOMM_NETWORK_REGISTRATION_STATUS_HOME;
+            break;
+        case 2: 
+            result = MSMCOMM_NETWORK_REGISTRATION_STATUS_SEARCHING;
+            break;
+        case 3:
+            result = MSMCOMM_NETWORK_REGISTRATION_STATUS_DENIED;
+            break;
+        case 4:
+            result = MSMCOMM_NETWORK_REGISTRATION_STATUS_DENIED;
+            break;
+    }
+
+    return result;
+}
+
 /*
  * MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_NETWORKLIST
  */
