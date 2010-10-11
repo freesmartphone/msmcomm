@@ -57,7 +57,7 @@ uint8_t *msg_sms_acknowledge_incommming_message_prepare_data(struct msmcomm_mess
 /*
  * MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_GET_SMS_CENTER_NUMBER
  */
-#if 0
+
 void msg_sms_get_sms_center_number_init(struct msmcomm_message *msg)
 {
     msg->group_id = 0x15;
@@ -84,4 +84,3 @@ uint8_t *msg_sms_get_sms_center_number_prepare_data(struct msmcomm_message *msg)
     MESSAGE_CAST(msg, struct sms_get_sms_center_number_msg)->ref_id = msg->ref_id;
     return msg->payload;
 }
-#endif

@@ -406,3 +406,8 @@ end
 start wms_resp 0
 end
 
+start sms_get_sms_center_number_msg 9
+[0-3] uint32_t ref_id
+[4] uint8_t value0
+end
+

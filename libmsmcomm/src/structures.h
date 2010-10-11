@@ -631,5 +631,13 @@ struct wms_resp
 {
 } __attribute__ ((packed));
 
+
+struct sms_get_sms_center_number_msg
+{
+	uint32_t ref_id;
+	uint8_t value0;
+	uint8_t unknown0[4];
+} __attribute__ ((packed));
+
 #endif
 
