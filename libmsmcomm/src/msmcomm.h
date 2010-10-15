@@ -70,6 +70,7 @@ typedef enum
 	MSMCOMM_MESSAGE_TYPE_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_GET_SMS_CENTER_NUMBER,
+	MSMCOMM_MESSAGE_TYPE_COMMAND_MANAGE_CALLS,
 
 	/*
 	 * Response types for the commands above 
@@ -367,6 +368,18 @@ typedef enum
 	MSMCOMM_NETWORK_REGISTRATION_STATUS_ROAMING,
 } msmcomm_network_registration_status_t;
 
+typedef enum
+{
+	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_INVALID,
+	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_ALL_OR_SEND_BUSY,
+	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_ALL_AND_ACCEPT_WAITING_OR_HELD,
+	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
+	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD,
+	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
+	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_ACTIVATE_HELD,
+	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_SELF_AND_CONNECT_ACTIVE,
+} msmcomm_manage_calls_comand_type_t;
+
 /*
  * Some constants
  */
@@ -446,6 +459,9 @@ void msmcomm_message_delete_phonebook_set_book_type(struct msmcomm_message *msg,
 
 void msmcomm_message_change_pin_set_old_pin(struct msmcomm_message *msg, const char *old_pin, unsigned int len);
 void msmcomm_message_change_pin_set_new_pin(struct msmcomm_message *msg, const char *new_pin, unsigned int len);
+
+void msmcomm_message_manage_calls_set_call_id(struct msmcomm_message *msg, uint8_t call_id);
+void msmcomm_message_manage_calls_set_command_type(struct msmcomm_message *msg, msmcomm_manage_calls_comand_type_t command_type);
 
 uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg);
 uint8_t msmcomm_event_sms_wms_read_template_get_number_mode(struct msmcomm_message *msg);

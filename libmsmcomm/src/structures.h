@@ -101,6 +101,17 @@ struct sups_resp
 } __attribute__ ((packed));
 
 
+struct manage_calls_msg
+{
+	uint32_t ref_id;
+	uint8_t command;
+	uint8_t call_id;
+	uint8_t unknown0[79];
+	uint8_t value0;
+	uint8_t unknown1[20];
+} __attribute__ ((packed));
+
+
 struct sim_resp
 {
 	uint8_t unknown0[4];

@@ -43,5 +43,11 @@
 		</structure>
 		<structure name="sups_resp" length="0">
 		</structure>
+		<structure name="manage_calls_msg" length="106">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="command" start="4" type="uint8_t"/>
+			<field name="call_id" start="5" type="uint8_t"/>
+			<field name="value0" start="85" type="uint8_t"/>
+		</structure>
 	</structures>
 </namespace:call>

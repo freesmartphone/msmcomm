@@ -85,6 +85,7 @@ namespace Msmcomm
 		COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS,
 		COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE,
 		COMMAND_SMS_GET_SMS_CENTER_NUMBER,
+        COMMAND_MANAGE_CALLS,
 		RESPONSE_TEST_ALIVE,
 		RESPONSE_GET_FIRMWARE_INFO,
 		RESPONSE_GET_IMEI,
@@ -253,6 +254,8 @@ namespace Msmcomm
             return "COMMAND_SMS_GET_SMS_CENTER_NUMBER";
             case MessageType.COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE:
             return "COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE";
+            case MessageType.COMMAND_MANAGE_CALLS:
+            return "COMMAND_MANAGE_CALLS";
 
             case MessageType.RESPONSE_TEST_ALIVE:
             return "RESPONSE_TEST_ALIVE";
@@ -1200,6 +1203,38 @@ namespace Msmcomm
                 set;
             }
         }
+
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class ManageCalls : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public ManageCalls(MessageType t = MessageType.COMMAND_MANAGE_CALLS);
+
+            [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_", cheader_filename = "msmcomm.h")]
+            public enum CommandType
+            {
+                DROP_ALL_OR_SEND_BUSY,
+                DROP_ALL_AND_ACCEPT_WAITING_OR_HELD,
+                DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
+                HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD,
+                HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
+                ACTIVATE_HELD,
+                DROP_SELF_AND_CONNECT_ACTIVE,
+            }
+
+            public CommandType command_type
+            {
+                [CCode (cname = "msmcomm_message_manage_calls_set_command_type")]
+                set;
+            }
+
+            public uint8 call_id {
+                [CCode (cname = "msmcomm_message_manage_calls_set_call_id")]
+                set;
+            }
+        }
+
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]

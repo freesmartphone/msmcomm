@@ -50,6 +50,13 @@ end
 start sups_resp 0
 end
 
+start manage_calls_msg 106
+[0-3] uint32_t ref_id
+[4] uint8_t command
+[5] uint8_t call_id
+[85] uint8_t value0
+end
+
 #-------------------------------------------------------------------
 # SIM
 #-------------------------------------------------------------------

@@ -48,6 +48,7 @@ MESSAGE_TYPE(set_mode_preference)
 MESSAGE_TYPE(get_phonebook_properties)
 MESSAGE_TYPE(get_audio_modem_tuning_params)
 MESSAGE_TYPE(sms_acknowledge_incommming_message)
+MESSAGE_TYPE(manage_calls)
 //MESSAGE_TYPE(sms_get_sms_center_number)
 
 struct descriptor msg_descriptors[] = {
@@ -78,6 +79,7 @@ struct descriptor msg_descriptors[] = {
     MESSAGE_DATA(MSMCOMM_MESSAGE_TYPE_COMMAND_SIM_INFO, sim_info),
     MESSAGE_DATA(MSMCOMM_MESSAGE_TYPE_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS, get_audio_modem_tuning_params),
     MESSAGE_DATA(MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE, sms_acknowledge_incommming_message),
+    MESSAGE_DATA(MSMCOMM_MESSAGE_TYPE_COMMAND_MANAGE_CALLS, manage_calls),
    //MESSAGE_DATA(MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_GET_SMS_CENTER_NUMBER, sms_get_sms_center_number),
 };
 

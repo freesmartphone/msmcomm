@@ -153,3 +153,66 @@ void msmcomm_message_end_call_set_call_id(struct msmcomm_message *msg, uint8_t c
 {
     MESSAGE_CAST(msg, struct end_call_msg)->call_id = call_id;
 }
+
+/*
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_MANAGE_CALLS
+ */
+
+void msg_manage_calls_init(struct msmcomm_message *msg)
+{
+    msg->group_id = 0x0;
+    msg->msg_id = 0x3;
+
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct manage_calls_msg);
+}
+
+uint32_t msg_manage_calls_get_size(struct msmcomm_message *msg)
+{
+    return sizeof (struct manage_calls_msg);
+}
+
+void msg_manage_calls_free(struct msmcomm_message *msg)
+{
+    talloc_free(msg->payload);
+}
+
+uint8_t *msg_manage_calls_prepare_data(struct msmcomm_message *msg)
+{
+    MESSAGE_CAST(msg, struct manage_calls_msg)->ref_id = msg->ref_id;
+    return msg->payload;
+}
+
+void msmcomm_message_manage_calls_set_call_id(struct msmcomm_message *msg, uint8_t call_id)
+{
+    MESSAGE_CAST(msg, struct manage_calls_msg)->call_id = call_id;
+}
+
+void msmcomm_message_manage_calls_set_command_type(struct msmcomm_message *msg, msmcomm_manage_calls_comand_type_t command_type)
+{
+    uint8_t value = 0x0;
+
+    switch (command_type)
+    {
+        case MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_ALL_OR_SEND_BUSY:
+            value = 0x0;
+            break;
+        case MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_ALL_AND_ACCEPT_WAITING_OR_HELD:
+        case MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD:
+            value = 0x1;
+            break;
+        case MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD:
+        case MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD:
+            value = 0x2;
+            break;
+        case MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_ACTIVATE_HELD:
+            value = 0x3;
+            break;
+        case MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_SELF_AND_CONNECT_ACTIVE:
+            value = 0x4;
+            break;
+        default:
+            return;
+    }
+
+    MESSAGE_CAST(msg, struct manage_calls_msg)->command = value;
+}
