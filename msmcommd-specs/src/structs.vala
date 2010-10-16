@@ -210,4 +210,18 @@ namespace Msmcomm
         }
     }
     
+    [CCode (cprefix = "MSMCOMMD_MODEM_OPERATION_MODE_", cheader_filename = "msmcommd.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum CallCommandType
+    {
+        INVALID,
+        DROP_ALL_OR_SEND_BUSY,
+        DROP_ALL_AND_ACCEPT_WAITING_OR_HELD,
+        DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
+        HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD,
+        HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
+        ACTIVATE_HELD,
+        DROP_SELF_AND_CONNECT_ACTIVE,
+    }
+    
 } // namespace Msmcomm

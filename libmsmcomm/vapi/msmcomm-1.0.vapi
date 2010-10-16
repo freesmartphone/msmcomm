@@ -1214,6 +1214,7 @@ namespace Msmcomm
             [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_", cheader_filename = "msmcomm.h")]
             public enum CommandType
             {
+                INVALID,
                 DROP_ALL_OR_SEND_BUSY,
                 DROP_ALL_AND_ACCEPT_WAITING_OR_HELD,
                 DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,

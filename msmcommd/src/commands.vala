@@ -245,7 +245,19 @@ namespace Msmcomm
         }
     }
     
-    public class EndCallCommand : BaseCommand
+    public abstract class AbstractCallCommand : BaseCommand 
+    {
+        protected void checkCallId(int call_id) throws Msmcomm.Error
+        {
+            if (call_id < 0 || call_id > uint8.MAX)
+            {
+                var msg = "Invalid argument supplied for call_id parameter for EndCall command";
+                throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
+            }
+        }
+    }
+    
+    public class EndCallCommand : AbstractCallCommand
     {
         public int call_id { get; set; }
         
@@ -253,12 +265,7 @@ namespace Msmcomm
         {
             var cmd = new Msmcomm.Command.EndCall();
             
-            if (call_id < 0 || call_id > uint8.MAX)
-            {
-                var msg = "Invalid argument supplied for call_id parameter for EndCall command";
-                throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
-            }
-            
+            checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
             
             unowned Msmcomm.Reply.Call response = (Msmcomm.Reply.Call) (yield channel.enqueueAsync((owned) cmd));
@@ -266,7 +273,7 @@ namespace Msmcomm
         }
     }
     
-    public class AnswerCallCommand : BaseCommand
+    public class AnswerCallCommand : AbstractCallCommand
     {
         public int call_id { get; set; }
         
@@ -274,12 +281,7 @@ namespace Msmcomm
         {
             var cmd = new Msmcomm.Command.AnswerCall();
             
-            if (call_id < 0 || call_id > uint8.MAX)
-            {
-                var msg = "Invalid argument supplied for call_id parameter for EndCall command";
-                throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
-            }
-            
+            checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
             
             unowned Msmcomm.Reply.Call response = (Msmcomm.Reply.Call) (yield channel.enqueueAsync((owned) cmd));
@@ -287,7 +289,7 @@ namespace Msmcomm
         }
     }
     
-    public class DialCallCommand : BaseCommand
+    public class DialCallCommand : AbstractCallCommand
     {
         public string number { get; set; }
         public bool block { get; set; }
@@ -297,6 +299,51 @@ namespace Msmcomm
             var cmd = new Msmcomm.Command.DialCall();
             cmd.number = number;
             cmd.block = block;
+            
+            unowned Msmcomm.Reply.Call response = (Msmcomm.Reply.Call) (yield channel.enqueueAsync((owned) cmd));
+            checkResponse(response);
+        }
+    }
+
+    public class ManageCallsCommand : AbstractCallCommand
+    {   
+        public CallCommandType command_type { get; set; default = CallCommandType.INVALID; }
+        public int call_id { get; set; }
+        
+        public override async void run() throws Msmcomm.Error
+        {
+            var cmd = new Msmcomm.Command.ManageCalls();
+            
+            checkCallId(call_id);
+            cmd.call_id = (uint8) call_id;
+            
+            switch (command_type)
+            {
+                case CallCommandType.DROP_ALL_OR_SEND_BUSY:
+                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.DROP_ALL_OR_SEND_BUSY;
+                    break;
+                case CallCommandType.DROP_ALL_AND_ACCEPT_WAITING_OR_HELD:
+                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.DROP_ALL_OR_SEND_BUSY;
+                    break;
+                case CallCommandType.DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD:
+                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD;
+                    break;
+                case CallCommandType.HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD:
+                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD;
+                    break;
+                case CallCommandType.HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD:
+                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD;
+                    break;
+                case CallCommandType.ACTIVATE_HELD:
+                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.ACTIVATE_HELD;
+                    break;
+                case CallCommandType.DROP_SELF_AND_CONNECT_ACTIVE:
+                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.DROP_SELF_AND_CONNECT_ACTIVE;
+                    break;
+                default:
+                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.INVALID;
+                    break;
+            }
             
             unowned Msmcomm.Reply.Call response = (Msmcomm.Reply.Call) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);

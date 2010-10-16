@@ -559,6 +559,16 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
+        public async void manage_calls(CallCommandType command_type, int call_id) throws DBus.Error, Msmcomm.Error
+        {
+            checkModemActivity();
+            
+            var cmd = new ManageCallsCommand();
+            cmd.command_type = command_type;
+            cmd.call_id = call_id;
+            yield modem.processCommand(cmd);
+        }
+        
         public async void change_pin(string old_pin, string new_pin) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
