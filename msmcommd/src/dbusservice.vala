@@ -94,7 +94,7 @@ namespace Msmcomm
                 var ns_info = NetworkStateInfo(networkStateInfoMsg.only_rssi_update, 
                                                networkStateInfoMsg.change_field,
                                                networkStateInfoMsg.new_value,
-                                               networkStateInfoMsg.operator_name,
+                                               networkStateInfoMsg.operator_name == null ? "" : networkStateInfoMsg.operator_name,
                                                networkStateInfoMsg.rssi,
                                                networkStateInfoMsg.ecio,
                                                networkStateInfoMsg.service_domain,
