@@ -145,7 +145,7 @@ namespace Msmcomm
         uint id;
         uint reject_type;
         uint reject_value;
-        
+
         public CallInfo(string number, string type, uint id, uint reject_type, uint reject_value)
         {
             this.number = number;
@@ -153,6 +153,29 @@ namespace Msmcomm
             this.id = id;
             this.reject_type = reject_type;
             this.reject_value = reject_value;
+        }
+
+        public CallInfo.empty()
+        {
+            number = "";
+            type = "";
+            id = 0;
+            reject_type = 0;
+            reject_value = 0;
+        }
+
+        public CallInfo.from_variant(GLib.Variant v)
+        {
+            var type_string = "(ssiii)";
+            if ( v.get_type_string().ascii_casecmp( type_string ) == 0 )
+            {
+                v.get( type_string, number, type, id, reject_type, reject_value );
+            }
+        }
+
+        public GLib.Variant to_variant()
+        {
+            return new GLib.Variant( "(ssiii)", number, type, id, reject_type, reject_value );
         }
     }
     
