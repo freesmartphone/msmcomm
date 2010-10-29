@@ -121,6 +121,7 @@ namespace Msmcomm
     public class Frame
     {
         private ByteArray _payload;
+        private const int CRC_MAGIC = 0xf0b8;
         
         public uint8 addr { get; set; default = 0xfa; }
         public uint8 seq { set; get; default = 0x0; }
@@ -253,7 +254,7 @@ namespace Msmcomm
         **/
         public bool unpack(uint8[] data)
         {
-            uint16 crc = 0x0, crc_result = 0xf0b8;
+            uint16 crc = 0x0;
 
             // check data length, should be a least the header + crc + end byte
             if (data.length < 5)
@@ -269,7 +270,7 @@ namespace Msmcomm
 
             // calculate crc16 checksum
             crc = Crc16.calculate(buffer.data[0:buffer.len-1]);
-            if (crc != crc_result)
+            if (crc != CRC_MAGIC)
             {
                 this.crc_result = false;
                 return false;
