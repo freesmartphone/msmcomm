@@ -104,8 +104,8 @@ struct msmcomm_frame * msmcomm_frame_new_from_buffer(uint8_t *buffer, uint32_t l
 		fr->payload_len = 0;
 		if (len > 5) {
 			fr->payload = (uint8_t*)malloc(sizeof(uint8_t) * (tmp_len - 3));
-			memcpy(fr->payload, &tmp[3], tmp_len - 3);
-			fr->payload_len = tmp_len - 3;
+			memcpy(fr->payload, &tmp[3], tmp_len - 5);
+			fr->payload_len = tmp_len - 5;
 		}
 	}
 
