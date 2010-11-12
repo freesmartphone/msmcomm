@@ -24,35 +24,6 @@ using Pango;
 
 namespace Msmcomm 
 {
-    public class LeftLabel : Gtk.Label 
-    {
-            public LeftLabel(string? text = null) 
-            {
-                    if (text != null)
-                            set_markup("<b>%s</b>".printf(text));
-                    set_alignment(1, 0);
-                    set_padding(6, 0);
-            }
-    }
-
-    public class RightLabel : Gtk.Label {
-            public RightLabel(string? text = null) 
-            {
-                    set_text_or_na(text);
-                    set_alignment(0, 1);
-                    set_ellipsize(Pango.EllipsizeMode.START);
-                    set_selectable(true);
-            }
-
-            public void set_text_or_na(string? text = null) 
-            {
-                    if (text == null)
-                            set_markup("<i>n/a</i>");
-                    else
-                            set_text(text);
-            }
-    }
-
     public class PacketlistView : GLib.Object 
     {
         private Gtk.Window _window;
@@ -65,6 +36,8 @@ namespace Msmcomm
         private Gee.HashMap<int, Packet> packets;
         private Gee.HashMap<int, TreeRowReference> rows;
         private TextView packetDumpView;
+        private Gtk.TextTag _textTagCovered;
+        private Gtk.TextTag _textTagNotCovered;
 
         construct 
         {
@@ -135,59 +108,97 @@ namespace Msmcomm
             Pango.FontDescription font = Pango.FontDescription.from_string("Terminus 10");
             packetDumpView.modify_font(font);
             
+            // Create our colorful tags
+            _textTagCovered = packetDumpView.buffer.create_tag("covered", "foreground", "black", "background", "#abd");
+            _textTagNotCovered = packetDumpView.buffer.create_tag("not-covered", "foreground", "0x00", "background", "0xff0000");
+            
             scroll = new Gtk.ScrolledWindow(null, null);
             scroll.set_policy (Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
             scroll.add(packetDumpView);
             mainBox.pack_start(scroll, true, true, 0);
         }
-
-        private void showPacketPayload(RawDataBuffer buffer) 
+        
+        private void appendBytesForLineToBuffer(uint offset, uint8[] bytes, bool[] bytes_covered, uint count)
         {
             string line = "", ascii = "", text = "";
-            uint pos = 0, count = 0, offset = 0;
-            uint8 byte;
-
-            for (int n = (int)buffer.size-1; n >= 0; n--) 
+            bool last_covered = false;
+            
+            append_with_tag(packetDumpView.buffer, "%08u ".printf(offset), null);
+            
+            for (int m = 0; m < count; m++)
             {
-                byte = buffer.data[pos];
-                pos++;
-                count++;
-
-                if (line.length > 0)
+                if (bytes_covered[m])
                 {
-                    line += " ";
+                    var tmp = "";
+                    
+                    if (last_covered)
+                    {
+                        tmp = " ";
+                    }
+                    else
+                    {
+                        append_with_tag(packetDumpView.buffer, " ", _textTagNotCovered);
+                    }
+                    
+                    tmp += "%02x".printf(bytes[m]);
+                    append_with_tag(packetDumpView.buffer, tmp, _textTagCovered);
+                            
+                    last_covered = true;
                 }
-
-                line += "%02x".printf(byte);
-                
-                if (byte > 32 && byte < 128)
+                else
                 {
-                    ascii += "%c".printf(byte);
+                    append_with_tag(packetDumpView.buffer, " %02x".printf(bytes[m]), _textTagNotCovered);
+                    last_covered = false;
+                }
+                        
+                if (bytes[m] > 32 && bytes[m] < 128)
+                {
+                    ascii += "%c".printf(bytes[m]);
                 }
                 else
                 {
                     ascii += ".";
                 }
+            }
+            
+            if (count < 16) 
+            {
+                for (uint n = count; n < 16; n++)
+                {
+                    append_with_tag(packetDumpView.buffer, "   ", _textTagNotCovered);
+                }
+            }
+                    
+            append_with_tag(packetDumpView.buffer, " %s\n".printf(ascii), _textTagNotCovered);
+        }
+        
+        private void showPacketPayload(RawDataBuffer buffer, FieldMap field_map) 
+        {
+            uint pos = 0, count = 0, offset = 0;
+            uint8 bytes[16];
+            bool bytes_covered[16];
+            
+            packetDumpView.buffer.text = "";
+
+            for (int n = (int)buffer.size-1; n >= 0; n--) 
+            {            
+                bytes[count] = buffer.data[pos];
+                bytes_covered[count] = field_map.is_covered((int)pos);
+                pos++;
+                count++;
                 
                 if (count >= 16) 
                 {
-                    text += "%08u %s %s\n".printf(offset, line, ascii);
-                    line = "";
-                    ascii = "";
+                    appendBytesForLineToBuffer(offset, bytes, bytes_covered, count);
                     offset += count;
                     count = 0;
                 }
             }
-
-            if (count != 0) 
+            
+            if (count < 16)
             {
-                while (count++ < 16) 
-                {
-                    line += "   ";
-                }
-                text += "%08u %s %s\n".printf(offset, line, ascii);
+                appendBytesForLineToBuffer(offset, bytes, bytes_covered, count);
             }
-            packetDumpView.buffer.text = text;
         }
 
         private Packet? getCurrentPacket() 
@@ -215,6 +226,21 @@ namespace Msmcomm
             Packet p = getCurrentPacket();
             setCurrentPacket(p);
         }
+        
+        private FieldMap generateFieldMap(Packet packet)
+        {
+            var field_map = new FieldMap();
+            
+            if (packet.message == null || packet.message.fields == null)
+                return field_map;
+            
+            foreach (var field in packet.message.fields)
+            {
+                field_map.add(field.offset_start, field.offset_end);
+            }
+            
+            return field_map;
+        }
 
         private void setCurrentPacket(Packet packet) 
         {
@@ -232,7 +258,7 @@ namespace Msmcomm
             }
 
             // FIXME this should the message payload and not the frame payload !!!
-            showPacketPayload(packet.frame.payload);
+            showPacketPayload(packet.message.payload, generateFieldMap(packet));
         }
 
         private void onOpenClicked() 
@@ -253,7 +279,7 @@ namespace Msmcomm
             _window.show_all();
         }
 
-        public void append_packets(Gee.ArrayList<Packet> packets) 
+        public void appendPackets(Gee.ArrayList<Packet> packets) 
         {
             int count = 0;
             string description = "";

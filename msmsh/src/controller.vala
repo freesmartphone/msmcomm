@@ -141,7 +141,7 @@ namespace Msmcomm
                     packets.add(p);
             }
 
-            _packetListView.append_packets(packets);
+            _packetListView.appendPackets(packets);
         }
 
         public void onQuit() 

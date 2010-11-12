@@ -30,7 +30,6 @@ namespace Msmcomm
             _buffer = new Gee.ArrayList<uint8>();
         }
         
-        
         public uint8[] pack_data()
         {
             uint8[] result = new uint8[_buffer.size];
@@ -63,6 +62,56 @@ namespace Msmcomm
             _buffer.clear();
         }
     }
+    
+    public class RawDataBuffer 
+    {
+        public uint8[] data { get; set; }
+        public uint size { get; set; }
+        public FsAction direction { get; set; }
+    }
+    
+    private class FieldMap
+    {
+        private class FieldMapEntry
+        {
+            public int start { get; set; }
+            public int end { get; set; }
+            
+            public FieldMapEntry(int start, int end)
+            {
+                this.start = start;
+                this.end = end;
+            }
+        }
+        
+        private Gee.ArrayList<FieldMapEntry> _entries;
+        
+        public FieldMap()
+        {
+            _entries = new Gee.ArrayList<FieldMapEntry>();
+        }
+        
+        public void add(int start, int end)
+        {
+            _entries.add(new FieldMapEntry(start, end));
+        }
+        
+        public bool is_covered(int position)
+        {
+            bool result = false;
+            foreach (var entry in _entries)
+            {
+                if (position >= entry.start && (entry.end > 0 && position <= entry.end) || 
+                    position == entry.start)
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
+    }
+
     
     public uint8 chr_to_byte(unichar str) 
     {
@@ -123,5 +172,22 @@ namespace Msmcomm
         }
 
         return result;
+    }
+    
+    //
+    // Copied from valencia (LGPL)
+    //
+    void append_with_tag(Gtk.TextBuffer buffer, string text, Gtk.TextTag? tag) 
+    {
+        Gtk.TextIter end;
+        buffer.get_end_iter(out end);
+        if (tag != null)
+        {
+            buffer.insert_with_tags(end, text, -1, tag);
+        }
+        else
+        {
+            buffer.insert(end, text, -1);
+        }
     }
 }

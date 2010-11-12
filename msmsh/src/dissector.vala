@@ -140,6 +140,8 @@ namespace Msmcomm
         public string name { get; set; }
         public string value_hex { get; set; }
         public string value_ascii { get; set; }
+        public int offset_start { get; set; }
+        public int offset_end { get; set; }
     }
 
     public class DataTransferObject
@@ -158,7 +160,7 @@ namespace Msmcomm
         // public abstract DataTransferObject to_data_transfer_object();
     }
 
-    public class FrameInfo : IResult, GLib.Object 
+    public class FrameInfo 
     {
         public uint8 addr { get; set; }
         public FrameType fr_type { get; set; default = FrameType.NULL; }
@@ -168,65 +170,27 @@ namespace Msmcomm
         public bool is_valid { get; set; default = true; }
         public bool is_complete { get; set; default = true; }
         public FsAction fs_action { get; set; default = FsAction.READ; }
-
-        private string _tmp;
-
-/*
-        public DataTransferObject to_data_transfer_object() 
+        
+        public FrameInfo()
         {
-            DataTransferObject obj = new DataTransferObject();
-            obj.name = "Frame";
-            obj.fields.set("Address", "0x%x".printf(addr));
-            obj.fields.set("Type", frame_type_to_string(fr_type));
-            obj.fields.set("Seq", "0x%x".printf(seq));
-            obj.fields.set("Ack", "0x%x".printf(ack));
-            
-            if (is_complete) 
-            {
-                obj.fields.set("Complete", "True");
-            }
-            else 
-            {
-                obj.fields.set("Complete", "False");
-            }
-            
-            if (is_valid) 
-            {
-                obj.fields.set("CRC", "OK");
-            }
-            else 
-            {
-                obj.fields.set("CRC", "ERROR");
-            }
-            
-            return obj;
+            payload = new RawDataBuffer();
         }
-*/
     }
 
-    public class MessageInfo : IResult, GLib.Object {
+    public class MessageInfo {
         public uint8 subsystem_id { get; set; }
         public uint8 group_id { get; set; }
         public uint8 msg_id { get; set; }
+        public RawDataBuffer payload { get; set; }
         public string structure_name { get; set; }
         public string message_type_name { get; set; }
         public Gee.ArrayList<FieldInfo> fields;
-        private string _tmp;
 
-        construct
+        public MessageInfo()
         {
             fields = new Gee.ArrayList<FieldInfo>();
-            _tmp = "";
+            payload = new RawDataBuffer();
         }
-
-/*
-        public DataTransferObject to_data_transfer_object() 
-        {
-            DataTransferObject dto = new DataTransferObject();
-            dto.name = "Message";
-            return dto;
-        }
-*/
     }
 
     public class LinkLayerDissector : GLib.Object 
@@ -281,72 +245,82 @@ namespace Msmcomm
             StructureDefinition sdef = null;
             uint len = 0, val = 0;
             
-            if (buffer.size == 0)
+            // We should have at least three bytes for a valid message 
+            if (buffer.size == 0 || buffer.size < 3)
                 return null;
 
             // First we need to find out which kind of message we have
+            // FIXME we need more handling for the case that we have a 
+            // subsystem id in our current message ...
             msg.group_id = tvb.read_uint8(0);
             msg.msg_id = tvb.read_uint8(1);
-
-            foreach (var def in session.definitions) 
+            
+            // Do we have a message with payload or just with group/msg/subsystem id
+            if (buffer.size > 3)
             {
-                if (msg.group_id == def.group_id && msg.msg_id == def.msg_id) 
-                {
-                    FsoFramework.theLogger.info("Found a valid definition for current message: %s".printf(def.structure_name));
-                    structure_name = def.structure_name;
-                    msg.message_type_name = def.message_type_name;
-                    break;
-                }
-            }
+                msg.payload = new RawDataBuffer();
+                msg.payload.data = tvb.read_range_uint8(3, tvb.length - 3);
+                msg.payload.size = tvb.length - 3;
 
-            // Found the right structure definition
-            foreach (var structure in session.structures) 
-            {
-                if (structure.name == structure_name) 
+                // Find the right packet definition for the current message
+                foreach (var def in session.definitions) 
                 {
-                    FsoFramework.theLogger.info("Found a valid structure for %s definition in structure repository".printf(structure.name));
-                    sdef = structure;
-                    msg.structure_name = sdef.name;
-                    break;
-                }
-            }
-
-            // Assign field definitions to buffer
-            if (sdef != null) 
-            {
-                FsoFramework.theLogger.info(@"Adding fields for structure '$(sdef.name)'");
-                
-                if (sdef.length != buffer.size - 3)
-                {
-                    FsoFramework.theLogger.error("Message length does not compare to structure length (%i != %i)".printf(sdef.length, (int)buffer.size));
-                    return msg;
+                    if (msg.group_id == def.group_id && msg.msg_id == def.msg_id) 
+                    {
+                        structure_name = def.structure_name;
+                        msg.message_type_name = def.message_type_name;
+                        break;
+                    }
                 }
 
-                foreach (var field in sdef.fields) 
+                // Find the right structure definition for the current message
+                foreach (var structure in session.structures) 
                 {
-                    FsoFramework.theLogger.info(@"Probing $(field.name) field for structure $(sdef.name)");
-                    if (field.offset_end == 0)
+                    if (structure.name == structure_name) 
                     {
-                        len = 1;
+                        sdef = structure;
+                        msg.structure_name = sdef.name;
+                        break;
                     }
-                    else 
-                    {
-                        len = field.offset_end - field.offset_start + 1;
-                    }
+                }
 
-                    uint8[] buf = tvb.read_range_uint8(field.offset_start + 3, len);
-                    var tmp = convertBinaryToString(buf);
-                    string hex = "";
-                    foreach (uint8 byte in buf) 
-                    {
-                        hex += "%02x ".printf(byte);
-                    }
+                // Assign field definitions to buffer
+                if (sdef != null) 
+                {
+                    FsoFramework.theLogger.info(@"Adding fields for structure '$(sdef.name)'");
                     
-                    var field_info = new FieldInfo(); 
-                    field_info.name = field.name;
-                    field_info.value_hex = hex;
-                    field_info.value_ascii = tmp;
-                    msg.fields.add(field_info);
+                    if (sdef.length != buffer.size - 3)
+                    {
+                        return msg;
+                    }
+
+                    foreach (var field in sdef.fields) 
+                    {
+                        if (field.offset_end == 0)
+                        {
+                            len = 1;
+                        }
+                        else 
+                        {
+                            len = field.offset_end - field.offset_start + 1;
+                        }
+
+                        uint8[] buf = tvb.read_range_uint8(field.offset_start + 3, len);
+                        var tmp = convertBinaryToString(buf);
+                        string hex = "";
+                        foreach (uint8 byte in buf) 
+                        {
+                            hex += "%02x ".printf(byte);
+                        }
+                        
+                        var field_info = new FieldInfo(); 
+                        field_info.name = field.name;
+                        field_info.value_hex = hex;
+                        field_info.value_ascii = tmp;
+                        field_info.offset_start = field.offset_start;
+                        field_info.offset_end = field.offset_end;
+                        msg.fields.add(field_info);
+                    }
                 }
             }
             

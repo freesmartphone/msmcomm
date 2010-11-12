@@ -22,15 +22,8 @@
 using Gee;
 using GLib;
 
-namespace Msmcomm {
-    
-    public class RawDataBuffer 
-    {
-        public uint8[] data { get; set; }
-        public uint size { get; set; }
-        public FsAction direction { get; set; }
-    }
-
+namespace Msmcomm 
+{
     public errordomain DumpReaderError 
     {
         UNKNOWN_FILE_FORMAT,

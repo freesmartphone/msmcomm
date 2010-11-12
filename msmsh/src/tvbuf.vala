@@ -58,6 +58,11 @@ namespace Msmcomm {
         public uint8[] read_range_uint8(uint start, uint len) throws TvbuffError 
         {
             stdout.printf(@"read_range_uint8: start=$(start) len=$(len)\n");
+            
+            if (len > _buffer.size)
+            {
+                throw new TvbuffError.OUT_OF_RANGE("Out of range!");
+            }
 
             uint8[] buf = new uint8[len];
             for (uint n=start; n<start+len; n++) 
