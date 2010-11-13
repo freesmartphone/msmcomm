@@ -49,18 +49,6 @@
 #include "msmcomm.h"
 #include "structures.h"
 
-#define LOG_MESSAGE(message, args, ...) \
-{ \
-    char buffer[4096]; \
-    snprintf(buffer, 4096, fmt, ## args); \
-    ctx->log_cb(ctx->log_data, buffer, 4096); \
-}
-
-#define DEBUG(msg, ...)
-#define INFO(msg, ...)
-
-#define MESSAGE_CAST(message, type) ((type*)message->payload)
-
 typedef enum
 {
     DESCRIPTOR_TYPE_INVALID,
@@ -69,9 +57,6 @@ typedef enum
     DESCRIPTOR_TYPE_GROUP,
     DESCRIPTOR_TYPE_EVENT,
 } descriptor_type_t;
-
-#define SUBSYSTEM_ID(msg) (msg->msg_id & 0xff)
-#define MSG_ID(msg) ((msg->msg_id & 0xff00) >> 8)
 
 struct msmcomm_context
 {
@@ -144,58 +129,68 @@ unsigned int network_plmn_to_value(const uint8_t *plmn);
 /*
  * Some helpful macros
  */
- 
- 
-#define MESSAGE_TYPE(name) \
+
+#define LOG_MESSAGE(message, args, ...) \
+{ \
+    char buffer[4096]; \
+    snprintf(buffer, 4096, fmt, ## args); \
+    ctx->log_cb(ctx->log_data, buffer, 4096); \
+}
+
+#define DEBUG(msg, ...)
+#define INFO(msg, ...)
+
+#define MESSAGE_CAST(message, type) ((type*)message->payload)
+#define ARRAY_SIZE(array, type) ((unsigned int)(sizeof(array) / sizeof(type)))
+
+/*
+ * Everything you need to defines messages/response/events and register them 
+ * to the system
+ */
+
+#define DEFINE_MESSAGE_TYPE(name) \
     extern void msg_##name##_init(struct msmcomm_message *msg); \
     extern uint32_t msg_##name##_get_size(struct msmcomm_message *msg); \
     extern void msg_##name##_free(struct msmcomm_message *msg); \
     extern uint8_t* msg_##name##_prepare_data(struct msmcomm_message *msg);
 
-#define MESSAGE_DATA(type, name) \
-    {   type, \
-        DESCRIPTOR_TYPE_MESSAGE, \
-        MSMCOMM_MESSAGE_CLASS_COMMAND, \
-        0, \
-        msg_##name##_get_size, \
-        msg_##name##_init, \
-        msg_##name##_free, \
-        msg_##name##_prepare_data, \
-        NULL, NULL, NULL }
+#define DEFINE_RESPONSE_TYPE(name) \
+    extern unsigned int resp_##name##_is_valid(struct msmcomm_message *msg); \
+    extern void resp_##name##_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len); \
+    extern uint32_t resp_##name##_get_size(struct msmcomm_message *msg);
 
-#define NEW_TYPE(type, name) \
-    extern unsigned int type##_##name##_is_valid(struct msmcomm_message *msg); \
-    extern void type##_##name##_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len); \
-    extern uint32_t type##_##name##_get_size(struct msmcomm_message *msg);
+#define DEFINE_EVENT_TYPE(name) \
+    extern unsigned int event_##name##_is_valid(struct msmcomm_message *msg); \
+    extern void event_##name##_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len); \
+    extern uint32_t event_##name##_get_size(struct msmcomm_message *msg);
 
-#define RESPONSE_TYPE(name) NEW_TYPE(resp, name)
-#define EVENT_TYPE(name) NEW_TYPE(event, name)
-
-#define EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(name) \
-    NEW_TYPE(event, name) \
+#define DEFINE_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(name) \
+    DEFINE_EVENT_TYPE(name) \
     extern unsigned int event_##name##_get_type(struct msmcomm_message *msg);
 
-#define TYPE_DATA(type, subtype, class, descriptor_type, name, has_submsg_id) \
-{   subtype, \
-    descriptor_type, \
-    class, \
-    has_submsg_id, \
-    type##_##name##_get_size, \
-    NULL, NULL, NULL, \
-    type##_##name##_handle_data, \
-    type##_##name##_is_valid, \
-    NULL \
-}
-        
-#define EVENT_DATA(type, name, has_submsg_id) \
-    TYPE_DATA(event, \
-              type, \
-              MSMCOMM_MESSAGE_CLASS_EVENT, \
-              DESCRIPTOR_TYPE_EVENT, \
-              name, \
-              has_submsg_id)
+#define REGISTER_MESSAGE_TYPE(type, name) \
+{   type, \
+    DESCRIPTOR_TYPE_MESSAGE, \
+    MSMCOMM_MESSAGE_CLASS_COMMAND, \
+    0, \
+    msg_##name##_get_size, \
+    msg_##name##_init, \
+    msg_##name##_free, \
+    msg_##name##_prepare_data, \
+    NULL, NULL, NULL }
 
-#define EVENT_DATA_WITHOUT_EXPLICIT_TYPE(name, has_submsg_id) \
+#define REGISTER_EVENT_TYPE(type, name, has_submsg_id) \
+{   type, \
+    DESCRIPTOR_TYPE_EVENT, \
+    MSMCOMM_MESSAGE_CLASS_EVENT, \
+    has_submsg_id, \
+    event_##name##_get_size, \
+    NULL, NULL, NULL, \
+    event_##name##_handle_data, \
+    event_##name##_is_valid, \
+    NULL }
+
+#define REGISTER_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(name, has_submsg_id) \
 {   MSMCOMM_MESSAGE_TYPE_INVALID, \
     DESCRIPTOR_TYPE_EVENT, \
     MSMCOMM_MESSAGE_CLASS_EVENT, \
@@ -205,16 +200,32 @@ unsigned int network_plmn_to_value(const uint8_t *plmn);
     event_##name##_is_valid, \
     event_##name##_get_type }
 
-#define RESPONSE_DATA(type, name, has_submsg_id) \
-    TYPE_DATA(resp, \
-              type, \
-              MSMCOMM_MESSAGE_CLASS_RESPONSE, \
-              DESCRIPTOR_TYPE_RESPONSE, \
-              name, \
-              has_submsg_id)
+#define REGISTER_RESPONSE_TYPE(type, name, has_submsg_id) \
+{   type, \
+    DESCRIPTOR_TYPE_RESPONSE, \
+    MSMCOMM_MESSAGE_CLASS_RESPONSE, \
+    has_submsg_id, \
+    resp_##name##_get_size, \
+    NULL, NULL, NULL, \
+    resp_##name##_handle_data, \
+    resp_##name##_is_valid, \
+    NULL }
+
+/*
+ * Helpful macros to check subsystem/group/msg id's
+ */
+
+#define SUBSYSTEM_ID(msg) (msg->msg_id & 0xff)
+#define GROUP_ID(msg) (msg->group_id)
+#define MSG_ID(msg) ((msg->msg_id & 0xff00) >> 8)
 
 uint16_t crc16_calc(const uint8_t *data, uint32_t len);
 
+/*
+ * subsystem, group and message id definition 
+ */
+
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_AUDIO					0x1f
 
 #endif
 
