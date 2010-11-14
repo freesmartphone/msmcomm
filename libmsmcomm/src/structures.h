@@ -233,8 +233,7 @@ struct get_phonebook_properties_resp
 struct sim_info_msg
 {
 	uint32_t ref_id;
-	uint8_t field_type_0;
-	uint8_t field_type_1;
+	uint16_t sim_file;
 	uint8_t unknown0[35];
 } __attribute__ ((packed));
 

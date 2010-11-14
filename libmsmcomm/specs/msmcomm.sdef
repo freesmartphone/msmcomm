@@ -142,8 +142,7 @@ end
 
 start sim_info_msg 41
 [0-3] uint32_t ref_id
-[4] uint8_t field_type_0
-[5] uint8_t field_type_1
+[4-5] uint16_t sim_file
 end
 
 #-------------------------------------------------------------------

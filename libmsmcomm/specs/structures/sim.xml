@@ -85,8 +85,7 @@
 		</structure>
         <structure name="sim_info_msg" length="41">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="field_type_0" start="4" type="uint8_t"/>
-            <field name="field_type_1" start="5" type="uint8_t"/>
+			<field name="sim_file" start="4" end="5" type="uint16_t"/>
 		</structure>
 	</structures>
 </namespace:sim>

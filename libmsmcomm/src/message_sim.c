@@ -475,12 +475,10 @@ void msmcomm_message_sim_info_set_field_type(struct msmcomm_message *msg, msmcom
     switch (field_type)
     {
         case MSMCOMM_SIM_INFO_FIELD_TYPE_IMSI:
-            MESSAGE_CAST(msg, struct sim_info_msg)->field_type_0 = 0x1;
-            MESSAGE_CAST(msg, struct sim_info_msg)->field_type_1 = 0x4;
+            MESSAGE_CAST(msg, struct sim_info_msg)->sim_file = 0x401;
             break;
         case MSMCOMM_SIM_INFO_FIELD_TYPE_MSISDN:
-            MESSAGE_CAST(msg, struct sim_info_msg)->field_type_0 = 0x19;
-            MESSAGE_CAST(msg, struct sim_info_msg)->field_type_1 = 0x4;
+            MESSAGE_CAST(msg, struct sim_info_msg)->sim_file = 0x419;
             break;
     }
 }
