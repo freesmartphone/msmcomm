@@ -67,6 +67,8 @@
 			<field name="plmn_8" start="1131" end="1133" type="uint8_t"/>
 			<field name="plmn_9" start="1226" end="1228" type="uint8_t"/>
 		</structure>
+		<structure name="get_home_network_name_msg" length="4">
+		</structure>
 	</structures>
 </namespace:network>
 

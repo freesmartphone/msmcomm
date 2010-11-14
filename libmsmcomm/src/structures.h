@@ -336,6 +336,12 @@ struct cm_ph_event
 } __attribute__ ((packed));
 
 
+struct get_home_network_name_msg
+{
+	uint8_t unknown0[4];
+} __attribute__ ((packed));
+
+
 struct cm_ph_info_available_event
 {
 } __attribute__ ((packed));

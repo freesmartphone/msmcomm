@@ -152,3 +152,29 @@ uint8_t *msg_get_networklist_prepare_data(struct msmcomm_message *msg)
     return msg->payload;
 }
 
+/*
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_GET_HOME_NETWORK_NAME
+ */
+
+void msg_get_home_network_name_init(struct msmcomm_message *msg)
+{
+    msg->group_id = 0xf;
+    msg->msg_id = 0x3;
+
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct get_home_network_name_msg);
+}
+
+uint32_t msg_get_home_network_name_get_size(struct msmcomm_message *msg)
+{
+    return sizeof (struct get_home_network_name_msg);
+}
+
+void msg_get_home_network_name_free(struct msmcomm_message *msg)
+{
+    talloc_free(msg->payload);
+}
+
+uint8_t *msg_get_home_network_name_prepare_data(struct msmcomm_message *msg)
+{
+    return msg->payload;
+}
