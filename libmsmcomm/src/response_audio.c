@@ -29,7 +29,7 @@ extern void *talloc_msmc_ctx;
 
 unsigned int resp_sound_is_valid(struct msmcomm_message *msg)
 {
-	return ((GROUP_ID(msg) == MSMCOMM_MESSAGE_GROUP_RESPONSE_AUDIO) && (MSG_ID(msg) == 0x1));
+	return ((GROUP_ID(msg) == MSMCOMM_MESSAGE_GROUP_RESPONSE_SOUND) && (MSG_ID(msg) == 0x1));
 }
 
 void resp_sound_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
@@ -63,7 +63,7 @@ uint32_t resp_sound_get_size(struct msmcomm_message * msg)
 
 unsigned int resp_audio_modem_tuning_params_is_valid(struct msmcomm_message *msg)
 {
-    return ((GROUP_ID(msg) == MSMCOMM_MESSAGE_GROUP_RESPONSE_AUDIO) && (MSG_ID(msg) == 0xb));
+    return ((GROUP_ID(msg) == MSMCOMM_MESSAGE_GROUP_RESPONSE_SOUND) && (MSG_ID(msg) == 0xb));
 }
 
 void resp_audio_modem_tuning_params_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
