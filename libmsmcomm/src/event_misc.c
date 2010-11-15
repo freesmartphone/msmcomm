@@ -91,26 +91,4 @@ uint32_t event_charger_status_get_size(struct msmcomm_message * msg)
     return sizeof (struct charger_status_event);
 }
 
-/*
- * MSMCOMM_MESSAGE_TYPE_RESPONSE_OPERATION_MODE
- */
-
-unsigned int event_operator_mode_is_valid(struct msmcomm_message *msg)
-{
-    return (msg->group_id == 0x5) && (msg->msg_id == 0x0);
-}
-
-void event_operator_mode_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
-{
-    if (len != sizeof (struct cm_ph_event))
-        return;
-
-    msg->payload = data;
-}
-
-uint32_t event_operator_mode_get_size(struct msmcomm_message * msg)
-{
-    return sizeof (struct cm_ph_event);
-}
-
 

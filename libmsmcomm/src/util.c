@@ -32,3 +32,42 @@ unsigned int network_plmn_to_value(const uint8_t *plmn)
     value += ((plmn[2] & 0xf0) >> 4);
     return value;
 }
+
+/*
+ * Common methods for pin_status_msg types
+ */
+
+void _message_pin_status_set_pin(struct msmcomm_message *msg, const char *pin)
+{
+    int len = strlen(pin);
+    unsigned int bytes = 0;
+    
+    /* A valid pin should be 4 or 8 bytes long */
+    if (len >= 4)
+    {
+        bytes = 4; 
+    }
+    else if (len >= 8)
+    {
+        bytes = 8;
+    }
+    
+    memcpy(MESSAGE_CAST(msg, struct pin_status_msg)->pin, pin, bytes);
+}
+
+void _message_pin_status_set_pin_type(struct msmcomm_message *msg, msmcomm_sim_pin_type_t pin_type)
+{
+    unsigned int type = 0x0;
+    switch (pin_type) 
+    {
+        case MSMCOMM_SIM_PIN_1:
+            type = 0x0;
+            break;
+        case MSMCOMM_SIM_PIN_2:
+            type = 0x1;
+            break;
+    }
+    MESSAGE_CAST(msg, struct pin_status_msg)->pin_type = type;
+}
+
+

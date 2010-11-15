@@ -124,6 +124,8 @@ int handle_response_data(struct msmcomm_context *ctx, uint8_t *data, uint32_t le
 void report_error(struct msmcomm_context *ctx, msmcomm_error_t error, void *data);
 uint16_t crc16_calc(const uint8_t *data, uint32_t len);
 unsigned int network_plmn_to_value(const uint8_t *plmn);
+void _message_pin_status_set_pin(struct msmcomm_message *msg, const char *pin);
+void _message_pin_status_set_pin_type(struct msmcomm_message *msg, msmcomm_sim_pin_type_t pin_type);
 
 
 /*
@@ -219,11 +221,49 @@ unsigned int network_plmn_to_value(const uint8_t *plmn);
 #define GROUP_ID(msg) (msg->group_id)
 #define MSG_ID(msg) ((msg->msg_id & 0xff00) >> 8)
 
-uint16_t crc16_calc(const uint8_t *data, uint32_t len);
-
 /*
  * subsystem, group and message id definition 
  */
+
+#define MSMCOMM_MESSAGE_GROUP_MESSAGE_CALL						0x00
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_CALL						0x01
+#define MSMCOMM_MESSAGE_GROUP_EVENT_CALL						0x02
+
+#define MSMCOMM_MESSAGE_GROUP_MESSAGE_CM_PH						0x03
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_CM_PH					0x04
+#define MSMCOMM_MESSAGE_GROUP_EVENT_CM_PH						0x05
+
+#define MSMCOMM_MESSAGE_GROUP_MESSAGE_CM_SS						0x06
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_CM_SS					0x07
+#define MSMCOMM_MESSAGR_GROUP_EVENT_CM_SS						0x08
+
+#define MSMCOMM_MESSAGE_GROUP_MESSAGE_CM_SUPS					0x09
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_CM_SUPS					0x0a
+#define MSMCOMM_MESSAGE_GROUP_EVENT_CM_SUPS						0x0b
+
+#define MSMCOMM_MESSAGE_GROUP_MESSAGE_CM_INBAND					0x0c
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_CM_INBAND				0x0d
+#define MSMCOMM_MESSAGE_GROUP_EVENT_CM_INBAND					0x0e
+
+#define MSMCOMM_MESSAGE_GROUP_MESSAGE_GSDI						0x0f
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_GSDI						0x10
+#define MSMCOMM_MESSAGE_GROUP_EVENT_GSDI						0x11
+
+#define MSMCOMM_MESSAGE_GROUP_MESSAGE_GSTK						0x12
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_GSTK						0x13
+#define MSMCOMM_MESSAGE_GROUP_EVENT_GSTK						0x14
+
+#define MSMCOMM_MESSAGE_GROUP_MESSAGE_WMS						0x15
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_WMS						0x16
+#define MSMCOMM_MESSAGE_GROUP_EVENT_WMS							0x17
+
+#define MSMCOMM_MESSAGE_GROUP_MESSAGE_PBM						0x18
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_PBM						0x19
+#define MSMCOMM_MESSAGE_GROUP_EVENT_PBM							0x1a
+
+#define MSMCOMM_MESSAGE_GROUP_MESSAGE_MISC						0x1b
+#define MSMCOMM_MESSAGE_GROUP_RESPONSE_MISC						0x1c
+#define MSMCOMM_MESSAGE_GROUP_EVENT_MISC						0x1d
 
 #define MSMCOMM_MESSAGE_GROUP_RESPONSE_AUDIO					0x1f
 
