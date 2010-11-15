@@ -193,6 +193,10 @@ namespace Msmcomm
 		EVENT_SMS_INFO,
 		EVENT_PHONEBOOK_READY,
 		EVENT_PHONEBOOK_MODIFIED,
+        EVENT_PHONEBOOK_RECORD_ADDED,
+        EVENT_PHONEBOOK_RECORD_UPDATED,
+        EVENT_PHONEBOOK_RECORD_DELETED,
+        EVENT_PHONEBOOK_RECORD_FAILED,
 		EVENT_CM_PH,
 		EVENT_GET_NETWORKLIST,
 	}
@@ -469,6 +473,14 @@ namespace Msmcomm
 			return "URC_PHONEBOOK_READY";
             case MessageType.EVENT_PHONEBOOK_MODIFIED:
             return "URC_PHONEBOOK_MODIFIED";
+            case MessageType.EVENT_PHONEBOOK_RECORD_ADDED:
+            return "URC_PHONEBOOK_RECORD_ADDED";
+            case MessageType.EVENT_PHONEBOOK_RECORD_UPDATED:
+            return "URC_PHONEBOOK_RECORD_UPDATED";
+            case MessageType.EVENT_PHONEBOOK_RECORD_DELETED:
+            return "URC_PHONEBOOK_RECORD_DELETED";
+            case MessageType.EVENT_PHONEBOOK_RECORD_FAILED:
+            return "URC_PHONEBOOK_RECORD_FAILED";
             case MessageType.EVENT_CM_PH:
             return "URC_CM_PH";
             case MessageType.EVENT_SMS_RECEIVED_MESSAGE:

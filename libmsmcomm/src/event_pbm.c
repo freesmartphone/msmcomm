@@ -123,3 +123,79 @@ uint8_t msmcomm_event_phonebook_modified_get_position(struct msmcomm_message *ms
     return MESSAGE_CAST(msg, struct phonebook_modified_event)->position;
 }
 
+/*
+ * MSMCOMM_MESSAGE_TYPE_EVENT_PHONEBOOK_RECORD_ADDED
+ */
+
+unsigned int event_phonebook_record_added_is_valid(struct msmcomm_message *msg)
+{
+	return ((GROUP_ID(msg) == MSMCOMM_MESSAGE_GROUP_EVENT_PBM) && (MSG_ID(msg) == 0x00));
+}
+
+void event_phonebook_record_added_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	/* FIXME */
+}
+
+uint32_t event_phonebook_record_added_get_size(struct msmcomm_message *msg)
+{
+	return 0;
+}
+
+/*
+ * MSMCOMM_MESSAGE_TYPE_EVENT_PHONEBOOK_RECORD_UPDATED
+ */
+
+unsigned int event_phonebook_record_updated_is_valid(struct msmcomm_message *msg)
+{
+	return ((GROUP_ID(msg) == MSMCOMM_MESSAGE_GROUP_EVENT_PBM) && (MSG_ID(msg) == 0x01));
+}
+
+void event_phonebook_record_updated_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	/* FIXME */
+}
+
+uint32_t event_phonebook_record_updated_get_size(struct msmcomm_message *msg)
+{
+	return 0;
+}
+
+/*
+ * MSMCOMM_MESSAGE_TYPE_EVENT_PHONEBOOK_RECORD_DELETED
+ */
+
+unsigned int event_phonebook_record_deleted_is_valid(struct msmcomm_message *msg)
+{
+	return ((GROUP_ID(msg) == MSMCOMM_MESSAGE_GROUP_EVENT_PBM) && (MSG_ID(msg) == 0x02));
+}
+
+void event_phonebook_record_deleted_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	/* FIXME */
+}
+
+uint32_t event_phonebook_record_deleted_get_size(struct msmcomm_message *msg)
+{
+	return 0;
+}
+
+
+/*
+ * MSMCOMM_MESSAGE_TYPE_EVENT_PHONEBOOK_RECORD_FAILED
+ */
+
+unsigned int event_phonebook_record_failed_is_valid(struct msmcomm_message *msg)
+{
+	return ((GROUP_ID(msg) == MSMCOMM_MESSAGE_GROUP_EVENT_PBM) && (MSG_ID(msg) == 0x03));
+}
+
+void event_phonebook_record_failed_handle_data(struct msmcomm_message *msg, uint8_t *data, uint32_t len)
+{
+	/* FIXME */
+}
+
+uint32_t event_phonebook_record_failed_get_size(struct msmcomm_message *msg)
+{
+	return 0;
+}
