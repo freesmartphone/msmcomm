@@ -69,6 +69,8 @@
 		</structure>
 		<structure name="get_home_network_name_msg" length="4">
 		</structure>
+		<structure name="get_home_network_name_resp" length="110">
+		</structure>
 	</structures>
 </namespace:network>
 

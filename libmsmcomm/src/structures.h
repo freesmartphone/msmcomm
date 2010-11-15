@@ -342,6 +342,12 @@ struct get_home_network_name_msg
 } __attribute__ ((packed));
 
 
+struct get_home_network_name_resp
+{
+	uint8_t unknown0[110];
+} __attribute__ ((packed));
+
+
 struct cm_ph_info_available_event
 {
 } __attribute__ ((packed));

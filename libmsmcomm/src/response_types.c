@@ -34,6 +34,7 @@ DEFINE_RESPONSE_TYPE(rssi_status)
 DEFINE_RESPONSE_TYPE(phonebook)
 DEFINE_RESPONSE_TYPE(get_phonebook_properties)
 DEFINE_RESPONSE_TYPE(audio_modem_tuning_params)
+DEFINE_RESPONSE_TYPE(get_home_network_name)
 
 DEFINE_EVENT_TYPE(radio_reset_ind)
 DEFINE_EVENT_TYPE(charger_status)
@@ -73,6 +74,7 @@ struct descriptor response_descriptors[] =
     REGISTER_RESPONSE_TYPE(MSMCOMM_MESSAGE_TYPE_RESPONSE_PHONEBOOK, phonebook, 0),
     REGISTER_RESPONSE_TYPE(MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_PHONEBOOK_PROPERTIES, get_phonebook_properties, 0),
     REGISTER_RESPONSE_TYPE(MSMCOMM_MESSAGE_TYPE_RESPONSE_AUDIO_MODEM_TUNING_PARAMS, audio_modem_tuning_params, 0),
+    REGISTER_RESPONSE_TYPE(MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_HOME_NETWORK_NAME, get_home_network_name, 0),
 
     /* events */
     REGISTER_EVENT_TYPE(MSMCOMM_MESSAGE_TYPE_EVENT_RESET_RADIO_IND, radio_reset_ind, 0),

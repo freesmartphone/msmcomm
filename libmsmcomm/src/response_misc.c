@@ -263,4 +263,25 @@ uint32_t resp_set_system_time_get_size(struct msmcomm_message * msg)
     return sizeof (struct set_system_time_resp);
 }
 
+/*
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_HOME_NETWORK_NAME
+ */
+
+unsigned int resp_get_home_network_name_is_valid(struct msmcomm_message *msg)
+{
+    return (msg->group_id == 0x1c) && (msg->msg_id == 0x17);
+}
+
+void resp_get_home_network_name_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
+{
+    if (len != sizeof (struct get_home_network_name_resp))
+        return;
+
+    msg->payload = data;
+}
+
+uint32_t resp_get_home_network_name_get_size(struct msmcomm_message * msg)
+{
+    return sizeof (struct get_home_network_name_resp);
+}
 
