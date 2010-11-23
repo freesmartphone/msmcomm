@@ -32,6 +32,11 @@ unsigned int event_pdsm_pd_done_is_valid(struct msmcomm_message *msg)
     return (msg->group_id == 0x23) && (msg->msg_id == 0x1);
 }
 
+uint32_t event_pdsm_pd_done_get_size(struct msmcomm_message *msg)
+{
+	return 0;
+}
+
 void event_pdsm_pd_done_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
     /* FIXME */
@@ -89,8 +94,12 @@ void event_pdsm_lcs_handle_data(struct msmcomm_message *msg, uint8_t * data, uin
 
 unsigned int event_pdsm_xtra_is_valid(struct msmcomm_message *msg)
 {
-    //return (msg->group_id == 0x1c) && (msg->msg_id == 0x2);
-    return 0;
+    return (msg->group_id == 0x1c) && (msg->msg_id == 0x5);
+}
+
+uint32_t event_pdsm_xtra_get_size(struct msmcomm_message *msg)
+{
+	return 0;
 }
 
 void event_pdsm_xtra_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
