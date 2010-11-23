@@ -570,26 +570,4 @@ unsigned int msmcomm_event_cm_ph_get_plmn(struct msmcomm_message *msg, unsigned 
 char* msmcomm_event_sms_recieved_message_get_sender(struct msmcomm_message *msg);
 uint8_t* msmcomm_event_sms_recieved_message_get_pdu(struct msmcomm_message *msg, unsigned int *len);
 
-/* 
- * Frame handling
- */
-struct msmcomm_frame;
-struct msmcomm_frame * msmcomm_frame_new();
-void msmcomm_frame_free(struct msmcomm_frame *fr);
-struct msmcomm_frame * msmcomm_frame_new_from_buffer(uint8_t *buffer, uint32_t length);
-void msmcomm_frame_set_payload(struct msmcomm_frame *fr, uint8_t *payload, uint32_t length);
-void msmcomm_frame_set_address(struct msmcomm_frame *fr, uint8_t addr);
-void msmcomm_frame_set_type(struct msmcomm_frame *fr, uint8_t type);
-void msmcomm_frame_set_sequence_nr(struct msmcomm_frame *fr, uint8_t seq);
-void msmcomm_frame_set_acknowledge_nr(struct msmcomm_frame *fr, uint8_t ack);
-uint8_t msmcomm_frame_get_address(struct msmcomm_frame *fr);
-uint8_t msmcomm_frame_get_type(struct msmcomm_frame *fr);
-uint8_t msmcomm_frame_get_sequence_nr(struct msmcomm_frame *fr);
-uint8_t msmcomm_frame_get_acknowledge_nr(struct msmcomm_frame *fr);
-uint32_t msmcomm_frame_get_payload_length(struct msmcomm_frame *fr);
-uint8_t* msmcomm_frame_get_payload(struct msmcomm_frame *fr, int *length);
-uint8_t msmcomm_frame_is_valid(struct msmcomm_frame *fr);
-void msmcomm_frame_encode(struct msmcomm_frame *fr);
-void msmcomm_frame_decode(struct msmcomm_frame *fr);
-
 #endif

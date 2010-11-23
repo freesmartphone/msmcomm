@@ -45,7 +45,6 @@ msmcomm.h \
 internal.h \
 linuxlist.h \
 structures.h \
-frame.c \
 crc.c \
 $(NULL)
 
