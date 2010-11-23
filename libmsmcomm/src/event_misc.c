@@ -24,25 +24,6 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_MESSAGE_TYPE_RESPONSE_LINK_ESTABLISHED
- */
-
-unsigned int event_link_established_is_valid(struct msmcomm_message *msg)
-{
-    return (msg->group_id == 0x8c) && (msg->msg_id == 0x1);
-}
-
-void event_link_established_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
-{
-    /* no data to handle */
-}
-
-uint32_t event_link_established_ind_get_size(struct msmcomm_message *msg)
-{
-    return 0;
-}
-
-/*
  * MSMCOMM_MESSAGE_TYPE_RESPONSE_RESET_RADIO_IND
  */
 
