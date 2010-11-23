@@ -46,7 +46,7 @@ struct call_status_event
 } __attribute__ ((packed));
 
 
-struct cm_call_resp
+struct cm_call_callback_resp
 {
 	uint32_t ref_id;
 	uint16_t cmd_type;

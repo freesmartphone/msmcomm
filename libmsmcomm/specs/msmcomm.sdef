@@ -15,7 +15,7 @@ start call_status_event 1107
 [933] uint8_t is_tty
 end
 
-start cm_call_resp 10
+start cm_call_callback_resp 10
 [0-3] uint32_t ref_id
 [4-5] uint16_t cmd_type
 [7] uint8_t result

@@ -88,7 +88,8 @@ typedef enum
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_SIM,
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_VOICEMAIL_NR,
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_SOUND,
-	MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_CALL,
+	MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_CALL_RETURN,
+	MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_CALL_CALLBACK,
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_CHARGER_STATUS,
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_CHARGING,
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_PH,
@@ -525,7 +526,7 @@ void msmcomm_message_rssi_status_set_status(struct msmcomm_message *msg, uint8_t
 
 uint8_t msmcomm_resp_cm_ph_get_result(struct msmcomm_message *msg);
 
-uint16_t msmcomm_resp_cm_call_get_cmd_type(struct msmcomm_message *msg);
+uint16_t msmcomm_resp_cm_call_callback_get_cmd_type(struct msmcomm_message *msg);
 
 uint8_t msmcomm_event_power_state_get_state(struct msmcomm_message *msg);
 

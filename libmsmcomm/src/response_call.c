@@ -24,24 +24,24 @@
 extern void *talloc_msmc_ctx;
 
 /*
- * MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_CALL
+ * MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_CALL_CALLBACK
  */
 
-unsigned int resp_cm_call_is_valid(struct msmcomm_message *msg)
+unsigned int resp_cm_call_callback_is_valid(struct msmcomm_message *msg)
 {
     return (msg->group_id == 0x1) && (msg->msg_id == 0x1);
 }
 
-void resp_cm_call_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
+void resp_cm_call_callback_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
-    if (len != sizeof (struct cm_call_resp))
+    if (len != sizeof (struct cm_call_callback_resp))
         return;
 
     msg->payload = data;
-    msg->ref_id = MESSAGE_CAST(msg, struct cm_call_resp)->ref_id;
+    msg->ref_id = MESSAGE_CAST(msg, struct cm_call_callback_resp)->ref_id;
     
-    printf("result = %02x\n", MESSAGE_CAST(msg, struct cm_call_resp)->result);
-    switch (MESSAGE_CAST(msg, struct cm_call_resp)->result)
+    printf("result = %02x\n", MESSAGE_CAST(msg, struct cm_call_callback_resp)->result);
+    switch (MESSAGE_CAST(msg, struct cm_call_callback_resp)->result)
     {
         case 0x31:
             msg->result = MSMCOMM_RESULT_BAD_CALL_ID;
@@ -52,12 +52,13 @@ void resp_cm_call_handle_data(struct msmcomm_message *msg, uint8_t * data, uint3
     }
 }
 
-uint32_t resp_cm_call_get_size(struct msmcomm_message *msg)
+uint32_t resp_cm_call_callback_get_size(struct msmcomm_message *msg)
 {
-    return sizeof (struct cm_call_resp);
+    return sizeof (struct cm_call_callback_resp);
 }
 
-uint16_t msmcomm_resp_cm_call_get_cmd_type(struct msmcomm_message *msg)
+uint16_t msmcomm_resp_cm_call_callback_get_cmd_type(struct msmcomm_message *msg)
 {
-    return MESSAGE_CAST(msg, struct cm_call_resp)->cmd_type;
+    return MESSAGE_CAST(msg, struct cm_call_callback_resp)->cmd_type;
 }
+
