@@ -109,11 +109,9 @@ typedef enum
 	MSMCOMM_MESSAGE_TYPE_EVENT_OPERATION_MODE,
 	MSMCOMM_MESSAGE_TYPE_EVENT_CM_PH_INFO_AVAILABLE,
 	MSMCOMM_MESSAGE_TYPE_EVENT_NETWORK_STATE_INFO,
-	MSMCOMM_MESSAGE_TYPE_EVENT_PDSM_PD_DONE,
 	MSMCOMM_MESSAGE_TYPE_EVENT_PD_POSITION_DATA,
 	MSMCOMM_MESSAGE_TYPE_EVENT_PD_PARAMETER_CHANGE,
 	MSMCOMM_MESSAGE_TYPE_EVENT_PDSM_LCS,
-	MSMCOMM_MESSAGE_TYPE_EVENT_PDSM_XTRA,
 	MSMCOMM_MESSAGE_TYPE_EVENT_CALL_STATUS,
 	MSMCOMM_MESSAGE_TYPE_EVENT_CALL_INCOMMING,
 	MSMCOMM_MESSAGE_TYPE_EVENT_CALL_ORIGINATION,
@@ -209,6 +207,8 @@ typedef enum
 	MSMCOMM_MESSAGE_TYPE_EVENT_PHONEBOOK_RECORD_FAILED,
 	MSMCOMM_MESSAGE_TYPE_EVENT_CM_PH,
 	MSMCOMM_MESSAGE_TYPE_EVENT_GET_NETWORKLIST,
+	MSMCOMM_MESSAGE_TYPE_EVENT_PDSM_PD_DONE,
+	MSMCOMM_MESSAGE_TYPE_EVENT_PDSM_XTRA,
 } msmcomm_message_type_t;
 
 
@@ -428,6 +428,9 @@ void msmcomm_register_write_handler(struct msmcomm_context *ctx, msmcomm_write_h
 void msmcomm_register_read_handler(struct msmcomm_context *ctx, msmcomm_read_handler_cb read_handler, void *data);
 void msmcomm_register_error_handler(struct msmcomm_context *ctx, msmcomm_error_handler_cb error_handler, void *data);
 void msmcomm_register_log_handler(struct msmcomm_context *ctx, msmcomm_log_handler_cb log_handler, void *data);
+
+char *msmcomm_message_type_to_string(msmcomm_message_type_t type);
+char *msmcomm_message_class_to_string(msmcomm_message_class_t type);
 
 /**
  * These are common operations which are valid for all kind of messages
