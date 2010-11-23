@@ -49,7 +49,7 @@ DEFINE_MESSAGE_TYPE(get_phonebook_properties)
 DEFINE_MESSAGE_TYPE(get_audio_modem_tuning_params)
 DEFINE_MESSAGE_TYPE(sms_acknowledge_incommming_message)
 DEFINE_MESSAGE_TYPE(manage_calls)
-//DEFINE_MESSAGE_TYPE(sms_get_sms_center_number)
+DEFINE_MESSAGE_TYPE(sms_get_sms_center_number)
 DEFINE_MESSAGE_TYPE(get_home_network_name)
 
 struct descriptor msg_descriptors[] = {
@@ -81,7 +81,7 @@ struct descriptor msg_descriptors[] = {
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS, get_audio_modem_tuning_params),
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE, sms_acknowledge_incommming_message),
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_MANAGE_CALLS, manage_calls),
-    //REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_GET_SMS_CENTER_NUMBER, sms_get_sms_center_number),
+    REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_GET_SMS_CENTER_NUMBER, sms_get_sms_center_number),
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_GET_HOME_NETWORK_NAME, get_home_network_name),
 };
 
