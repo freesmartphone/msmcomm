@@ -822,14 +822,12 @@ namespace Msmcomm
             }
         }
 
-        namespace Call
-        {
             [Compact]
             [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-            public class MessageCmCallEnd : Message
+            public class EndCall : Message
             {
                 [CCode (cname = "msmcomm_create_message")]
-                public MessageCmCallEnd(MessageType t = MessageType.COMMAND_CM_CALL_END);
+                public EndCall(MessageType t = MessageType.COMMAND_CM_CALL_END);
 
                 public uint8 call_id 
                 {
@@ -840,10 +838,10 @@ namespace Msmcomm
 
             [Compact]
             [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-            public class MessageCmCallAnswer : Message
+            public class AnswerCall : Message
             {
                 [CCode (cname = "msmcomm_create_message")]
-                public MessageCmCallAnswer(MessageType t = MessageType.COMMAND_CM_CALL_ANSWER);
+                public AnswerCall(MessageType t = MessageType.COMMAND_CM_CALL_ANSWER);
 
                 public uint8 call_id 
                 {
@@ -854,10 +852,10 @@ namespace Msmcomm
 
             [Compact]
             [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-            public class MessageCmCallSups : Message
+            public class SupsCall : Message
             {
                 [CCode (cname = "msmcomm_create_message")]
-                public MessageCmCallSups(MessageType t = MessageType.COMMAND_CM_CALL_SUPS);
+                public SupsCall(MessageType t = MessageType.COMMAND_CM_CALL_SUPS);
 
                 [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_", cheader_filename = "msmcomm.h")]
                 public enum CommandType
@@ -888,10 +886,10 @@ namespace Msmcomm
 
             [Compact]
             [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-            public class MessageCmCallSups : Message
+            public class OriginateCall : Message
             {
                 [CCode (cname = "msmcomm_create_message")]
-                public MessageCmCallSups(MessageType t = MessageType.COMMAND_CM_CALL_ORIGINATION);
+                public OriginateCall(MessageType t = MessageType.COMMAND_CM_CALL_ORIGINATION);
 
                 [CCode (cname = "msmcomm_message_cm_call_origination_set_caller_id")]
                 private void _setCallerId(string callerId, uint length);
@@ -910,7 +908,6 @@ namespace Msmcomm
                     set;
                 }
             }
-        } // namespace Call
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
@@ -1255,7 +1252,7 @@ namespace Msmcomm
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-        public class ResponseCmCallCallback : Message
+        public class CallCallback : Message
         {
             public uint16 cmd_type 
             {
@@ -1393,7 +1390,7 @@ namespace Msmcomm
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-        public abstract class CallStatus : Message
+        public abstract class Call : Message
         {
             public string number
             {
@@ -1401,64 +1398,30 @@ namespace Msmcomm
 				get;
             }
 
-            public CallType type {
+            public CallType type 
+            {
                 [CCode (cname = "msmcomm_event_cm_call_get_call_type")]
 				get;
             }
 
-            public uint id {
+            public uint id 
+            {
 				[CCode (cname = "msmcomm_event_cm_call_get_call_id")]
 				get;
 			}
 
-            public uint reject_type {
+            public uint reject_type 
+            {
 				[CCode (cname = "msmcomm_event_cm_call_get_reject_type")]
 				get;
 			}
 
-            public uint reject_value {
+            public uint reject_value 
+            {
 				[CCode (cname = "msmcomm_event_cm_call_get_reject_value")]
 				get;
 			}
 
-        }
-
-        namespace Call
-        {
-            [Compact]
-            [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-            public abstract class CallStatus : Message
-            {
-                public string number
-                {
-                    [CCode (cname = "msmcomm_event_cm_call_get_caller_id")]
-                    get;
-                }
-
-                public CallType type 
-                {
-                    [CCode (cname = "msmcomm_event_cm_call_get_call_type")]
-                    get;
-                }
-
-                public uint id 
-                {
-                    [CCode (cname = "msmcomm_event_cm_call_get_call_id")]
-                    get;
-                }
-
-                public uint reject_type 
-                {
-                    [CCode (cname = "msmcomm_event_cm_call_get_reject_type")]
-                    get;
-                }
-
-                public uint reject_value 
-                {
-                    [CCode (cname = "msmcomm_event_cm_call_get_reject_value")]
-                    get;
-                }
-            }
         }
 
         [Compact]
