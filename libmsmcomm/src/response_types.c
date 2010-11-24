@@ -41,7 +41,6 @@ DEFINE_EVENT_TYPE(charger_status)
 DEFINE_EVENT_TYPE(operator_mode) 
 DEFINE_EVENT_TYPE(cm_ph_info_available) 
 DEFINE_EVENT_TYPE(get_networklist)
-DEFINE_EVENT_TYPE(cm_ph)
 DEFINE_EVENT_TYPE(power_state)
 DEFINE_EVENT_TYPE(network_state_info)
 DEFINE_EVENT_TYPE(phonebook_ready) 
@@ -58,6 +57,7 @@ DEFINE_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(cm_call)
 DEFINE_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(sim_status)
 DEFINE_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(sups_status)
 DEFINE_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(sms_status)
+DEFINE_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(cm_ph)
 
 struct descriptor response_descriptors[] = 
 {
@@ -87,7 +87,6 @@ struct descriptor response_descriptors[] =
     REGISTER_EVENT_TYPE(MSMCOMM_MESSAGE_TYPE_EVENT_GET_NETWORKLIST, get_networklist, 0),
     REGISTER_EVENT_TYPE(MSMCOMM_MESSAGE_TYPE_EVENT_PHONEBOOK_READY, phonebook_ready, 0),
     REGISTER_EVENT_TYPE(MSMCOMM_MESSAGE_TYPE_EVENT_PHONEBOOK_MODIFIED, phonebook_modified, 0),
-    REGISTER_EVENT_TYPE(MSMCOMM_MESSAGE_TYPE_EVENT_CM_PH, cm_ph, 0),
     REGISTER_EVENT_TYPE(MSMCOMM_MESSAGE_TYPE_EVENT_SMS_RECEIVED_MESSAGE, sms_recieved_message, 0),
     REGISTER_EVENT_TYPE(MSMCOMM_MESSAGE_TYPE_EVENT_PHONEBOOK_RECORD_ADDED, phonebook_record_added, 0),
     REGISTER_EVENT_TYPE(MSMCOMM_MESSAGE_TYPE_EVENT_PHONEBOOK_RECORD_UPDATED, phonebook_record_updated, 0),
@@ -100,6 +99,7 @@ struct descriptor response_descriptors[] =
     REGISTER_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(sim_status, 0),
     REGISTER_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(sups_status, 0),
     REGISTER_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(sms_status, 0),
+    REGISTER_EVENT_TYPE_WITHOUT_EXPLICIT_TYPE(cm_ph, 0),
 };
 
 const unsigned int response_descriptors_count = ARRAY_SIZE(response_descriptors, struct descriptor);
