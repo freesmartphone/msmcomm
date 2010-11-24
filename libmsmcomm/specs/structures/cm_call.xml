@@ -19,19 +19,19 @@
 			<field name="cmd_type" start="4" end="5" type="uint16_t"/>
 			<field name="result" start="7" type="uint8_t"/>
 		</structure>
-		<structure name="answer_call_msg" length="8">
+		<structure name="cm_call_answer_msg" length="8">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
             <field name="call_id" start="4" type="uint8_t"/>
 			<field name="value0" start="5" type="uint8_t"/>
 			<field name="value1" start="6" type="uint8_t"/>
 			<field name="value2" start="7" type="uint8_t"/>
 		</structure>
-		<structure name="end_call_msg" length="61">
+		<structure name="cm_call_end_msg" length="61">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="value0" start="4" type="uint8_t"/>
 			<field name="call_id" start="5" type="uint8_t"/>
 		</structure>
-		<structure name="dial_call_msg" length="206">
+		<structure name="cm_call_origination_msg" length="206">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="value0" start="5" type="uint8_t"/>
 			<field name="caller_id" start="105" end="168" type="uint8_t"/>
@@ -39,11 +39,7 @@
 			<field name="value1" start="172" type="uint8_t"/>
 			<field name="block" start="204" type="uint8_t"/>
 		</structure>
-		<structure name="cm_sups_event" length="0">
-		</structure>
-		<structure name="sups_resp" length="0">
-		</structure>
-		<structure name="manage_calls_msg" length="106">
+		<structure name="cm_call_sups_msg" length="106">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="command" start="4" type="uint8_t"/>
 			<field name="call_id" start="5" type="uint8_t"/>

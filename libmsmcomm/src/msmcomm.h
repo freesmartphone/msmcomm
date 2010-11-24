@@ -49,12 +49,12 @@ typedef enum
 	MSMCOMM_MESSAGE_TYPE_COMMAND_VERIFY_PIN,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_GET_VOICEMAIL_NR,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_GET_LOCATION_PRIV_PREF,
-	MSMCOMM_MESSAGE_TYPE_COMMAND_ANSWER_CALL,
+	MSMCOMM_MESSAGE_TYPE_COMMAND_CM_CALL_ANSWER,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_SET_AUDIO_PROFILE,
-	MSMCOMM_MESSAGE_TYPE_COMMAND_END_CALL,
+	MSMCOMM_MESSAGE_TYPE_COMMAND_CM_CALL_END,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_GET_CHARGER_STATUS,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_CHARGING,
-	MSMCOMM_MESSAGE_TYPE_COMMAND_DIAL_CALL,
+	MSMCOMM_MESSAGE_TYPE_COMMAND_CM_CALL_ORIGINATION,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_SET_SYSTEM_TIME,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_RSSI_STATUS,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_READ_PHONEBOOK,
@@ -70,7 +70,7 @@ typedef enum
 	MSMCOMM_MESSAGE_TYPE_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_GET_SMS_CENTER_NUMBER,
-	MSMCOMM_MESSAGE_TYPE_COMMAND_MANAGE_CALLS,
+	MSMCOMM_MESSAGE_TYPE_COMMAND_CM_CALL_SUPS,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_GET_HOME_NETWORK_NAME,
 
 	/*
@@ -474,15 +474,15 @@ typedef enum
 
 typedef enum
 {
-	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_INVALID,
-	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_ALL_OR_SEND_BUSY,
-	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_ALL_AND_ACCEPT_WAITING_OR_HELD,
-	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
-	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD,
-	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
-	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_ACTIVATE_HELD,
-	MSMCOMM_MANAGE_CALLS_COMMAND_TYPE_DROP_SELF_AND_CONNECT_ACTIVE,
-} msmcomm_manage_calls_comand_type_t;
+	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_INVALID,
+	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_DROP_ALL_OR_SEND_BUSY,
+	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_DROP_ALL_AND_ACCEPT_WAITING_OR_HELD,
+	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
+	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD,
+	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
+	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_ACTIVATE_HELD,
+	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_DROP_SELF_AND_CONNECT_ACTIVE,
+} msmcomm_cm_call_sups_comand_type_t;
 
 /*
  * Some constants
@@ -542,10 +542,10 @@ void msmcomm_message_charging_set_mode(struct msmcomm_message *msg, msmcomm_char
 
 void msmcomm_message_set_mode_preference_status_set_mode(struct msmcomm_message *msg, unsigned int mode);
 
-void msmcomm_message_dial_call_set_caller_id(struct msmcomm_message *msg, const char *caller_id, unsigned int len);
-void msmcomm_message_dial_call_set_block(struct msmcomm_message *msg, unsigned int block);
-void msmcomm_message_answer_call_set_call_id(struct msmcomm_message *msg, uint8_t call_id);
-void msmcomm_message_end_call_set_call_id(struct msmcomm_message *msg, uint8_t call_id);
+void msmcomm_message_cm_call_origination_set_caller_id(struct msmcomm_message *msg, const char *caller_id, unsigned int len);
+void msmcomm_message_cm_call_origination_set_block(struct msmcomm_message *msg, unsigned int block);
+void msmcomm_message_cm_call_answer_set_call_id(struct msmcomm_message *msg, uint8_t call_id);
+void msmcomm_message_cm_call_end_set_call_id(struct msmcomm_message *msg, uint8_t call_id);
 
 void msmcomm_message_verify_pin_set_pin(struct msmcomm_message *msg, const char *pin);
 
@@ -568,7 +568,7 @@ void msmcomm_message_change_pin_set_old_pin(struct msmcomm_message *msg, const c
 void msmcomm_message_change_pin_set_new_pin(struct msmcomm_message *msg, const char *new_pin, unsigned int len);
 
 void msmcomm_message_manage_calls_set_call_id(struct msmcomm_message *msg, uint8_t call_id);
-void msmcomm_message_manage_calls_set_command_type(struct msmcomm_message *msg, msmcomm_manage_calls_comand_type_t command_type);
+void msmcomm_message_manage_calls_set_command_type(struct msmcomm_message *msg, msmcomm_cm_call_sups_comand_type_t command_type);
 
 uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg);
 uint8_t msmcomm_event_sms_wms_read_template_get_number_mode(struct msmcomm_message *msg);
@@ -616,11 +616,11 @@ uint8_t msmcomm_event_power_state_get_state(struct msmcomm_message *msg);
 
 unsigned int msmcomm_event_charger_status_get_voltage(struct msmcomm_message *msg);
 
-char *msmcomm_event_call_status_get_caller_id(struct msmcomm_message *msg);
-uint8_t msmcomm_event_call_status_get_reject_type(struct msmcomm_message *msg);
-uint8_t msmcomm_event_call_status_get_reject_value(struct msmcomm_message *msg);
-uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message *msg);
-unsigned int msmcomm_event_call_status_get_call_type(struct msmcomm_message *msg);
+char *msmcomm_event_cm_call_get_caller_id(struct msmcomm_message *msg);
+uint8_t msmcomm_event_cm_call_get_reject_type(struct msmcomm_message *msg);
+uint8_t msmcomm_event_cm_call_get_reject_value(struct msmcomm_message *msg);
+uint8_t msmcomm_event_cm_call_get_call_id(struct msmcomm_message *msg);
+unsigned int msmcomm_event_cm_call_get_call_type(struct msmcomm_message *msg);
 
 unsigned int msmcomm_event_network_state_info_is_only_rssi_update(struct msmcomm_message *msg);
 uint32_t msmcomm_event_network_state_info_get_change_field(struct msmcomm_message *msg);

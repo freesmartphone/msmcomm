@@ -21,7 +21,7 @@ start cm_call_callback_resp 10
 [7] uint8_t result
 end
 
-start answer_call_msg 8
+start cm_call_answer_msg 8
 [0-3] uint32_t ref_id
 [4] uint8_t call_id
 [5] uint8_t value0
@@ -29,13 +29,13 @@ start answer_call_msg 8
 [7] uint8_t value2
 end
 
-start end_call_msg 61
+start cm_call_end_msg 61
 [0-3] uint32_t ref_id
 [4] uint8_t value0
 [5] uint8_t call_id
 end
 
-start dial_call_msg 206
+start cm_call_origination_msg 206
 [0-3] uint32_t ref_id
 [5] uint8_t value0
 [105-168] uint8_t caller_id
@@ -44,13 +44,7 @@ start dial_call_msg 206
 [204] uint8_t block
 end
 
-start cm_sups_event 0
-end
-
-start sups_resp 0
-end
-
-start manage_calls_msg 106
+start cm_call_sups_msg 106
 [0-3] uint32_t ref_id
 [4] uint8_t command
 [5] uint8_t call_id

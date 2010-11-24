@@ -26,12 +26,12 @@ extern void *talloc_msmc_ctx;
  * Call status events
  */
 
-unsigned int event_call_status_is_valid(struct msmcomm_message *msg)
+unsigned int event_cm_call_is_valid(struct msmcomm_message *msg)
 {
     return msg->group_id == 0x2;
 }
 
-void event_call_status_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
+void event_cm_call_handle_data(struct msmcomm_message *msg, uint8_t * data, uint32_t len)
 {
     if (len != sizeof (struct call_status_event))
         return;
@@ -39,11 +39,11 @@ void event_call_status_handle_data(struct msmcomm_message *msg, uint8_t * data, 
     msg->payload = data;
 }
 
-void event_call_status_free(struct msmcomm_message *msg)
+void event_cm_call_free(struct msmcomm_message *msg)
 {
 }
 
-unsigned int event_call_status_get_type(struct msmcomm_message *msg)
+unsigned int event_cm_call_get_type(struct msmcomm_message *msg)
 {
     switch (msg->msg_id)
     {
@@ -228,12 +228,12 @@ unsigned int event_call_status_get_type(struct msmcomm_message *msg)
     return MSMCOMM_MESSAGE_TYPE_INVALID;
 }
 
-uint8_t msmcomm_event_call_status_get_call_id(struct msmcomm_message * msg)
+uint8_t msmcomm_event_cm_call_get_call_id(struct msmcomm_message * msg)
 {
     return MESSAGE_CAST(msg, struct call_status_event)->call_id;
 }
 
-unsigned int msmcomm_event_call_status_get_call_type(struct msmcomm_message *msg)
+unsigned int msmcomm_event_cm_call_get_call_type(struct msmcomm_message *msg)
 {
     switch (MESSAGE_CAST(msg, struct call_status_event)->call_type)
     {
@@ -246,7 +246,7 @@ unsigned int msmcomm_event_call_status_get_call_type(struct msmcomm_message *msg
 	return MSMCOMM_CALL_TYPE_NONE;
 }
 
-char *msmcomm_event_call_status_get_caller_id(struct msmcomm_message *msg)
+char *msmcomm_event_cm_call_get_caller_id(struct msmcomm_message *msg)
 {
     char *tmp;
 
@@ -263,17 +263,17 @@ char *msmcomm_event_call_status_get_caller_id(struct msmcomm_message *msg)
     return tmp;
 }
 
-uint8_t msmcomm_event_call_status_get_reject_type(struct msmcomm_message * msg)
+uint8_t msmcomm_event_cm_call_get_reject_type(struct msmcomm_message * msg)
 {
     return MESSAGE_CAST(msg, struct call_status_event)->reject_type;
 }
 
-uint8_t msmcomm_event_call_status_get_reject_value(struct msmcomm_message *msg)
+uint8_t msmcomm_event_cm_call_get_reject_value(struct msmcomm_message *msg)
 {
     return MESSAGE_CAST(msg, struct call_status_event)->reject_value;
 }
 
-unsigned int msmcomm_event_call_status_get_cause_value(struct msmcomm_message *msg)
+unsigned int msmcomm_event_cm_call_get_cause_value(struct msmcomm_message *msg)
 {
     uint8_t value = 0xff;
 

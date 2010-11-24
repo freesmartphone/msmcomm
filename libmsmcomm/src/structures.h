@@ -56,7 +56,7 @@ struct cm_call_callback_resp
 } __attribute__ ((packed));
 
 
-struct answer_call_msg
+struct cm_call_answer_msg
 {
 	uint32_t ref_id;
 	uint8_t call_id;
@@ -66,7 +66,7 @@ struct answer_call_msg
 } __attribute__ ((packed));
 
 
-struct end_call_msg
+struct cm_call_end_msg
 {
 	uint32_t ref_id;
 	uint8_t value0;
@@ -75,7 +75,7 @@ struct end_call_msg
 } __attribute__ ((packed));
 
 
-struct dial_call_msg
+struct cm_call_origination_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
@@ -91,17 +91,7 @@ struct dial_call_msg
 } __attribute__ ((packed));
 
 
-struct cm_sups_event
-{
-} __attribute__ ((packed));
-
-
-struct sups_resp
-{
-} __attribute__ ((packed));
-
-
-struct manage_calls_msg
+struct cm_call_sups_msg
 {
 	uint32_t ref_id;
 	uint8_t command;

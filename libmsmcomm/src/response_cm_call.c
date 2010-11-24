@@ -39,7 +39,7 @@ void resp_cm_call_callback_handle_data(struct msmcomm_message *msg, uint8_t * da
 
     msg->payload = data;
     msg->ref_id = MESSAGE_CAST(msg, struct cm_call_callback_resp)->ref_id;
-    
+
     printf("result = %02x\n", MESSAGE_CAST(msg, struct cm_call_callback_resp)->result);
     switch (MESSAGE_CAST(msg, struct cm_call_callback_resp)->result)
     {
