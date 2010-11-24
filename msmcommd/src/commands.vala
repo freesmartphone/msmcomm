@@ -268,7 +268,7 @@ namespace Msmcomm
             checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
             
-            unowned Msmcomm.Reply.Call response = (Msmcomm.Reply.Call) (yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
@@ -284,23 +284,23 @@ namespace Msmcomm
             checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
             
-            unowned Msmcomm.Reply.Call response = (Msmcomm.Reply.Call) (yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
     
-    public class DialCallCommand : AbstractCallCommand
+    public class OriginateCallCommand : AbstractCallCommand
     {
         public string number { get; set; }
         public bool block { get; set; }
         
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.DialCall();
+            var cmd = new Msmcomm.Command.OriginateCall();
             cmd.number = number;
             cmd.block = block;
             
-            unowned Msmcomm.Reply.Call response = (Msmcomm.Reply.Call) (yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
@@ -312,7 +312,7 @@ namespace Msmcomm
         
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.ManageCalls();
+            var cmd = new Msmcomm.Command.SupsCall();
             
             checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
@@ -320,32 +320,32 @@ namespace Msmcomm
             switch (command_type)
             {
                 case CallCommandType.DROP_ALL_OR_SEND_BUSY:
-                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.DROP_ALL_OR_SEND_BUSY;
+                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.DROP_ALL_OR_SEND_BUSY;
                     break;
                 case CallCommandType.DROP_ALL_AND_ACCEPT_WAITING_OR_HELD:
-                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.DROP_ALL_OR_SEND_BUSY;
+                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.DROP_ALL_OR_SEND_BUSY;
                     break;
                 case CallCommandType.DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD:
-                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD;
+                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD;
                     break;
                 case CallCommandType.HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD:
-                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD;
+                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD;
                     break;
                 case CallCommandType.HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD:
-                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD;
+                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD;
                     break;
                 case CallCommandType.ACTIVATE_HELD:
-                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.ACTIVATE_HELD;
+                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.ACTIVATE_HELD;
                     break;
                 case CallCommandType.DROP_SELF_AND_CONNECT_ACTIVE:
-                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.DROP_SELF_AND_CONNECT_ACTIVE;
+                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.DROP_SELF_AND_CONNECT_ACTIVE;
                     break;
                 default:
-                    cmd.command_type = Msmcomm.Command.ManageCalls.CommandType.INVALID;
+                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.INVALID;
                     break;
             }
             
-            unowned Msmcomm.Reply.Call response = (Msmcomm.Reply.Call) (yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }

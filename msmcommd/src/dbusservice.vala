@@ -105,8 +105,8 @@ namespace Msmcomm
                 network_state_info(ns_info);
             });
             
-            urc_handlers[Msmcomm.MessageType.EVENT_CALL_INCOMMING] = createUnsolicitedResponseHandler((msg) => {
-                unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
+            urc_handlers[Msmcomm.MessageType.EVENT_CM_CALL_INCOMMING] = createUnsolicitedResponseHandler((msg) => {
+                unowned Msmcomm.Unsolicited.Call callStatusMsg = (Msmcomm.Unsolicited.Call) msg;
                 
                 var info = CallInfo(callStatusMsg.number, 
                                     callTypeToString(callStatusMsg.type), 
@@ -116,8 +116,8 @@ namespace Msmcomm
                 call_incomming(info);
             });
             
-            urc_handlers[Msmcomm.MessageType.EVENT_CALL_END] = createUnsolicitedResponseHandler((msg) => {
-                unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
+            urc_handlers[Msmcomm.MessageType.EVENT_CM_CALL_END] = createUnsolicitedResponseHandler((msg) => {
+                unowned Msmcomm.Unsolicited.Call callStatusMsg = (Msmcomm.Unsolicited.Call) msg;
                 
                 var info = CallInfo(callStatusMsg.number, 
                                     callTypeToString(callStatusMsg.type), 
@@ -127,8 +127,8 @@ namespace Msmcomm
                 call_end(info);
             });
             
-            urc_handlers[Msmcomm.MessageType.EVENT_CALL_CONNECT] = createUnsolicitedResponseHandler((msg) => {
-                unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
+            urc_handlers[Msmcomm.MessageType.EVENT_CM_CALL_CONNECT] = createUnsolicitedResponseHandler((msg) => {
+                unowned Msmcomm.Unsolicited.Call callStatusMsg = (Msmcomm.Unsolicited.Call) msg;
                 
                 var info = CallInfo(callStatusMsg.number, 
                                     callTypeToString(callStatusMsg.type), 
@@ -138,8 +138,8 @@ namespace Msmcomm
                 call_connect(info);
             });
             
-            urc_handlers[Msmcomm.MessageType.EVENT_CALL_ORIGINATION] = createUnsolicitedResponseHandler((msg) => {
-                unowned Msmcomm.Unsolicited.CallStatus callStatusMsg = (Msmcomm.Unsolicited.CallStatus) msg;
+            urc_handlers[Msmcomm.MessageType.EVENT_CM_CALL_ORIGINATION] = createUnsolicitedResponseHandler((msg) => {
+                unowned Msmcomm.Unsolicited.Call callStatusMsg = (Msmcomm.Unsolicited.Call) msg;
                 
                 var info = CallInfo(callStatusMsg.number, 
                                     callTypeToString(callStatusMsg.type), 
@@ -301,7 +301,7 @@ namespace Msmcomm
         {
             UnsolicitedResponseHandlerWrapper handler = null;
             
-            logger.debug(@"Got message: $(message.to_string())");
+            // logger.debug(@"Got message: $(message.to_string())");
             
             if (urc_handlers.has_key(type))
             {
@@ -549,17 +549,17 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void dial_call(string number, bool block) throws DBus.Error, Msmcomm.Error
+        public async void originate_call(string number, bool block) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
-            var cmd = new DialCallCommand();
+            var cmd = new OriginateCallCommand();
             cmd.number = number;
             cmd.block = block;
             yield modem.processCommand(cmd);
         }
         
-        public async void manage_calls(CallCommandType command_type, int call_id) throws DBus.Error, Msmcomm.Error
+        public async void execute_call_sups_command(CallCommandType command_type, int call_id) throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
