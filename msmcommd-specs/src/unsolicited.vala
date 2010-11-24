@@ -21,6 +21,16 @@
 
 namespace Msmcomm
 {
+    public enum UrcType
+    {
+        NETWORK_STATE_INFO,
+        NETWORK_LIST,
+        CALL_ORIGINATION,
+        CALL_INCOMMING,
+        CALL_CONNECT,
+        CALL_END,
+    }
+
     [DBus (timeout = 120000, name = "org.msmcomm.Unsolicited")]
     public interface ResponseUnsolicited : GLib.Object
     {
