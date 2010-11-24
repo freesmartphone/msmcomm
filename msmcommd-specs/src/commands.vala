@@ -41,8 +41,8 @@ namespace Msmcomm
         
         public abstract async void end_call(int call_id) throws DBus.Error, Msmcomm.Error;
         public abstract async void answer_call(int call_id) throws DBus.Error, Msmcomm.Error;
-        public abstract async void dial_call(string number, bool block) throws DBus.Error, Msmcomm.Error;
-        public abstract async void manage_calls(CallCommandType command_type, int call_id) throws DBus.Error, Msmcomm.Error;
+        public abstract async void originate_call(string number, bool block) throws DBus.Error, Msmcomm.Error;
+        public abstract async void execute_call_sups_command(CallCommandType command_type, int call_id) throws DBus.Error, Msmcomm.Error;
         
         public abstract async void set_system_time(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset) throws DBus.Error, Msmcomm.Error;
         public abstract async void rssi_status(bool status) throws DBus.Error, Msmcomm.Error;

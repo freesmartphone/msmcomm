@@ -21,49 +21,6 @@
 
 namespace Msmcomm
 {
-    public enum UrcType
-    {
-        POWER_STATE,
-        CHARGER_STATUS,
-        CALL_INCOMMING,
-        CALL_CONNECT,
-        CALL_END,
-        CALL_ORIGINATION,
-        NETWORK_LIST,
-        NETWORK_STATE_INFO,
-        PHONEBOOK_READY,
-        PHONEBOOK_MODIFIED,
-        CM_PH,
-        RESET_RADIO_IND,
-        OPERATION_MODE,
-        CM_PH_INFO_AVAILABLE,
-        SIM_INSERTED,
-        SIM_REMOVED,
-        SIM_NOT_AVAILABLE,
-        PIN1_VERIFIED,
-        PIN1_BLOCKED,
-        PIN1_UNBLOCKED,
-        PIN1_ENABLED,
-        PIN1_DISABLED,
-        PIN1_CHANGED,
-        PIN1_PERM_BLOCKED,
-        PIN2_VERIFIED,
-        PIN2_BLOCKED,
-        PIN2_UNBLOCKED,
-        PIN2_ENABLED,
-        PIN2_DISABLED,
-        PIN2_CHANGED,
-        PIN2_PERM_BLOCKED,
-        SMS_MESSAGE_RECIEVED,
-        SMS_WMS_CFG_MESSAGE_LIST,
-        SMS_WMS_CFG_GW_DOMAIN_PREF,
-        SMS_WMS_CFG_EVENT_ROUTES,
-        SMS_WMS_CFG_MEMORY_STATUS,
-        SMS_WMS_CFG_MEMORY_STATUS_SET,
-        SMS_WMS_CFG_GW_READY,
-        SMS_WMS_READ_TEMPLATE,
-    }
-    
     [DBus (timeout = 120000, name = "org.msmcomm.Unsolicited")]
     public interface ResponseUnsolicited : GLib.Object
     {
