@@ -149,7 +149,7 @@ namespace Msmcomm
 
         public GLib.Variant to_variant()
         {
-            return new GLib.Variant("biisiiiibi", only_rssi_update, change_field,
+            return new GLib.Variant("(biisiiiibi)", only_rssi_update, change_field,
                                     new_value, operator_name, rssi, ecio, service_domain, service_capability,
                                     gprs_attached, roam);
         }
