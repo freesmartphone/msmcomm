@@ -250,7 +250,6 @@ struct network_state_info_event
 	uint8_t unknown4[4];
 	uint8_t with_nitz_update;
 	uint8_t unknown5[541];
-	uint8_t modem_gsm_icon_ind;
 	uint8_t reg_status;
 	uint8_t unknown6[3];
 } __attribute__ ((packed));

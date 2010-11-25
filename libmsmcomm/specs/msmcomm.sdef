@@ -157,7 +157,6 @@ start network_state_info_event 677
 [123-124] uint16_t rssi
 [125-126] uint16_t ecio
 [131] uint8_t with_nitz_update
-[673] uint8_t modem_gsm_icon_ind
 [673] uint8_t reg_status
 end
 

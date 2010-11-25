@@ -16,7 +16,6 @@
 			<field name="rssi" start="123" end="124" type="uint16_t"/>
 			<field name="ecio" start="125" end="126" type="uint16_t"/>
 			<field name="with_nitz_update" start="131" type="uint8_t"/>
-			<field name="modem_gsm_icon_ind" start="673" type="uint8_t"/>
 			<field name="reg_status" start="673" type="uint8_t">
 				<description>
 					Possible values:
