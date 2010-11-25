@@ -228,6 +228,12 @@ struct sim_info_msg
 } __attribute__ ((packed));
 
 
+struct gsdi_get_all_pin_status_info_msg
+{
+	uint8_t unknown0[5];
+} __attribute__ ((packed));
+
+
 struct network_state_info_event
 {
 	uint8_t change_field[8];

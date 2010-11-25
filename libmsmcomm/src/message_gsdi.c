@@ -230,3 +230,29 @@ void msmcomm_message_sim_info_set_field_type(struct msmcomm_message *msg, msmcom
     }
 }
 
+/*
+ * MSMCOMM_MESSAGE_TYPE_COMMAND_GSDI_GET_ALL_PIN_STATUS_INFO
+ */
+
+void msg_gsdi_get_all_pin_status_info_init(struct msmcomm_message *msg)
+{
+    msg->group_id = 0x0f;
+    msg->msg_id = 0x1a;
+
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct gsdi_get_all_pin_status_info_msg);
+}
+
+uint32_t msg_gsdi_get_all_pin_status_info_get_size(struct msmcomm_message *msg)
+{
+    return sizeof (struct gsdi_get_all_pin_status_info_msg);
+}
+
+void msg_gsdi_get_all_pin_status_info_free(struct msmcomm_message *msg)
+{
+    talloc_free(msg->payload);
+}
+
+uint8_t *msg_gsdi_get_all_pin_status_info_prepare_data(struct msmcomm_message *msg)
+{
+    return msg->payload;
+}

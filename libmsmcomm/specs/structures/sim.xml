@@ -87,6 +87,8 @@
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="sim_file" start="4" end="5" type="uint16_t"/>
 		</structure>
+		<structure name="gsdi_get_all_pin_status_info_msg" length="5">
+		</structure>
 	</structures>
 </namespace:sim>
 

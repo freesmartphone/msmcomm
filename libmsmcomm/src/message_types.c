@@ -51,6 +51,7 @@ DEFINE_MESSAGE_TYPE(sms_acknowledge_incommming_message)
 DEFINE_MESSAGE_TYPE(cm_call_sups)
 DEFINE_MESSAGE_TYPE(sms_get_sms_center_number)
 DEFINE_MESSAGE_TYPE(get_home_network_name)
+DEFINE_MESSAGE_TYPE(gsdi_get_all_pin_status_info)
 
 struct descriptor msg_descriptors[] = {
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_CHANGE_OPERATION_MODE, change_operation_mode),
@@ -83,6 +84,7 @@ struct descriptor msg_descriptors[] = {
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_CM_CALL_SUPS, cm_call_sups),
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_GET_SMS_CENTER_NUMBER, sms_get_sms_center_number),
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_GET_HOME_NETWORK_NAME, get_home_network_name),
+    REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_GSDI_GET_ALL_PIN_STATUS_INFO, gsdi_get_all_pin_status_info),
 };
 
 unsigned int msg_descriptors_size = ARRAY_SIZE(msg_descriptors, struct descriptor);

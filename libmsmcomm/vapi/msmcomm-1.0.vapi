@@ -850,6 +850,15 @@ namespace Msmcomm
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
+        public class GetAllPinStatusInfo : Message
+        {
+            [CCode (cname = "msmcomm_create_message")]
+            public GetAllPinStatusInfo(MessageType t = MessageType.COMMAND_GSDI_GET_ALL_PIN_STATUS_INFO);
+        }
+
+
+        [Compact]
+        [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
         public class VerifyPin : Message
         {
             [CCode (cname = "msmcomm_create_message")]
