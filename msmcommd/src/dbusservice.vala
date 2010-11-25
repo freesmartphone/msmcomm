@@ -68,29 +68,53 @@ namespace Msmcomm
             handler.func = func;
             return handler;
         }
-        
+
         private void registerUnsolicitedResponseHandlers()
         {
             urc_handlers[Msmcomm.MessageType.EVENT_RESET_RADIO_IND] = createUnsolicitedResponseHandler((msg) => { 
                 reset_radio_ind(); 
             });
-            
+
             urc_handlers[Msmcomm.MessageType.EVENT_CHARGER_STATUS] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.ChargerStatus chargerStatusMsg = (Msmcomm.Unsolicited.ChargerStatus) msg;
                 charger_status(chargerStatusMsg.voltage);
             });
-            
+
             urc_handlers[Msmcomm.MessageType.EVENT_OPERATION_MODE] = createUnsolicitedResponseHandler((msg) => {
                 operation_mode();
             });
-            
+
             urc_handlers[Msmcomm.MessageType.EVENT_CM_PH_INFO_AVAILABLE] = createUnsolicitedResponseHandler((msg) => {
                 cm_ph_info_available();
             });
-            
+
             urc_handlers[Msmcomm.MessageType.EVENT_NETWORK_STATE_INFO] = createUnsolicitedResponseHandler((msg) => {
                 unowned Msmcomm.Unsolicited.NetworkStateInfo networkStateInfoMsg = (Msmcomm.Unsolicited.NetworkStateInfo) msg;
-                
+
+                var reg_status = NetworkRegistrationStatus.INVALID;
+
+                switch ( networkStateInfoMsg.registration_status )
+                {
+                    case Msmcomm.NetworkRegistrationStatusType.NO_SERVICE:
+                        reg_status = Msmcomm.NetworkRegistrationStatus.NO_SERVICE;
+                        break;
+                    case Msmcomm.NetworkRegistrationStatusType.DENIED:
+                        reg_status = Msmcomm.NetworkRegistrationStatus.DENIED;
+                        break;
+                    case Msmcomm.NetworkRegistrationStatusType.ROAMING:
+                        reg_status = Msmcomm.NetworkRegistrationStatus.ROAMING;
+                        break;
+                    case Msmcomm.NetworkRegistrationStatusType.SEARCHING:
+                        reg_status = Msmcomm.NetworkRegistrationStatus.SEARCHING;
+                        break;
+                    case Msmcomm.NetworkRegistrationStatusType.HOME:
+                        reg_status = Msmcomm.NetworkRegistrationStatus.HOME;
+                        break;
+                    case Msmcomm.NetworkRegistrationStatusType.UNKNOWN:
+                        reg_status = Msmcomm.NetworkRegistrationStatus.UNKNOWN;
+                        break;
+                }
+
                 var ns_info = NetworkStateInfo(networkStateInfoMsg.only_rssi_update, 
                                                networkStateInfoMsg.change_field,
                                                networkStateInfoMsg.new_value,
@@ -100,7 +124,8 @@ namespace Msmcomm
                                                networkStateInfoMsg.service_domain,
                                                networkStateInfoMsg.service_capability,
                                                (bool) networkStateInfoMsg.gprs_attached,
-                                               networkStateInfoMsg.roam);
+                                               networkStateInfoMsg.roam,
+                                               reg_status);
                 
                 network_state_info(ns_info);
             });
@@ -301,7 +326,7 @@ namespace Msmcomm
         {
             UnsolicitedResponseHandlerWrapper handler = null;
             
-            // logger.debug(@"Got message: $(message.to_string())");
+            //logger.debug(@"Got message: $(message.to_string())");
             
             if (urc_handlers.has_key(type))
             {

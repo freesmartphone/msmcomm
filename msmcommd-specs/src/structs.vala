@@ -107,6 +107,19 @@ namespace Msmcomm
             this.current_state = current_state;
         }
     }
+
+    [CCode (cprefix = "MSMCOMMD_NETWORK_REGISTRATION_STATUS_TYPE_", cheader_filename = "msmcommd.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum NetworkRegistrationStatus
+    {
+        INVALID,
+        NO_SERVICE,
+        HOME,
+        SEARCHING,
+        DENIED,
+        ROAMING,
+        UNKNOWN,
+    }
     
     [CCode (type_id = "MSMCOMMD_NETWORK_STATE_INFO", cheader_filename = "msmcommd.h")]
     public struct NetworkStateInfo
@@ -121,8 +134,9 @@ namespace Msmcomm
         uint service_capability;
         bool gprs_attached;
         uint roam;
+        NetworkRegistrationStatus registration_status;
         
-        public NetworkStateInfo(bool only_rssi_update, uint change_field, uint new_value, string operator_name, uint rssi, uint ecio, uint service_domain, uint service_capability, bool gprs_attached, uint roam)
+        public NetworkStateInfo(bool only_rssi_update, uint change_field, uint new_value, string operator_name, uint rssi, uint ecio, uint service_domain, uint service_capability, bool gprs_attached, uint roam, NetworkRegistrationStatus registration_status)
         {
             this.only_rssi_update = only_rssi_update;
             this.change_field = change_field;
@@ -134,6 +148,7 @@ namespace Msmcomm
             this.service_capability = service_capability;
             this.gprs_attached = gprs_attached;
             this.roam = roam;
+            this.registration_status = registration_status;
         }
 
         public NetworkStateInfo.from_variant(GLib.Variant v)

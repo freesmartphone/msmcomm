@@ -640,6 +640,50 @@ namespace Msmcomm
 		return result;
 	}
 
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_NETWORK_REGISTRATION_STATUS_", cheader_filename = "msmcomm.h")]
+    public enum NetworkRegistrationStatusType
+    {
+        INVALID,
+        NO_SERVICE,
+        HOME,
+        SEARCHING,
+        DENIED,
+        ROAMING,
+        UNKNOWN,
+    }
+
+    public string networkRegistrationStatusToString(NetworkRegistrationStatusType type)
+    {
+        string result = "";
+
+        switch ( type )
+        {
+            case NetworkRegistrationStatusType.INVALID:
+                result = "INVALID";
+                break;
+            case NetworkRegistrationStatusType.NO_SERVICE:
+                result = "NO_SERVICE";
+                break;
+            case NetworkRegistrationStatusType.HOME:
+                result = "HOME";
+                break;
+            case NetworkRegistrationStatusType.SEARCHING:
+                result = "SEARCHING";
+                break;
+            case NetworkRegistrationStatusType.DENIED:
+                result = "DENIED";
+                break;
+            case NetworkRegistrationStatusType.ROAMING:
+                result = "ROAMING";
+                break;
+            default:
+                result = "<UNKNOWN>";
+                break;
+        }
+
+        return result;
+    }
+
 	// FIXME public enum ErrorType ...
 
     [CCode (cname = "msmcomm_response_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
@@ -1495,6 +1539,12 @@ namespace Msmcomm
 				[CCode (cname = "msmcomm_event_network_state_info_get_roam")]
 				get;
 			}
+
+            public NetworkRegistrationStatusType registration_status
+            {
+                [CCode (cname = "msmcomm_event_network_state_info_get_registration_status")]
+                get;
+            }
 		}
 
 		[Compact]

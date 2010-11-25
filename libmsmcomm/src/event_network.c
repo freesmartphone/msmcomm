@@ -233,7 +233,10 @@ msmcomm_network_registration_status_t msmcomm_event_network_state_info_get_regis
             result = MSMCOMM_NETWORK_REGISTRATION_STATUS_DENIED;
             break;
         case 4:
-            result = MSMCOMM_NETWORK_REGISTRATION_STATUS_DENIED;
+            result = MSMCOMM_NETWORK_REGISTRATION_STATUS_UNKNOWN;
+            break;
+        case 5:
+            result = MSMCOMM_NETWORK_REGISTRATION_STATUS_ROAMING;
             break;
     }
 
