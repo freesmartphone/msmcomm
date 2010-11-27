@@ -158,8 +158,8 @@ uint8_t *msg_get_networklist_prepare_data(struct msmcomm_message *msg)
 
 void msg_get_home_network_name_init(struct msmcomm_message *msg)
 {
-    msg->group_id = 0xf;
-    msg->msg_id = 0x3;
+    msg->group_id = 0x1b;
+    msg->msg_id = 0x16;
 
     msg->payload = talloc_zero(talloc_msmc_ctx, struct get_home_network_name_msg);
 }
