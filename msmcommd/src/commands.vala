@@ -240,7 +240,7 @@ namespace Msmcomm
             
             cmd.pin = pin;
                     
-            unowned Msmcomm.Reply.Sim response = (Msmcomm.Reply.Sim) (yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.Reply.GsdiCallback response = (Msmcomm.Reply.GsdiCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
@@ -595,7 +595,7 @@ namespace Msmcomm
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
             
-            unowned Msmcomm.Reply.Sim response = (Msmcomm.Reply.Sim)(yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.Reply.GsdiCallback response = (Msmcomm.Reply.GsdiCallback)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
             
             field_data = response.field_data;
