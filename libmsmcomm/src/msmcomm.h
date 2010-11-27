@@ -86,7 +86,7 @@ typedef enum
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_PA_SET_PARAM,
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_LCS_AGENT_CLIENT_RSP,
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_XTRA_SET_DATA,
-	MSMCOMM_MESSAGE_TYPE_RESPONSE_SIM,
+	MSMCOMM_MESSAGE_TYPE_RESPONSE_GSDI_CALLBACK,
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_VOICEMAIL_NR,
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_SOUND,
 	MSMCOMM_MESSAGE_TYPE_RESPONSE_CM_CALL_RETURN,
@@ -683,9 +683,9 @@ unsigned int msmcomm_event_get_networklist_get_plmn(struct msmcomm_message *msg,
 char *msmcomm_event_get_networklist_get_network_name(struct msmcomm_message *msg, int nnum);
 
 char* msmcomm_resp_sim_get_field_data(struct msmcomm_message *msg);
-unsigned int msmcomm_resp_sim_info_get_field_type(struct msmcomm_message *msg);
+unsigned int msmcomm_resp_gsdi_callback_get_field_type(struct msmcomm_message *msg);
 
-void msmcomm_message_sim_info_set_field_type(struct msmcomm_message *msg, unsigned int field_type);
+void msmcomm_message_gsdi_callback_set_field_type(struct msmcomm_message *msg, unsigned int field_type);
                                             
 uint8_t *msmcomm_resp_audio_modem_tuning_params_get_params(struct msmcomm_message *msg, unsigned int *len);
 

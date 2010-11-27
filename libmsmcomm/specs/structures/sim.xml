@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <namespace:sim>
 	<structures>
-        <structure name="sim_resp" length="1934">
+        <structure name="gsdi_callback_resp" length="1934">
             <field name="result0" start="4" type="uint8_t"/>
             <field name="ref_id" start="5" end="8" type="uint32_t"/>
+			<field name="resp_type" start="9" type="uint8_t"/>
             <field name="field_type_0" start="10" type="uint8_t"/>
             <field name="field_type_1" start="11" type="uint8_t"/>
             <field name="result1" start="12" type="uint8_t"/>

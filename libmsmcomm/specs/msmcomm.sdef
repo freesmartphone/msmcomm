@@ -54,9 +54,10 @@ end
 #-------------------------------------------------------------------
 # SIM
 #-------------------------------------------------------------------
-start sim_resp 1934
+start gsdi_callback_resp 1934
 [4] uint8_t result0
 [5-8] uint32_t ref_id
+[9] uint8_t resp_type
 [10] uint8_t field_type_0
 [11] uint8_t field_type_1
 [12] uint8_t result1
@@ -137,6 +138,9 @@ end
 start sim_info_msg 41
 [0-3] uint32_t ref_id
 [4-5] uint16_t sim_file
+end
+
+start gsdi_get_all_pin_status_info_msg 5
 end
 
 #-------------------------------------------------------------------

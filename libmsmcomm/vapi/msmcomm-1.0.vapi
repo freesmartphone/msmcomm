@@ -1392,18 +1392,20 @@ namespace Msmcomm
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-		public class Sim : Message
-		{
-            public string field_data {
-				[CCode (cname = "msmcomm_resp_sim_get_field_data")]
-				get;
-			}
-
-            public SimInfoFieldType field_type {
-                [CCode (cname = "msmcomm_resp_sim_info_get_field_type")]
+        public class GsdiCallback : Message
+        {
+            public string field_data 
+            {
+                [CCode (cname = "msmcomm_resp_gsdi_callback_get_field_data")]
                 get;
             }
-		}
+
+            public SimInfoFieldType field_type 
+            {
+                [CCode (cname = "msmcomm_resp_gsdi_callback_get_field_type")]
+                get;
+            }
+        }
 
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]

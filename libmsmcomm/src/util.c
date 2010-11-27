@@ -160,8 +160,8 @@ char *msmcomm_message_type_to_string(msmcomm_message_type_t type)
 			return strdup("RESPONSE_LCS_AGENT_CLIENT_RSP");
 		case MSMCOMM_MESSAGE_TYPE_RESPONSE_XTRA_SET_DATA:
 			return strdup("RESPONSE_XTRA_SET_DATA");
-		case MSMCOMM_MESSAGE_TYPE_RESPONSE_SIM:
-			return strdup("RESPONSE_SIM");
+		case MSMCOMM_MESSAGE_TYPE_RESPONSE_GSDI_CALLBACK:
+			return strdup("RESPONSE_GSDI_CALLBACK");
 		case MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_VOICEMAIL_NR:
 			return strdup("RESPONSE_GET_VOICEMAIL_NR");
 		case MSMCOMM_MESSAGE_TYPE_RESPONSE_SOUND:
