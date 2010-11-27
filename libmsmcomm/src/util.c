@@ -144,6 +144,8 @@ char *msmcomm_message_type_to_string(msmcomm_message_type_t type)
 			return strdup("COMMAND_CM_CALL_SUPS");
 		case MSMCOMM_MESSAGE_TYPE_COMMAND_GET_HOME_NETWORK_NAME:
 			return strdup("COMMAND_GET_HOME_NETWORK_NAME");
+        case MSMCOMM_MESSAGE_TYPE_COMMAND_GSDI_GET_ALL_PIN_STATUS_INFO:
+            return strdup("COMMAND_GSDI_GET_ALL_PIN_STATUS_INFO");
 		case MSMCOMM_MESSAGE_TYPE_RESPONSE_TEST_ALIVE:
 			return strdup("RESPONSE_TEST_ALIVE");
 		case MSMCOMM_MESSAGE_TYPE_RESPONSE_GET_FIRMWARE_INFO:

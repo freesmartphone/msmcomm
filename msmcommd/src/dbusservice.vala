@@ -754,6 +754,14 @@ namespace Msmcomm
             var cmd = new GetSmsCenterNumberCommand();
             yield modem.processCommand(cmd);
         }
+        
+        public async void get_all_pin_status_info() throws DBus.Error, Msmcomm.Error
+        {
+            checkModemActivity();
+            
+            var cmd = new GetAllPinStatusInfo();
+            yield modem.processCommand(cmd);
+        }
     }
 } // namespace Msmcomm
 

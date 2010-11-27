@@ -59,5 +59,7 @@ namespace Msmcomm
         public abstract async void set_audio_profile(uint class, uint sub_class) throws DBus.Error, Msmcomm.Error;
         
         public abstract async void get_sms_center_number() throws DBus.Error, Msmcomm.Error;
+        
+        public abstract async void get_all_pin_status_info() throws DBus.Error, Msmcomm.Error;
     }
 }
