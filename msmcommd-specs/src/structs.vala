@@ -153,20 +153,20 @@ namespace Msmcomm
 
         public NetworkStateInfo.from_variant(GLib.Variant v)
         {
-            var type_string = "(biisiiiibi)";
+            var type_string = "(biisiiiibis)";
             if ( v.get_type_string().ascii_casecmp( type_string ) == 0 )
             {
                 v.get( type_string, only_rssi_update, change_field, new_value,
                        operator_name, rssi, ecio, service_domain, service_capability,
-                       gprs_attached, roam );
+                       gprs_attached, roam, registration_status );
             }
         }
 
         public GLib.Variant to_variant()
         {
-            return new GLib.Variant("(biisiiiibi)", only_rssi_update, change_field,
+            return new GLib.Variant("(biisiiiibis)", only_rssi_update, change_field,
                                     new_value, operator_name, rssi, ecio, service_domain, service_capability,
-                                    gprs_attached, roam);
+                                    gprs_attached, roam, registration_status);
         }
     }
     
