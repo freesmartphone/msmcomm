@@ -69,7 +69,7 @@ typedef enum
 	MSMCOMM_MESSAGE_TYPE_COMMAND_SIM_INFO,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE,
-	MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_GET_SMS_CENTER_NUMBER,
+	MSMCOMM_MESSAGE_TYPE_COMMAND_WMS_READ_TEMPLATE,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_CM_CALL_SUPS,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_GET_HOME_NETWORK_NAME,
 	MSMCOMM_MESSAGE_TYPE_COMMAND_GSDI_GET_ALL_PIN_STATUS_INFO,
@@ -524,6 +524,14 @@ typedef enum
 	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_DROP_SELF_AND_CONNECT_ACTIVE,
 } msmcomm_cm_call_sups_comand_type_t;
 
+
+typedef enum
+{
+	MSMCOMM_WMS_TEMPLATE_TYPE_INVALID,
+	MSMCOMM_WMS_TEMPLATE_TYPE_SMSC_ADDRESS,
+	MSMCOMM_WMS_TEMPLATE_TYPE_EMAIL_ADDRESS,
+} msmcomm_wms_template_type_t;
+
 /*
  * Some constants
  */
@@ -609,6 +617,8 @@ void msmcomm_message_change_pin_set_new_pin(struct msmcomm_message *msg, const c
 
 void msmcomm_message_manage_calls_set_call_id(struct msmcomm_message *msg, uint8_t call_id);
 void msmcomm_message_manage_calls_set_command_type(struct msmcomm_message *msg, msmcomm_cm_call_sups_comand_type_t command_type);
+
+void msmcomm_message_wms_read_template_set_template(struct msmcomm_message *msg, msmcomm_wms_template_type_t template_type);
 
 uint8_t msmcomm_event_sms_wms_read_template_get_digit_mode(struct msmcomm_message *msg);
 uint8_t msmcomm_event_sms_wms_read_template_get_number_mode(struct msmcomm_message *msg);

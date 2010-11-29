@@ -279,5 +279,14 @@ namespace Msmcomm
         ACTIVATE_HELD,
         DROP_SELF_AND_CONNECT_ACTIVE,
     }
+
+    [CCode (cprefix = "MSMCOMMD_TEMPLATE_TYPE_", cheader_filename = "msmcommd.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum TemplateType
+    {
+        INVALID,
+        SMSC_ADDRESS,
+        EMAIL_ADDRESS,
+    }
     
 } // namespace Msmcomm

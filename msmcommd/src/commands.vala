@@ -631,14 +631,26 @@ namespace Msmcomm
         }
     }
     
-    public class GetSmsCenterNumberCommand : BaseCommand
+    public class GetAllPinStatusInfoCommand : BaseCommand
     {
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.SmsGetSmsCenterNumber();
+            var cmd = new Msmcomm.Command.GetAllPinStatusInfo();
             
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
+        }
+    }
+
+    public class ReadTemplateCommand : BaseCommand
+    {
+        public TemplateType template_type { get; set; }
+
+        public override async void run() throws Msmcomm.Error
+        {
+            var cmd = new Msmcomm.Command.ReadTemplate();
+
+            // FIXME ...
         }
     }
 }

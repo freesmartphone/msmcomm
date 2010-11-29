@@ -49,7 +49,7 @@ DEFINE_MESSAGE_TYPE(get_phonebook_properties)
 DEFINE_MESSAGE_TYPE(get_audio_modem_tuning_params)
 DEFINE_MESSAGE_TYPE(sms_acknowledge_incommming_message)
 DEFINE_MESSAGE_TYPE(cm_call_sups)
-DEFINE_MESSAGE_TYPE(sms_get_sms_center_number)
+DEFINE_MESSAGE_TYPE(wms_read_template)
 DEFINE_MESSAGE_TYPE(get_home_network_name)
 DEFINE_MESSAGE_TYPE(gsdi_get_all_pin_status_info)
 
@@ -82,7 +82,7 @@ struct descriptor msg_descriptors[] = {
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS, get_audio_modem_tuning_params),
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE, sms_acknowledge_incommming_message),
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_CM_CALL_SUPS, cm_call_sups),
-    REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_GET_SMS_CENTER_NUMBER, sms_get_sms_center_number),
+    REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_WMS_READ_TEMPLATE, wms_read_template),
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_GET_HOME_NETWORK_NAME, get_home_network_name),
     REGISTER_MESSAGE_TYPE(MSMCOMM_MESSAGE_TYPE_COMMAND_GSDI_GET_ALL_PIN_STATUS_INFO, gsdi_get_all_pin_status_info),
 };

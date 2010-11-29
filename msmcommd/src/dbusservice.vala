@@ -747,19 +747,20 @@ namespace Msmcomm
             yield modem.processCommand(cmd);
         }
         
-        public async void get_sms_center_number() throws DBus.Error, Msmcomm.Error
-        {
-            checkModemActivity();
-            
-            var cmd = new GetSmsCenterNumberCommand();
-            yield modem.processCommand(cmd);
-        }
-        
         public async void get_all_pin_status_info() throws DBus.Error, Msmcomm.Error
         {
             checkModemActivity();
             
-            var cmd = new GetAllPinStatusInfo();
+            var cmd = new GetAllPinStatusInfoCommand();
+            yield modem.processCommand(cmd);
+        }
+
+        public async void read_template(TemplateType tt) throws DBus.Error, Msmcomm.Error
+        {
+            checkModemActivity();
+
+            var cmd = new ReadTemplateCommand();
+            cmd.template_type = tt;
             yield modem.processCommand(cmd);
         }
     }

@@ -29,9 +29,9 @@
 		</structure>
 		<structure name="wms_resp" length="0">
 		</structure>
-		<structure name="sms_get_sms_center_number_msg" length="9">
+		<structure name="wms_read_template_msg" length="9">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="value0" start="4" type="uint8_t"/>
+			<field name="record" start="4" end="5" type="uint16_t"/>
 		</structure>
 	</structures>
 </namespace:sms>

@@ -67,7 +67,7 @@ namespace Msmcomm
         COMMAND_SIM_INFO,
         COMMAND_GET_AUDIO_MODEM_TUNING_PARAMS,
         COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE,
-        COMMAND_SMS_GET_SMS_CENTER_NUMBER,
+        COMMAND_WMS_READ_TEMPLATE,
         COMMAND_CM_CALL_SUPS,
         COMMAND_GET_HOME_NETWORK_NAME,
         COMMAND_GSDI_GET_ALL_PIN_STATUS_INFO,
@@ -1227,10 +1227,24 @@ namespace Msmcomm
         
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-        public class SmsGetSmsCenterNumber : Message
+        public class ReadTemplate : Message
         {
+            [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_WMS_TEMPLATE_TYPE_", cheader_filename = "msmcomm.h")]
+            public enum TemplateType
+            {
+                INVALID,
+                SMSC_ADDRESS,
+                EMAIL_ADDRESS,
+            }
+
             [CCode (cname = "msmcomm_create_message")]
-            public SmsGetSmsCenterNumber(MessageType t = MessageType.COMMAND_SMS_GET_SMS_CENTER_NUMBER);
+            public ReadTemplate(MessageType t = MessageType.COMMAND_WMS_READ_TEMPLATE);
+            
+            public TemplateType template
+            {
+                [CCode (cname = "msmcomm_message_wms_read_template_set_template")]
+                set;
+            }
         }
     } // namespace Command
 
