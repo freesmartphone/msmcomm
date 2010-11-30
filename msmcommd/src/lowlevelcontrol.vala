@@ -49,7 +49,7 @@ namespace Msmcomm
             sysfsnodes = new string[3];
             sysfsnodes[SysfsNodeType.POWER_ON] = config.stringValue("lowlevel", "sysfs_power_on", "/sys/user_hw/pins/modem/power_on/level");
             sysfsnodes[SysfsNodeType.BOOT_MODE] = config.stringValue("lowlevel", "sysfs_boot_mode", "/sys/user_hw/pins/modem/boot_mode/level");
-            sysfsnodes[SysfsNodeType.WAKEUP_MODEM] = config.stringValue("lowlevel", "sysfs_wakeup_modem", "/sys/user_hw/pins/wakeup_modem/level");
+            sysfsnodes[SysfsNodeType.WAKEUP_MODEM] = config.stringValue("lowlevel", "sysfs_wakeup_modem", "/sys/user_hw/pins/modem/wakeup_modem/level");
         }
         
         public void reset()
