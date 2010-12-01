@@ -41,9 +41,9 @@ namespace Msmcomm
         {
             int bread = 0;
             var data = new uint8[4096];
-            
+
             bread = t.read(data, data.length);
-            
+
             if (!active)
             {
                 logger.debug("Could not read to any data from modem, as we are in in-active mode!");
@@ -150,23 +150,20 @@ namespace Msmcomm
         
         /*
          * Something within the link layer went wrong and we should restart 
-         * the whole link layer stack.
+         * the whole stack - this includes a hard reset of the modem
          */
         private void handleModemRequestReset()
         {
-            // FIXME use lowlevel reset here!
-            
+            llc.stop();
+            closeModemTransport();
+
             if (use_lowlevel)
             {
                 lowlevel.reset();
             }
-            
-            /*
-            closeModemTransport();
+        
             openModemTransport();
-            */
-            
-            llc.reset();
+            llc.start();
         }
         
         private void handleLinkSetupComplete()
