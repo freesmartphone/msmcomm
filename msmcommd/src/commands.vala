@@ -649,8 +649,24 @@ namespace Msmcomm
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.ReadTemplate();
+            var tt = Msmcomm.Command.ReadTemplate.TemplateType.INVALID;
+            
+            switch (template_type)
+            {
+                case Msmcomm.TemplateType.SMSC_ADDRESS:
+                    tt = Msmcomm.Command.ReadTemplate.TemplateType.SMSC_ADDRESS;
+                    break;
+                case Msmcomm.TemplateType.EMAIL_ADDRESS:
+                    tt = Msmcomm.Command.ReadTemplate.TemplateType.EMAIL_ADDRESS;
+                    break;
+                default:
+                    throw new Msmcomm.Error.INVALID_ARGUMENTS("Invalid arguments supplied for ReadTemplate command");
+            }
 
-            // FIXME ...
+            cmd.template = tt;
+
+            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            checkResponse(response);
         }
     }
 }
