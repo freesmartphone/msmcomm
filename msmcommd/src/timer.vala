@@ -28,6 +28,7 @@ namespace Msmcomm
         public int interval { get; set; default = 0; }
         public int priority { get; set; default = GLib.Priority.DEFAULT; }
         public bool running { get { return id > 0; } }
+        public uint occurence { get; set; default = 0; }
 
         //
         // private API
@@ -43,6 +44,8 @@ namespace Msmcomm
             {
                 id = 0;
             }
+
+            occurence += 1;
             
             return result;
         }
@@ -58,6 +61,7 @@ namespace Msmcomm
         {
             if (id == 0) 
             {
+                occurence = 0;
                 id = GLib.Timeout.add_full(priority, interval, onTimerEvent);
             }
         }

@@ -25,6 +25,8 @@ namespace Msmcomm
     {
         private Timer sync_timer;
 
+        private const uint MAX_SYNC_RETRIES = 10;
+
         //
         // private API
         //
@@ -35,7 +37,14 @@ namespace Msmcomm
             {
                 return false;
             }
-            
+
+            // If the timer overlaps more than we expected it to do than we tell the modem
+            // control layer to reset the modem and start again
+            if (timer.occurence > MAX_SYNC_RETRIES)
+            {
+                requestReset();
+            }
+
             createAndSendFrame(FrameType.SYNC); 
             return true;
         }
