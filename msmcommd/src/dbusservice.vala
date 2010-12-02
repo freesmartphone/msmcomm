@@ -397,7 +397,9 @@ namespace Msmcomm
 
                 dbusconn.register_object(objectpath, this);
                 
+                #if 0
                 Idle.add(registerWithResource);
+                #endif
             }
             catch (DBus.Error err)
             {
