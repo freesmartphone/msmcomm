@@ -22,13 +22,11 @@
 namespace Msmcomm
 {
 
-public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
+public class LinkLayerControl : ILinkControl, ITransmissionControl, AbstractObject
 {
-    private FsoFramework.Logger logger;
     private LinkContext context;
     private Gee.ArrayList<AbstractLinkHandler> handlers;
     private TransmissionHandler transmission_handler;
-    private FsoFramework.SmartKeyFile config;
     private ByteArray in_buffer;
 
     //
@@ -37,8 +35,6 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
 
     public LinkLayerControl()
     {
-        logger = FsoFramework.theLogger;
-        config = FsoFramework.theConfig;
         context = new LinkContext();
         context.stateChanged.connect(onStateChanged);
 
@@ -55,9 +51,16 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
         
         configure();
     }
+
+    public override string  repr()
+    {
+        return "<>";
+    }
     
     public void start()
     {
+        logger.debug("starting ...");
+
         context.reset();
         foreach (AbstractLinkHandler handler in handlers)
         {
@@ -67,6 +70,8 @@ public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
 
     public void stop()
     {
+        logger.debug("stopping ...");
+
         foreach (AbstractLinkHandler handler in handlers)
         {
             handler.stop();

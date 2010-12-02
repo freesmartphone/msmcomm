@@ -182,6 +182,7 @@ namespace Msmcomm
             modem_config = new Gee.HashMap<string,string>();
             lowlevel = new LowLevelControl();
             in_buffer = new GLib.ByteArray();
+            statusUpdate.connect(handleStatusUpdate);
         }
 
         /*
@@ -260,6 +261,8 @@ namespace Msmcomm
          */
         public void stop()
         {
+            logger.debug("Someone wants the modem controller to be stopped ...");
+
             if (!active)
             {
                 logger.debug("Modem should be stopped but is not in active mode.");
@@ -270,6 +273,11 @@ namespace Msmcomm
             closeModemTransport();
             llc.stop();
             statusUpdate(Msmcomm.ModemControlStatus.INACTIVE);
+        }
+        
+        public void handleStatusUpdate(Msmcomm.ModemControlStatus status)
+        {
+            logger.debug("Modem control switched to status '$(modemControlStatusToString(status))'");
         }
 
         /*
