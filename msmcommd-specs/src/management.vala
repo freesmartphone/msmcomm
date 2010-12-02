@@ -28,6 +28,26 @@ namespace Msmcomm
         ACTIVE,
         UNKNOWN,
     }
+
+    public string modemControlStatusToString(ModemControlStatus status)
+    {
+        string result = "<UNKNOWN>";
+
+        switch (status)
+        {
+            case ModemControlStatus.INACTIVE:
+                result = "INACTIVE";
+                break;
+            case ModemControlStatus.ACTIVE:
+                result = "ACTIVE";
+                break;
+            case ModemControlStatus.UNKNOWN:
+                result = "UNKNOWN";
+                break;
+        }
+
+        return result;
+    }
     
     [DBus (timeout = 120000, name = "org.msmcomm.Management")]
     public interface Management : GLib.Object
