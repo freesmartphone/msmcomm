@@ -58,7 +58,12 @@ namespace Msmcomm
         // private API
         //
         
-        protected void requestReset()
+        protected void requestLinkReset()
+        {
+            control.reset();
+        }
+
+        protected void requestModemReset()
         {
             control.requestModemReset();
         }

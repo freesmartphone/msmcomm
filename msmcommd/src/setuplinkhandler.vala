@@ -42,7 +42,7 @@ namespace Msmcomm
             // control layer to reset the modem and start again
             if (timer.occurence > MAX_SYNC_RETRIES)
             {
-                requestReset();
+                requestModemReset();
             }
 
             createAndSendFrame(FrameType.SYNC); 
@@ -116,7 +116,7 @@ namespace Msmcomm
                         logger.debug("got SYNC FRAME in ACTIVE state -> restart link!");
                         // The spec tolds us to restart the whole stack if we receive
                         // a sync message in ACTIVE state
-                        requestReset();
+                        requestLinkReset();
                     }
                     else if (frame.fr_type == FrameType.CONFIG)
                     {
@@ -133,7 +133,7 @@ namespace Msmcomm
                     break;
                 default:
                     logger.error("arrived in invalid state ... assuming restart!");
-                    requestReset();
+                    requestLinkReset();
                     break;
             }
 

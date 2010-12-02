@@ -150,9 +150,11 @@ namespace Msmcomm
         
         /*
          * Something within the link layer went wrong and we should restart 
-         * the whole stack - this includes a hard reset of the modem
+         * the whole stack - this includes a hard reset of the modem. This is different
+         * from what does inside when something went wrong. The link restarts itself
+         * when it detects that it runs out of sync with the modem and tries to resync.
          */
-        private void handleModemRequestReset()
+        private void handleRequestModemReset()
         {
             llc.stop();
             closeModemTransport();
@@ -165,7 +167,7 @@ namespace Msmcomm
             openModemTransport();
             llc.start();
         }
-        
+
         private void handleLinkSetupComplete()
         {
             statusUpdate(Msmcomm.ModemControlStatus.ACTIVE);
@@ -203,7 +205,7 @@ namespace Msmcomm
             llc = new LinkLayerControl();
             llc.requestHandleSendData.connect(handleModemRequestSendData);
             llc.requestHandleFrameContent.connect(handleModemRequestFrameContent);
-            llc.requestModemReset.connect(handleModemRequestReset);
+            llc.requestModemReset.connect(handleRequestModemReset);
             llc.requestHandleLinkSetupComplete.connect(() => { handleLinkSetupComplete(); });
             
             logger.debug("Worker setup finished!");
