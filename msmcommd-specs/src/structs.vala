@@ -34,7 +34,7 @@ namespace Msmcomm
         MBN,
         UNKNOWN,
     }
-    
+
     [CCode (type_id = "MSMCOMMD_PHONEBOOK_PROPERTIES", cheader_filename = "msmcommd.h")]
     public struct PhonebookProperties
     {
@@ -42,7 +42,7 @@ namespace Msmcomm
         public int slots_used;
         public int max_chars_per_title;
         public int max_chars_per_number;
-        
+
         public PhonebookProperties(int slot_count, int slots_used, int max_chars_per_title, int max_chars_per_number)
         {
             this.slot_count = slot_count;
@@ -51,7 +51,7 @@ namespace Msmcomm
             this.max_chars_per_number = max_chars_per_number;
         }
     }
-    
+
     [CCode (type_id = "MSMCOMMD_PHONEBOOK_ENTRY", cheader_filename = "msmcommd.h")]
     public struct PhonebookEntry
     {
@@ -60,7 +60,7 @@ namespace Msmcomm
         public string number;
         public string title;
         public string encoding_type;
-        
+
         public PhonebookEntry(PhonebookBookType book_type, int position, string number, string title, string encoding_type)
         {
             this.book_type = book_type;
@@ -70,38 +70,38 @@ namespace Msmcomm
             this.encoding_type = encoding_type;
         }
     }
-    
+
     [CCode (type_id = "MSMCOMMD_NETWORK_PROVIDER", cheader_filename = "msmcommd.h")]
     public struct NetworkProvider
     {
         string operator_name;
         uint plmn;
-        
+
         public NetworkProvider(string operator_name, uint plmn)
         {
             this.operator_name = operator_name;
             this.plmn = plmn;
         }
     }
-    
+
     [CCode (type_id = "MSMCOMMD_FIRMWARE_INFO", cheader_filename = "msmcommd.h")]
     public struct FirmwareInfo
     {
         string version_string;
         int hci_version;
-        
+
         public FirmwareInfo(string version_string, int hci_version)
         {
             this.version_string = version_string;
             this.hci_version = hci_version;
         }
     }
-    
+
     [CCode (type_id = "MSMCOMMD_PHONE_STATE_INFO", cheader_filename = "msmcommd.h")]
     public struct PhoneStateInfo
     {
         int current_state;
-        
+
         public PhoneStateInfo(int current_state)
         {
             this.current_state = current_state;
@@ -120,7 +120,7 @@ namespace Msmcomm
         ROAMING,
         UNKNOWN,
     }
-    
+
     [CCode (type_id = "MSMCOMMD_NETWORK_STATE_INFO", cheader_filename = "msmcommd.h")]
     public struct NetworkStateInfo
     {
@@ -129,13 +129,13 @@ namespace Msmcomm
         uint new_value;
         string operator_name;
         uint rssi;
-        uint ecio; 
+        uint ecio;
         uint service_domain;
         uint service_capability;
         bool gprs_attached;
         uint roam;
         NetworkRegistrationStatus registration_status;
-        
+
         public NetworkStateInfo(bool only_rssi_update, uint change_field, uint new_value, string operator_name, uint rssi, uint ecio, uint service_domain, uint service_capability, bool gprs_attached, uint roam, NetworkRegistrationStatus registration_status)
         {
             this.only_rssi_update = only_rssi_update;
@@ -153,7 +153,7 @@ namespace Msmcomm
 
         public NetworkStateInfo.from_variant(GLib.Variant v)
         {
-            var type_string = "(biisiiiibis)";
+            var type_string = "(biisiiiibii)";
             if ( v.get_type_string().ascii_casecmp( type_string ) == 0 )
             {
                 v.get( type_string, only_rssi_update, change_field, new_value,
@@ -164,12 +164,12 @@ namespace Msmcomm
 
         public GLib.Variant to_variant()
         {
-            return new GLib.Variant("(biisiiiibis)", only_rssi_update, change_field,
+            return new GLib.Variant("(biisiiiibii)", only_rssi_update, change_field,
                                     new_value, operator_name, rssi, ecio, service_domain, service_capability,
                                     gprs_attached, roam, registration_status);
         }
     }
-    
+
     [CCode (type_id = "MSMCOMMD_CALL_INFO", cheader_filename = "msmcommd.h")]
     public struct CallInfo
     {
@@ -211,7 +211,7 @@ namespace Msmcomm
             return new GLib.Variant( "(ssiii)", number, type, id, reject_type, reject_value );
         }
     }
-    
+
     [CCode (cprefix = "MSMCOMMD_CHARGER_STATUS_MODE_", cheader_filename = "msmcommd.h")]
     [DBus (use_string_marshalling = true)]
     public enum ChargerStatusMode
@@ -220,7 +220,7 @@ namespace Msmcomm
         USB,
         INDUCTIVE,
     }
-    
+
     [CCode (cprefix = "MSMCOMMD_CHARGER_STATUS_VOLTAGE_", cheader_filename = "msmcommd.h")]
     [DBus (use_string_marshalling = true)]
     public enum ChargerStatusVoltage
@@ -230,13 +230,13 @@ namespace Msmcomm
         VOLTAGE_1A,
         VOLTAGE_UNKNOWN,
     }
-       
-    [CCode (type_id = "MSMCOMMD_CHARGER_STATUS", cheader_filename = "msmcommd.h")] 
+
+    [CCode (type_id = "MSMCOMMD_CHARGER_STATUS", cheader_filename = "msmcommd.h")]
     public struct ChargerStatus
     {
         public ChargerStatusMode mode;
         public ChargerStatusVoltage voltage;
-        
+
         public ChargerStatus(ChargerStatusMode mode, ChargerStatusVoltage voltage)
         {
             this.mode = mode;
@@ -245,27 +245,27 @@ namespace Msmcomm
     }
 
     [CCode (cprefix = "MSMCOMMD_MODEM_OPERATION_MODE_", cheader_filename = "msmcommd.h")]
-    [DBus (use_string_marshalling = true)]    
+    [DBus (use_string_marshalling = true)]
     public enum ModemOperationMode
     {
         OFFLINE,
         ONLINE,
         UNKNOWN,
     }
-    
+
     [CCode (type_id = "MSMCOMMD_SMS_INFO", cheader_filename = "msmcommd.h")]
     public struct SmsInfo
     {
         public string sender_number { get; set; }
         public uint8[] pdu { get; set; }
-        
+
         public SmsInfo(string sender_number, uint8[] pdu)
         {
             this.sender_number = sender_number;
             this.pdu = pdu;
         }
     }
-    
+
     [CCode (cprefix = "MSMCOMMD_MODEM_OPERATION_MODE_", cheader_filename = "msmcommd.h")]
     [DBus (use_string_marshalling = true)]
     public enum CallCommandType
@@ -288,5 +288,6 @@ namespace Msmcomm
         SMSC_ADDRESS,
         EMAIL_ADDRESS,
     }
-    
+
 } // namespace Msmcomm
+
