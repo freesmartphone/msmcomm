@@ -53,6 +53,8 @@ namespace Msmcomm
     public interface Management : GLib.Object
     {
         public abstract async void reset() throws DBus.Error, Msmcomm.Error;
+        public abstract async void initialize() throws DBus.Error, Msmcomm.Error;
+        public abstract async void shutdown() throws DBus.Error, Msmcomm.Error;
         public abstract async bool get_active() throws DBus.Error, Msmcomm.Error;
         
         public signal void status_update(ModemControlStatus status);
