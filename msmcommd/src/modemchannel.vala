@@ -136,6 +136,7 @@ namespace Msmcomm
 
         private bool checkResponseForCommandHandler(Msmcomm.Message response, CommandHandler bundle)
         {
+            logger.debug("+checkResponseForCommandHandler");
             bool result = false;
 
             // Ugly, ugly hack: As the GET_PHONEBOOK_PROPERTIES response does not
@@ -145,6 +146,7 @@ namespace Msmcomm
                 result = response.index == bundle.command.index;
             }
 
+            logger.debug("-checkResponseForCommandHandler");
             return true;
         }
 
@@ -161,15 +163,21 @@ namespace Msmcomm
 
         protected void onSolicitedResponse( CommandHandler bundle, Msmcomm.Message response )
         {
-
-            if ( checkResponseForCommandHandler( response, bundle ) )
+            if ( bundle.callback != null )
             {
-                bundle.response = response;
-                bundle.callback();
+                if ( checkResponseForCommandHandler( response, bundle ) )
+                {
+                    bundle.response = response;
+                    bundle.callback();
+                }
+                else
+                {
+                    logger.error( @"got response for current command with wrong ref id ($(response.index), $(bundle.command.index))!" );
+                }
             }
             else
             {
-                logger.error( @"got response for current command with wrong ref id ($(response.index), $(bundle.command.index))!" );
+                logger.debug("Last issued command does not have a callback so this command was issued as a sync one; ignoring response");
             }
         }
 
@@ -217,9 +225,8 @@ namespace Msmcomm
                     reset();
                     return;
                 }
-                var t = current as CommandHandler;
-                assert (t != null);
-                onSolicitedResponse( (CommandHandler)current, message );
+
+                onSolicitedResponse( (CommandHandler) current, message );
                 current = null;
                 Idle.add( checkRestartingQueue );
             }
