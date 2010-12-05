@@ -27,19 +27,19 @@ namespace Msmcomm
         private uint timeoutWatch;
         protected CommandHandler current;
         private int current_event_type;
-        
+
         public ModemControl modem;
         public static Msmcomm.Context context;
         public uint32 current_index;
-        
+
         //
         // public API
         //
-        
+
         public ModemChannel(ModemControl modem)
         {
             this.modem = modem;
-            
+
             q = new Gee.LinkedList<CommandHandler>();
             current_index = 0;
             context = new Msmcomm.Context();
@@ -52,17 +52,17 @@ namespace Msmcomm
             context.registerWriteHandler( handleMsmcommWriteRequest );
             return true;
         }
-        
+
         //
         // signals
         //
-        
+
         public signal void requestHandleUnsolicitedResponse(Msmcomm.MessageType type, Msmcomm.Message message);
-        
+
         //
         // private API
         //
-        
+
         protected bool checkRestartingQueue()
         {
             if ( current == null && q.size > 0 )
@@ -75,7 +75,7 @@ namespace Msmcomm
                 return false;
             }
         }
-        
+
         protected void writeNextCommand()
         {
             current = q.poll_head();
@@ -128,7 +128,7 @@ namespace Msmcomm
             current = null;
             q.clear();
         }
-        
+
         private void handleMsmcommWriteRequest(uint8[] data)
         {
             modem.send(data, data.length);
@@ -137,14 +137,14 @@ namespace Msmcomm
         private bool checkResponseForCommandHandler(Msmcomm.Message response, CommandHandler bundle)
         {
             bool result = false;
-            
+
             // Ugly, ugly hack: As the GET_PHONEBOOK_PROPERTIES response does not
-            // has a ref_id field, we disable the check for only this response !!!
+            // has a ref_id field, we disable the check only for this response !!!
             if (current_event_type != Msmcomm.MessageType.RESPONSE_GET_PHONEBOOK_PROPERTIES)
             {
                 result = response.index == bundle.command.index;
             }
-            
+
             return true;
         }
 
@@ -161,7 +161,7 @@ namespace Msmcomm
 
         protected void onSolicitedResponse( CommandHandler bundle, Msmcomm.Message response )
         {
-            
+
             if ( checkResponseForCommandHandler( response, bundle ) )
             {
                 bundle.response = response;
@@ -182,14 +182,14 @@ namespace Msmcomm
             yield;
             return handler.response;
         }
-        
+
         public void enqueueSync( owned Msmcomm.Message command, int retries = 0 )
         {
             command.index = nextValidMessageIndex();
             var handler = new CommandHandler( command, 0 );
             enqueueCommand( handler );
         }
-        
+
         public void handleIncommingData(uint8[] data)
         {
             context.processData((void*) data, data.length);
@@ -199,7 +199,7 @@ namespace Msmcomm
         {
             var et = Msmcomm.messageTypeToString( event );
             logger.debug( et );
-            
+
             current_event_type = event;
 
             if ( message.type == Msmcomm.MessageType.EVENT_RESET_RADIO_IND )
@@ -208,7 +208,7 @@ namespace Msmcomm
                 logger.debug( "Modem was reseted, we should do the same ..." );
                 reset();
             }
-            
+
             if ( message.class == Msmcomm.MessageClass.RESPONSE )
             {
                 if (current == null)
@@ -217,7 +217,8 @@ namespace Msmcomm
                     reset();
                     return;
                 }
-                
+                var t = current as CommandHandler;
+                assert (t != null);
                 onSolicitedResponse( (CommandHandler)current, message );
                 current = null;
                 Idle.add( checkRestartingQueue );
@@ -227,10 +228,11 @@ namespace Msmcomm
                 requestHandleUnsolicitedResponse(event, message);
             }
         }
-        
+
         public override string repr()
         {
             return "<>";
         }
     }
 }
+

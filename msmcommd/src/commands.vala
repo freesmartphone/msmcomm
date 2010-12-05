@@ -26,9 +26,9 @@ namespace Msmcomm
     public abstract class BaseCommand
     {
         public ModemChannel channel { get; set; }
-    
+
         public abstract async void run() throws Msmcomm.Error;
-        
+
         protected void checkResponse(Msmcomm.Message response) throws Msmcomm.Error
         {
             if (response.result != Msmcomm.ResultType.OK)
@@ -38,15 +38,15 @@ namespace Msmcomm
             }
         }
     }
-    
+
     public class ChangeOperationModeCommand : BaseCommand
     {
         public ModemOperationMode mode { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.ChangeOperationMode();
-            
+
             switch (mode)
             {
                 case ModemOperationMode.OFFLINE:
@@ -59,72 +59,74 @@ namespace Msmcomm
                     var msg = "Invalid argument supplied for mode parameter for ChangeOperationMode command";
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
-            
+
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
-        } 
+        }
     }
-    
+
     public class ResetCommand : BaseCommand
     {
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.ChangeOperationMode();
             cmd.mode = Msmcomm.OperationMode.RESET;
-            
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
-            checkResponse(response);
+
+            // NOTE We send the reset command without waiting for it's response
+            // as we do not ever get one. The user have to wait for the
+            // reset_radio_ind event to notify when the reset is done.
+            channel.enqueueSync((owned) cmd);
         }
     }
 
     public class TestAliveCommand : BaseCommand
     {
         public override async void run() throws Msmcomm.Error
-        {  
+        {
             var cmd = new Msmcomm.Command.TestAlive();
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
-    
+
     public class GetImeiCommand : BaseCommand
     {
         public string imei { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
-        {  
+        {
             var cmd = new Msmcomm.Command.GetImei();
             unowned Msmcomm.Reply.GetImei response = (Msmcomm.Reply.GetImei) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
-            
+
             imei = response.imei;
         }
     }
-    
+
     public class GetFirmwareInfoCommand : BaseCommand
     {
         public FirmwareInfo result { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
-        {  
+        {
             var cmd = new Msmcomm.Command.GetFirmwareInfo();
             unowned Msmcomm.Reply.GetFirmwareInfo response = (Msmcomm.Reply.GetFirmwareInfo)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
-            
+
             result = FirmwareInfo(response.info, response.hci);
         }
     }
-    
+
     public class ChargingCommand : BaseCommand
     {
         public ChargerStatusMode mode { get; set; }
         public ChargerStatusVoltage voltage { get; set; }
-    
+
         public override async void run() throws Msmcomm.Error
-        {  
+        {
             var cmd = new Msmcomm.Command.Charging();
             var msg = "";
-            
+
             switch (mode)
             {
                 case ChargerStatusMode.USB:
@@ -137,7 +139,7 @@ namespace Msmcomm
                     msg = "Invalid argument supplied for mode parameter for Charging command";
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
-            
+
             switch (voltage)
             {
                 case ChargerStatusVoltage.VOLTAGE_250mA:
@@ -153,23 +155,23 @@ namespace Msmcomm
                     msg = "Invalid argument supplied for voltage parameter for Charging command";
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
-            
+
             unowned Msmcomm.Reply.Charging response = (Msmcomm.Reply.Charging)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
-    
+
     public class GetChargerStatusCommand : BaseCommand
     {
         // OUT
         public ChargerStatus result;
-    
+
         public override async void run() throws Msmcomm.Error
-        { 
+        {
             var cmd = new Msmcomm.Command.GetChargerStatus();
             unowned Msmcomm.Reply.ChargerStatus response = (Msmcomm.Reply.ChargerStatus)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
-            
+
             switch (response.mode)
             {
                 case Msmcomm.ChargingMode.USB:
@@ -182,7 +184,7 @@ namespace Msmcomm
                     result.mode = ChargerStatusMode.UNKNOWN;
                     break;
             }
-            
+
             switch (response.voltage)
             {
                 case Msmcomm.UsbVoltageMode.MODE_250mA:
@@ -194,37 +196,37 @@ namespace Msmcomm
                 case Msmcomm.UsbVoltageMode.MODE_1A:
                     result.voltage = ChargerStatusVoltage.VOLTAGE_1A;
                     break;
-                default: 
+                default:
                     result.voltage = ChargerStatusVoltage.VOLTAGE_UNKNOWN;;
                     break;
             }
         }
     }
-    
+
     public class GetPhoneStateInfoCommand : BaseCommand
     {
         public PhoneStateInfo result;
-        
+
         public override async void run() throws Msmcomm.Error
-        { 
+        {
             var cmd = new Msmcomm.Command.GetPhoneStateInfo();
-            // FIXME find the right response!          
+            // FIXME find the right response!
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
-            
+
             result = PhoneStateInfo(0);
         }
     }
-    
+
     public class VerifyPinCommand : BaseCommand
     {
         public string pin { get; set; }
         public string pin_type { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
-        { 
+        {
             var cmd = new Msmcomm.Command.VerifyPin();
-            
+
             switch (pin_type)
             {
                 case "pin1":
@@ -237,15 +239,15 @@ namespace Msmcomm
                     var msg = "Invalid argument supplied for pin_type parameter for VerifyPin command";
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
-            
+
             cmd.pin = pin;
-                    
+
             unowned Msmcomm.Reply.GsdiCallback response = (Msmcomm.Reply.GsdiCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
-    
-    public abstract class AbstractCallCommand : BaseCommand 
+
+    public abstract class AbstractCallCommand : BaseCommand
     {
         protected void checkCallId(int call_id) throws Msmcomm.Error
         {
@@ -256,67 +258,67 @@ namespace Msmcomm
             }
         }
     }
-    
+
     public class EndCallCommand : AbstractCallCommand
     {
         public int call_id { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.EndCall();
-            
+
             checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
-            
+
             unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
-    
+
     public class AnswerCallCommand : AbstractCallCommand
     {
         public int call_id { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.AnswerCall();
-            
+
             checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
-            
+
             unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
-    
+
     public class OriginateCallCommand : AbstractCallCommand
     {
         public string number { get; set; }
         public bool block { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.OriginateCall();
             cmd.number = number;
             cmd.block = block;
-            
+
             unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
 
     public class ManageCallsCommand : AbstractCallCommand
-    {   
+    {
         public CallCommandType command_type { get; set; default = CallCommandType.INVALID; }
         public int call_id { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.SupsCall();
-            
+
             checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
-            
+
             switch (command_type)
             {
                 case CallCommandType.DROP_ALL_OR_SEND_BUSY:
@@ -344,12 +346,12 @@ namespace Msmcomm
                     cmd.command_type = Msmcomm.Command.SupsCall.CommandType.INVALID;
                     break;
             }
-            
+
             unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
-    
+
     public class SetSystemTimeCommand : BaseCommand
     {
         public int year { get; set; }
@@ -359,57 +361,57 @@ namespace Msmcomm
         public int minutes { get; set; }
         public int seconds { get; set; }
         public int timezone_offset { get; set; }
-    
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.SetSystemTime();
-            
+
             cmd.setData(year, month, day, hours, minutes, seconds, timezone_offset);
-            
+
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
-    
+
     public class RssiStatusCommand : BaseCommand
     {
         public bool status { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.RssiStatus();
-            
+
             cmd.status = status;
-            
+
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
-    
+
     public abstract class BasePhonebookCommand : BaseCommand
     {
-        
+
     }
-    
+
     public class ReadPhonebookCommand : BasePhonebookCommand
     {
         // IN
         public PhonebookBookType book_type { get; set; }
         public uint8 position { get; set; }
-        
+
         // OUT
         public PhonebookEntry result { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.ReadPhonebook();
-            
+
             cmd.book_type = convertPhonebookBookType(book_type);
             cmd.position = position;
-            
+
             unowned Msmcomm.Reply.Phonebook response = (Msmcomm.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
-            
+
             result = PhonebookEntry(convertPhonebookType(response.book_type),
                                     response.position,
                                     response.number,
@@ -417,73 +419,73 @@ namespace Msmcomm
                                     encodingTypeToString(response.encoding_type));
         }
     }
-    
+
     public class WritePhonebookCommand : BasePhonebookCommand
     {
         // IN
         public PhonebookBookType book_type { get; set; }
         public string number { get; set; }
         public string title { get; set; }
-        
+
         // OUT
         public int modify_id { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.WritePhonebook();
-            
+
             cmd.book_type = convertPhonebookBookType(book_type);
             cmd.number = number;
             cmd.title = title;
-            
+
             unowned Msmcomm.Reply.Phonebook response = (Msmcomm.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
-            
+
             modify_id = response.modify_id;
         }
     }
-    
+
     public class DeletePhonebookCommand : BasePhonebookCommand
     {
         public PhonebookBookType book_type { get; set; }
         public uint8 position { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.DeletePhonebook();
-            
+
             cmd.book_type = convertPhonebookBookType(book_type);
             cmd.position = position;
-            
+
             unowned Msmcomm.Reply.Phonebook response = (Msmcomm.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
-    
-    public class GetPhonebookPropertiesCommand : BasePhonebookCommand 
+
+    public class GetPhonebookPropertiesCommand : BasePhonebookCommand
     {
         // IN
         public PhonebookBookType book_type { get; set; }
-        
+
         // OUT
         public PhonebookProperties result { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.GetPhonebookProperties();
-            
+
             cmd.book_type = convertPhonebookBookType(book_type);
-            
+
             unowned Msmcomm.Reply.GetPhonebookProperties response = (Msmcomm.Reply.GetPhonebookProperties)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
-            
+
             result = PhonebookProperties(response.slot_count,
                                          response.slots_used,
                                          response.max_chars_per_title,
                                          response.max_chars_per_number);
         }
     }
-    
+
     public class GetNetworkListCommand : BaseCommand
     {
         public override async void run() throws Msmcomm.Error
@@ -493,15 +495,15 @@ namespace Msmcomm
             checkResponse(response);
         }
     }
-    
+
     public class SetModePreferenceCommand : BaseCommand
     {
         public string mode { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.SetModePreference();
-            
+
             switch (mode)
             {
                 case "auto":
@@ -517,7 +519,7 @@ namespace Msmcomm
                     var msg = "Invalid argument supplied for mode parameter for SetModePreference command";
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
-            
+
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
@@ -527,61 +529,61 @@ namespace Msmcomm
     {
         public string old_pin { get; set; }
         public string new_pin { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.ChangePin();
-            
+
             cmd.old_pin = old_pin;
             cmd.new_pin = new_pin;
-            
+
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
-    
+
     public class EnablePinCommand : BaseCommand
     {
         public string pin { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.EnablePin();
-            
+
             cmd.pin = pin;
-            
+
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
-    
+
     public class DisablePinCommand : BaseCommand
     {
         public string pin { get; set; }
-    
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.DisablePin();
-            
+
              cmd.pin = pin;
-            
+
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
-    
+
     public class SimInfoCommand : BaseCommand
     {
         // IN
         public string field_type { get; set; }
-        
+
         // OUT
         public string field_data { get; set; }
-    
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.SimInfo();
-            
+
             switch (field_type)
             {
                 case "imsi":
@@ -594,14 +596,14 @@ namespace Msmcomm
                     var msg = "Invalid argument supplied for field_type parameter for SimInfo command";
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
-            
+
             unowned Msmcomm.Reply.GsdiCallback response = (Msmcomm.Reply.GsdiCallback)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
-            
+
             field_data = response.field_data;
         }
     }
-    
+
     public class GetAudioModemTuningParamsCommand : BaseCommand
     {
         public override async void run() throws Msmcomm.Error
@@ -609,34 +611,34 @@ namespace Msmcomm
             var cmd = new Msmcomm.Command.GetAudioModemTuningParams();
             unowned Msmcomm.Reply.AudioModemTuningParams response = (Msmcomm.Reply.AudioModemTuningParams)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
-            
+
             // FIXME handle result ...
         }
     }
-    
+
     public class SetAudioProfileCommand : BaseCommand
     {
         public uint8 class { get; set; }
         public uint8 sub_class { get; set; }
-        
+
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.SetAudioProfile();
-            
+
             cmd.class = class;
             cmd.sub_class = sub_class;
-            
+
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
-    
+
     public class GetAllPinStatusInfoCommand : BaseCommand
     {
         public override async void run() throws Msmcomm.Error
         {
             var cmd = new Msmcomm.Command.GetAllPinStatusInfo();
-            
+
             unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
@@ -650,7 +652,7 @@ namespace Msmcomm
         {
             var cmd = new Msmcomm.Command.ReadTemplate();
             var tt = Msmcomm.Command.ReadTemplate.TemplateType.INVALID;
-            
+
             switch (template_type)
             {
                 case Msmcomm.TemplateType.SMSC_ADDRESS:
@@ -670,3 +672,4 @@ namespace Msmcomm
         }
     }
 }
+
