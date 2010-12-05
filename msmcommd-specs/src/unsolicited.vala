@@ -29,6 +29,7 @@ namespace Msmcomm
         CALL_INCOMMING,
         CALL_CONNECT,
         CALL_END,
+        RESET_RADIO_IND,
     }
 
     [DBus (timeout = 120000, name = "org.msmcomm.Unsolicited")]
@@ -45,15 +46,15 @@ namespace Msmcomm
         public signal void phonebook_ready(PhonebookBookType book_type);
         public signal void phonebook_modified(PhonebookBookType book_type, uint position);
         public signal void cm_ph(string[] plmns);
-        
+
         public signal void reset_radio_ind();
         public signal void operation_mode();
         public signal void cm_ph_info_available();
-        
+
         public signal void sim_inserted();
         public signal void sim_removed();
         public signal void sim_not_available();
-        
+
         public signal void pin1_verified();
         public signal void pin1_blocked();
         public signal void pin1_unblocked();
@@ -61,7 +62,7 @@ namespace Msmcomm
         public signal void pin1_disabled();
         public signal void pin1_changed();
         public signal void pin1_perm_blocked();
-        
+
         public signal void pin2_verified();
         public signal void pin2_blocked();
         public signal void pin2_unblocked();
@@ -69,7 +70,7 @@ namespace Msmcomm
         public signal void pin2_disabled();
         public signal void pin2_changed();
         public signal void pin2_perm_blocked();
-        
+
         public signal void sms_message_recieved(SmsInfo info);
         public signal void sms_wms_cfg_message_list();
         public signal void sms_wms_cfg_gw_domain_pref();
@@ -80,3 +81,4 @@ namespace Msmcomm
         public signal void sms_wms_read_template();
     }
 }
+
