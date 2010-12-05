@@ -413,17 +413,16 @@ namespace Msmcomm
 
         public async void disable() throws FreeSmartphone.ResourceError, DBus.Error
         {
-            modem.stop();
+            if (modem.active)
+            {
+                logger.debug("Resource 'Modem' should be disabled and modem is active so shutting down modem control");
+                shutdown();
+            }
         }
 
         public async void enable() throws FreeSmartphone.ResourceError, DBus.Error
         {
-            logger.info("Starting modem ...");
-            if (!modem.start())
-            {
-                var msg = @"Could not startup connected modem";
-                throw new FreeSmartphone.ResourceError.UNABLE_TO_ENABLE(msg);
-            }
+            logger.debug("Resource 'Modem' is now enabled");
         }
 
         public async void resume() throws FreeSmartphone.ResourceError, DBus.Error
@@ -448,14 +447,23 @@ namespace Msmcomm
 
         public async void initialize() throws DBus.Error, Msmcomm.Error
         {
+            logger.info("Starting modem ...");
+            if (!modem.start())
+            {
+                var msg = @"Could not startup connected modem";
+                throw new FreeSmartphone.ResourceError.UNABLE_TO_ENABLE(msg);
+            }
         }
 
         public async void shutdown() throws DBus.Error, Msmcomm.Error
         {
+            modem.stop();
         }
 
         public async void reset() throws DBus.Error, Msmcomm.Error
         {
+            shutdown();
+            initialize();
         }
 
         public async bool get_active() throws DBus.Error, Msmcomm.Error
