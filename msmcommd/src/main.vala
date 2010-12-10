@@ -34,8 +34,8 @@ public int main( string[] args )
     loop = new MainLoop( null, false );
     Posix.signal( Posix.SIGINT, SIGINT_handler );
     
-    var modem = new Msmcomm.ModemControl();
-    var channel = new Msmcomm.ModemChannel(modem);
+    var modem = new Msmcomm.Daemon.ModemControl();
+    var channel = new Msmcomm.Daemon.ModemChannel(modem);
     Idle.add(() => {
         if (!modem.setup())
         {
@@ -48,7 +48,7 @@ public int main( string[] args )
         return false;
     });
 
-    var service = new Msmcomm.DBusService(modem);
+    var service = new Msmcomm.Daemon.DBusService(modem);
     if (!service.register())
     {
         return -1;

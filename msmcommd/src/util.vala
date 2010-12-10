@@ -21,7 +21,7 @@
  
 using GLib;
 
-namespace Msmcomm
+namespace Msmcomm.Daemon
 {
 	internal void hexdump2(bool write, uint8[] data, FsoFramework.Logger logger)
 	{
@@ -101,51 +101,51 @@ namespace Msmcomm
         }
     }
     
-    public Msmcomm.PhonebookType convertPhonebookBookType(PhonebookBookType book_type)
+    public Msmcomm.LowLevel.PhonebookType convertPhonebookBookType(PhonebookBookType book_type)
     {
-        Msmcomm.PhonebookType result = Msmcomm.PhonebookType.ADN;
+        Msmcomm.LowLevel.PhonebookType result = Msmcomm.LowLevel.PhonebookType.ADN;
             
         switch (book_type)
         {
             case PhonebookBookType.FDN:
-                result = Msmcomm.PhonebookType.FDN;
+                result = Msmcomm.LowLevel.PhonebookType.FDN;
                 break;
             case PhonebookBookType.SDN:
-                result = Msmcomm.PhonebookType.SDN;
+                result = Msmcomm.LowLevel.PhonebookType.SDN;
                 break;
             case PhonebookBookType.ADN:
-                result = Msmcomm.PhonebookType.ADN;
+                result = Msmcomm.LowLevel.PhonebookType.ADN;
                 break;
             case PhonebookBookType.MBDN:
-                result = Msmcomm.PhonebookType.MBDN;
+                result = Msmcomm.LowLevel.PhonebookType.MBDN;
                 break;
             case PhonebookBookType.MBN:
-                result = Msmcomm.PhonebookType.MBN;
+                result = Msmcomm.LowLevel.PhonebookType.MBN;
                 break;
         }
             
         return result;
     }
     
-    public PhonebookBookType convertPhonebookType(Msmcomm.PhonebookType book_type)
+    public PhonebookBookType convertPhonebookType(Msmcomm.LowLevel.PhonebookType book_type)
     {
         PhonebookBookType result = PhonebookBookType.UNKNOWN;
         
         switch (book_type)
         {
-            case Msmcomm.PhonebookType.FDN:
+            case Msmcomm.LowLevel.PhonebookType.FDN:
                 result = PhonebookBookType.FDN;
                 break;
-            case Msmcomm.PhonebookType.SDN:
+            case Msmcomm.LowLevel.PhonebookType.SDN:
                 result = PhonebookBookType.SDN;
                 break;
-            case Msmcomm.PhonebookType.ADN:
+            case Msmcomm.LowLevel.PhonebookType.ADN:
                 result = PhonebookBookType.ADN;
                 break;
-            case Msmcomm.PhonebookType.MBDN:
+            case Msmcomm.LowLevel.PhonebookType.MBDN:
                 result = PhonebookBookType.MBDN;
                 break;
-            case Msmcomm.PhonebookType.MBN:
+            case Msmcomm.LowLevel.PhonebookType.MBN:
                 result = PhonebookBookType.MBN;
                 break;
         }

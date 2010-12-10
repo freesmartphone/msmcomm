@@ -21,7 +21,7 @@
 
 using GLib;
 
-namespace Msmcomm
+namespace Msmcomm.Daemon
 {
     public abstract class BaseCommand
     {
@@ -29,11 +29,11 @@ namespace Msmcomm
 
         public abstract async void run() throws Msmcomm.Error;
 
-        protected void checkResponse(Msmcomm.Message response) throws Msmcomm.Error
+        protected void checkResponse(Msmcomm.LowLevel.Message response) throws Msmcomm.Error
         {
-            if (response.result != Msmcomm.ResultType.OK)
+            if (response.result != Msmcomm.LowLevel.ResultType.OK)
             {
-                var msg = @"$(messageTypeToString(response.type)) command failed with: $(resultTypeToString(response.result))";
+                var msg = @"$(LowLevel.messageTypeToString(response.type)) command failed with: $(LowLevel.resultTypeToString(response.result))";
                 throw new Msmcomm.Error.FAILED(msg);
             }
         }
@@ -45,22 +45,22 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.ChangeOperationMode();
+            var cmd = new Msmcomm.LowLevel.Command.ChangeOperationMode();
 
             switch (mode)
             {
                 case ModemOperationMode.OFFLINE:
-                    cmd.mode = Msmcomm.OperationMode.OFFLINE;
+                    cmd.mode = Msmcomm.LowLevel.OperationMode.OFFLINE;
                     break;
                 case ModemOperationMode.ONLINE:
-                    cmd.mode = Msmcomm.OperationMode.ONLINE;
+                    cmd.mode = Msmcomm.LowLevel.OperationMode.ONLINE;
                     break;
                 default:
                     var msg = "Invalid argument supplied for mode parameter for ChangeOperationMode command";
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
 
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -69,8 +69,8 @@ namespace Msmcomm
     {
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.ChangeOperationMode();
-            cmd.mode = Msmcomm.OperationMode.RESET;
+            var cmd = new Msmcomm.LowLevel.Command.ChangeOperationMode();
+            cmd.mode = Msmcomm.LowLevel.OperationMode.RESET;
 
             // NOTE We send the reset command without waiting for it's response
             // as we do not ever get one. The user have to wait for the
@@ -83,8 +83,8 @@ namespace Msmcomm
     {
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.TestAlive();
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            var cmd = new Msmcomm.LowLevel.Command.TestAlive();
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -95,8 +95,8 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.GetImei();
-            unowned Msmcomm.Reply.GetImei response = (Msmcomm.Reply.GetImei) (yield channel.enqueueAsync((owned) cmd));
+            var cmd = new Msmcomm.LowLevel.Command.GetImei();
+            unowned Msmcomm.LowLevel.Reply.GetImei response = (Msmcomm.LowLevel.Reply.GetImei) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
 
             imei = response.imei;
@@ -109,8 +109,8 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.GetFirmwareInfo();
-            unowned Msmcomm.Reply.GetFirmwareInfo response = (Msmcomm.Reply.GetFirmwareInfo)(yield channel.enqueueAsync((owned) cmd));
+            var cmd = new Msmcomm.LowLevel.Command.GetFirmwareInfo();
+            unowned Msmcomm.LowLevel.Reply.GetFirmwareInfo response = (Msmcomm.LowLevel.Reply.GetFirmwareInfo)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
 
             result = FirmwareInfo(response.info, response.hci);
@@ -124,16 +124,16 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.Charging();
+            var cmd = new Msmcomm.LowLevel.Command.Charging();
             var msg = "";
 
             switch (mode)
             {
                 case ChargerStatusMode.USB:
-                    cmd.mode = Msmcomm.ChargingMode.USB;
+                    cmd.mode = Msmcomm.LowLevel.ChargingMode.USB;
                     break;
                 case ChargerStatusMode.INDUCTIVE:
-                    cmd.mode = Msmcomm.ChargingMode.INDUCTIVE;
+                    cmd.mode = Msmcomm.LowLevel.ChargingMode.INDUCTIVE;
                     break;
                 default:
                     msg = "Invalid argument supplied for mode parameter for Charging command";
@@ -143,20 +143,20 @@ namespace Msmcomm
             switch (voltage)
             {
                 case ChargerStatusVoltage.VOLTAGE_250mA:
-                    cmd.voltage = Msmcomm.UsbVoltageMode.MODE_250mA;
+                    cmd.voltage = Msmcomm.LowLevel.UsbVoltageMode.MODE_250mA;
                     break;
                 case ChargerStatusVoltage.VOLTAGE_500mA:
-                    cmd.voltage = Msmcomm.UsbVoltageMode.MODE_500mA;
+                    cmd.voltage = Msmcomm.LowLevel.UsbVoltageMode.MODE_500mA;
                     break;
                 case ChargerStatusVoltage.VOLTAGE_1A:
-                    cmd.voltage = Msmcomm.UsbVoltageMode.MODE_1A;
+                    cmd.voltage = Msmcomm.LowLevel.UsbVoltageMode.MODE_1A;
                     break;
                 default:
                     msg = "Invalid argument supplied for voltage parameter for Charging command";
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
 
-            unowned Msmcomm.Reply.Charging response = (Msmcomm.Reply.Charging)(yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.Charging response = (Msmcomm.LowLevel.Reply.Charging)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
@@ -168,16 +168,16 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.GetChargerStatus();
-            unowned Msmcomm.Reply.ChargerStatus response = (Msmcomm.Reply.ChargerStatus)(yield channel.enqueueAsync((owned) cmd));
+            var cmd = new Msmcomm.LowLevel.Command.GetChargerStatus();
+            unowned Msmcomm.LowLevel.Reply.ChargerStatus response = (Msmcomm.LowLevel.Reply.ChargerStatus)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
 
             switch (response.mode)
             {
-                case Msmcomm.ChargingMode.USB:
+                case Msmcomm.LowLevel.ChargingMode.USB:
                     result.mode = ChargerStatusMode.USB;
                     break;
-                case Msmcomm.ChargingMode.INDUCTIVE:
+                case Msmcomm.LowLevel.ChargingMode.INDUCTIVE:
                     result.mode = ChargerStatusMode.INDUCTIVE;
                     break;
                 default:
@@ -187,13 +187,13 @@ namespace Msmcomm
 
             switch (response.voltage)
             {
-                case Msmcomm.UsbVoltageMode.MODE_250mA:
+                case Msmcomm.LowLevel.UsbVoltageMode.MODE_250mA:
                     result.voltage = ChargerStatusVoltage.VOLTAGE_250mA;
                     break;
-                case Msmcomm.UsbVoltageMode.MODE_500mA:
+                case Msmcomm.LowLevel.UsbVoltageMode.MODE_500mA:
                     result.voltage = ChargerStatusVoltage.VOLTAGE_500mA;
                     break;
-                case Msmcomm.UsbVoltageMode.MODE_1A:
+                case Msmcomm.LowLevel.UsbVoltageMode.MODE_1A:
                     result.voltage = ChargerStatusVoltage.VOLTAGE_1A;
                     break;
                 default:
@@ -209,9 +209,9 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.GetPhoneStateInfo();
+            var cmd = new Msmcomm.LowLevel.Command.GetPhoneStateInfo();
             // FIXME find the right response!
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
 
             result = PhoneStateInfo(0);
@@ -225,15 +225,15 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.VerifyPin();
+            var cmd = new Msmcomm.LowLevel.Command.VerifyPin();
 
             switch (pin_type)
             {
                 case "pin1":
-                    cmd.pin_type = Msmcomm.SimPinType.PIN_1;
+                    cmd.pin_type = Msmcomm.LowLevel.SimPinType.PIN_1;
                     break;
                 case "pin2":
-                    cmd.pin_type = Msmcomm.SimPinType.PIN_2;
+                    cmd.pin_type = Msmcomm.LowLevel.SimPinType.PIN_2;
                     break;
                 default:
                     var msg = "Invalid argument supplied for pin_type parameter for VerifyPin command";
@@ -242,7 +242,7 @@ namespace Msmcomm
 
             cmd.pin = pin;
 
-            unowned Msmcomm.Reply.GsdiCallback response = (Msmcomm.Reply.GsdiCallback) (yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.GsdiCallback response = (Msmcomm.LowLevel.Reply.GsdiCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
@@ -265,12 +265,12 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.EndCall();
+            var cmd = new Msmcomm.LowLevel.Command.EndCall();
 
             checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
 
-            unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.CallCallback response = (Msmcomm.LowLevel.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
@@ -281,12 +281,12 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.AnswerCall();
+            var cmd = new Msmcomm.LowLevel.Command.AnswerCall();
 
             checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
 
-            unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.CallCallback response = (Msmcomm.LowLevel.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
@@ -298,11 +298,11 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.OriginateCall();
+            var cmd = new Msmcomm.LowLevel.Command.OriginateCall();
             cmd.number = number;
             cmd.block = block;
 
-            unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.CallCallback response = (Msmcomm.LowLevel.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
@@ -314,7 +314,7 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.SupsCall();
+            var cmd = new Msmcomm.LowLevel.Command.SupsCall();
 
             checkCallId(call_id);
             cmd.call_id = (uint8) call_id;
@@ -322,32 +322,32 @@ namespace Msmcomm
             switch (command_type)
             {
                 case CallCommandType.DROP_ALL_OR_SEND_BUSY:
-                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.DROP_ALL_OR_SEND_BUSY;
+                    cmd.command_type = Msmcomm.LowLevel.Command.SupsCall.CommandType.DROP_ALL_OR_SEND_BUSY;
                     break;
                 case CallCommandType.DROP_ALL_AND_ACCEPT_WAITING_OR_HELD:
-                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.DROP_ALL_OR_SEND_BUSY;
+                    cmd.command_type = Msmcomm.LowLevel.Command.SupsCall.CommandType.DROP_ALL_OR_SEND_BUSY;
                     break;
                 case CallCommandType.DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD:
-                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD;
+                    cmd.command_type = Msmcomm.LowLevel.Command.SupsCall.CommandType.DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD;
                     break;
                 case CallCommandType.HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD:
-                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD;
+                    cmd.command_type = Msmcomm.LowLevel.Command.SupsCall.CommandType.HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD;
                     break;
                 case CallCommandType.HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD:
-                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD;
+                    cmd.command_type = Msmcomm.LowLevel.Command.SupsCall.CommandType.HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD;
                     break;
                 case CallCommandType.ACTIVATE_HELD:
-                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.ACTIVATE_HELD;
+                    cmd.command_type = Msmcomm.LowLevel.Command.SupsCall.CommandType.ACTIVATE_HELD;
                     break;
                 case CallCommandType.DROP_SELF_AND_CONNECT_ACTIVE:
-                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.DROP_SELF_AND_CONNECT_ACTIVE;
+                    cmd.command_type = Msmcomm.LowLevel.Command.SupsCall.CommandType.DROP_SELF_AND_CONNECT_ACTIVE;
                     break;
                 default:
-                    cmd.command_type = Msmcomm.Command.SupsCall.CommandType.INVALID;
+                    cmd.command_type = Msmcomm.LowLevel.Command.SupsCall.CommandType.INVALID;
                     break;
             }
 
-            unowned Msmcomm.Reply.CallCallback response = (Msmcomm.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.CallCallback response = (Msmcomm.LowLevel.Reply.CallCallback) (yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
@@ -364,11 +364,11 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.SetSystemTime();
+            var cmd = new Msmcomm.LowLevel.Command.SetSystemTime();
 
             cmd.setData(year, month, day, hours, minutes, seconds, timezone_offset);
 
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -379,11 +379,11 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.RssiStatus();
+            var cmd = new Msmcomm.LowLevel.Command.RssiStatus();
 
             cmd.status = status;
 
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -404,19 +404,19 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.ReadPhonebook();
+            var cmd = new Msmcomm.LowLevel.Command.ReadPhonebook();
 
             cmd.book_type = convertPhonebookBookType(book_type);
             cmd.position = position;
 
-            unowned Msmcomm.Reply.Phonebook response = (Msmcomm.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.Phonebook response = (Msmcomm.LowLevel.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
 
             result = PhonebookEntry(convertPhonebookType(response.book_type),
                                     response.position,
                                     response.number,
                                     response.title,
-                                    encodingTypeToString(response.encoding_type));
+                                    LowLevel.encodingTypeToString(response.encoding_type));
         }
     }
 
@@ -432,13 +432,13 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.WritePhonebook();
+            var cmd = new Msmcomm.LowLevel.Command.WritePhonebook();
 
             cmd.book_type = convertPhonebookBookType(book_type);
             cmd.number = number;
             cmd.title = title;
 
-            unowned Msmcomm.Reply.Phonebook response = (Msmcomm.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.Phonebook response = (Msmcomm.LowLevel.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
 
             modify_id = response.modify_id;
@@ -452,12 +452,12 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.DeletePhonebook();
+            var cmd = new Msmcomm.LowLevel.Command.DeletePhonebook();
 
             cmd.book_type = convertPhonebookBookType(book_type);
             cmd.position = position;
 
-            unowned Msmcomm.Reply.Phonebook response = (Msmcomm.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.Phonebook response = (Msmcomm.LowLevel.Reply.Phonebook)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
         }
     }
@@ -472,11 +472,12 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.GetPhonebookProperties();
+            var cmd = new Msmcomm.LowLevel.Command.GetPhonebookProperties();
 
             cmd.book_type = convertPhonebookBookType(book_type);
 
-            unowned Msmcomm.Reply.GetPhonebookProperties response = (Msmcomm.Reply.GetPhonebookProperties)(yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.GetPhonebookProperties response = 
+                (Msmcomm.LowLevel.Reply.GetPhonebookProperties)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
 
             result = PhonebookProperties(response.slot_count,
@@ -490,8 +491,8 @@ namespace Msmcomm
     {
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.GetNetworkList();
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            var cmd = new Msmcomm.LowLevel.Command.GetNetworkList();
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -502,25 +503,25 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.SetModePreference();
+            var cmd = new Msmcomm.LowLevel.Command.SetModePreference();
 
             switch (mode)
             {
                 case "auto":
-                    cmd.mode = Msmcomm.NetworkMode.AUTOMATIC;
+                    cmd.mode = Msmcomm.LowLevel.NetworkMode.AUTOMATIC;
                     break;
                 case "gsm":
-                    cmd.mode = Msmcomm.NetworkMode.GSM;
+                    cmd.mode = Msmcomm.LowLevel.NetworkMode.GSM;
                     break;
                 case "umts":
-                    cmd.mode = Msmcomm.NetworkMode.UMTS;
+                    cmd.mode = Msmcomm.LowLevel.NetworkMode.UMTS;
                     break;
                 default:
                     var msg = "Invalid argument supplied for mode parameter for SetModePreference command";
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
 
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -532,12 +533,12 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.ChangePin();
+            var cmd = new Msmcomm.LowLevel.Command.ChangePin();
 
             cmd.old_pin = old_pin;
             cmd.new_pin = new_pin;
 
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -548,11 +549,11 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.EnablePin();
+            var cmd = new Msmcomm.LowLevel.Command.EnablePin();
 
             cmd.pin = pin;
 
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -563,11 +564,11 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.DisablePin();
+            var cmd = new Msmcomm.LowLevel.Command.DisablePin();
 
              cmd.pin = pin;
 
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -582,22 +583,22 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.SimInfo();
+            var cmd = new Msmcomm.LowLevel.Command.SimInfo();
 
             switch (field_type)
             {
                 case "imsi":
-                    cmd.field_type = Msmcomm.SimInfoFieldType.IMSI;
+                    cmd.field_type = Msmcomm.LowLevel.SimInfoFieldType.IMSI;
                     break;
                 case "msisdn":
-                    cmd.field_type = Msmcomm.SimInfoFieldType.MSISDN;
+                    cmd.field_type = Msmcomm.LowLevel.SimInfoFieldType.MSISDN;
                     break;
                 default:
                     var msg = "Invalid argument supplied for field_type parameter for SimInfo command";
                     throw new Msmcomm.Error.INVALID_ARGUMENTS(msg);
             }
 
-            unowned Msmcomm.Reply.GsdiCallback response = (Msmcomm.Reply.GsdiCallback)(yield channel.enqueueAsync((owned) cmd));
+            unowned Msmcomm.LowLevel.Reply.GsdiCallback response = (Msmcomm.LowLevel.Reply.GsdiCallback)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
 
             field_data = response.field_data;
@@ -608,8 +609,8 @@ namespace Msmcomm
     {
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.GetAudioModemTuningParams();
-            unowned Msmcomm.Reply.AudioModemTuningParams response = (Msmcomm.Reply.AudioModemTuningParams)(yield channel.enqueueAsync((owned) cmd));
+            var cmd = new Msmcomm.LowLevel.Command.GetAudioModemTuningParams();
+            unowned Msmcomm.LowLevel.Reply.AudioModemTuningParams response = (Msmcomm.LowLevel.Reply.AudioModemTuningParams)(yield channel.enqueueAsync((owned) cmd));
             checkResponse(response);
 
             // FIXME handle result ...
@@ -623,12 +624,12 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.SetAudioProfile();
+            var cmd = new Msmcomm.LowLevel.Command.SetAudioProfile();
 
             cmd.class = class;
             cmd.sub_class = sub_class;
 
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -637,9 +638,9 @@ namespace Msmcomm
     {
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.GetAllPinStatusInfo();
+            var cmd = new Msmcomm.LowLevel.Command.GetAllPinStatusInfo();
 
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }
@@ -650,16 +651,16 @@ namespace Msmcomm
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.Command.ReadTemplate();
-            var tt = Msmcomm.Command.ReadTemplate.TemplateType.INVALID;
+            var cmd = new Msmcomm.LowLevel.Command.ReadTemplate();
+            var tt = Msmcomm.LowLevel.Command.ReadTemplate.TemplateType.INVALID;
 
             switch (template_type)
             {
                 case Msmcomm.TemplateType.SMSC_ADDRESS:
-                    tt = Msmcomm.Command.ReadTemplate.TemplateType.SMSC_ADDRESS;
+                    tt = Msmcomm.LowLevel.Command.ReadTemplate.TemplateType.SMSC_ADDRESS;
                     break;
                 case Msmcomm.TemplateType.EMAIL_ADDRESS:
-                    tt = Msmcomm.Command.ReadTemplate.TemplateType.EMAIL_ADDRESS;
+                    tt = Msmcomm.LowLevel.Command.ReadTemplate.TemplateType.EMAIL_ADDRESS;
                     break;
                 default:
                     throw new Msmcomm.Error.INVALID_ARGUMENTS("Invalid arguments supplied for ReadTemplate command");
@@ -667,7 +668,7 @@ namespace Msmcomm
 
             cmd.template = tt;
 
-            unowned Msmcomm.Message response = yield channel.enqueueAsync((owned) cmd);
+            unowned Msmcomm.LowLevel.Message response = yield channel.enqueueAsync((owned) cmd);
             checkResponse(response);
         }
     }

@@ -19,7 +19,7 @@
  *
  **/
  
-namespace Msmcomm
+namespace Msmcomm.Daemon
 {
     public enum LinkStateType
     {

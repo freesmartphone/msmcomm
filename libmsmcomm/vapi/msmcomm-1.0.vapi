@@ -19,7 +19,7 @@
  */
 
 [CCode (cheader_filename = "msmcomm.h")]
-namespace Msmcomm
+namespace Msmcomm.LowLevel
 {
     [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_MESSAGE_CLASS_", cheader_filename = "msmcomm.h")]
     public enum MessageClass

@@ -21,9 +21,8 @@
  
 using GLib;
 
-namespace Msmcomm
+namespace Msmcomm.Daemon
 {
-
     public enum FrameType
     {
         SYNC,

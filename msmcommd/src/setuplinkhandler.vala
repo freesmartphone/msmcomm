@@ -19,12 +19,11 @@
  *
  **/
  
-namespace Msmcomm
+namespace Msmcomm.Daemon
 {
     public class SetupLinkHandler : AbstractLinkHandler
     {
         private Timer sync_timer;
-
         private const uint MAX_SYNC_RETRIES = 10;
 
         //

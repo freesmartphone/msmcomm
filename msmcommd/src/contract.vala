@@ -19,31 +19,29 @@
  *
  **/
 
-namespace Msmcomm
+namespace Msmcomm.Daemon
 {
+    public interface ITransmissionControl : GLib.Object
+    {
+        public signal void requestHandleSendData(uint8[] data);
+    }
 
-public interface ITransmissionControl : GLib.Object
-{
-    public signal void requestHandleSendData(uint8[] data);
-}
+    public interface ILinkControl : GLib.Object
+    {
+        public abstract void sendFrame(Frame frame);
+        public abstract void start();
+        public abstract void stop();
+        public abstract void reset();
+        
+        public signal void requestModemReset();
+        public signal void requestHandleFrameContent(uint8[] data);
+        public signal void requestHandleLinkSetupComplete();
+    }
 
-public interface ILinkControl : GLib.Object
-{
-    public abstract void sendFrame(Frame frame);
-    public abstract void start();
-    public abstract void stop();
-    public abstract void reset();
-    
-    public signal void requestModemReset();
-    public signal void requestHandleFrameContent(uint8[] data);
-    public signal void requestHandleLinkSetupComplete();
-}
-
-public interface ILowLevelControl : GLib.Object
-{
-    public abstract void powerOn();
-    public abstract void powerOff();
-    public abstract void reset();
-}
-
+    public interface ILowLevelControl : GLib.Object
+    {
+        public abstract void powerOn();
+        public abstract void powerOff();
+        public abstract void reset();
+    }
 } // namespace Msmcomm

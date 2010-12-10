@@ -17,21 +17,21 @@
  *
  */
 
-namespace Msmcomm 
+namespace Msmcomm.Daemon
 {
     /**
      * @class CommandHandler
      **/
     public class CommandHandler
     {
-        public unowned Msmcomm.Message command;
-        public unowned Msmcomm.Message response;
+        public unowned Msmcomm.LowLevel.Message command;
+        public unowned Msmcomm.LowLevel.Message response;
         
         public uint timeout;
         public uint retry;
         public SourceFunc callback;
 
-        public CommandHandler( Msmcomm.Message command, int retries )
+        public CommandHandler( Msmcomm.LowLevel.Message command, int retries )
         {
             this.command = command;
             this.retry = retries;
@@ -46,11 +46,11 @@ namespace Msmcomm
         {
             if ( response != null )
             {
-                return "\"%s\" -> %s".printf( Msmcomm.messageTypeToString( command.type ), Msmcomm.messageTypeToString( response.type ) );
+                return "\"%s\" -> %s".printf( Msmcomm.LowLevel.messageTypeToString( command.type ), Msmcomm.LowLevel.messageTypeToString( response.type ) );
             }
             else
             {
-                return Msmcomm.messageTypeToString( command.type );
+                return Msmcomm.LowLevel.messageTypeToString( command.type );
             }
         }
     }

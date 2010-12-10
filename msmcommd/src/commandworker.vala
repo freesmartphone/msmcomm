@@ -21,7 +21,7 @@
 
 using GLib;
 
-namespace Msmcomm
+namespace Msmcomm.Daemon
 {
     public class CommandWorker : AbstractObject
     {

@@ -19,9 +19,8 @@
  *
  **/
 
-namespace Msmcomm
+namespace Msmcomm.Daemon
 {
-
     public class LowLevelControl : AbstractObject, ILowLevelControl
     {
         private string[] sysfsnodes;
