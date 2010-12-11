@@ -237,7 +237,7 @@ struct gsdi_get_all_pin_status_info_msg
 struct network_state_info_event
 {
 	uint8_t change_field[8];
-	uint8_t new_value;
+	uint8_t serv_status;
 	uint8_t servce_domain;
 	uint8_t service_capability;
 	uint8_t gprs_attached;
@@ -255,9 +255,9 @@ struct network_state_info_event
 	uint16_t ecio;
 	uint8_t unknown4[4];
 	uint8_t with_nitz_update;
-	uint8_t unknown5[541];
+	uint8_t unknown5[543];
 	uint8_t reg_status;
-	uint8_t unknown6[3];
+	uint8_t unknown6;
 } __attribute__ ((packed));
 
 
@@ -613,6 +613,13 @@ struct sms_message_send_event
 } __attribute__ ((packed));
 
 
+struct wms_callback_rsp
+{
+	uint8_t command;
+	uint8_t result[9];
+} __attribute__ ((packed));
+
+
 struct sms_ack_msg
 {
 	uint32_t ref_id;
@@ -641,11 +648,6 @@ struct sms_get_info_msg
 	uint8_t value0;
 	uint8_t value1;
 	uint8_t unknown0[3];
-} __attribute__ ((packed));
-
-
-struct wms_resp
-{
 } __attribute__ ((packed));
 
 

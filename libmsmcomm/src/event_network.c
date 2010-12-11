@@ -171,14 +171,6 @@ uint16_t msmcomm_event_network_state_info_get_ecio(struct msmcomm_message *msg)
     return MESSAGE_CAST(msg, struct network_state_info_event)->ecio;
 }
 
-uint8_t msmcomm_event_network_state_info_get_new_value(struct msmcomm_message *msg)
-{
-    if (msg->payload == NULL)
-        return 0x0;
-
-    return MESSAGE_CAST(msg, struct network_state_info_event)->new_value == 2 ? 1 : 0;
-}
-
 uint8_t msmcomm_event_network_state_info_get_service_domain(struct msmcomm_message *msg)
 {
     if (msg->payload == NULL)
@@ -237,6 +229,31 @@ msmcomm_network_registration_status_t msmcomm_event_network_state_info_get_regis
             break;
         case 5:
             result = MSMCOMM_NETWORK_REGISTRATION_STATUS_ROAMING;
+            break;
+    }
+
+    return result;
+}
+
+msmcomm_network_service_status_t msmcomm_event_network_state_info_get_service_status(struct msmcomm_message *msg)
+{
+    msmcomm_network_service_status_t result = MSMCOMM_NETWORK_SERVICE_STATUS_INVALID;
+
+    if (msg->payload == NULL)
+    {
+        return MSMCOMM_NETWORK_SERVICE_STATUS_INVALID;
+    }
+
+    switch (MESSAGE_CAST(msg, struct network_state_info_event)->serv_status)
+    {
+        case 0:
+            result = MSMCOMM_NETWORK_SERVICE_STATUS_NO_SERVICE;
+            break;
+        case 1:
+            result = MSMCOMM_NETWORK_SERVICE_STATUS_LIMITED;
+            break;
+        case 2:
+            result = MSMCOMM_NETWORK_SERVICE_STATUS_FULL;
             break;
     }
 

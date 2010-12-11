@@ -114,10 +114,24 @@ namespace Msmcomm.Daemon
                         reg_status = Msmcomm.NetworkRegistrationStatus.UNKNOWN;
                         break;
                 }
+                
+                var service_status = Msmcomm.NetworkServiceStatus.INVALID;
+                
+                switch ( networkStateInfoMsg.service_status )
+                {
+                    case Msmcomm.LowLevel.NetworkServiceStatus.NO_SERVICE:
+                        service_status = Msmcomm.NetworkServiceStatus.NO_SERVICE;
+                        break;
+                    case Msmcomm.LowLevel.NetworkServiceStatus.LIMITED:
+                        service_status = Msmcomm.NetworkServiceStatus.LIMITED;
+                        break;
+                    case Msmcomm.LowLevel.NetworkServiceStatus.FULL:
+                        service_status = Msmcomm.NetworkServiceStatus.FULL;
+                        break;
+                }
 
                 var ns_info = NetworkStateInfo(networkStateInfoMsg.only_rssi_update,
                                                networkStateInfoMsg.change_field,
-                                               networkStateInfoMsg.new_value,
                                                networkStateInfoMsg.operator_name == null ? "" : networkStateInfoMsg.operator_name,
                                                networkStateInfoMsg.rssi,
                                                networkStateInfoMsg.ecio,
@@ -125,7 +139,8 @@ namespace Msmcomm.Daemon
                                                networkStateInfoMsg.service_capability,
                                                (bool) networkStateInfoMsg.gprs_attached,
                                                networkStateInfoMsg.roam,
-                                               reg_status);
+                                               reg_status,
+                                               service_status);
 
                 network_state_info(ns_info);
             });

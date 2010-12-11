@@ -120,13 +120,23 @@ namespace Msmcomm
         ROAMING,
         UNKNOWN,
     }
+    
+    
+    [CCode (cprefix = "MSMCOMMD_NETWORK_SERVICE_STATUS_TYPE_", cheader_filename = "msmcommd.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum NetworkServiceStatus
+    {
+        INVALID,
+        NO_SERVICE,
+        LIMITED,
+        FULL,
+    }
 
     [CCode (type_id = "MSMCOMMD_NETWORK_STATE_INFO", cheader_filename = "msmcommd.h")]
     public struct NetworkStateInfo
     {
         bool only_rssi_update;
         uint change_field;
-        uint new_value;
         string operator_name;
         uint rssi;
         uint ecio;
@@ -135,12 +145,12 @@ namespace Msmcomm
         bool gprs_attached;
         uint roam;
         NetworkRegistrationStatus registration_status;
+        NetworkServiceStatus service_status;
 
-        public NetworkStateInfo(bool only_rssi_update, uint change_field, uint new_value, string operator_name, uint rssi, uint ecio, uint service_domain, uint service_capability, bool gprs_attached, uint roam, NetworkRegistrationStatus registration_status)
+        public NetworkStateInfo(bool only_rssi_update, uint change_field, string operator_name, uint rssi, uint ecio, uint service_domain, uint service_capability, bool gprs_attached, uint roam, NetworkRegistrationStatus registration_status, NetworkServiceStatus service_status)
         {
             this.only_rssi_update = only_rssi_update;
             this.change_field = change_field;
-            this.new_value = new_value;
             this.operator_name = operator_name;
             this.rssi = rssi;
             this.ecio = ecio;
@@ -149,24 +159,25 @@ namespace Msmcomm
             this.gprs_attached = gprs_attached;
             this.roam = roam;
             this.registration_status = registration_status;
+            this.service_status = service_status;
         }
 
         public NetworkStateInfo.from_variant(GLib.Variant v)
         {
-            var type_string = "(biisiiiibii)";
+            var type_string = "(bisiiiibiii)";
             if ( v.get_type_string().ascii_casecmp( type_string ) == 0 )
             {
-                v.get( type_string, only_rssi_update, change_field, new_value,
+                v.get( type_string, only_rssi_update, change_field,
                        operator_name, rssi, ecio, service_domain, service_capability,
-                       gprs_attached, roam, registration_status );
+                       gprs_attached, roam, registration_status, service_status );
             }
         }
 
         public GLib.Variant to_variant()
         {
-            return new GLib.Variant("(biisiiiibii)", only_rssi_update, change_field,
-                                    new_value, operator_name, rssi, ecio, service_domain, service_capability,
-                                    gprs_attached, roam, registration_status);
+            return new GLib.Variant("(bisiiiibiii)", only_rssi_update, change_field,
+                                    operator_name, rssi, ecio, service_domain, service_capability,
+                                    gprs_attached, roam, registration_status, service_status);
         }
     }
 

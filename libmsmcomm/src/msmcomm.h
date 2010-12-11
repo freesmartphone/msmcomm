@@ -514,6 +514,14 @@ typedef enum
 
 typedef enum
 {
+	MSMCOMM_NETWORK_SERVICE_STATUS_INVALID,
+	MSMCOMM_NETWORK_SERVICE_STATUS_NO_SERVICE,
+	MSMCOMM_NETWORK_SERVICE_STATUS_LIMITED,
+	MSMCOMM_NETWORK_SERVICE_STATUS_FULL,
+} msmcomm_network_service_status_t;
+
+typedef enum
+{
 	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_INVALID,
 	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_DROP_ALL_OR_SEND_BUSY,
 	MSMCOMM_CM_CALL_SUPS_COMMAND_TYPE_DROP_ALL_AND_ACCEPT_WAITING_OR_HELD,
@@ -674,7 +682,7 @@ unsigned int msmcomm_event_cm_call_get_call_type(struct msmcomm_message *msg);
 
 unsigned int msmcomm_event_network_state_info_is_only_rssi_update(struct msmcomm_message *msg);
 uint32_t msmcomm_event_network_state_info_get_change_field(struct msmcomm_message *msg);
-uint8_t msmcomm_event_network_state_info_get_new_value(struct msmcomm_message *msg);
+msmcomm_network_service_status_t msmcomm_event_network_state_info_get_service_status(struct msmcomm_message *msg);
 uint8_t *msmcomm_event_network_state_info_get_plmn(struct msmcomm_message *msg);
 char *msmcomm_event_network_state_info_get_operator_name(struct msmcomm_message *msg);
 uint16_t msmcomm_event_network_state_info_get_rssi(struct msmcomm_message *msg);

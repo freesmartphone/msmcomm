@@ -684,7 +684,41 @@ namespace Msmcomm.LowLevel
 
         return result;
     }
+    
+    [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_NETWORK_SERVICE_STATUS_", cheader_filename = "msmcomm.h")]
+    public enum NetworkServiceStatus
+    {
+        INVALID,
+        NO_SERVICE,
+        LIMITED,
+        FULL,
+    }
 
+    public string networkServiceStatusToString(NetworkServiceStatus type)
+    {
+        string result = "";
+
+        switch ( type )
+        {
+            case NetworkServiceStatus.INVALID:
+                result = "INVALID";
+                break;
+            case NetworkServiceStatus.NO_SERVICE:
+                result = "NO_SERVICE";
+                break;
+            case NetworkServiceStatus.LIMITED:
+                result = "LIMITED";
+                break;
+            case NetworkServiceStatus.FULL:
+                result = "FULL";
+                break;
+            default:
+                result = "<UNKNOWN>";
+                break;
+        }
+
+        return result;
+    }
 	// FIXME public enum ErrorType ...
 
     [CCode (cname = "msmcomm_response_handler_cb", instance_pos = 0, cheader_filename = "msmcomm.h")]
@@ -1518,15 +1552,17 @@ namespace Msmcomm.LowLevel
 				[CCode (cname = "msmcomm_event_network_state_info_is_only_rssi_update")]
 				get;
 			}
+
 			public uint change_field {
 				[CCode (cname = "msmcomm_event_network_state_info_get_change_field")]
 				get;
 			}
 
-			public uint8 new_value {
-				[CCode (cname = "msmcomm_event_network_state_info_get_new_value")]
-				get;
-			}
+            public NetworkServiceStatus service_status 
+            {
+                [CCode (cname = "msmcomm_event_network_state_info_get_service_status")]
+                get;
+            }
 
             [CCode (cname = "msmcomm_event_network_state_info_trace_changes")]
             public void traceChanges(ChangedFieldTypeCb type_handler);
