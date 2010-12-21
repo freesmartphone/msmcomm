@@ -19,18 +19,19 @@
  *
  **/
 
+using FsoFramework;
+
 namespace Msmcomm.Daemon
 {
     public class LowLevelControl : AbstractObject, ILowLevelControl
     {
-        private string[] sysfsnodes;
+        private string powernode;
+        private string bootnode;
+        private string wakeupnode;
 
-        private enum SysfsNodeType
-        {
-            POWER_ON,
-            BOOT_MODE,
-            WAKEUP_MODEM
-        }
+        private const string DEFAULT_POWER_NODE  = "/sys/user_hw/pins/modem/power_on/level";
+        private const string DEFAULT_BOOT_NODE   = "/sys/user_hw/pins/modem/boot_mode/level";
+        private const string DEFAULT_WAKEUP_NODE = "/sys/user_hw/pins/modem/wakeup_modem/level";
 
         //
         // public API
@@ -39,46 +40,37 @@ namespace Msmcomm.Daemon
         public LowLevelControl()
         {
             // load sysfs nodes from config file
-            sysfsnodes = new string[3];
-            sysfsnodes[SysfsNodeType.POWER_ON] = config.stringValue("lowlevel", "sysfs_power_on", "/sys/user_hw/pins/modem/power_on/level");
-            sysfsnodes[SysfsNodeType.BOOT_MODE] = config.stringValue("lowlevel", "sysfs_boot_mode", "/sys/user_hw/pins/modem/boot_mode/level");
-            sysfsnodes[SysfsNodeType.WAKEUP_MODEM] = config.stringValue("lowlevel", "sysfs_wakeup_modem", "/sys/user_hw/pins/modem/wakeup_modem/level");
+            powernode = config.stringValue("lowlevel", "power_node", DEFAULT_POWER_NODE);
+            bootnode = config.stringValue("lowlevel", "boot_node", DEFAULT_BOOT_NODE);
+            wakeupnode = config.stringValue("lowlevel", "wakeup_node", DEFAULT_WAKEUP_NODE);
         }
 
         public override string repr()
         {
-            return "<>";
-        }
-
-        private void executeShellCommand(string command)
-        {
-            if ( Posix.system(command) < 0 )
-            {
-                logger.error(@"Could not execute shell command: '$command'");
-            }
+            return "< Msmcomm.Daemon.LowLevelControl @ >";
         }
 
         public void reset()
         {
-            executeShellCommand(@"echo 0 > $(sysfsnodes[SysfsNodeType.BOOT_MODE])");
-            executeShellCommand(@"echo 0 > $(sysfsnodes[SysfsNodeType.WAKEUP_MODEM])");
-            executeShellCommand(@"echo 0 > $(sysfsnodes[SysfsNodeType.POWER_ON])");
+            FileHandling.write("0", bootnode);
+            FileHandling.write("0", wakeupnode);
+            FileHandling.write("0", powernode);
 
             Posix.sleep(2);
 
-            executeShellCommand(@"echo 1 > $(sysfsnodes[SysfsNodeType.POWER_ON])");
-            executeShellCommand(@"echo 1 > $(sysfsnodes[SysfsNodeType.WAKEUP_MODEM])");
+            FileHandling.write("1", powernode);
+            FileHandling.write("1", wakeupnode);
         }
 
         public void powerOn()
         {
-            executeShellCommand(@"echo 1 > $(sysfsnodes[SysfsNodeType.POWER_ON])");
+            FileHandling.write("1", powernode);
         }
 
         public void powerOff()
         {
-            executeShellCommand(@"echo 0 > $(sysfsnodes[SysfsNodeType.BOOT_MODE])");
-            executeShellCommand(@"echo 0 > $(sysfsnodes[SysfsNodeType.POWER_ON])");
+            FileHandling.write("0", bootnode);
+            FileHandling.write("0", powernode);
         }
     }
 } // namespace Msmcomm
