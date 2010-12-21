@@ -114,9 +114,9 @@ namespace Msmcomm.Daemon
                         reg_status = Msmcomm.NetworkRegistrationStatus.UNKNOWN;
                         break;
                 }
-                
+
                 var service_status = Msmcomm.NetworkServiceStatus.INVALID;
-                
+
                 switch ( networkStateInfoMsg.service_status )
                 {
                     case Msmcomm.LowLevel.NetworkServiceStatus.NO_SERVICE:
@@ -466,7 +466,7 @@ namespace Msmcomm.Daemon
             if (!modem.start())
             {
                 var msg = @"Could not startup connected modem";
-                throw new FreeSmartphone.ResourceError.UNABLE_TO_ENABLE(msg);
+                throw new Msmcomm.Error.FAILED(msg);
             }
         }
 
@@ -694,11 +694,11 @@ namespace Msmcomm.Daemon
 
             // NOTE Seed get_firmware_info method for description of this
             // workaround ...
-            return new PhonebookEntry(cmd.result.book_type,
-                                      cmd.result.position,
-                                      cmd.result.number,
-                                      cmd.result.title,
-                                      cmd.result.encoding_type);
+            return PhonebookEntry(cmd.result.book_type,
+                                  cmd.result.position,
+                                  cmd.result.number,
+                                  cmd.result.title,
+                                  cmd.result.encoding_type);
         }
 
         public async uint write_phonebook(PhonebookBookType book_type, string number, string title) throws DBus.Error, Msmcomm.Error

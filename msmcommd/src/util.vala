@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  **/
- 
+
 using GLib;
 
 namespace Msmcomm.Daemon
@@ -27,22 +27,22 @@ namespace Msmcomm.Daemon
 	{
 		if (data.length < 1)
 			return;
-			
+
 		int BYTES_PER_LINE = 16;
 		var hexline = new StringBuilder(write ? "<<< " : ">>> ");
 		var ascline = new StringBuilder();
 		int i = 0;
-		
+
 		foreach (uint8 byte in data)
 		{
 			i++;
-			
+
 			hexline.append_printf("%02x ", byte);
 			if (31 < byte && byte < 128)
 				ascline.append_printf("%c", byte);
 			else
 				ascline.append_printf(".");
-			
+
 			if (i % BYTES_PER_LINE + 1 == BYTES_PER_LINE)
 			{
 				hexline.append(ascline.str);
@@ -51,7 +51,7 @@ namespace Msmcomm.Daemon
 				ascline = new StringBuilder();
 			}
 		}
-		
+
 		if (i % BYTES_PER_LINE + 1 != BYTES_PER_LINE)
 		{
 			while (hexline.len < 52)
@@ -60,51 +60,11 @@ namespace Msmcomm.Daemon
 			logger.debug(hexline.str);
 		}
 	}
-	
-    internal void hexdump( bool write, void* data, int len, FsoFramework.Logger logger )
-    {
-        if ( len < 1 )
-            return;
 
-        int BYTES_PER_LINE = 16;
-
-        uint8* pointer = (uchar*) data;
-        var hexline = new StringBuilder( write? "<<< " : ">>> " );
-        var ascline = new StringBuilder();
-        uint8 b;
-        int i;
-
-        for ( i = 0; i < len; ++i )
-        {
-            b = pointer[i];
-            hexline.append_printf( "%02x ", b );
-            if ( 31 < b && b < 128 )
-                ascline.append_printf( "%c", b );
-            else
-                ascline.append_printf( "." );
-
-            if ( i % BYTES_PER_LINE+1 == BYTES_PER_LINE )
-            {
-                hexline.append( ascline.str );
-                logger.debug( hexline.str );
-                hexline = new StringBuilder( write? ">>> " : "<<< " );
-                ascline = new StringBuilder();
-            }
-        }
-        if ( i % BYTES_PER_LINE+1 != BYTES_PER_LINE )
-        {
-            while ( hexline.len < 52 )
-                hexline.append_c( ' ' );
-
-            hexline.append( ascline.str );
-            logger.debug( hexline.str );
-        }
-    }
-    
     public Msmcomm.LowLevel.PhonebookType convertPhonebookBookType(PhonebookBookType book_type)
     {
         Msmcomm.LowLevel.PhonebookType result = Msmcomm.LowLevel.PhonebookType.ADN;
-            
+
         switch (book_type)
         {
             case PhonebookBookType.FDN:
@@ -123,14 +83,14 @@ namespace Msmcomm.Daemon
                 result = Msmcomm.LowLevel.PhonebookType.MBN;
                 break;
         }
-            
+
         return result;
     }
-    
+
     public PhonebookBookType convertPhonebookType(Msmcomm.LowLevel.PhonebookType book_type)
     {
         PhonebookBookType result = PhonebookBookType.UNKNOWN;
-        
+
         switch (book_type)
         {
             case Msmcomm.LowLevel.PhonebookType.FDN:
@@ -149,7 +109,7 @@ namespace Msmcomm.Daemon
                 result = PhonebookBookType.MBN;
                 break;
         }
-        
+
         return result;
     }
 } // namespace Msmcomm
