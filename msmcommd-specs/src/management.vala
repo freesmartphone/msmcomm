@@ -29,6 +29,15 @@ namespace Msmcomm
         UNKNOWN,
     }
 
+    [DBus (name = "org.msmcomm.Management")]
+    public errordomain Error
+    {
+        INVALID_ARGUMENTS,
+        FAILED,
+        MODEM_INACTIVE,
+    }
+
+
     public string modemControlStatusToString(ModemControlStatus status)
     {
         string result = "<UNKNOWN>";
@@ -52,10 +61,10 @@ namespace Msmcomm
     [DBus (timeout = 120000, name = "org.msmcomm.Management")]
     public interface Management : GLib.Object
     {
-        public abstract async void reset() throws DBus.Error, Msmcomm.Error;
-        public abstract async void initialize() throws DBus.Error, Msmcomm.Error;
-        public abstract async void shutdown() throws DBus.Error, Msmcomm.Error;
-        public abstract async bool get_active() throws DBus.Error, Msmcomm.Error;
+        public abstract async void reset() throws GLib.Error, Msmcomm.Error;
+        public abstract async void initialize() throws GLib.Error, Msmcomm.Error;
+        public abstract async void shutdown() throws GLib.Error, Msmcomm.Error;
+        public abstract async bool get_active() throws GLib.Error, Msmcomm.Error;
         
         public signal void status_update(ModemControlStatus status);
     }

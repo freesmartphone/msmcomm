@@ -21,6 +21,10 @@
 
 namespace Msmcomm
 {
+    /* NOTE: This is now in management.vala due to some bug in vala. Vala does not produce
+     * compilable code when a dbus errordomain is the only content of a code file.
+     */
+#if 0
     [DBus (name = "org.msmcomm.Management")]
     public errordomain Error
     {
@@ -28,4 +32,5 @@ namespace Msmcomm
         FAILED,
         MODEM_INACTIVE,
     }
+#endif
 }

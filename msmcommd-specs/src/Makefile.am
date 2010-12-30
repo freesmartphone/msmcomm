@@ -7,8 +7,8 @@ AM_CFLAGS = \
 	-include $(CONFIG_HEADER)
 
 VALACFLAGS = \
+	--pkg glib-2.0 \
 	--pkg gio-2.0 \
-	--pkg dbus-glib-1 \
 	--header msmcommd.h \
 	--library msmcommd-1.0 \
 	--gir msmcommd-1.0.gir
