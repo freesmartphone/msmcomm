@@ -40,12 +40,11 @@ namespace Msmcomm.Daemon
         Msmcomm.ResponseUnsolicited
     {
         private FsoFramework.Logger logger;
+        private FreeSmartphone.Usage usage;
         private ModemControl modem;
-        private DBus.Connection dbusconn;
-        private dynamic DBus.Object dbusobj;
+        private GLib.DBusConnection dbusconn;
         private string servicename;
         private string objectpath;
-        private dynamic DBus.Object usage;
 
         private Gee.HashMap<Msmcomm.LowLevel.MessageType,UnsolicitedResponseHandlerWrapper> urc_handlers;
 
@@ -352,20 +351,20 @@ namespace Msmcomm.Daemon
 
         private bool registerWithResource()
         {
-            usage = dbusconn.get_object( "org.freesmartphone.ousaged",
-                                         "/org/freesmartphone/Usage",
-                                         "org.freesmartphone.Usage" ); /* dynamic for async */
+            usage = dbusconn.get_proxy_sync<FreeSmartphone.Usage>( FsoFramework.Usage.ServiceDBusName,
+                                                                   FsoFramework.Usage.ServicePathPrefix,
+                                                                   GLib.DBusProxyFlags.NONE);
 
-            var path =  new DBus.ObjectPath("/org/msmcomm");
+            var path =  new GLib.ObjectPath("/org/msmcomm");
             usage.register_resource( "Modem", path, onRegisterResourceReply );
             return false;
         }
 
-        private void onRegisterResourceReply(GLib.Error err)
+        private void onRegisterResourceReply(GLib.Object? source_object, GLib.AsyncResult res)
         {
-            if (err != null)
+            if (res != null)
             {
-                logger.error(@"Error: $(err.message): Can't register resource with org.freesmartphone.ousaged, enabling unconditionally...");
+                logger.error(@"Error: Can't register resource with org.freesmartphone.ousaged, enabling unconditionally...");
                 enable();
             }
             else
@@ -395,25 +394,25 @@ namespace Msmcomm.Daemon
         {
             try
             {
-                dbusconn = DBus.Bus.get(DBus.BusType.SYSTEM);
+                dbusconn = GLib.Bus.get_sync(GLib.BusType.SYSTEM);
 
 
-                dbusobj = dbusconn.get_object(DBUS_SERVICE_BUS,
-                                              DBUS_PATH_DBUS,
-                                              DBUS_INTERFACE_DBUS);
+                GLib.Bus.own_name_on_connection( dbusconn, servicename, 0, 
+                    ( conn, name ) => {
+                        logger.debug( @"Successfully claimed busname $servicename" );
+                    },
+                    ( conn, name ) => {
+                        logger.critical( @"Can't claim busname $servicename" );
+                        Posix.exit( -1 );
+                    } );
 
-                uint res = dbusobj.RequestName(servicename, (uint) 0);
+                dbusconn.register_object<Msmcomm.Commands>(objectpath, this);
+                dbusconn.register_object<Msmcomm.Management>(objectpath, this);
+                dbusconn.register_object<Msmcomm.ResponseUnsolicited>(objectpath, this);
 
-                if (res != DBus.RequestNameReply.PRIMARY_OWNER)
-                {
-                    logger.critical(@"Can't accquire service name $servicename; service already running or not allowed in dbus configuration");
-                    return false;
-                }
-
-                dbusconn.register_object(objectpath, this);
                 Idle.add(registerWithResource);
             }
-            catch (DBus.Error err)
+            catch (GLib.Error err)
             {
                 logger.error(@"Could not handle DBus connection: $(err.message)");
                 return false;
@@ -426,7 +425,7 @@ namespace Msmcomm.Daemon
         // DBUS (org.freesmartphone.Resource)
         //
 
-        public async void disable() throws FreeSmartphone.ResourceError, DBus.Error
+        public async void disable() throws FreeSmartphone.ResourceError
         {
             if (modem.active)
             {
@@ -435,22 +434,22 @@ namespace Msmcomm.Daemon
             }
         }
 
-        public async void enable() throws FreeSmartphone.ResourceError, DBus.Error
+        public async void enable() throws FreeSmartphone.ResourceError
         {
             logger.debug("Resource 'Modem' is now enabled");
         }
 
-        public async void resume() throws FreeSmartphone.ResourceError, DBus.Error
+        public async void resume() throws FreeSmartphone.ResourceError
         {
             // FIXME
         }
 
-        public async void suspend() throws FreeSmartphone.ResourceError, DBus.Error
+        public async void suspend() throws FreeSmartphone.ResourceError
         {
             // FIXME
         }
 
-        public async GLib.HashTable<string,GLib.Value?> get_dependencies () throws FreeSmartphone.ResourceError, DBus.Error
+        public async GLib.HashTable<string,GLib.Value?> get_dependencies () throws FreeSmartphone.ResourceError
         {
             GLib.HashTable<string,GLib.Value?> result = new GLib.HashTable<string,string>(str_hash, str_equal);
             return result;
@@ -460,7 +459,7 @@ namespace Msmcomm.Daemon
         // DBUS (org.msmcomm.Management)
         //
 
-        public async void initialize() throws DBus.Error, Msmcomm.Error
+        public async void initialize() throws GLib.Error, Msmcomm.Error
         {
             logger.info("Starting modem ...");
             if (!modem.start())
@@ -470,18 +469,18 @@ namespace Msmcomm.Daemon
             }
         }
 
-        public async void shutdown() throws DBus.Error, Msmcomm.Error
+        public async void shutdown() throws GLib.Error, Msmcomm.Error
         {
             modem.stop();
         }
 
-        public async void reset() throws DBus.Error, Msmcomm.Error
+        public async void reset() throws GLib.Error, Msmcomm.Error
         {
             shutdown();
             initialize();
         }
 
-        public async bool get_active() throws DBus.Error, Msmcomm.Error
+        public async bool get_active() throws GLib.Error, Msmcomm.Error
         {
             return modem.active;
         }
@@ -490,7 +489,7 @@ namespace Msmcomm.Daemon
         // DBUS (org.msmcomm.Commands)
         //
 
-        public async void test_alive() throws DBus.Error, Msmcomm.Error
+        public async void test_alive() throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -498,7 +497,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void change_operation_mode(ModemOperationMode mode) throws DBus.Error, Msmcomm.Error
+        public async void change_operation_mode(ModemOperationMode mode) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -507,7 +506,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async string get_imei() throws DBus.Error, Msmcomm.Error
+        public async string get_imei() throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -516,7 +515,7 @@ namespace Msmcomm.Daemon
             return cmd.imei;
         }
 
-        public async FirmwareInfo get_firmware_info() throws DBus.Error, Msmcomm.Error
+        public async FirmwareInfo get_firmware_info() throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -534,7 +533,7 @@ namespace Msmcomm.Daemon
                                 cmd.result.hci_version);
         }
 
-        public async void charging(ChargerStatusMode mode, ChargerStatusVoltage voltage) throws DBus.Error, Msmcomm.Error
+        public async void charging(ChargerStatusMode mode, ChargerStatusVoltage voltage) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -544,7 +543,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async ChargerStatus get_charger_status() throws DBus.Error, Msmcomm.Error
+        public async ChargerStatus get_charger_status() throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -554,7 +553,7 @@ namespace Msmcomm.Daemon
             return cmd.result;
         }
 
-        public async void reset_modem() throws DBus.Error, Msmcomm.Error
+        public async void reset_modem() throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -562,7 +561,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async PhoneStateInfo get_phone_state_info() throws DBus.Error, Msmcomm.Error
+        public async PhoneStateInfo get_phone_state_info() throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -572,7 +571,7 @@ namespace Msmcomm.Daemon
             return cmd.result;
         }
 
-        public async void verify_pin(string pin_type, string pin) throws DBus.Error, Msmcomm.Error
+        public async void verify_pin(string pin_type, string pin) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -582,7 +581,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void end_call(int call_id) throws DBus.Error, Msmcomm.Error
+        public async void end_call(int call_id) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -591,7 +590,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void answer_call(int call_id) throws DBus.Error, Msmcomm.Error
+        public async void answer_call(int call_id) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -600,7 +599,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void originate_call(string number, bool block) throws DBus.Error, Msmcomm.Error
+        public async void originate_call(string number, bool block) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -610,7 +609,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void execute_call_sups_command(CallCommandType command_type, int call_id) throws DBus.Error, Msmcomm.Error
+        public async void execute_call_sups_command(CallCommandType command_type, int call_id) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -620,7 +619,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void change_pin(string old_pin, string new_pin) throws DBus.Error, Msmcomm.Error
+        public async void change_pin(string old_pin, string new_pin) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -630,7 +629,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void enable_pin(string pin) throws DBus.Error, Msmcomm.Error
+        public async void enable_pin(string pin) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -639,7 +638,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void disable_pin(string pin) throws DBus.Error, Msmcomm.Error
+        public async void disable_pin(string pin) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -648,7 +647,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void set_system_time(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset) throws DBus.Error, Msmcomm.Error
+        public async void set_system_time(int year, int month, int day, int hours, int minutes, int seconds, int timezone_offset) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -663,7 +662,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void rssi_status(bool status) throws DBus.Error, Msmcomm.Error
+        public async void rssi_status(bool status) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -672,7 +671,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async PhonebookProperties get_phonebook_properties(PhonebookBookType book_type) throws DBus.Error, Msmcomm.Error
+        public async PhonebookProperties get_phonebook_properties(PhonebookBookType book_type) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -683,7 +682,7 @@ namespace Msmcomm.Daemon
             return cmd.result;
         }
 
-        public async PhonebookEntry read_phonebook(PhonebookBookType book_type, uint position) throws DBus.Error, Msmcomm.Error
+        public async PhonebookEntry read_phonebook(PhonebookBookType book_type, uint position) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -701,7 +700,7 @@ namespace Msmcomm.Daemon
                                   cmd.result.encoding_type);
         }
 
-        public async uint write_phonebook(PhonebookBookType book_type, string number, string title) throws DBus.Error, Msmcomm.Error
+        public async uint write_phonebook(PhonebookBookType book_type, string number, string title) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -714,7 +713,7 @@ namespace Msmcomm.Daemon
             return cmd.modify_id;
         }
 
-        public async void delete_phonebook(PhonebookBookType book_type, uint position) throws DBus.Error, Msmcomm.Error
+        public async void delete_phonebook(PhonebookBookType book_type, uint position) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -724,7 +723,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void get_network_list() throws DBus.Error, Msmcomm.Error
+        public async void get_network_list() throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -732,7 +731,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void set_mode_preference(string mode) throws DBus.Error, Msmcomm.Error
+        public async void set_mode_preference(string mode) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -741,7 +740,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async string sim_info(string field_type) throws DBus.Error, Msmcomm.Error
+        public async string sim_info(string field_type) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -752,7 +751,7 @@ namespace Msmcomm.Daemon
             return cmd.field_data;
         }
 
-        public async uint[] get_audio_modem_tuning_params() throws DBus.Error, Msmcomm.Error
+        public async uint[] get_audio_modem_tuning_params() throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -763,7 +762,7 @@ namespace Msmcomm.Daemon
             return tmp;
         }
 
-        public async void set_audio_profile(uint _class, uint sub_class) throws DBus.Error, Msmcomm.Error
+        public async void set_audio_profile(uint _class, uint sub_class) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -773,7 +772,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void get_all_pin_status_info() throws DBus.Error, Msmcomm.Error
+        public async void get_all_pin_status_info() throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 
@@ -781,7 +780,7 @@ namespace Msmcomm.Daemon
             yield modem.processCommand(cmd);
         }
 
-        public async void read_template(TemplateType tt) throws DBus.Error, Msmcomm.Error
+        public async void read_template(TemplateType tt) throws GLib.Error, Msmcomm.Error
         {
             checkModemActivity();
 

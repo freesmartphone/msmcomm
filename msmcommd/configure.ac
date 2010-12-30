@@ -10,7 +10,7 @@ AM_PROG_CC_C_O
 AC_PROG_LIBTOOL
 
 ################################################################################
-VALA_REQUIRED=0.9.7
+VALA_REQUIRED=0.11.1
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 m4_ifdef([AM_PROG_VALAC], [AM_PROG_VALAC([$VALA_REQUIRED])])
@@ -28,13 +28,12 @@ AC_ARG_ENABLE(debug,
 AM_CONDITIONAL( [WANT_DEBUG], [test x"$debug" = x"yes"])
 
 ################################################################################
-GLIB_REQUIRED=2.12.0
+GLIB_REQUIRED=2.26
 GEE_REQUIRED=0.5
 FSOT_REQUIRED=0.9
 FSOB_REQUIRED=0.9
-FSO_GLIB_REQUIRED=2010.07.28.1
-DBUS_REQUIRED=1.2.16
-DBUS_GLIB_REQUIRED=0.84
+FSOF_REQUIRED=0.8
+FSO_GLIB_REQUIRED=2010.12.13.1
 MSMCOMM_REQUIRED=0.5.0
 MSMCOMM_SPECS_REQUIRED=0.1.0
 
@@ -44,10 +43,9 @@ PKG_CHECK_MODULES(DEPS,
   gobject-2.0 >= $GLIB_REQUIRED
   gthread-2.0 >= $GLIB_REQUIRED
   gee-1.0 >= $GEE_REQUIRED
-  dbus-1 >= $DBUS_REQUIRED
-  dbus-glib-1 >= $DBUS_GLIB_REQUIRED
   fsotransport-2.0 >= $FSOT_REQUIRED
   fsobasics-2.0 >= $FSOB_REQUIRED
+  fsoframework-2.0 >= $FSOF_REQUIRED
   fso-glib-1.0 >= $FSO_GLIB_REQUIRED
   msmcomm-1.0 >= $MSMCOMM_REQUIRED
   msmcommd-specs-1.0 >= $MSMCOMM_SPECS_REQUIRED)
