@@ -349,15 +349,19 @@ namespace Msmcomm.Daemon
             }
         }
 
-        private bool registerWithResource()
+        private async void registerWithResource()
         {
-            usage = dbusconn.get_proxy_sync<FreeSmartphone.Usage>( FsoFramework.Usage.ServiceDBusName,
-                                                                   FsoFramework.Usage.ServicePathPrefix,
-                                                                   GLib.DBusProxyFlags.NONE);
-
-            var path =  new GLib.ObjectPath("/org/msmcomm");
-            usage.register_resource( "Modem", path, onRegisterResourceReply );
-            return false;
+            try
+            {
+                usage = yield dbusconn.get_proxy<FreeSmartphone.Usage>(FsoFramework.Usage.ServiceDBusName, FsoFramework.Usage.ServicePathPrefix, GLib.DBusProxyFlags.NONE);
+                yield usage.register_resource("Modem", new GLib.ObjectPath("/org/msmcomm"));
+                logger.info(@"Successfully registered resource with org.freesmartphone.ousaged");
+            }
+            catch (IOError e)
+            {
+                logger.error(@"Can't register resource with org.freesmartphone.ousaged ($(e.message)); enabling unconditionally" );
+                enable();
+            }
         }
 
         private void onRegisterResourceReply(GLib.Object? source_object, GLib.AsyncResult res)
@@ -411,7 +415,7 @@ namespace Msmcomm.Daemon
                 dbusconn.register_object<Msmcomm.Management>(objectpath, this);
                 dbusconn.register_object<Msmcomm.ResponseUnsolicited>(objectpath, this);
 
-                Idle.add(registerWithResource);
+                Idle.add( () => { registerWithResource(); return false; } );
             }
             catch (GLib.Error err)
             {
