@@ -405,7 +405,8 @@ namespace Msmcomm.Daemon
                         logger.critical( @"Can't claim busname $servicename" );
                         Posix.exit( -1 );
                     } );
-
+                
+                dbusconn.register_object<FreeSmartphone.Resource>(objectpath, this);
                 dbusconn.register_object<Msmcomm.Commands>(objectpath, this);
                 dbusconn.register_object<Msmcomm.Management>(objectpath, this);
                 dbusconn.register_object<Msmcomm.ResponseUnsolicited>(objectpath, this);
