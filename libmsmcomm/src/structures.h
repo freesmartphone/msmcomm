@@ -613,14 +613,7 @@ struct sms_message_send_event
 } __attribute__ ((packed));
 
 
-struct wms_callback_rsp
-{
-	uint8_t command;
-	uint8_t result[9];
-} __attribute__ ((packed));
-
-
-struct sms_ack_msg
+struct wms_ack_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0[4];
@@ -630,7 +623,7 @@ struct sms_ack_msg
 } __attribute__ ((packed));
 
 
-struct send_sms_msg
+struct wms_send_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0[17];
@@ -648,6 +641,11 @@ struct sms_get_info_msg
 	uint8_t value0;
 	uint8_t value1;
 	uint8_t unknown0[3];
+} __attribute__ ((packed));
+
+
+struct wms_resp
+{
 } __attribute__ ((packed));
 
 

@@ -26,31 +26,31 @@ extern void *talloc_msmc_ctx;
  * MSMCOMM_MESSAGE_TYPE_COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE
  */
 
-void msg_sms_acknowledge_incommming_message_init(struct msmcomm_message *msg)
+void msg_wms_ack_init(struct msmcomm_message *msg)
 {
     msg->group_id = 0x15;
     msg->msg_id = 0xb;
 
-    msg->payload = talloc_zero(talloc_msmc_ctx, struct sms_ack_msg);
+    msg->payload = talloc_zero(talloc_msmc_ctx, struct wms_ack_msg);
     
     /* Some unknown values, set always to 0x1 */
-    MESSAGE_CAST(msg, struct sms_ack_msg)->value0 = 0x1;
-    MESSAGE_CAST(msg, struct sms_ack_msg)->value1 = 0x1;
+    MESSAGE_CAST(msg, struct wms_ack_msg)->value0 = 0x1;
+    MESSAGE_CAST(msg, struct wms_ack_msg)->value1 = 0x1;
 }
 
-uint32_t msg_sms_acknowledge_incommming_message_get_size(struct msmcomm_message *msg)
+uint32_t msg_wms_ack_get_size(struct msmcomm_message *msg)
 {
-    return sizeof (struct sms_ack_msg);
+    return sizeof (struct wms_ack_msg);
 }
 
-void msg_sms_acknowledge_incommming_message_free(struct msmcomm_message *msg)
+void msg_wms_ack_free(struct msmcomm_message *msg)
 {
     talloc_free(msg->payload);
 }
 
-uint8_t *msg_sms_acknowledge_incommming_message_prepare_data(struct msmcomm_message *msg)
+uint8_t *msg_wms_ack_prepare_data(struct msmcomm_message *msg)
 {
-    MESSAGE_CAST(msg, struct sms_ack_msg)->ref_id = msg->ref_id;
+    MESSAGE_CAST(msg, struct wms_ack_msg)->ref_id = msg->ref_id;
     return msg->payload;
 }
 

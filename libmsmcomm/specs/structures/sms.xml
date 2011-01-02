@@ -10,12 +10,12 @@
 		</structure>
 		<structure name="sms_message_send_event" length="2083">
 		</structure>
-		<structure name="sms_ack_msg" length="1901">
+		<structure name="wms_ack_msg" length="1901">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="value0" start="8" type="uint8_t"/>
 			<field name="value1" start="9" type="uint8_t"/>
 		</structure>
-		<structure name="send_sms_msg" length="319">
+		<structure name="wms_send_msg" length="319">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="recipient_length" start="21" type="uint8_t"/>
 			<field name="recipient" start="22" end="57" type="uint8_t"/>
