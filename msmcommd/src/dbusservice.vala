@@ -45,6 +45,7 @@ namespace Msmcomm.Daemon
         private GLib.DBusConnection dbusconn;
         private string servicename;
         private string objectpath;
+        private Msmcomm.ModemControlStatus status;
 
         private Gee.HashMap<Msmcomm.LowLevel.MessageType,UnsolicitedResponseHandlerWrapper> urc_handlers;
 
@@ -377,6 +378,12 @@ namespace Msmcomm.Daemon
             }
         }
 
+        private void handleModemControlStatusUpdate( Msmcomm.ModemControlStatus status )
+        {
+            this.status = status;
+            status_update( status );
+        }
+
         //
         // public API
         //
@@ -384,9 +391,11 @@ namespace Msmcomm.Daemon
         public DBusService(ModemControl modem)
         {
             logger = FsoFramework.theLogger;
+
             this.modem = modem;
             this.modem.requestHandleUnsolicitedResponse.connect(dispatchUnsolicitedResponse);
-            this.modem.statusUpdate.connect((status) => { status_update(status); });
+            this.modem.statusUpdate.connect(handleModemControlStatusUpdate);
+
             servicename = "org.msmcomm";
             objectpath = "/org/msmcomm";
 
@@ -437,6 +446,8 @@ namespace Msmcomm.Daemon
                 logger.debug("Resource 'Modem' should be disabled and modem is active so shutting down modem control");
                 shutdown();
             }
+
+            logger.debug("Resource 'Modem' is now disabled");
         }
 
         public async void enable() throws FreeSmartphone.ResourceError

@@ -1253,15 +1253,15 @@ namespace Msmcomm.LowLevel
         
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-        public class SmsAcknowledgeIncommingMessage : Message
+        public class WmsAck : Message
         {
             [CCode (cname = "msmcomm_create_message")]
-            public SmsAcknowledgeIncommingMessage(MessageType t = MessageType.COMMAND_SMS_ACKNOWLDEGE_INCOMMING_MESSAGE);
+            public WmsAck(MessageType t = MessageType.COMMAND_WMS_ACK);
         }
         
         [Compact]
         [CCode (cname = "struct msmcomm_message", free_function = "", cheader_filename = "msmcomm.h")]
-        public class ReadTemplate : Message
+        public class WmsReadTemplate : Message
         {
             [CCode (cname = "int", has_type_id = false, cprefix = "MSMCOMM_WMS_TEMPLATE_TYPE_", cheader_filename = "msmcomm.h")]
             public enum TemplateType
@@ -1272,7 +1272,7 @@ namespace Msmcomm.LowLevel
             }
 
             [CCode (cname = "msmcomm_create_message")]
-            public ReadTemplate(MessageType t = MessageType.COMMAND_WMS_READ_TEMPLATE);
+            public WmsReadTemplate(MessageType t = MessageType.COMMAND_WMS_READ_TEMPLATE);
             
             public TemplateType template
             {

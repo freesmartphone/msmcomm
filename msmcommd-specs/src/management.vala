@@ -65,7 +65,7 @@ namespace Msmcomm
         public abstract async void initialize() throws GLib.Error, Msmcomm.Error;
         public abstract async void shutdown() throws GLib.Error, Msmcomm.Error;
         public abstract async bool get_active() throws GLib.Error, Msmcomm.Error;
-        
+
         public signal void status_update(ModemControlStatus status);
     }
 }

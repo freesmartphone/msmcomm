@@ -651,16 +651,16 @@ namespace Msmcomm.Daemon
 
         public override async void run() throws Msmcomm.Error
         {
-            var cmd = new Msmcomm.LowLevel.Command.ReadTemplate();
-            var tt = Msmcomm.LowLevel.Command.ReadTemplate.TemplateType.INVALID;
+            var cmd = new Msmcomm.LowLevel.Command.WmsReadTemplate();
+            var tt = Msmcomm.LowLevel.Command.WmsReadTemplate.TemplateType.INVALID;
 
             switch (template_type)
             {
                 case Msmcomm.TemplateType.SMSC_ADDRESS:
-                    tt = Msmcomm.LowLevel.Command.ReadTemplate.TemplateType.SMSC_ADDRESS;
+                    tt = Msmcomm.LowLevel.Command.WmsReadTemplate.TemplateType.SMSC_ADDRESS;
                     break;
                 case Msmcomm.TemplateType.EMAIL_ADDRESS:
-                    tt = Msmcomm.LowLevel.Command.ReadTemplate.TemplateType.EMAIL_ADDRESS;
+                    tt = Msmcomm.LowLevel.Command.WmsReadTemplate.TemplateType.EMAIL_ADDRESS;
                     break;
                 default:
                     throw new Msmcomm.Error.INVALID_ARGUMENTS("Invalid arguments supplied for ReadTemplate command");
