@@ -50,18 +50,23 @@ public static void MSG( string msg )
 public class Commands
 {
     private Gee.HashMap<string,CommandHolder> map;
-    private unowned Msmcomm.Context msm;
     private uint8 ref_id_counter;
 
-    public Commands( ref Msmcomm.Context context )
+    public Commands( )
     {
-        msm = context;
         map = new Gee.HashMap<string,CommandHolder>();
 
         ref_id_counter = 0;
 
         register( "help", help, "Show all known commands with their syntax" );
         register( "quit", () => { loop.quit(); }, "Quit this program" );
+
+        register( "reset_modem", reset_modem, "Reset the modem" );
+        register( "test_alive", test_alive, "Sychronize with the modem" );
+        register( "change_operation_mode", change_operation_mode, "Change operation mode", "change_operation_mode <online|offline>", 1 );
+        register( "verify_pin", verify_pin, "Send SIM PIN authentication code", "verify_pin <pin1|pin2> <pin>", 2 );
+
+#if 0
         register( "get_imei", get_imei, "Receive IMEI" );
         register( "get_firmware_info", get_firmware_info, "Get firmware info string" );
         register( "change_operation_mode", change_operation_mode, "Change operation mode", "change_operation_mode <reset|online|offline>", 1 );
@@ -86,6 +91,7 @@ public class Commands
         register( "sim_info", sim_info, "Gather information from the SIM card", "sim_info <imsi|msisdn>", 1 );
         register( "get_audio_modem_tuning_params", get_audio_modem_tuning_params, "Get various audio tuning params from modem" );
         register( "set_audio_profile", set_audio_profile, "Set audio profile to modem", "set_audio_profile <class> <sub-class>", 2 );
+#endif 
     }
 
     private uint8 nextValidRefId()
@@ -138,7 +144,7 @@ public class Commands
 
     private void help( string[] params )
     {
-        MSG( "This program supports the following commands:\n" );
+        MSG( "This program supports the following commands:" );
         foreach ( var cmd in map.values )
         {
             var syntax = cmd.syntax;
@@ -148,6 +154,43 @@ public class Commands
         }
     }
 
+    private void reset_modem( string[] params )
+    {
+        ModemAgent.instance().commands.reset_modem();
+    }
+
+    private void test_alive( string[] params )
+    {
+        ModemAgent.instance().commands.test_alive();
+    }
+
+    private void change_operation_mode( string[] params )
+    {
+        Msmcomm.ModemOperationMode mode = Msmcomm.ModemOperationMode.UNKNOWN;
+
+        switch ( params[0] )
+        {
+            case "online":
+                mode = Msmcomm.ModemOperationMode.ONLINE;
+                break;
+            case "offline":
+                mode = Msmcomm.ModemOperationMode.OFFLINE;
+                break;
+            default:
+                ERR( @"Unknown operation mode $(params[0])" );
+                return;
+        }
+
+        ModemAgent.instance().commands.change_operation_mode(mode);
+    }
+
+    private void verify_pin( string[] params )
+    {
+        ModemAgent.instance().commands.verify_pin(params[0], params[1]);
+    }
+
+
+#if 0
     private void get_imei( string[] params )
     {
         var msg = new Msmcomm.Command.GetImei();
@@ -495,4 +538,5 @@ public class Commands
         msg.sub_class = (uint8)params[1].to_int();
         msm.sendMessage(msg);
     }
+#endif
 }
