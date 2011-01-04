@@ -1,0 +1,3 @@
+NULL =
+
+MAINTAINERCLEANFILES = Makefile.in

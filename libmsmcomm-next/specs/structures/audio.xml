@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:audio>
+	<structures>
+		<structure name="set_audio_profile_msg" length="10">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="class" start="4" type="uint8_t"/>
+			<field name="sub_class" start="6" type="uint8_t"/>
+		</structure>
+		<structure name="sound_resp" length="11">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+            <field name="result" start="6" type="uint8_t"/>
+		</structure>
+		<structure name="get_audio_modem_tuning_params_msg" length="4">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+		<structure name="audio_modem_tuning_params_resp" length="21">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="params" start="5" end="20" type="uint8_t"/>
+		</structure>
+	</structures>
+</namespace:audio>

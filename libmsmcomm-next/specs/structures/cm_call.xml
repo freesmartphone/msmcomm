@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:call>
+	<structures>
+		<structure name="call_status_event" length="1107">
+			<field name="call_id" start="0" type="uint8_t"/>
+			<field name="call_type" start="1" type="uint8_t"/>
+			<field name="caller_id" start="3" end="17" type="uint8_t"/>
+			<field name="plmn" start="57" end="59" type="uint8_t"/>
+			<field name="caller_id_len" start="67" type="uint8_t"/>
+			<field name="cause_value0" start="590" type="uint8_t"/>
+			<field name="cause_value1" start="595" type="uint8_t"/>
+			<field name="cause_value2" start="624" type="uint8_t"/>
+			<field name="reject_type" start="625" type="uint8_t"/>
+			<field name="reject_value" start="626" type="uint8_t"/>
+			<field name="is_tty" start="933" type="uint8_t"/>
+		</structure> 
+		<structure name="cm_call_callback_resp" length="10">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="cmd_type" start="4" end="5" type="uint16_t"/>
+			<field name="result" start="7" type="uint8_t"/>
+		</structure>
+		<structure name="cm_call_answer_msg" length="8">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+            <field name="call_id" start="4" type="uint8_t"/>
+			<field name="value0" start="5" type="uint8_t"/>
+			<field name="value1" start="6" type="uint8_t"/>
+			<field name="value2" start="7" type="uint8_t"/>
+		</structure>
+		<structure name="cm_call_end_msg" length="61">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="value0" start="4" type="uint8_t"/>
+			<field name="call_id" start="5" type="uint8_t"/>
+		</structure>
+		<structure name="cm_call_origination_msg" length="206">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="value0" start="5" type="uint8_t"/>
+			<field name="caller_id" start="105" end="168" type="uint8_t"/>
+			<field name="caller_id_len" start="169" type="uint8_t"/>
+			<field name="value1" start="172" type="uint8_t"/>
+			<field name="block" start="204" type="uint8_t"/>
+		</structure>
+		<structure name="cm_call_sups_msg" length="106">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="command" start="4" type="uint8_t"/>
+			<field name="call_id" start="5" type="uint8_t"/>
+			<field name="value0" start="85" type="uint8_t"/>
+		</structure>
+	</structures>
+</namespace:call>

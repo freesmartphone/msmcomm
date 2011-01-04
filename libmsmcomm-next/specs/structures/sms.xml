@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:sms>
+	<structures>
+		<structure name="sms_received_message_event" length="2083">
+			<field name="sender_length" start="23" type="uint8_t"/>
+			<field name="sender" start="24" end="59" type="uint8_t"/>
+			<field name="pdu_length" start="62" end="65" type="uint32_t"/>
+			<field name="pdu_start" start="66" type="uint8_t"/>
+			<field name="pdu" start="67" end="2082" type="uint8_t"/>
+		</structure>
+		<structure name="sms_message_send_event" length="2083">
+		</structure>
+		<structure name="wms_ack_msg" length="1901">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="value0" start="8" type="uint8_t"/>
+			<field name="value1" start="9" type="uint8_t"/>
+		</structure>
+		<structure name="wms_send_msg" length="319">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="recipient_length" start="21" type="uint8_t"/>
+			<field name="recipient" start="22" end="57" type="uint8_t"/>
+			<field name="pdu_length" start="60" end="63" type="uint32_t"/>
+			<field name="pdu" start="64" end="318" type="uint8_t"/>
+		</structure>
+		<structure name="sms_get_info_msg" length="9">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="value0" start="4" type="uint8_t"/>
+			<field name="value1" start="5" type="uint8_t"/>
+		</structure>
+		<structure name="wms_resp" length="0">
+		</structure>
+		<structure name="wms_read_template_msg" length="9">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="record" start="4" end="5" type="uint16_t"/>
+		</structure>
+	</structures>
+</namespace:sms>
+

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:system>
+	<messages>
+		<!--
+		Commands
+		-->
+		<command name="change_operation_mode">
+			<description>
+			</description>
+			<identity group_id="0x3" msg_id="0x0"/>
+			<response-is name="cm_ph"/>
+			<structure-is name="change_operation_mode_msg"/>
+		</command>
+		<command name="test_alive">
+			<description>
+			</description>
+			<identity group_id="0x1b" msg_id="0x1"/>
+			<response-is name="test_alive"/>
+			<structure-is name="test_alive_msg"/>
+		</command>
+		<command name="get_firmware_info">
+			<description>
+			</description>
+			<identity group_id="0x1b" msg_id="0x9"/>
+			<response-is name="get_firmware_info"/>
+			<structure-is name="get_firmware_info_msg"/>
+		</command>
+		<command name="get_phone_state_info">
+			<description>
+			</description>
+			<identity group_id="0x3" msg_id="0xb"/>
+			<response-is name=""/>
+			<structure-is name="get_phone_state_info_msg"/>
+		</command>
+		<command name="charger_status">
+			<description>
+			</description>
+			<identity group_id="0x1b" msg_id="0x15"/>
+			<response-is name="charger_status"/>
+			<structure-is name="charger_status_msg"/>
+		</command>
+		<command name="charging">
+			<description>
+			</description>
+			<identity group_id="0x1b" msg_id="0x13"/>
+			<response-is name="charging"/>
+			<structure-is name="charging_msg"/>
+		</command>
+		<command name="set_system_time">
+			<description>
+			</description>
+			<identity group_id="0x1b" msg_id="0xe"/>
+			<response-is name="set_system_time"/>
+			<structure-is name="set_system_time_msg"/>
+		</command>
+		<command name="rssi_status">
+			<description>
+			</description>
+			<identity group_id="0x1b" msg_id="0xe"/>
+			<response-is name="rssi_status"/>
+			<structure-is name="rssi_status_msg"/>
+		</command>
+		<command name="set_mode_preference">
+			<description>
+			</description>
+			<identity group_id="0x1b" msg_id="0xe"/>
+			<response-is name="rssi_status"/>
+			<structure-is name="set_mode_preference_msg"/>
+		</command>
+		
+		<!--
+		Responses
+		-->
+		<response name="cm_ph">
+			<description>
+			</description>
+			<identity-is group_id="0x4" msg_id="0x1"/>
+			<structure-is name="cm_ph_resp"/>
+		</response>
+		<response name="test_alive">
+			<description>
+			</description>
+			<identity group_id="0x1c" msg_id="0x2"/>
+			<structure-is name="test_alive_resp"/>
+		</response>
+		<response name="get_firmware_info">
+			<description>
+			</description>
+			<identity group_id="0x1c" msg_id="0xa"/>
+			<structure-is name="get_firmware_info_resp"/>
+		</response>
+		<response name="get_imei">
+			<description>
+			</description>
+			<identity group_id="0x1c" msg_id="0x9"/>
+			<structure-is name="get_imei_resp"/>
+		</response>
+		<response name="charger_status">
+			<description>
+			</description>
+			<identity group_id="0x1c" msg_id="0x16"/>
+			<structure-is name="charger_status_msg"/>
+		</response>
+		<response name="charging">
+			<description>
+			</description>
+			<identity group_id="0x1c" msg_id="0x14"/>
+			<structure-is name="charging_msg"/>
+		</response>
+		<response name="set_system_time">
+			<description>
+			</description>
+			<identity group_id="0x1c" msg_id="0xf"/>
+			<structure-is name="set_system_time_resp"/>
+		</response>
+		<response name="ressi_status">
+			<description>
+			</description>
+			<identity group_id="0x7" msg_id="0x1"/>
+			<structure-is name="rssi_status_resp"/>
+		</response>
+		
+		<!--
+		Events
+		-->
+		<event name="link_established">
+			<description>
+			</description>
+			<identity group_id="0x8c" msg_id="0x1"/>
+			<structure-is name=""/>
+		</event>
+		<event name="radio_reset_ind">
+			<description>
+			</description>
+			<identity group_id="0x1d" msg_id="0x0"/>
+			<structure-is name="radio_reset_ind_event"/>
+		</event>
+		<event name="charger_status">
+			<description>
+			</description>
+			<identity group_id="0x1d" msg_id="0x1"/>
+			<structure-is name="charger_status_event"/>
+		</event>
+		<event name="operator_mode">
+			<description>
+			</description>
+			<identity group_id="0x5" msg_id="0x2"/>
+			<structure-is name="cm_ph_event"/>
+		</event>
+		
+	</messages>
+</namespace:system>
