@@ -51,8 +51,8 @@ namespace Msmcomm.LowLevel
         protected override void prepareData()
         {
             _message.ref_id = ref_id;
-            // _message.caller_id = number.data;
-            // _message.caller_id_len = (uint8) number.length;
+            Memory.copy(_message.caller_id, number.data, number.length);
+            _message.caller_id_len = (uint8) number.length;
             _message.block = suppress_own_number ? 1 : 0;
         }
     }
