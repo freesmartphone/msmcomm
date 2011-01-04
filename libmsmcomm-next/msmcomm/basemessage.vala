@@ -21,19 +21,27 @@
 
 namespace Msmcomm.LowLevel
 {
+    public enum MessageType
+    {
+        INVALID,
+        COMMAND_CALL_ORIGINATION,
+    }
+    
     public abstract class BaseMessage
     {
         public uint8 group_id { get; private set;  }
         public uint16 message_id { get; private set;  }
         public uint8 ref_id { get; set; default = 0x0; }
+        public MessageType message_type { get; private set; }
 
         private void *_payload;
         private ulong _payload_size;
 
-        public BaseMessage(uint8 group_id, uint16 message_id)
+        public BaseMessage(uint8 group_id, uint16 message_id, MessageType message_type)
         {
             this.group_id = group_id;
             this.message_id = message_id;
+            this.message_type = message_type;
         }
 
         public uint8[] pack()

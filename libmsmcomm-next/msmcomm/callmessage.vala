@@ -35,7 +35,7 @@ namespace Msmcomm.LowLevel
 
         public CallOriginationMessage()
         {
-            base(GROUP_ID, MESSAGE_ID);
+            base(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ORIGINATION);
 
             number = "";
             suppress_own_number = false;
