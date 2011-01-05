@@ -45,6 +45,16 @@ $(testmessagedisassembler_SOURCES): $(testmessagedisassembler_VALASOURCES)
 testmessagedisassembler_LDADD = $(progs_ldadd)
 EXTRA_DIST += $(testmessagedisassembler_VALASOURCES)
 
+TEST_PROGS += testmessageassembler
+testmessageassembler_VALASOURCES = testmessageassembler.vala
+testmessageassembler_SOURCES = testmessageassembler.c
+$(testmessageassembler_SOURCES): $(testmessageassembler_VALASOURCES)
+	$(VALAC) $(VALAC_ARGS) $^
+	touch $@
+testmessageassembler_LDADD = $(progs_ldadd)
+EXTRA_DIST += $(testmessageassembler_VALASOURCES)
+
+
 CLEANFILES = \
 	$(TEST_PROGS) \
 	*.? \
