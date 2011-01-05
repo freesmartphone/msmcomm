@@ -169,6 +169,9 @@ namespace Msmcomm.LowLevel
         public CallCallbackResponseMessage()
         {
             base(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
+
+            _message = CmCallCallbackResponse();
+            setPayload((void*)(&_message), sizeof(CmCallCallbackResponse));
         }
 
         protected override void evaluateData()
