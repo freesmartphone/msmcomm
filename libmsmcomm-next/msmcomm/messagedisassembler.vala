@@ -22,39 +22,39 @@
 namespace Msmcomm.LowLevel
 {
     public static const int MESSAGE_HEADER_SIZE = 3;
-    
+
     public class MessageDisassembler
     {
-		private Gee.HashMap<uint8,BaseMessageGroup> groups;
+        private Gee.HashMap<uint8,BaseMessageGroup> groups;
 
-	    public MessageDisassembler()
-	    {
-	        groups = new Gee.HashMap<uint8,BaseMessageGroup>();
+        public MessageDisassembler()
+        {
+            groups = new Gee.HashMap<uint8,BaseMessageGroup>();
 
-			groups[CallResponseMessageGroup.GROUP_ID]   = new CallResponseMessageGroup();
-			groups[CallUrcMessageGroup.GROUP_ID]    = new CallUrcMessageGroup();
-	    }
-		
+            groups[CallResponseMessageGroup.GROUP_ID]   = new CallResponseMessageGroup();
+            groups[CallUnsolicitedResponseMessageGroup.GROUP_ID]    = new CallUnsolicitedResponseMessageGroup();
+        }
+
         public BaseMessage? unpackMessage(void *data, int size)
         {
             BaseMessage? message = null;
             uint8[] buffer = (uint8[]) data;
-            
+
             /* Minimum required size to have a valid message are four bytes */
             assert(size > MESSAGE_HEADER_SIZE);
-			
-			/* Extract group and message id from the first three bytes */
-			uint8 groupId = buffer[0];
-			uint16 messageId = buffer[1] | (buffer[2] << 8);
-			
-			/* Check for message group and unpack message for byte stream */
-			if (groups.has_key(groupId))
-			{
-			    var group = groups[groupId];
-			    message = group.unpackMessage(messageId, buffer[3:size-1], size - 3);
-			}
-			
-			return message;
+
+            /* Extract group and message id from the first three bytes */
+            uint8 groupId = buffer[0];
+            uint16 messageId = buffer[1] | (buffer[2] << 8);
+
+            /* Check for message group and unpack message for byte stream */
+            if (groups.has_key(groupId))
+            {
+                var group = groups[groupId];
+                message = group.unpackMessage(messageId, buffer[3:size-1], size - 3);
+            }
+
+            return message;
         }
     }
 }

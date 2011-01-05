@@ -30,18 +30,18 @@ namespace Msmcomm.LowLevel
         {
             base(CallResponseMessageGroup.GROUP_ID);
 
-            message_types[CallResponseCallbackMessage.GROUP_ID] = typeof(CallResponseCallbackMessage);
-            message_types[CallResponseReturnMessage.GROUP_ID] = typeof(CallResponseReturnMessage);
+            message_types[CallCallbackResponseMessage.GROUP_ID] = typeof(CallCallbackResponseMessage);
+            message_types[CallReturnResponseMessage.GROUP_ID] = typeof(CallReturnResponseMessage);
         }
     }
 
-    public class CallUrcMessageGroup : BaseMessageGroup
+    public class CallUnsolicitedResponseMessageGroup : BaseMessageGroup
     {
         public static const uint8 GROUP_ID = 0x2;
 
-        public CallUrcMessageGroup()
+        public CallUnsolicitedResponseMessageGroup()
         {
-            base(CallUrcMessageGroup.GROUP_ID);
+            base(CallUnsolicitedResponseMessageGroup.GROUP_ID);
         }
     }
 }

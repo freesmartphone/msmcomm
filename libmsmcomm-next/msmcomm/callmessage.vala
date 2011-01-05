@@ -23,7 +23,7 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-    public class CallOriginationMessage : BaseMessage
+    public class CallOriginationCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x0;
         public static const uint16 MESSAGE_ID = 0x0;
@@ -36,7 +36,7 @@ namespace Msmcomm.LowLevel
         public string number;
         public bool suppress_own_number;
 
-        public CallOriginationMessage()
+        public CallOriginationCommandMessage()
         {
             base(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ORIGINATION);
 
@@ -60,23 +60,23 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class CallResponseCallbackMessage : BaseMessage
+    public class CallCallbackResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x2;
         public static const uint16 MESSAGE_ID = 0x0;
 
-        public CallResponseCallbackMessage()
+        public CallCallbackResponseMessage()
         {
             base(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
         }
     }
 
-    public class CallResponseReturnMessage : BaseMessage
+    public class CallReturnResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x2;
         public static const uint16 MESSAGE_ID = 0x1;
 
-        public CallResponseReturnMessage()
+        public CallReturnResponseMessage()
         {
             base(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
         }
