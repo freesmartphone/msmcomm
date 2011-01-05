@@ -20,22 +20,54 @@
  **/
 
 using Msmcomm.LowLevel;
+using Msmcomm.LowLevel.Structures;
 
 void test_messagedisassembler_too_small_message()
 {
     uint8[] data = { 0x42 };
 
     MessageDisassembler mdis = new MessageDisassembler();
-    BaseMessage? result = mdis.unpackMessage(data);
+    BaseMessage? result = mdis.unpack_message(data);
 
     assert(result == null);
 }
 
+void test_messagedisassembler_correct_unpacking_message()
+{
+    var message = CmCallCallbackResponse();
+    message.ref_id = 3;
+    message.cmd_type = 4;
+    message.result = 1; /* RESULT_OK */
+
+    uint8[] data = new uint8[3 + (int) sizeof(CmCallCallbackResponse)];
+
+    /* set group and message id */
+    data[0] = 0x1;
+    data[1] = 0x0;
+    data[2] = 0x0;
+
+    /* append message structure to buffer */
+    Memory.copy((uint8*)(data) + 3, (void*)(&message), sizeof(CmCallCallbackResponse));
+
+    MessageDisassembler mdis = new MessageDisassembler();
+    BaseMessage? result = mdis.unpack_message(data);
+
+    assert(result != null);
+    assert(result.group_id == 0x1);
+    assert(result.message_id == 0x0);
+    assert(result.ref_id == 3);
+    assert(result.result == ResultType.RESULT_OK);
+
+    var call_message = result as CallCallbackResponseMessage;
+    assert(call_message != null);
+    assert(call_message.command_type == 4);
+}
 
 void main(string[] args)
 {
     Test.init(ref args);
     Test.add_func("/MessageDisassembler/TooSmallMessage", test_messagedisassembler_too_small_message);
+    Test.add_func("/MessageDisassembler/CorrectUnpackingMessage", test_messagedisassembler_correct_unpacking_message);
     Test.run();
 }
 
