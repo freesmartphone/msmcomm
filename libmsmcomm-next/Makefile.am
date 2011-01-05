@@ -34,5 +34,5 @@ STRUCTURE_SPECS = \
 
 generate-structures:
 	$(top_srcdir)/tools/xml-to-sdef.py $(STRUCTURE_SPECS) > $(top_srcdir)/specs/msmcomm.sdef
-	$(top_srcdir)/tools/generate-structures-c.py $(top_srcdir)/specs/msmcomm.sdef > $(top_srcdir)/src/structures.h
+	$(top_srcdir)/tools/generate-structures-c.py $(top_srcdir)/specs/msmcomm.sdef > $(top_srcdir)/msmcomm/structures.h
 	$(top_srcdir)/tools/generate-structures-vala.py $(top_srcdir)/specs/msmcomm.sdef > $(top_srcdir)/vapi/structures.vapi

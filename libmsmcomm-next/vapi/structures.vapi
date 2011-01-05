@@ -22,7 +22,7 @@
 
 namespace Msmcomm.LowLevel.Structures
 {
-[CCode (cname = "struct call_status_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct call_status_event", cheader_filename = "structures.h", destroy_function = "")]
 struct CallStatusEvent
 {
 	public uint8 call_id;
@@ -47,7 +47,7 @@ struct CallStatusEvent
 }
 
 
-[CCode (cname = "struct cm_call_callback_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct cm_call_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct CmCallCallbackResponse
 {
 	public uint32 ref_id;
@@ -58,7 +58,7 @@ struct CmCallCallbackResponse
 }
 
 
-[CCode (cname = "struct cm_call_answer_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct cm_call_answer_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct CmCallAnswerMessage
 {
 	public uint32 ref_id;
@@ -69,7 +69,7 @@ struct CmCallAnswerMessage
 }
 
 
-[CCode (cname = "struct cm_call_end_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct cm_call_end_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct CmCallEndMessage
 {
 	public uint32 ref_id;
@@ -79,7 +79,7 @@ struct CmCallEndMessage
 }
 
 
-[CCode (cname = "struct cm_call_origination_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct cm_call_origination_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct CmCallOriginationMessage
 {
 	public uint32 ref_id;
@@ -96,7 +96,7 @@ struct CmCallOriginationMessage
 }
 
 
-[CCode (cname = "struct cm_call_sups_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct cm_call_sups_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct CmCallSupsMessage
 {
 	public uint32 ref_id;
@@ -108,7 +108,7 @@ struct CmCallSupsMessage
 }
 
 
-[CCode (cname = "struct gsdi_callback_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct gsdi_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct GsdiCallbackResponse
 {
 	public uint8[] unknown0;
@@ -125,7 +125,7 @@ struct GsdiCallbackResponse
 }
 
 
-[CCode (cname = "struct change_pin_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct change_pin_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct ChangePinMessage
 {
 	public uint32 ref_id;
@@ -135,7 +135,7 @@ struct ChangePinMessage
 }
 
 
-[CCode (cname = "struct pin_status_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct pin_status_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct PinStatusMessage
 {
 	public uint32 ref_id;
@@ -145,7 +145,7 @@ struct PinStatusMessage
 }
 
 
-[CCode (cname = "struct sms_wms_read_template_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct sms_wms_read_template_event", cheader_filename = "structures.h", destroy_function = "")]
 struct SmsWmsReadTemplateEvent
 {
 	public uint8[] unknown0;
@@ -159,7 +159,7 @@ struct SmsWmsReadTemplateEvent
 }
 
 
-[CCode (cname = "struct read_phonebook_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct read_phonebook_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct ReadPhonebookMessage
 {
 	public uint32 ref_id;
@@ -168,7 +168,7 @@ struct ReadPhonebookMessage
 }
 
 
-[CCode (cname = "struct modify_phonebook_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct modify_phonebook_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct ModifyPhonebookMessage
 {
 	public uint32 ref_id;
@@ -181,7 +181,7 @@ struct ModifyPhonebookMessage
 }
 
 
-[CCode (cname = "struct phonebook_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct phonebook_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct PhonebookResponse
 {
 	public uint32 ref_id;
@@ -196,7 +196,7 @@ struct PhonebookResponse
 }
 
 
-[CCode (cname = "struct phonebook_ready_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct phonebook_ready_event", cheader_filename = "structures.h", destroy_function = "")]
 struct PhonebookReadyEvent
 {
 	public uint8[] unknown0;
@@ -205,7 +205,7 @@ struct PhonebookReadyEvent
 }
 
 
-[CCode (cname = "struct phonebook_modified_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct phonebook_modified_event", cheader_filename = "structures.h", destroy_function = "")]
 struct PhonebookModifiedEvent
 {
 	public uint8 unknown0;
@@ -216,7 +216,7 @@ struct PhonebookModifiedEvent
 }
 
 
-[CCode (cname = "struct get_phonebook_properties_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_phonebook_properties_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct GetPhonebookPropertiesMessage
 {
 	public uint32 ref_id;
@@ -224,7 +224,7 @@ struct GetPhonebookPropertiesMessage
 }
 
 
-[CCode (cname = "struct get_phonebook_properties_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_phonebook_properties_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct GetPhonebookPropertiesResponse
 {
 	public uint8 unknown0;
@@ -237,7 +237,7 @@ struct GetPhonebookPropertiesResponse
 }
 
 
-[CCode (cname = "struct sim_info_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct sim_info_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct SimInfoMessage
 {
 	public uint32 ref_id;
@@ -246,14 +246,14 @@ struct SimInfoMessage
 }
 
 
-[CCode (cname = "struct gsdi_get_all_pin_status_info_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct gsdi_get_all_pin_status_info_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct GsdiGetAllPinStatusInfoMessage
 {
 	public uint8[] unknown0;
 }
 
 
-[CCode (cname = "struct network_state_info_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct network_state_info_event", cheader_filename = "structures.h", destroy_function = "")]
 struct NetworkStateInfoEvent
 {
 	public uint8[] change_field;
@@ -281,7 +281,7 @@ struct NetworkStateInfoEvent
 }
 
 
-[CCode (cname = "struct get_networklist_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_networklist_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct GetNetworklistMessage
 {
 	public uint32 ref_id;
@@ -290,7 +290,7 @@ struct GetNetworklistMessage
 }
 
 
-[CCode (cname = "struct get_networklist_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_networklist_event", cheader_filename = "structures.h", destroy_function = "")]
 struct GetNetworklistEvent
 {
 	public uint8[] unknown0;
@@ -322,7 +322,7 @@ struct GetNetworklistEvent
 }
 
 
-[CCode (cname = "struct cm_ph_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct cm_ph_event", cheader_filename = "structures.h", destroy_function = "")]
 struct CmPhEvent
 {
 	public uint8[] unknown0;
@@ -354,27 +354,27 @@ struct CmPhEvent
 }
 
 
-[CCode (cname = "struct get_home_network_name_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_home_network_name_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct GetHomeNetworkNameMessage
 {
 	public uint8[] unknown0;
 }
 
 
-[CCode (cname = "struct get_home_network_name_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_home_network_name_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct GetHomeNetworkNameResponse
 {
 	public uint8[] unknown0;
 }
 
 
-[CCode (cname = "struct cm_ph_info_available_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct cm_ph_info_available_event", cheader_filename = "structures.h", destroy_function = "")]
 struct CmPhInfoAvailableEvent
 {
 }
 
 
-[CCode (cname = "struct charger_status_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct charger_status_event", cheader_filename = "structures.h", destroy_function = "")]
 struct ChargerStatusEvent
 {
 	public uint8[] unknown0;
@@ -383,14 +383,14 @@ struct ChargerStatusEvent
 }
 
 
-[CCode (cname = "struct radio_reset_ind_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct radio_reset_ind_event", cheader_filename = "structures.h", destroy_function = "")]
 struct RadioResetIndEvent
 {
 	public uint8[] unknown0;
 }
 
 
-[CCode (cname = "struct cm_ph_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct cm_ph_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct CmPhResponse
 {
 	public uint32 ref_id;
@@ -399,7 +399,7 @@ struct CmPhResponse
 }
 
 
-[CCode (cname = "struct get_firmware_info_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_firmware_info_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct GetFirmwareInfoResponse
 {
 	public uint32 ref_id;
@@ -410,7 +410,7 @@ struct GetFirmwareInfoResponse
 }
 
 
-[CCode (cname = "struct get_imei_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_imei_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct GetImeiResponse
 {
 	public uint32 ref_id;
@@ -418,14 +418,14 @@ struct GetImeiResponse
 }
 
 
-[CCode (cname = "struct get_imei_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_imei_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct GetImeiMessage
 {
 	public uint32 ref_id;
 }
 
 
-[CCode (cname = "struct change_operation_mode_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct ChangeOperationModeMessage
 {
 	public uint32 ref_id;
@@ -433,7 +433,7 @@ struct ChangeOperationModeMessage
 }
 
 
-[CCode (cname = "struct test_alive_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct test_alive_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct TestAliveMessage
 {
 	public uint32 ref_id;
@@ -441,21 +441,21 @@ struct TestAliveMessage
 }
 
 
-[CCode (cname = "struct get_firmware_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_firmware_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct GetFirmwareMessage
 {
 	public uint32 ref_id;
 }
 
 
-[CCode (cname = "struct get_phone_state_info_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_phone_state_info_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct GetPhoneStateInfoMessage
 {
 	public uint32 ref_id;
 }
 
 
-[CCode (cname = "struct charger_status_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct charger_status_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct ChargerStatusMessage
 {
 	public uint32 ref_id;
@@ -468,7 +468,7 @@ struct ChargerStatusMessage
 }
 
 
-[CCode (cname = "struct charging_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct charging_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct ChargingMessage
 {
 	public uint32 ref_id;
@@ -479,7 +479,7 @@ struct ChargingMessage
 }
 
 
-[CCode (cname = "struct test_alive_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct test_alive_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct TestAliveResponse
 {
 	public uint32 ref_id;
@@ -487,7 +487,7 @@ struct TestAliveResponse
 }
 
 
-[CCode (cname = "struct set_system_time_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct set_system_time_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct SetSystemTimeMessage
 {
 	public uint32 ref_id;
@@ -506,7 +506,7 @@ struct SetSystemTimeMessage
 }
 
 
-[CCode (cname = "struct set_system_time_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct set_system_time_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct SetSystemTimeResponse
 {
 	public uint32 ref_id;
@@ -515,7 +515,7 @@ struct SetSystemTimeResponse
 }
 
 
-[CCode (cname = "struct rssi_status_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct rssi_status_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct RssiStatusMessage
 {
 	public uint32 ref_id;
@@ -523,7 +523,7 @@ struct RssiStatusMessage
 }
 
 
-[CCode (cname = "struct rssi_status_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct rssi_status_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct RssiStatusResponse
 {
 	public uint32 ref_id;
@@ -531,7 +531,7 @@ struct RssiStatusResponse
 }
 
 
-[CCode (cname = "struct set_mode_preference_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct set_mode_preference_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct SetModePreferenceMessage
 {
 	public uint32 ref_id;
@@ -550,7 +550,7 @@ struct SetModePreferenceMessage
 }
 
 
-[CCode (cname = "struct set_audio_profile_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct set_audio_profile_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct SetAudioProfileMessage
 {
 	public uint32 ref_id;
@@ -561,7 +561,7 @@ struct SetAudioProfileMessage
 }
 
 
-[CCode (cname = "struct sound_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct sound_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct SoundResponse
 {
 	public uint32 ref_id;
@@ -571,14 +571,14 @@ struct SoundResponse
 }
 
 
-[CCode (cname = "struct get_audio_modem_tuning_params_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_audio_modem_tuning_params_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct GetAudioModemTuningParamsMessage
 {
 	public uint32 ref_id;
 }
 
 
-[CCode (cname = "struct audio_modem_tuning_params_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct audio_modem_tuning_params_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct AudioModemTuningParamsResponse
 {
 	public uint32 ref_id;
@@ -587,74 +587,74 @@ struct AudioModemTuningParamsResponse
 }
 
 
-[CCode (cname = "struct pdsm_pd_done_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct pdsm_pd_done_event", cheader_filename = "structures.h", destroy_function = "")]
 struct PdsmPdDoneEvent
 {
 }
 
 
-[CCode (cname = "struct pd_position_data_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct pd_position_data_event", cheader_filename = "structures.h", destroy_function = "")]
 struct PdPositionDataEvent
 {
 }
 
 
-[CCode (cname = "struct pd_parameter_change_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct pd_parameter_change_event", cheader_filename = "structures.h", destroy_function = "")]
 struct PdParameterChangeEvent
 {
 }
 
 
-[CCode (cname = "struct pdsm_lcs_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct pdsm_lcs_event", cheader_filename = "structures.h", destroy_function = "")]
 struct PdsmLcsEvent
 {
 }
 
 
-[CCode (cname = "struct pdsm_xtra_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct pdsm_xtra_event", cheader_filename = "structures.h", destroy_function = "")]
 struct PdsmXtraEvent
 {
 }
 
 
-[CCode (cname = "struct pdsm_pd_get_pos_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct pdsm_pd_get_pos_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct PdsmPdGetPosResponse
 {
 }
 
 
-[CCode (cname = "struct pdsm_pd_end_session_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct pdsm_pd_end_session_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct PdsmPdEndSessionResponse
 {
 }
 
 
-[CCode (cname = "struct pa_set_param_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct pa_set_param_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct PaSetParamResponse
 {
 }
 
 
-[CCode (cname = "struct lcs_agent_client_rsp_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct lcs_agent_client_rsp_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct LcsAgentClientRspResponse
 {
 }
 
 
-[CCode (cname = "struct xtra_set_data_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct xtra_set_data_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct XtraSetDataResponse
 {
 }
 
 
-[CCode (cname = "struct get_location_priv_pref_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct get_location_priv_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct GetLocationPrivPrefMessage
 {
 	public uint8[] unknown0;
 }
 
 
-[CCode (cname = "struct sms_received_message_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct sms_received_message_event", cheader_filename = "structures.h", destroy_function = "")]
 struct SmsReceivedMessageEvent
 {
 	public uint8[] unknown0;
@@ -667,14 +667,14 @@ struct SmsReceivedMessageEvent
 }
 
 
-[CCode (cname = "struct sms_message_send_event", cheader_filename = "structures.h")]
+[CCode (cname = "struct sms_message_send_event", cheader_filename = "structures.h", destroy_function = "")]
 struct SmsMessageSendEvent
 {
 	public uint8[] unknown0;
 }
 
 
-[CCode (cname = "struct wms_ack_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct wms_ack_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct WmsAckMessage
 {
 	public uint32 ref_id;
@@ -685,7 +685,7 @@ struct WmsAckMessage
 }
 
 
-[CCode (cname = "struct wms_send_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct wms_send_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct WmsSendMessage
 {
 	public uint32 ref_id;
@@ -698,7 +698,7 @@ struct WmsSendMessage
 }
 
 
-[CCode (cname = "struct sms_get_info_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct sms_get_info_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct SmsGetInfoMessage
 {
 	public uint32 ref_id;
@@ -708,13 +708,13 @@ struct SmsGetInfoMessage
 }
 
 
-[CCode (cname = "struct wms_resp", cheader_filename = "structures.h")]
+[CCode (cname = "struct wms_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct WmsResponse
 {
 }
 
 
-[CCode (cname = "struct wms_read_template_msg", cheader_filename = "structures.h")]
+[CCode (cname = "struct wms_read_template_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct WmsReadTemplateMessage
 {
 	public uint32 ref_id;

@@ -52,7 +52,7 @@ def format_name(name):
 def build_object(name, len, parts):
   vala_name = format_name(name)
 
-  print "[CCode (cname = \"struct %s\", cheader_filename = \"structures.h\")]" % name
+  print "[CCode (cname = \"struct %s\", cheader_filename = \"structures.h\", destroy_function = \"\")]" % name
   print "struct %s" % vala_name
   print "{"
 
