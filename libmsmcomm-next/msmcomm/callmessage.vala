@@ -47,13 +47,35 @@ namespace Msmcomm.LowLevel
             _message.value0 = 0x4;
             _message.value1 = 0x1;
         }
-        
+
         protected override void prepareData()
         {
             _message.ref_id = ref_id;
             Memory.copy(_message.caller_id, number.data, number.length);
             _message.caller_id_len = (uint8) number.length;
             _message.block = suppress_own_number ? 1 : 0;
+        }
+    }
+
+    public class CallResponseCallbackMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x2;
+        public static const uint16 MESSAGE_ID = 0x0;
+
+        public CallResponseCallbackMessage()
+        {
+            base(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
+        }
+    }
+
+    public class CallResponseReturnMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x2;
+        public static const uint16 MESSAGE_ID = 0x1;
+
+        public CallResponseReturnMessage()
+        {
+            base(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
         }
     }
 }

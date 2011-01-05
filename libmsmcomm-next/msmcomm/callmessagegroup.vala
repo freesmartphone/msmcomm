@@ -19,37 +19,29 @@
  *
  **/
 
- namespace Msmcomm.LowLevel
- {
+
+namespace Msmcomm.LowLevel
+{
     public class CallResponseMessageGroup : BaseMessageGroup
     {
-		public static const uint8 GROUP_ID = 0x1;
-		
-		public CallResponseMessageGroup()
-		{
-			base(CallResponseMessageGroup.GROUP_ID);
-		}
-		
-		public override BaseMessage? unpackMessage(uint16 id, void *data, int size)
-		{
-			BaseMessage? result = null;
-			return result;
-		}
+        public static const uint8 GROUP_ID = 0x1;
+
+        public CallResponseMessageGroup()
+        {
+            base(CallResponseMessageGroup.GROUP_ID);
+
+            message_types[CallResponseCallbackMessage.GROUP_ID] = typeof(CallResponseCallbackMessage);
+            message_types[CallResponseReturnMessage.GROUP_ID] = typeof(CallResponseReturnMessage);
+        }
     }
-    
+
     public class CallUrcMessageGroup : BaseMessageGroup
     {
-		public static const uint8 GROUP_ID = 0x2;
-		
-		public CallUrcMessageGroup()
-		{
-			base(CallUrcMessageGroup.GROUP_ID);
-		}
-		
-		public override BaseMessage? unpackMessage(uint16 id, void *data, int size)
-		{
-			BaseMessage? result = null;
-			return result;
-		}
-	}
- }
+        public static const uint8 GROUP_ID = 0x2;
+
+        public CallUrcMessageGroup()
+        {
+            base(CallUrcMessageGroup.GROUP_ID);
+        }
+    }
+}

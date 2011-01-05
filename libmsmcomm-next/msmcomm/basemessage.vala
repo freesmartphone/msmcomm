@@ -25,6 +25,8 @@ namespace Msmcomm.LowLevel
     {
         INVALID,
         COMMAND_CALL_ORIGINATION,
+        RESPONSE_CALL_CALLBACK,
+        RESPONSE_CALL_RETURN,
     }
     
     public abstract class BaseMessage
