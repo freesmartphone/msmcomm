@@ -46,7 +46,7 @@ namespace Msmcomm.LowLevel
             _message = CmCallOriginationMessage();
             setPayload((void*)(&_message), sizeof(CmCallOriginationMessage));
 
-            /* Some unknown values which have to bet set */
+            /* Some unknown values which have to be set */
             _message.value0 = 0x4;
             _message.value1 = 0x1;
         }
@@ -60,14 +60,130 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class CallAnswerCommandMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x0;
+        public static const uint8 MESSAGE_ID = 0x1;
+
+        public uint8 call_id;
+
+        private CmCallAnswerMessage _message;
+
+        public CallAnswerCommandMessage()
+        {
+            base(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ANSWER);
+
+            _message = CmCallAnswerMessage();
+            setPayload((void*)(&_message), sizeof(CmCallAnswerMessage));
+
+            /* Some unknown values which have to be set */
+            _message.value0 = 0x2;
+            _message.value1 = 0x1;
+            _message.value2 = 0x0;
+        }
+
+        protected override void prepareData()
+        {
+            _message.ref_id = ref_id;
+            _message.call_id = call_id;
+        }
+    }
+
+    public class CallEndCommandMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x0;
+        public static const uint16 MESSAGE_ID = 0x2;
+
+        public uint8 call_id;
+
+        private CmCallEndMessage _message;
+
+        public CallEndCommandMessage()
+        {
+            base(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_END);
+
+            _message = CmCallEndMessage();
+            setPayload((void*)(&_message), sizeof(CmCallEndMessage));
+
+            /* Some unknown values which have to be set */
+            _message.value0 = 0x1;
+        }
+
+        protected override void prepareData()
+        {
+            _message.ref_id = ref_id;
+            _message.call_id = call_id;
+        }
+    }
+
+    public class CallSupsCommandMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x0;
+        public static const uint16 MESSAGE_ID = 0x3;
+
+        public enum Action
+        {
+            DROP_ALL_OR_SEND_BUSY = 0,
+            DROP_ALL_AND_ACCEPT_WAITING_OR_HELD = 1,
+            DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD = 1,
+            HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD = 2,
+            HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD = 2,
+            ACTIVATE_HELD = 3,
+            DROP_SELF_AND_CONNECT_ACTIVE = 4,
+        }
+
+        public uint8 call_id;
+        public Action action;
+
+        private CmCallSupsMessage _message;
+
+        public CallSupsCommandMessage()
+        {
+            base(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_SUPS);
+
+            _message = CmCallSupsMessage();
+            setPayload((void*)(&_message), sizeof(CmCallSupsMessage));
+        }
+
+        protected override void prepareData()
+        {
+            _message.ref_id = ref_id;
+            _message.call_id = call_id;
+            _message.command = (uint8) action;
+        }
+    }
+
+
     public class CallCallbackResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x2;
         public static const uint16 MESSAGE_ID = 0x0;
 
+        public uint32 command_type;
+
+        private const uint8 RESULT_BAD_CALL_ID_VALUE = 0x31;
+        private const uint8 RESULT_ERROR_VALUE = 0x2;
+
+        private CmCallCallbackResponse _message;
+
         public CallCallbackResponseMessage()
         {
             base(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
+        }
+
+        protected override void evaluateData()
+        {
+            command_type = _message.cmd_type;
+
+            switch (_message.result)
+            {
+                case RESULT_BAD_CALL_ID_VALUE:
+                    result = ResultType.ERROR_BAD_CALL_ID;
+                    break;
+                case RESULT_ERROR_VALUE:
+                    result = ResultType.ERROR_UNKNOWN;
+                    break;
+            }
         }
     }
 

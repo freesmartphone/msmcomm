@@ -25,16 +25,27 @@ namespace Msmcomm.LowLevel
     {
         INVALID,
         COMMAND_CALL_ORIGINATION,
+        COMMAND_CALL_ANSWER,
+        COMMAND_CALL_END,
+        COMMAND_CALL_SUPS,
         RESPONSE_CALL_CALLBACK,
         RESPONSE_CALL_RETURN,
     }
-    
+
+    public enum ResultType
+    {
+        RESULT_OK,
+        ERROR_BAD_CALL_ID,
+        ERROR_UNKNOWN,
+    }
+
     public abstract class BaseMessage
     {
         public uint8 group_id { get; private set;  }
         public uint16 message_id { get; private set;  }
         public uint8 ref_id { get; set; default = 0x0; }
         public MessageType message_type { get; private set; }
+        public ResultType result { get; protected set; default = ResultType.RESULT_OK; }
 
         private void *_payload;
         private ulong _payload_size;
