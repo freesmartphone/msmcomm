@@ -28,6 +28,9 @@ namespace Msmcomm.LowLevel
         public static const uint8 GROUP_ID = 0x0;
         public static const uint16 MESSAGE_ID = 0x0;
 
+        private const uint8 BLOCK_MODE_ON = 0xc;
+        private const uint8 BLOCK_MODE_OFF = 0xb;
+
         private CmCallOriginationMessage _message;
 
         public string number;
@@ -53,7 +56,7 @@ namespace Msmcomm.LowLevel
             _message.ref_id = ref_id;
             Memory.copy(_message.caller_id, number.data, number.length);
             _message.caller_id_len = (uint8) number.length;
-            _message.block = suppress_own_number ? 1 : 0;
+            _message.block = suppress_own_number ? BLOCK_MODE_ON : BLOCK_MODE_OFF;
         }
     }
 
