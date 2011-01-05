@@ -36,22 +36,22 @@ namespace Msmcomm.LowLevel
         public string number;
         public bool suppress_own_number;
 
-        public CallOriginationCommandMessage()
+        construct
         {
-            base(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ORIGINATION);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ORIGINATION);
 
             number = "";
             suppress_own_number = false;
 
             _message = CmCallOriginationMessage();
-            setPayload((void*)(&_message), sizeof(CmCallOriginationMessage));
+            set_payload((void*)(&_message), sizeof(CmCallOriginationMessage));
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x4;
             _message.value1 = 0x1;
         }
 
-        protected override void prepareData()
+        protected override void prepare_data()
         {
             _message.ref_id = ref_id;
             Memory.copy(_message.caller_id, number.data, number.length);
@@ -69,12 +69,12 @@ namespace Msmcomm.LowLevel
 
         private CmCallAnswerMessage _message;
 
-        public CallAnswerCommandMessage()
+        construct
         {
-            base(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ANSWER);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ANSWER);
 
             _message = CmCallAnswerMessage();
-            setPayload((void*)(&_message), sizeof(CmCallAnswerMessage));
+            set_payload((void*)(&_message), sizeof(CmCallAnswerMessage));
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x2;
@@ -82,7 +82,7 @@ namespace Msmcomm.LowLevel
             _message.value2 = 0x0;
         }
 
-        protected override void prepareData()
+        protected override void prepare_data()
         {
             _message.ref_id = ref_id;
             _message.call_id = call_id;
@@ -98,18 +98,18 @@ namespace Msmcomm.LowLevel
 
         private CmCallEndMessage _message;
 
-        public CallEndCommandMessage()
+        construct
         {
-            base(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_END);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_END);
 
             _message = CmCallEndMessage();
-            setPayload((void*)(&_message), sizeof(CmCallEndMessage));
+            set_payload((void*)(&_message), sizeof(CmCallEndMessage));
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x1;
         }
 
-        protected override void prepareData()
+        protected override void prepare_data()
         {
             _message.ref_id = ref_id;
             _message.call_id = call_id;
@@ -137,15 +137,15 @@ namespace Msmcomm.LowLevel
 
         private CmCallSupsMessage _message;
 
-        public CallSupsCommandMessage()
+        construct
         {
-            base(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_SUPS);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_SUPS);
 
             _message = CmCallSupsMessage();
-            setPayload((void*)(&_message), sizeof(CmCallSupsMessage));
+            set_payload((void*)(&_message), sizeof(CmCallSupsMessage));
         }
 
-        protected override void prepareData()
+        protected override void prepare_data()
         {
             _message.ref_id = ref_id;
             _message.call_id = call_id;
@@ -156,7 +156,7 @@ namespace Msmcomm.LowLevel
 
     public class CallCallbackResponseMessage : BaseMessage
     {
-        public static const uint8 GROUP_ID = 0x2;
+        public static const uint8 GROUP_ID = 0x1;
         public static const uint16 MESSAGE_ID = 0x0;
 
         public uint32 command_type;
@@ -166,16 +166,17 @@ namespace Msmcomm.LowLevel
 
         private CmCallCallbackResponse _message;
 
-        public CallCallbackResponseMessage()
+        construct
         {
-            base(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
 
             _message = CmCallCallbackResponse();
-            setPayload((void*)(&_message), sizeof(CmCallCallbackResponse));
+            set_payload((void*)(&_message), sizeof(CmCallCallbackResponse));
         }
 
-        protected override void evaluateData()
+        protected override void evaluate_data()
         {
+            ref_id = _message.ref_id;
             command_type = _message.cmd_type;
 
             switch (_message.result)
@@ -192,12 +193,12 @@ namespace Msmcomm.LowLevel
 
     public class CallReturnResponseMessage : BaseMessage
     {
-        public static const uint8 GROUP_ID = 0x2;
+        public static const uint8 GROUP_ID = 0x1;
         public static const uint16 MESSAGE_ID = 0x1;
 
-        public CallReturnResponseMessage()
+        construct
         {
-            base(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
         }
     }
 }

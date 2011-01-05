@@ -33,7 +33,7 @@ namespace Msmcomm.LowLevel
             this.id = id;
         }
 
-        public BaseMessage? unpackMessage(uint16 id, void *data, int size)
+        public BaseMessage? unpack_message(uint16 id, void *data, int size)
         {
             BaseMessage? message = null;
 

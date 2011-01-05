@@ -39,18 +39,18 @@ namespace Msmcomm.LowLevel
         ERROR_UNKNOWN,
     }
 
-    public abstract class BaseMessage
+    public abstract class BaseMessage : GLib.Object
     {
         public uint8 group_id { get; private set;  }
         public uint16 message_id { get; private set;  }
-        public uint8 ref_id { get; set; default = 0x0; }
+        public uint32 ref_id { get; set; default = 0x0; }
         public MessageType message_type { get; private set; }
         public ResultType result { get; protected set; default = ResultType.RESULT_OK; }
 
         private void *_payload;
         private ulong _payload_size;
 
-        public BaseMessage(uint8 group_id, uint16 message_id, MessageType message_type)
+        construct
         {
             this.group_id = group_id;
             this.message_id = message_id;
@@ -60,10 +60,10 @@ namespace Msmcomm.LowLevel
         public uint8[] pack()
         {
             uint8[] buffer = new uint8[_payload_size];
-            
-            prepareData();
+
+            prepare_data();
             Memory.copy(buffer, _payload, _payload_size);
-            
+
             return buffer;
         }
 
@@ -71,23 +71,31 @@ namespace Msmcomm.LowLevel
         {
             assert(size == _payload_size);
             assert(_payload != null);
-            
+
             Memory.copy(_payload, data, size);
-            evaluateData();
+            evaluate_data();
         }
-        
-        protected virtual void evaluateData()
+
+        protected virtual void evaluate_data()
         {
         }
         
-        protected virtual void prepareData()
+        protected virtual void prepare_data()
         {
         }
 
-        protected void setPayload(void *payload, ulong payload_size)
+        protected void set_payload(void *payload, ulong payload_size)
         {
             _payload = payload;
             _payload_size = payload_size;
         }
+
+        protected void set_description(uint8 group_id, uint16 message_id, MessageType message_type)
+        {
+            this.group_id = group_id;
+            this.message_id = message_id;
+            this.message_type = message_type;
+        }
+
     }
 }

@@ -23,7 +23,7 @@ namespace Msmcomm.LowLevel
 {
     public static const int MESSAGE_HEADER_SIZE = 3;
 
-    public class MessageDisassembler
+    public class MessageDisassembler : AbstractObject
     {
         private Gee.HashMap<uint8,BaseMessageGroup> groups;
 
@@ -35,12 +35,12 @@ namespace Msmcomm.LowLevel
             groups[CallUnsolicitedResponseMessageGroup.GROUP_ID] = new CallUnsolicitedResponseMessageGroup();
         }
 
-        public BaseMessage? unpackMessage(uint8[] data)
+        public BaseMessage? unpack_message(uint8[] data)
         {
             BaseMessage? message = null;
 
             /* Minimum required size to have a valid message are four bytes */
-            if (data.length > MESSAGE_HEADER_SIZE)
+            if (data.length < MESSAGE_HEADER_SIZE + 1)
             {
                 return null;
             }
@@ -53,10 +53,15 @@ namespace Msmcomm.LowLevel
             if (groups.has_key(groupId))
             {
                 var group = groups[groupId];
-                message = group.unpackMessage(messageId, data[3:data.length-1], data.length - 3);
+                message = group.unpack_message(messageId, data[3:data.length-1], data.length - 3);
             }
 
             return message;
+        }
+
+        public override string repr()
+        {
+            return "<>";
         }
     }
 }

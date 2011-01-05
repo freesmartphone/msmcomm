@@ -30,8 +30,8 @@ namespace Msmcomm.LowLevel
         {
             base(CallResponseMessageGroup.GROUP_ID);
 
-            message_types[CallCallbackResponseMessage.GROUP_ID] = typeof(CallCallbackResponseMessage);
-            message_types[CallReturnResponseMessage.GROUP_ID] = typeof(CallReturnResponseMessage);
+            message_types[CallCallbackResponseMessage.MESSAGE_ID] = typeof(CallCallbackResponseMessage);
+            message_types[CallReturnResponseMessage.MESSAGE_ID] = typeof(CallReturnResponseMessage);
         }
     }
 
