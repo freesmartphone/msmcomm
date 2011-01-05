@@ -31,27 +31,26 @@ namespace Msmcomm.LowLevel
         {
             groups = new Gee.HashMap<uint8,BaseMessageGroup>();
 
-            groups[CallResponseMessageGroup.GROUP_ID]   = new CallResponseMessageGroup();
-            groups[CallUnsolicitedResponseMessageGroup.GROUP_ID]    = new CallUnsolicitedResponseMessageGroup();
+            groups[CallResponseMessageGroup.GROUP_ID] = new CallResponseMessageGroup();
+            groups[CallUnsolicitedResponseMessageGroup.GROUP_ID] = new CallUnsolicitedResponseMessageGroup();
         }
 
-        public BaseMessage? unpackMessage(void *data, int size)
+        public BaseMessage? unpackMessage(uint8[] data)
         {
             BaseMessage? message = null;
-            uint8[] buffer = (uint8[]) data;
 
             /* Minimum required size to have a valid message are four bytes */
-            assert(size > MESSAGE_HEADER_SIZE);
+            assert(data.length > MESSAGE_HEADER_SIZE);
 
             /* Extract group and message id from the first three bytes */
-            uint8 groupId = buffer[0];
-            uint16 messageId = buffer[1] | (buffer[2] << 8);
+            uint8 groupId = data[0];
+            uint16 messageId = data[1] | (data[2] << 8);
 
             /* Check for message group and unpack message for byte stream */
             if (groups.has_key(groupId))
             {
                 var group = groups[groupId];
-                message = group.unpackMessage(messageId, buffer[3:size-1], size - 3);
+                message = group.unpackMessage(messageId, data[3:data.length-1], data.length - 3);
             }
 
             return message;
