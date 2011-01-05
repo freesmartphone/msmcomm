@@ -12,6 +12,7 @@ VALAC_ARGS = \
 	--pkg structures \
 	--pkg glib-2.0 \
 	--pkg gee-1.0 \
+	--pkg fsobasics-2.0 \
 	--header msmcomm.h \
 	--library msmcomm-2.0
 
@@ -27,6 +28,7 @@ lib_LTLIBRARIES = \
 	$(NULL)
 
 libmsmcomm_la_VALASOURCES = \
+	abstractobject.vala \
 	basemessage.vala \
 	callmessage.vala \
 	basemessagegroup.vala \

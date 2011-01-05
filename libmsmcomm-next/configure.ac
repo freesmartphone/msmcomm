@@ -22,11 +22,13 @@ AC_SUBST(LDFLAGS)
 ################################################################################
 GLIB_REQUIRED=2.26
 GEE_REQUIRED=0.5.3
+FSOBASICS_REQUIRED=0.9.10
 
 PKG_CHECK_MODULES(DEPS,
   glib-2.0 >= $GLIB_REQUIRED
   gobject-2.0 >= $GLIB_REQUIRED
-  gee-1.0 >= $GEE_REQUIRED)
+  gee-1.0 >= $GEE_REQUIRED
+  fsobasics-2.0 >= $FSOBASICS_REQUIRED)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 
