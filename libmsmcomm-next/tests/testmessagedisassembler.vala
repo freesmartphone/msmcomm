@@ -28,7 +28,7 @@ void test_messagedisassembler_too_small_message()
     MessageDisassembler mdis = new MessageDisassembler();
     BaseMessage? result = mdis.unpackMessage(data);
 
-    assert( result == null);
+    assert(result == null);
 }
 
 

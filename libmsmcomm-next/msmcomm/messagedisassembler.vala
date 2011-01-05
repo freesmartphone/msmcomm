@@ -40,7 +40,10 @@ namespace Msmcomm.LowLevel
             BaseMessage? message = null;
 
             /* Minimum required size to have a valid message are four bytes */
-            assert(data.length > MESSAGE_HEADER_SIZE);
+            if (data.length > MESSAGE_HEADER_SIZE)
+            {
+                return null;
+            }
 
             /* Extract group and message id from the first three bytes */
             uint8 groupId = data[0];
