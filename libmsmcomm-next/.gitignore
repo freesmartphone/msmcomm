@@ -1,2 +1,6 @@
 *.c
 *.stamp
+msmcomm-2.0.vapi
+msmcomm.h
+testmessageassembler
+testmessagedisassembler
