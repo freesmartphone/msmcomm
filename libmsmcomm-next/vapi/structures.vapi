@@ -47,8 +47,8 @@ struct CallStatusEvent
 }
 
 
-[CCode (cname = "struct cm_call_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct CmCallCallbackResponse
+[CCode (cname = "struct call_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct CallCallbackResponse
 {
 	public uint32 ref_id;
 	public uint16 cmd_type;
@@ -58,8 +58,8 @@ struct CmCallCallbackResponse
 }
 
 
-[CCode (cname = "struct cm_call_answer_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct CmCallAnswerMessage
+[CCode (cname = "struct call_answer_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct CallAnswerMessage
 {
 	public uint32 ref_id;
 	public uint8 call_id;
@@ -69,8 +69,8 @@ struct CmCallAnswerMessage
 }
 
 
-[CCode (cname = "struct cm_call_end_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct CmCallEndMessage
+[CCode (cname = "struct call_end_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct CallEndMessage
 {
 	public uint32 ref_id;
 	public uint8 value0;
@@ -79,8 +79,8 @@ struct CmCallEndMessage
 }
 
 
-[CCode (cname = "struct cm_call_origination_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct CmCallOriginationMessage
+[CCode (cname = "struct call_origination_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct CallOriginationMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
@@ -96,8 +96,8 @@ struct CmCallOriginationMessage
 }
 
 
-[CCode (cname = "struct cm_call_sups_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct CmCallSupsMessage
+[CCode (cname = "struct call_sups_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct CallSupsMessage
 {
 	public uint32 ref_id;
 	public uint8 command;
@@ -108,618 +108,36 @@ struct CmCallSupsMessage
 }
 
 
-[CCode (cname = "struct gsdi_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct GsdiCallbackResponse
-{
-	public uint8[] unknown0;
-	public uint8 result0;
-	public uint32 ref_id;
-	public uint8 resp_type;
-	public uint8 field_type_0;
-	public uint8 field_type_1;
-	public uint8 result1;
-	public uint8 unknown1;
-	public uint8 field_length;
-	public uint8[] field_data;
-	public uint8[] unknown2;
-}
-
-
-[CCode (cname = "struct change_pin_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct ChangePinMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0;
-	public uint8[] old_pin;
-	public uint8[] new_pin;
-}
-
-
-[CCode (cname = "struct pin_status_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PinStatusMessage
-{
-	public uint32 ref_id;
-	public uint8 pin_type;
-	public uint8[] pin;
-	public uint8 unknown0;
-}
-
-
-[CCode (cname = "struct sms_wms_read_template_event", cheader_filename = "structures.h", destroy_function = "")]
-struct SmsWmsReadTemplateEvent
-{
-	public uint8[] unknown0;
-	public uint8 digit_mode;
-	public uint8 number_mode;
-	public uint8 number_type;
-	public uint8 number_plan;
-	public uint8 scaddr_len;
-	public uint8[] scaddr;
-	public uint8[] unknown1;
-}
-
-
-[CCode (cname = "struct read_phonebook_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct ReadPhonebookMessage
-{
-	public uint32 ref_id;
-	public uint8 position;
-	public uint8 book_type;
-}
-
-
-[CCode (cname = "struct modify_phonebook_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct ModifyPhonebookMessage
-{
-	public uint32 ref_id;
-	public uint8 position;
-	public uint8 book_type;
-	public uint8[] number;
-	public uint8 unknown0;
-	public uint8[] title;
-	public uint8 value0;
-}
-
-
-[CCode (cname = "struct phonebook_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookResponse
-{
-	public uint32 ref_id;
-	public uint8 modify_id;
-	public uint8 unknown0;
-	public uint8 result;
-	public uint8 position;
-	public uint8 book_type;
-	public uint8[] number;
-	public uint8[] title;
-	public uint8 encoding_type;
-}
-
-
-[CCode (cname = "struct phonebook_ready_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookReadyEvent
-{
-	public uint8[] unknown0;
-	public uint8 book_type;
-	public uint8[] unknown1;
-}
-
-
-[CCode (cname = "struct phonebook_modified_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookModifiedEvent
-{
-	public uint8 unknown0;
-	public uint8 position;
-	public uint8 book_type;
-	public uint32 ref_id;
-	public uint8[] unknown1;
-}
-
-
-[CCode (cname = "struct get_phonebook_properties_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct GetPhonebookPropertiesMessage
-{
-	public uint32 ref_id;
-	public uint8 book_type;
-}
-
-
-[CCode (cname = "struct get_phonebook_properties_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct GetPhonebookPropertiesResponse
-{
-	public uint8 unknown0;
-	public uint8 book_type;
-	public uint32 slots_used;
-	public uint32 slot_count;
-	public uint32 max_chars_per_title;
-	public uint32 max_chars_per_number;
-	public uint8[] unknown1;
-}
-
-
-[CCode (cname = "struct sim_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimInfoMessage
-{
-	public uint32 ref_id;
-	public uint16 sim_file;
-	public uint8[] unknown0;
-}
-
-
-[CCode (cname = "struct gsdi_get_all_pin_status_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct GsdiGetAllPinStatusInfoMessage
-{
-	public uint8[] unknown0;
-}
-
-
-[CCode (cname = "struct network_state_info_event", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkStateInfoEvent
-{
-	public uint8[] change_field;
-	public uint8 serv_status;
-	public uint8 servce_domain;
-	public uint8 service_capability;
-	public uint8 gprs_attached;
-	public uint16 roam;
-	public uint8 unknown0;
-	public uint8[] plmn;
-	public uint8[] unknown1;
-	public uint8 operator_name_len;
-	public uint8[] operator_name;
-	public uint8[] unknown2;
-	public uint8 hplmn_or_spdi;
-	public uint8 hplmn_length;
-	public uint8[] unknown3;
-	public uint16 rssi;
-	public uint16 ecio;
-	public uint8[] unknown4;
-	public uint8 with_nitz_update;
-	public uint8[] unknown5;
-	public uint8 reg_status;
-	public uint8 unknown6;
-}
-
-
-[CCode (cname = "struct get_networklist_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct GetNetworklistMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0;
-	public uint8 value0;
-}
-
-
-[CCode (cname = "struct get_networklist_event", cheader_filename = "structures.h", destroy_function = "")]
-struct GetNetworklistEvent
-{
-	public uint8[] unknown0;
-	public uint8[] plmn_0;
-	public uint8[] unknown1;
-	public uint8 operator_name_len_0;
-	public uint8[] operator_name_0;
-	public uint8[] plmn_1;
-	public uint8[] unknown2;
-	public uint8 operator_name_len_1;
-	public uint8[] operator_name_1;
-	public uint8[] plmn_2;
-	public uint8[] unknown3;
-	public uint8 operator_name_len_2;
-	public uint8[] operator_name_2;
-	public uint8[] plmn_3;
-	public uint8[] unknown4;
-	public uint8 operator_name_len_3;
-	public uint8[] operator_name_3;
-	public uint8[] plmn_4;
-	public uint8[] unknown5;
-	public uint8 operator_name_len_4;
-	public uint8[] operator_name_4;
-	public uint8[] plmn_5;
-	public uint8[] unknown6;
-	public uint8 operator_name_len_5;
-	public uint8[] operator_name_5;
-	public uint8[] unknown7;
-}
-
-
-[CCode (cname = "struct cm_ph_event", cheader_filename = "structures.h", destroy_function = "")]
-struct CmPhEvent
-{
-	public uint8[] unknown0;
-	public uint8 network_sel_mode_pref;
-	public uint8[] current_plmn;
-	public uint8[] unknown1;
-	public uint8 plmn_count;
-	public uint8[] unknown2;
-	public uint8[] plmn_0;
-	public uint8[] unknown3;
-	public uint8[] plmn_1;
-	public uint8[] unknown4;
-	public uint8[] plmn_2;
-	public uint8[] unknown5;
-	public uint8[] plmn_3;
-	public uint8[] unknown6;
-	public uint8[] plmn_4;
-	public uint8[] unknown7;
-	public uint8[] plmn_5;
-	public uint8[] unknown8;
-	public uint8[] plmn_6;
-	public uint8[] unknown9;
-	public uint8[] plmn_7;
-	public uint8[] unknown10;
-	public uint8[] plmn_8;
-	public uint8[] unknown11;
-	public uint8[] plmn_9;
-	public uint8[] unknown12;
-}
-
-
-[CCode (cname = "struct get_home_network_name_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct GetHomeNetworkNameMessage
-{
-	public uint8[] unknown0;
-}
-
-
-[CCode (cname = "struct get_home_network_name_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct GetHomeNetworkNameResponse
-{
-	public uint8[] unknown0;
-}
-
-
-[CCode (cname = "struct cm_ph_info_available_event", cheader_filename = "structures.h", destroy_function = "")]
-struct CmPhInfoAvailableEvent
-{
-}
-
-
-[CCode (cname = "struct charger_status_event", cheader_filename = "structures.h", destroy_function = "")]
-struct ChargerStatusEvent
-{
-	public uint8[] unknown0;
-	public uint16 voltage;
-	public uint8[] unknown1;
-}
-
-
-[CCode (cname = "struct radio_reset_ind_event", cheader_filename = "structures.h", destroy_function = "")]
-struct RadioResetIndEvent
-{
-	public uint8[] unknown0;
-}
-
-
-[CCode (cname = "struct cm_ph_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct CmPhResponse
-{
-	public uint32 ref_id;
-	public uint8[] unknown0;
-	public uint8 result;
-}
-
-
-[CCode (cname = "struct get_firmware_info_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct GetFirmwareInfoResponse
-{
-	public uint32 ref_id;
-	public uint8 hci_version;
-	public uint8[] unknown0;
-	public uint8[] firmware_version;
-	public uint8[] unknown1;
-}
-
-
-[CCode (cname = "struct get_imei_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct GetImeiResponse
-{
-	public uint32 ref_id;
-	public uint8[] imei;
-}
-
-
-[CCode (cname = "struct get_imei_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct GetImeiMessage
-{
-	public uint32 ref_id;
-}
-
-
-[CCode (cname = "struct change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct ChangeOperationModeMessage
-{
-	public uint32 ref_id;
-	public uint8 operation_mode;
-}
-
-
-[CCode (cname = "struct test_alive_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct TestAliveMessage
+[CCode (cname = "struct misc_test_alive_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscTestAliveMessage
 {
 	public uint32 ref_id;
 	public uint8 some_value1;
 }
 
 
-[CCode (cname = "struct get_firmware_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct GetFirmwareMessage
-{
-	public uint32 ref_id;
-}
-
-
-[CCode (cname = "struct get_phone_state_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct GetPhoneStateInfoMessage
-{
-	public uint32 ref_id;
-}
-
-
-[CCode (cname = "struct charger_status_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct ChargerStatusMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0;
-	public uint16 voltage;
-	public uint8 unknown1;
-	public uint8 mode;
-	public uint8[] unknown2;
-	public uint8 rc;
-}
-
-
-[CCode (cname = "struct charging_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct ChargingMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0;
-	public uint8 mode;
-	public uint16 voltage;
-	public uint8 rc;
-}
-
-
-[CCode (cname = "struct test_alive_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct TestAliveResponse
+[CCode (cname = "struct misc_test_alive_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscTestAliveResponse
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
 }
 
 
-[CCode (cname = "struct set_system_time_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SetSystemTimeMessage
+[CCode (cname = "struct state_change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct StateChangeOperationModeMessage
 {
 	public uint32 ref_id;
-	public uint16 year;
-	public uint16 month;
-	public uint16 day;
-	public uint16 hour;
-	public uint16 minutes;
-	public uint16 seconds;
-	public uint8[] unknown0;
-	public int32 timezone_offset;
-	public uint8 value0;
-	public uint8 unknown1;
-	public uint8 static0;
-	public uint8 unknown2;
+	public uint8 operation_mode;
 }
 
 
-[CCode (cname = "struct set_system_time_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SetSystemTimeResponse
-{
-	public uint32 ref_id;
-	public uint8 static0;
-	public uint8 unknown0;
-}
-
-
-[CCode (cname = "struct rssi_status_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct RssiStatusMessage
-{
-	public uint32 ref_id;
-	public uint8 status;
-}
-
-
-[CCode (cname = "struct rssi_status_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct RssiStatusResponse
-{
-	public uint32 ref_id;
-	public uint8[] unknown0;
-}
-
-
-[CCode (cname = "struct set_mode_preference_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SetModePreferenceMessage
-{
-	public uint32 ref_id;
-	public uint8 mode;
-	public uint8[] unknown0;
-	public uint8 value0;
-	public uint8[] unknown1;
-	public uint8 value1;
-	public uint8[] unknown2;
-	public uint8 value2;
-	public uint8 unknown3;
-	public uint8 value3;
-	public uint8 value4;
-	public uint8 value5;
-	public uint8[] unknown4;
-}
-
-
-[CCode (cname = "struct set_audio_profile_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SetAudioProfileMessage
-{
-	public uint32 ref_id;
-	public uint8 class;
-	public uint8 unknown0;
-	public uint8 sub_class;
-	public uint8[] unknown1;
-}
-
-
-[CCode (cname = "struct sound_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SoundResponse
+[CCode (cname = "struct misc_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscCallbackResponse
 {
 	public uint32 ref_id;
 	public uint8[] unknown0;
 	public uint8 result;
-	public uint8[] unknown1;
-}
-
-
-[CCode (cname = "struct get_audio_modem_tuning_params_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct GetAudioModemTuningParamsMessage
-{
-	public uint32 ref_id;
-}
-
-
-[CCode (cname = "struct audio_modem_tuning_params_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct AudioModemTuningParamsResponse
-{
-	public uint32 ref_id;
-	public uint8 unknown0;
-	public uint8[] params;
-}
-
-
-[CCode (cname = "struct pdsm_pd_done_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmPdDoneEvent
-{
-}
-
-
-[CCode (cname = "struct pd_position_data_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PdPositionDataEvent
-{
-}
-
-
-[CCode (cname = "struct pd_parameter_change_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PdParameterChangeEvent
-{
-}
-
-
-[CCode (cname = "struct pdsm_lcs_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmLcsEvent
-{
-}
-
-
-[CCode (cname = "struct pdsm_xtra_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmXtraEvent
-{
-}
-
-
-[CCode (cname = "struct pdsm_pd_get_pos_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmPdGetPosResponse
-{
-}
-
-
-[CCode (cname = "struct pdsm_pd_end_session_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmPdEndSessionResponse
-{
-}
-
-
-[CCode (cname = "struct pa_set_param_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct PaSetParamResponse
-{
-}
-
-
-[CCode (cname = "struct lcs_agent_client_rsp_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct LcsAgentClientRspResponse
-{
-}
-
-
-[CCode (cname = "struct xtra_set_data_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct XtraSetDataResponse
-{
-}
-
-
-[CCode (cname = "struct get_location_priv_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct GetLocationPrivPrefMessage
-{
-	public uint8[] unknown0;
-}
-
-
-[CCode (cname = "struct sms_received_message_event", cheader_filename = "structures.h", destroy_function = "")]
-struct SmsReceivedMessageEvent
-{
-	public uint8[] unknown0;
-	public uint8 sender_length;
-	public uint8[] sender;
-	public uint8[] unknown1;
-	public uint32 pdu_length;
-	public uint8 pdu_start;
-	public uint8[] pdu;
-}
-
-
-[CCode (cname = "struct sms_message_send_event", cheader_filename = "structures.h", destroy_function = "")]
-struct SmsMessageSendEvent
-{
-	public uint8[] unknown0;
-}
-
-
-[CCode (cname = "struct wms_ack_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsAckMessage
-{
-	public uint32 ref_id;
-	public uint8[] unknown0;
-	public uint8 value0;
-	public uint8 value1;
-	public uint8[] unknown1;
-}
-
-
-[CCode (cname = "struct wms_send_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsSendMessage
-{
-	public uint32 ref_id;
-	public uint8[] unknown0;
-	public uint8 recipient_length;
-	public uint8[] recipient;
-	public uint8[] unknown1;
-	public uint32 pdu_length;
-	public uint8[] pdu;
-}
-
-
-[CCode (cname = "struct sms_get_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SmsGetInfoMessage
-{
-	public uint32 ref_id;
-	public uint8 value0;
-	public uint8 value1;
-	public uint8[] unknown0;
-}
-
-
-[CCode (cname = "struct wms_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsResponse
-{
-}
-
-
-[CCode (cname = "struct wms_read_template_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsReadTemplateMessage
-{
-	public uint32 ref_id;
-	public uint16 record;
-	public uint8[] unknown0;
 }
 
 } /* namespace Msmcomm.LowLevel.Structures */ 

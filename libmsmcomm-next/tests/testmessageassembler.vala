@@ -33,7 +33,7 @@ void test_messageassembler_correct_packing_message()
     MessageAssembler masm = new MessageAssembler();
     uint8[] buffer = masm.pack_message(message);
 
-    assert(buffer.length == (sizeof(CmCallOriginationMessage) + 3));
+    assert(buffer.length == (sizeof(CallOriginationMessage) + 3));
     assert(buffer[0] == CallOriginationCommandMessage.GROUP_ID);
     assert(buffer[1] == CallOriginationCommandMessage.MESSAGE_ID);
 

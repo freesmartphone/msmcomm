@@ -28,14 +28,14 @@ namespace Msmcomm.LowLevel
         public static const uint8 GROUP_ID = 0x4;
         public static const uint16 MESSAGE_ID = 0x1;
 
-        private ChangeOperationModeMessage _message;
+        private StateChangeOperationModeMessage _message;
 
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_STATE_CHANGE_OPERATION_MODE_REQUEST, MessageClass.COMMAND);
 
-            _message = ChangeOperationModeMessage();
-            set_payload((void*)(&_message), sizeof(ChangeOperationModeMessage));
+            _message = StateChangeOperationModeMessage();
+            set_payload((void*)(&_message), sizeof(StateChangeOperationModeMessage));
         }
     }
 }

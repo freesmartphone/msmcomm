@@ -24,12 +24,9 @@ MAINTAINERCLEANFILES = \
 	$(NULL)
 
 STRUCTURE_SPECS = \
-	specs/structures/cm_call.xml \
-	specs/structures/sim.xml \
-	specs/structures/network.xml \
-	specs/structures/system.xml \
-	specs/structures/audio.xml \
-	specs/structures/gps.xml \
+	specs/structures/call.xml \
+	specs/structures/misc.xml \
+	specs/structures/state.xml \
 	specs/structures/sms.xml
 
 generate-structures:

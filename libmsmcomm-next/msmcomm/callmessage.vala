@@ -31,7 +31,7 @@ namespace Msmcomm.LowLevel
         private const uint8 BLOCK_MODE_ON = 0xc;
         private const uint8 BLOCK_MODE_OFF = 0xb;
 
-        private CmCallOriginationMessage _message;
+        private CallOriginationMessage _message;
 
         public string number;
         public bool suppress_own_number;
@@ -43,8 +43,8 @@ namespace Msmcomm.LowLevel
             number = "";
             suppress_own_number = false;
 
-            _message = CmCallOriginationMessage();
-            set_payload((void*)(&_message), sizeof(CmCallOriginationMessage));
+            _message = CallOriginationMessage();
+            set_payload((void*)(&_message), sizeof(CallOriginationMessage));
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x4;
@@ -67,14 +67,14 @@ namespace Msmcomm.LowLevel
 
         public uint8 call_id;
 
-        private CmCallAnswerMessage _message;
+        private CallAnswerMessage _message;
 
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ANSWER, MessageClass.COMMAND);
 
-            _message = CmCallAnswerMessage();
-            set_payload((void*)(&_message), sizeof(CmCallAnswerMessage));
+            _message = CallAnswerMessage();
+            set_payload((void*)(&_message), sizeof(CallAnswerMessage));
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x2;
@@ -96,14 +96,14 @@ namespace Msmcomm.LowLevel
 
         public uint8 call_id;
 
-        private CmCallEndMessage _message;
+        private CallEndMessage _message;
 
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_END, MessageClass.COMMAND);
 
-            _message = CmCallEndMessage();
-            set_payload((void*)(&_message), sizeof(CmCallEndMessage));
+            _message = CallEndMessage();
+            set_payload((void*)(&_message), sizeof(CallEndMessage));
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x1;
@@ -135,14 +135,14 @@ namespace Msmcomm.LowLevel
         public uint8 call_id;
         public Action action;
 
-        private CmCallSupsMessage _message;
+        private CallSupsMessage _message;
 
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_SUPS, MessageClass.COMMAND);
 
-            _message = CmCallSupsMessage();
-            set_payload((void*)(&_message), sizeof(CmCallSupsMessage));
+            _message = CallSupsMessage();
+            set_payload((void*)(&_message), sizeof(CallSupsMessage));
         }
 
         protected override void prepare_data()
@@ -164,14 +164,14 @@ namespace Msmcomm.LowLevel
         private const uint8 RESULT_BAD_CALL_ID_VALUE = 0x31;
         private const uint8 RESULT_ERROR_VALUE = 0x2;
 
-        private CmCallCallbackResponse _message;
+        private CallCallbackResponse _message;
 
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK, MessageClass.SOLICITED_RESPONSE);
 
-            _message = CmCallCallbackResponse();
-            set_payload((void*)(&_message), sizeof(CmCallCallbackResponse));
+            _message = CallCallbackResponse();
+            set_payload((void*)(&_message), sizeof(CallCallbackResponse));
         }
 
         protected override void evaluate_data()

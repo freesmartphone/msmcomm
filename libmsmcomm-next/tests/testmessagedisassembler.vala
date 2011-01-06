@@ -34,12 +34,12 @@ void test_messagedisassembler_too_small_message()
 
 void test_messagedisassembler_correct_unpacking_message()
 {
-    var message = CmCallCallbackResponse();
+    var message = CallCallbackResponse();
     message.ref_id = 3;
     message.cmd_type = 4;
     message.result = 1; /* RESULT_OK */
 
-    uint8[] data = new uint8[3 + (int) sizeof(CmCallCallbackResponse)];
+    uint8[] data = new uint8[3 + (int) sizeof(CallCallbackResponse)];
 
     /* set group and message id */
     data[0] = 0x1;
@@ -47,7 +47,7 @@ void test_messagedisassembler_correct_unpacking_message()
     data[2] = 0x0;
 
     /* append message structure to buffer */
-    Memory.copy((uint8*)(data) + 3, (void*)(&message), sizeof(CmCallCallbackResponse));
+    Memory.copy((uint8*)(data) + 3, (void*)(&message), sizeof(CallCallbackResponse));
 
     MessageDisassembler mdis = new MessageDisassembler();
     BaseMessage? result = mdis.unpack_message(data);
