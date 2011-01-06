@@ -33,6 +33,10 @@ namespace Msmcomm.LowLevel
 
             groups[CallResponseMessageGroup.GROUP_ID] = new CallResponseMessageGroup();
             groups[CallUnsolicitedResponseMessageGroup.GROUP_ID] = new CallUnsolicitedResponseMessageGroup();
+            groups[StateResponseMessageGroup.GROUP_ID] = new StateResponseMessageGroup();
+            groups[StateUnsolicitedResponseMessageGroup.GROUP_ID] = new StateUnsolicitedResponseMessageGroup();
+            groups[MiscResponseMessageGroup.GROUP_ID] = new MiscResponseMessageGroup();
+            groups[MiscUnsolicitedResponseMessageGroup.GROUP_ID] = new MiscUnsolicitedResponseMessageGroup();
         }
 
         public BaseMessage? unpack_message(uint8[] data)
