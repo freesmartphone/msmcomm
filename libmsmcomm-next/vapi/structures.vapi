@@ -116,10 +116,87 @@ struct MiscTestAliveMessage
 }
 
 
-[CCode (cname = "struct misc_test_alive_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscTestAliveResponse
+[CCode (cname = "struct misc_get_imei_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscGetImeiMessage
 {
 	public uint32 ref_id;
+}
+
+
+[CCode (cname = "struct misc_get_imei_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscGetImeiResponse
+{
+	public uint32 ref_id;
+	public uint8[] imei;
+}
+
+
+[CCode (cname = "struct misc_get_radio_firmware_version_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscGetRadioFirmwareVersionMessage
+{
+	public uint32 ref_id;
+}
+
+
+[CCode (cname = "struct misc_get_radio_firmware_version_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscGetRadioFirmwareVersionResponse
+{
+	public uint32 ref_id;
+	public uint8 carrier_id;
+	public uint8[] unknown0;
+	public uint8[] firmware_version;
+	public uint8[] unknown1;
+}
+
+
+[CCode (cname = "struct misc_get_charger_status_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscGetChargerStatusMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0;
+	public uint16 voltage;
+	public uint8 unknown1;
+	public uint8 mode;
+	public uint8[] unknown2;
+	public uint8 rc;
+}
+
+
+[CCode (cname = "struct misc_set_charge_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscSetChargeMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0;
+	public uint8 mode;
+	public uint16 voltage;
+	public uint8 rc;
+}
+
+
+[CCode (cname = "struct misc_set_date_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscSetDateMessage
+{
+	public uint32 ref_id;
+	public uint16 year;
+	public uint16 month;
+	public uint16 day;
+	public uint16 hour;
+	public uint16 minutes;
+	public uint16 seconds;
+	public uint8[] unknown0;
+	public int32 timezone_offset;
+	public uint8 value0;
+	public uint8 unknown1;
+	public uint8 time_source;
+	public uint8 unknown2;
+}
+
+
+[CCode (cname = "struct misc_set_date_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscSetDateResponse
+{
+	public uint32 ref_id;
+	public uint8 rc;
 	public uint8 unknown0;
 }
 

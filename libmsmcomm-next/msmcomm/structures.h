@@ -111,9 +111,79 @@ struct misc_test_alive_msg
 } __attribute__ ((packed));
 
 
-struct misc_test_alive_resp
+struct misc_get_imei_msg
 {
 	uint32_t ref_id;
+} __attribute__ ((packed));
+
+
+struct misc_get_imei_resp
+{
+	uint32_t ref_id;
+	uint8_t imei[17];
+} __attribute__ ((packed));
+
+
+struct misc_get_radio_firmware_version_msg
+{
+	uint32_t ref_id;
+} __attribute__ ((packed));
+
+
+struct misc_get_radio_firmware_version_resp
+{
+	uint32_t ref_id;
+	uint8_t carrier_id;
+	uint8_t unknown0[3];
+	uint8_t firmware_version[13];
+	uint8_t unknown1[122];
+} __attribute__ ((packed));
+
+
+struct misc_get_charger_status_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint16_t voltage;
+	uint8_t unknown1;
+	uint8_t mode;
+	uint8_t unknown2[3];
+	uint8_t rc;
+} __attribute__ ((packed));
+
+
+struct misc_set_charge_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint8_t mode;
+	uint16_t voltage;
+	uint8_t rc;
+} __attribute__ ((packed));
+
+
+struct misc_set_date_msg
+{
+	uint32_t ref_id;
+	uint16_t year;
+	uint16_t month;
+	uint16_t day;
+	uint16_t hour;
+	uint16_t minutes;
+	uint16_t seconds;
+	uint8_t unknown0[2];
+	int32_t timezone_offset;
+	uint8_t value0;
+	uint8_t unknown1;
+	uint8_t time_source;
+	uint8_t unknown2;
+} __attribute__ ((packed));
+
+
+struct misc_set_date_resp
+{
+	uint32_t ref_id;
+	uint8_t rc;
 	uint8_t unknown0;
 } __attribute__ ((packed));
 

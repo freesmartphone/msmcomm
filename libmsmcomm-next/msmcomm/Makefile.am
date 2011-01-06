@@ -35,9 +35,11 @@ libmsmcomm_la_VALASOURCES = \
 	basemessage.vala \
 	callmessage.vala \
 	statemessage.vala \
+	miscmessage.vala \
 	basemessagegroup.vala \
 	callmessagegroup.vala \
 	statemessagegroup.vala \
+	miscmessagegroup.vala \
 	messageassembler.vala \
 	messagedisassembler.vala \
 	$(NULL)

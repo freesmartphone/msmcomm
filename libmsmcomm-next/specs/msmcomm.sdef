@@ -59,8 +59,55 @@ start misc_test_alive_msg 5
 [4] uint8_t some_value1
 end
 
-start misc_test_alive_resp 5
+start misc_get_imei_msg 4
 [0-3] uint32_t ref_id
+end
+
+start misc_get_imei_resp 21
+[0-3] uint32_t ref_id
+[4-20] uint8_t imei
+end
+
+start misc_get_radio_firmware_version_msg 4
+[0-3] uint32_t ref_id
+end
+
+start misc_get_radio_firmware_version_resp 143
+[0-3] uint32_t ref_id
+[4] uint8_t carrier_id
+[8-20] uint8_t firmware_version
+end
+
+start misc_get_charger_status_msg 13
+[0-3] uint32_t ref_id
+[5-6] uint16_t voltage
+[8] uint8_t mode
+[12] uint8_t rc
+end
+
+start misc_set_charge_msg 9
+[0-3] uint32_t ref_id
+[5] uint8_t mode
+[6-7] uint16_t voltage
+[8] uint8_t rc
+end
+
+start misc_set_date_msg 26
+[0-3] uint32_t ref_id
+[4-5] uint16_t year
+[6-7] uint16_t month
+[8-9] uint16_t day
+[10-11] uint16_t hour
+[12-13] uint16_t minutes
+[14-15] uint16_t seconds
+[18-21] int32_t timezone_offset
+[22] uint8_t value0
+[24] uint8_t time_source
+end
+
+start misc_set_date_resp 6
+[0-3] uint32_t ref_id
+[4] uint8_t rc
 end
 
 #-------------------------------------------------------------------
