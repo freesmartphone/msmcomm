@@ -21,31 +21,13 @@
 
 namespace Msmcomm.LowLevel
 {
-    public enum MessageType
-    {
-        INVALID,
-        COMMAND_CALL_ORIGINATION,
-        COMMAND_CALL_ANSWER,
-        COMMAND_CALL_END,
-        COMMAND_CALL_SUPS,
-        RESPONSE_CALL_CALLBACK,
-        RESPONSE_CALL_RETURN,
-    }
-
-    public enum ResultType
-    {
-        RESULT_OK,
-        ERROR_BAD_CALL_ID,
-        ERROR_UNKNOWN,
-    }
-
     public abstract class BaseMessage : GLib.Object
     {
         public uint8 group_id { get; private set;  }
         public uint16 message_id { get; private set;  }
         public uint32 ref_id { get; set; default = 0x0; }
         public MessageType message_type { get; private set; }
-        public ResultType result { get; protected set; default = ResultType.RESULT_OK; }
+        public MessageResultType result { get; protected set; default = MessageResultType.RESULT_OK; }
 
         private void *_payload;
         private ulong _payload_size;
@@ -79,7 +61,7 @@ namespace Msmcomm.LowLevel
         protected virtual void evaluate_data()
         {
         }
-        
+
         protected virtual void prepare_data()
         {
         }

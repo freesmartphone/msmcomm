@@ -56,7 +56,7 @@ void test_messagedisassembler_correct_unpacking_message()
     assert(result.group_id == 0x1);
     assert(result.message_id == 0x0);
     assert(result.ref_id == 3);
-    assert(result.result == ResultType.RESULT_OK);
+    assert(result.result == MessageResultType.RESULT_OK);
 
     var call_message = result as CallCallbackResponseMessage;
     assert(call_message != null);

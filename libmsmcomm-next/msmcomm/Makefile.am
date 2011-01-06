@@ -29,6 +29,8 @@ lib_LTLIBRARIES = \
 
 libmsmcomm_la_VALASOURCES = \
 	abstractobject.vala \
+	messagetype.vala \
+	messageresulttype.vala \
 	basemessage.vala \
 	callmessage.vala \
 	basemessagegroup.vala \

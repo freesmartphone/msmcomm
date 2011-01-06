@@ -182,10 +182,10 @@ namespace Msmcomm.LowLevel
             switch (_message.result)
             {
                 case RESULT_BAD_CALL_ID_VALUE:
-                    result = ResultType.ERROR_BAD_CALL_ID;
+                    result = MessageResultType.ERROR_BAD_CALL_ID;
                     break;
                 case RESULT_ERROR_VALUE:
-                    result = ResultType.ERROR_UNKNOWN;
+                    result = MessageResultType.ERROR_UNKNOWN;
                     break;
             }
         }
