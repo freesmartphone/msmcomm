@@ -28,6 +28,7 @@ namespace Msmcomm.LowLevel
         public uint32 ref_id { get; set; default = 0x0; }
         public MessageType message_type { get; private set; }
         public MessageResultType result { get; protected set; default = MessageResultType.RESULT_OK; }
+        public MessageClass message_class { get; protected set; default = MessageClass.UNKNOWN; }
 
         private void *_payload;
         private ulong _payload_size;
@@ -72,11 +73,12 @@ namespace Msmcomm.LowLevel
             _payload_size = payload_size;
         }
 
-        protected void set_description(uint8 group_id, uint16 message_id, MessageType message_type)
+        protected void set_description(uint8 group_id, uint16 message_id, MessageType message_type, MessageClass message_class)
         {
             this.group_id = group_id;
             this.message_id = message_id;
             this.message_type = message_type;
+            this.message_class = message_class;
         }
 
     }

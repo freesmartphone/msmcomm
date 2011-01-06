@@ -38,7 +38,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ORIGINATION);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ORIGINATION, MessageClass.COMMAND);
 
             number = "";
             suppress_own_number = false;
@@ -71,7 +71,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ANSWER);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ANSWER, MessageClass.COMMAND);
 
             _message = CmCallAnswerMessage();
             set_payload((void*)(&_message), sizeof(CmCallAnswerMessage));
@@ -100,7 +100,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_END);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_END, MessageClass.COMMAND);
 
             _message = CmCallEndMessage();
             set_payload((void*)(&_message), sizeof(CmCallEndMessage));
@@ -139,7 +139,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_SUPS);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_SUPS, MessageClass.COMMAND);
 
             _message = CmCallSupsMessage();
             set_payload((void*)(&_message), sizeof(CmCallSupsMessage));
@@ -168,7 +168,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK, MessageClass.SOLICITED_RESPONSE);
 
             _message = CmCallCallbackResponse();
             set_payload((void*)(&_message), sizeof(CmCallCallbackResponse));
@@ -198,7 +198,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK, MessageClass.SOLICITED_RESPONSE);
         }
     }
 }

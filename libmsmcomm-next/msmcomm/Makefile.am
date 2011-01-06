@@ -31,6 +31,7 @@ libmsmcomm_la_VALASOURCES = \
 	abstractobject.vala \
 	messagetype.vala \
 	messageresulttype.vala \
+	messageclass.vala \
 	basemessage.vala \
 	callmessage.vala \
 	basemessagegroup.vala \
