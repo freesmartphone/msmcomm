@@ -132,8 +132,8 @@ struct StateChangeOperationModeMessage
 }
 
 
-[CCode (cname = "struct misc_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscCallbackResponse
+[CCode (cname = "struct state_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct StateCallbackResponse
 {
 	public uint32 ref_id;
 	public uint8[] unknown0;

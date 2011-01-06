@@ -25,10 +25,23 @@ namespace Msmcomm.LowLevel
 {
     public class StateChangeOperationModeRequestCommandMessage : BaseMessage
     {
-        public static const uint8 GROUP_ID = 0x4;
-        public static const uint16 MESSAGE_ID = 0x1;
+        public static const uint8 GROUP_ID = 0x3;
+        public static const uint16 MESSAGE_ID = 0x0;
+
+        private static const uint8 MODE_ONLINE_VALUE = 0x5;
+        private static const uint8 MODE_OFFLINE_VALUE = 0x6;
+        private static const uint8 MODE_RESET_VALUE = 0x7;
 
         private StateChangeOperationModeMessage _message;
+
+        public enum Mode
+        {
+            ONLINE,
+            OFFLINE,
+            RESET,
+        }
+
+        public Mode mode;
 
         construct
         {
@@ -36,6 +49,58 @@ namespace Msmcomm.LowLevel
 
             _message = StateChangeOperationModeMessage();
             set_payload((void*)(&_message), sizeof(StateChangeOperationModeMessage));
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+
+            switch (mode)
+            {
+                case Mode.ONLINE:
+                    _message.operation_mode = MODE_ONLINE_VALUE;
+                    break;
+                case Mode.OFFLINE:
+                    _message.operation_mode = MODE_OFFLINE_VALUE;
+                    break;
+                case Mode.RESET:
+                    _message.operation_mode = MODE_RESET_VALUE;
+                    break;
+            }
+        }
+    }
+
+    public class StateCallbackResponseMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x4;
+        public static const uint8 MESSAGE_ID = 0x1;
+
+        private StateCallbackResponse _message;
+
+        private static const uint8 RESULT_OK = 0x0;
+        private static const uint8 RESULT_ERROR = 0x1a;
+
+        construct 
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_STATE_CALLBACK, MessageClass.SOLICITED_RESPONSE);
+
+            _message = StateCallbackResponse();
+            set_payload((void*)(&_message), sizeof(StateCallbackResponse));
+        }
+
+        protected override void evaluate_data()
+        {
+            ref_id = _message.ref_id;
+
+            switch (_message.result)
+            {
+                case RESULT_OK:
+                    result = MessageResultType.RESULT_OK;
+                    break;
+                case RESULT_ERROR:
+                    result = MessageResultType.ERROR_UNKNOWN;
+                    break;
+            }
         }
     }
 }

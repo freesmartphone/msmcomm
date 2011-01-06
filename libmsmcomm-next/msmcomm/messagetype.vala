@@ -33,6 +33,7 @@ namespace Msmcomm.LowLevel
 
         RESPONSE_CALL_CALLBACK,
         RESPONSE_CALL_RETURN,
+        RESPONSE_STATE_CALLBACK,
     }
 
     public string messageTypeToString(MessageType type)
@@ -56,11 +57,17 @@ namespace Msmcomm.LowLevel
             case MessageType.COMMAND_CALL_SUPS:
                 result = "COMMAND_CALL_SUPS";
                 break;
+            case MessageType.COMMAND_STATE_CHANGE_OPERATION_MODE_REQUEST:
+                result = "COMMAND_STATE_CHANGE_OPERATION_MODE_REQUEST";
+                break;
             case MessageType.RESPONSE_CALL_CALLBACK:
                 result = "RESPONSE_CALL_CALLBACK";
                 break;
             case MessageType.RESPONSE_CALL_RETURN:
                 result = "RESPONSE_CALL_RETURN";
+                break;
+            case MessageType.RESPONSE_STATE_CALLBACK:
+                result = "RESPONSE_STATE_CALLBACK";
                 break;
         }
 

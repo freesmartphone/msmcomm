@@ -125,7 +125,7 @@ struct state_change_operation_mode_msg
 } __attribute__ ((packed));
 
 
-struct misc_callback_resp
+struct state_callback_resp
 {
 	uint32_t ref_id;
 	uint8_t unknown0[7];
