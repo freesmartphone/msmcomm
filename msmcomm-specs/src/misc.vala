@@ -83,5 +83,8 @@ namespace Msmcomm
         public abstract async void set_date(DateInfo info) throws GLib.Error, Msmcomm.Error;
         public abstract async DateInfo get_date() throws GLib.Error, Msmcomm.Error;
         public abstract async string get_imei() throws GLib.Error, Msmcomm.Error;
+
+        public signal void radio_reset_ind();
+        public signal void charger_status(ChargerStatusInfo info);
     }
 }
