@@ -24,14 +24,14 @@ namespace Msmcomm.Daemon
      **/
     public class CommandHandler
     {
-        public unowned Msmcomm.LowLevel.Message command;
-        public unowned Msmcomm.LowLevel.Message response;
+        public unowned Msmcomm.LowLevel.BaseMessage command;
+        public unowned Msmcomm.LowLevel.BaseMessage response;
         
         public uint timeout;
         public uint retry;
         public SourceFunc callback;
 
-        public CommandHandler( Msmcomm.LowLevel.Message command, int retries )
+        public CommandHandler( Msmcomm.LowLevel.BaseMessage command, int retries )
         {
             this.command = command;
             this.retry = retries;
@@ -39,18 +39,19 @@ namespace Msmcomm.Daemon
 
         public void write()
         {
-            ModemChannel.context.sendMessage( command );
+            // ModemChannel.context.sendMessage( command );
         }
 
         public string to_string()
         {
             if ( response != null )
             {
-                return "\"%s\" -> %s".printf( Msmcomm.LowLevel.messageTypeToString( command.type ), Msmcomm.LowLevel.messageTypeToString( response.type ) );
+                return "\"%s\" -> %s".printf( Msmcomm.LowLevel.messageTypeToString( command.message_type ), 
+                                              Msmcomm.LowLevel.messageTypeToString( response.message_type ) );
             }
             else
             {
-                return Msmcomm.LowLevel.messageTypeToString( command.type );
+                return Msmcomm.LowLevel.messageTypeToString( command.message_type );
             }
         }
     }

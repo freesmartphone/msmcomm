@@ -170,7 +170,7 @@ namespace Msmcomm.Daemon
 
         private void handleLinkSetupComplete()
         {
-            statusUpdate(Msmcomm.ModemControlStatus.ACTIVE);
+            statusUpdate(Msmcomm.ModemStatus.ACTIVE);
         }
 
         //
@@ -272,12 +272,12 @@ namespace Msmcomm.Daemon
             active = false;
             closeModemTransport();
             llc.stop();
-            statusUpdate(Msmcomm.ModemControlStatus.INACTIVE);
+            statusUpdate(Msmcomm.ModemStatus.INACTIVE);
         }
 
-        public void handleStatusUpdate(Msmcomm.ModemControlStatus status)
+        public void handleStatusUpdate(Msmcomm.ModemStatus status)
         {
-            logger.debug(@"Modem control switched to status '$(modemControlStatusToString(status))'");
+            logger.debug(@"Modem control switched to status '$(modemStatusToString(status))'");
         }
 
         /*
@@ -307,8 +307,8 @@ namespace Msmcomm.Daemon
         }
 
         public signal void requestHandleUnsolicitedResponse(Msmcomm.LowLevel.MessageType type, 
-                                                            Msmcomm.LowLevel.Message message);
-        public signal void statusUpdate(Msmcomm.ModemControlStatus status);
+                                                            Msmcomm.LowLevel.BaseMessage message);
+        public signal void statusUpdate(Msmcomm.ModemStatus status);
     }
 } // namespace Msmcomm
 

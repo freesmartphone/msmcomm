@@ -47,8 +47,8 @@ PKG_CHECK_MODULES(DEPS,
   fsobasics-2.0 >= $FSOB_REQUIRED
   fsoframework-2.0 >= $FSOF_REQUIRED
   fso-glib-1.0 >= $FSO_GLIB_REQUIRED
-  msmcomm-1.0 >= $MSMCOMM_REQUIRED
-  msmcommd-specs-1.0 >= $MSMCOMM_SPECS_REQUIRED)
+  msmcomm-2.0 >= $MSMCOMM_REQUIRED
+  msmcomm-specs-2.0 >= $MSMCOMM_SPECS_REQUIRED)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 

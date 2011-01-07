@@ -29,8 +29,8 @@ namespace Msmcomm.Daemon
         private int current_event_type;
 
         public ModemControl modem;
-        public static Msmcomm.LowLevel.Context context;
-        public uint32 current_index;
+        // public static Msmcomm.LowLevel.Context context;
+        public uint32 current_ref_id;
 
         //
         // public API
@@ -41,15 +41,15 @@ namespace Msmcomm.Daemon
             this.modem = modem;
 
             q = new Gee.LinkedList<CommandHandler>();
-            current_index = 0;
-            context = new Msmcomm.LowLevel.Context();
+            current_ref_id = 0;
+//            context = new Msmcomm.LowLevel.Context();
             modem.registerChannel(this);
         }
 
         public async bool open()
         {
-            context.registerResponseHandler( handleMsmcommEvent );
-            context.registerWriteHandler( handleMsmcommWriteRequest );
+//            context.registerResponseHandler( handleMsmcommEvent );
+//            context.registerWriteHandler( handleMsmcommWriteRequest );
             return true;
         }
 
@@ -58,7 +58,7 @@ namespace Msmcomm.Daemon
         //
 
         public signal void requestHandleUnsolicitedResponse(Msmcomm.LowLevel.MessageType type, 
-                                                            Msmcomm.LowLevel.Message message);
+                                                            Msmcomm.LowLevel.BaseMessage message);
 
         //
         // private API
@@ -135,34 +135,39 @@ namespace Msmcomm.Daemon
             modem.send(data, data.length);
         }
 
-        private bool checkResponseForCommandHandler(Msmcomm.LowLevel.Message response, CommandHandler bundle)
+        private bool checkResponseForCommandHandler(Msmcomm.LowLevel.BaseMessage response, CommandHandler bundle)
         {
             logger.debug("+checkResponseForCommandHandler");
             bool result = false;
 
+#if 0
             // Ugly, ugly hack: As the GET_PHONEBOOK_PROPERTIES response does not
             // has a ref_id field, we disable the check only for this response !!!
-            if (current_event_type != Msmcomm.LowLevel.MessageType.RESPONSE_GET_PHONEBOOK_PROPERTIES)
+            if (current_event_type != Msmcomm.LowLevel.BaseMessageType.RESPONSE_GET_PHONEBOOK_PROPERTIES)
             {
-                result = response.index == bundle.command.index;
+                result = response.ref_id == bundle.command.ref_id;
             }
+#endif
 
             logger.debug("-checkResponseForCommandHandler");
             return true;
         }
 
-        private uint32 nextValidMessageIndex()
+        private uint32 nextValidMessageRefId()
         {
-            if (current_index > uint32.MAX) {
-                current_index = 0;
+            if (current_ref_id > uint32.MAX) 
+            {
+                current_ref_id = 0;
             }
-            else {
-                current_index++;
+            else 
+            {
+                current_ref_id++;
             }
-            return current_index;
+
+            return current_ref_id;
         }
 
-        protected void onSolicitedResponse( CommandHandler bundle, Msmcomm.LowLevel.Message response )
+        protected void onSolicitedResponse( CommandHandler bundle, Msmcomm.LowLevel.BaseMessage response )
         {
             if ( bundle.callback != null )
             {
@@ -173,7 +178,7 @@ namespace Msmcomm.Daemon
                 }
                 else
                 {
-                    logger.error( @"got response for current command with wrong ref id ($(response.index), $(bundle.command.index))!" );
+                    logger.error( @"got response for current command with wrong ref id ($(response.ref_id), $(bundle.command.ref_id))!" );
                 }
             }
             else
@@ -182,9 +187,9 @@ namespace Msmcomm.Daemon
             }
         }
 
-        public async unowned Msmcomm.LowLevel.Message enqueueAsync( owned Msmcomm.LowLevel.Message command, int retries = 0, int timeout = 0 )
+        public async unowned Msmcomm.LowLevel.BaseMessage enqueueAsync( owned Msmcomm.LowLevel.BaseMessage command, int retries = 0, int timeout = 0 )
         {
-            command.index = nextValidMessageIndex();
+            command.ref_id = nextValidMessageRefId();
             var handler = new CommandHandler( command, retries );
             handler.callback = enqueueAsync.callback;
             enqueueCommand( handler );
@@ -192,33 +197,34 @@ namespace Msmcomm.Daemon
             return handler.response;
         }
 
-        public void enqueueSync( owned Msmcomm.LowLevel.Message command, int retries = 0 )
+        public void enqueueSync( owned Msmcomm.LowLevel.BaseMessage command, int retries = 0 )
         {
-            command.index = nextValidMessageIndex();
+            command.ref_id = nextValidMessageRefId();
             var handler = new CommandHandler( command, 0 );
             enqueueCommand( handler );
         }
 
         public void handleIncommingData(uint8[] data)
         {
-            context.processData((void*) data, data.length);
+            // context.processData((void*) data, data.length);
         }
 
-        public void handleMsmcommEvent( Msmcomm.LowLevel.MessageType event, Msmcomm.LowLevel.Message message )
+        public void handleMsmcommEvent( Msmcomm.LowLevel.MessageType event, Msmcomm.LowLevel.BaseMessage message )
         {
             var et = Msmcomm.LowLevel.messageTypeToString( event );
             logger.debug( et );
 
             current_event_type = event;
 
-            if ( message.type == Msmcomm.LowLevel.MessageType.EVENT_RESET_RADIO_IND )
+#if 0
+            if ( message.type == Msmcomm.LowLevel.BaseMessageType.EVENT_RESET_RADIO_IND )
             {
                 /* Modem was reseted, we should do the same */
                 logger.debug( "Modem was reseted, we should do the same ..." );
                 reset();
             }
 
-            if ( message.class == Msmcomm.LowLevel.MessageClass.RESPONSE )
+            if ( message.class == Msmcomm.LowLevel.BaseMessageClass.RESPONSE )
             {
                 if (current == null)
                 {
@@ -231,10 +237,11 @@ namespace Msmcomm.Daemon
                 current = null;
                 Idle.add( checkRestartingQueue );
             }
-            else if ( message.class == Msmcomm.LowLevel.MessageClass.EVENT )
+            else if ( message.class == Msmcomm.LowLevel.BaseMessageClass.EVENT )
             {
                 requestHandleUnsolicitedResponse(event, message);
             }
+#endif
         }
 
         public override string repr()

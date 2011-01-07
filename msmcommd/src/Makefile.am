@@ -10,8 +10,8 @@ VALAC_ARGS = \
 	--pkg fsotransport-2.0 \
 	--pkg fsoframework-2.0 \
 	--pkg config \
-	--pkg msmcomm-1.0 \
-	--pkg msmcommd-1.0 \
+	--pkg msmcomm-2.0 \
+	--pkg msmcomm-specs-2.0 \
 	--pkg fso-glib-1.0 \
 	--thread \
 	--save-temps \
