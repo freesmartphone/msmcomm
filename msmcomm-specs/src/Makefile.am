@@ -9,54 +9,53 @@ AM_CFLAGS = \
 VALACFLAGS = \
 	--pkg glib-2.0 \
 	--pkg gio-2.0 \
-	--header msmcommd.h \
-	--library msmcommd-2.0 \
-	--gir msmcommd-2.0.gir
+	--header msmcomm-specs.h \
+	--library msmcomm-specs-2.0 \
+	--gir msmcomm-specs-2.0.gir
 
-BUILT_SOURCES = libmsmcommd_la.vala.stamp
+BUILT_SOURCES = libmsmcomm_specs_la.vala.stamp
 
-lib_LTLIBRARIES = libmsmcommd.la
+lib_LTLIBRARIES = libmsmcomm_specs.la
 
-libmsmcommd_la_VALASOURCES = \
+libmsmcomm_specs_la_VALASOURCES = \
 	management.vala \
 	error.vala \
 	misc.vala \
 	$(NULL)
 
-libmsmcommddir = $(includedir)/msmcommd-2.0
-libmsmcommd_HEADERS = \
-	msmcommd.h
+libmsmcomm_specsdir = $(includedir)/msmcomm-specs-2.0
+libmsmcomm_specs_HEADERS = \
+	msmcomm-specs.h
 
 vapidir = $(datadir)/vala/vapi
 vapi_DATA = \
-	msmcommd-2.0.vapi \
-	msmcommd-2.0.deps
+	msmcomm-specs-2.0.vapi \
+	msmcomm-specs-2.0.deps
 
 girdir = $(datadir)/gir-1.0
-gir_DATA = msmcommd-2.0.gir
+gir_DATA = msmcomm-specs-2.0.gir
 
-libmsmcommd_la_SOURCES = \
-	$(libmsmcommd_la_VALASOURCES:.vala=.c)
+libmsmcomm_specs_la_SOURCES = \
+	$(libmsmcomm_la_VALASOURCES:.vala=.c)
 
-msmcommd-2.0.deps libmsmcommd_la.vala.stamp: 
-	$(VALAC) -C ${VALACFLAGS} --basedir . $(libmsmcommd_la_VALASOURCES)
+msmcomm-specs.h msmcomm-specs-2.0.deps libmsmcomm_specs_la.vala.stamp: 
+	$(VALAC) -C ${VALACFLAGS} --basedir . $(libmsmcomm_specs_la_VALASOURCES)
 	touch $@
-
 
 if TYPELIB
 typelibdir = $(libdir)/girepository-1.0
-typelib_DATA = msmcommd-2.0.typelib
+typelib_DATA = msmcomm-specs-2.0.typelib
 
-msmcommd-1.0.typelib: msmcommd-2.0.gir
-	$(GIR_COMPILER) --includedir /usr/share/gir-1.0/ msmcommd-2.0.gir -o msmcommd-2.0.typelib
+msmcomm-specs-1.0.typelib: msmcomm-specs-2.0.gir
+	$(GIR_COMPILER) --includedir /usr/share/gir-1.0/ msmcomm-specs-2.0.gir -o msmcomm-specs-2.0.typelib
 endif
 
-libmsmcommd_la_LIBADD = \
+libmsmcomm_specs_la_LIBADD = \
 	$(DEPS_LIBS)
 
 EXTRA_DIST = \
-	$(libmsmcommd_la_VALASOURCES) \
-	libmsmcommd_la.vala.stamp
+	$(libmsmcomm_specs_la_VALASOURCES) \
+	libmsmcomm_specs_la.vala.stamp
 
 CLEANFILES = \
 	*.c \
@@ -64,7 +63,7 @@ CLEANFILES = \
 	*.vapi \
 	*.gir \
 	*.typelib \
-	libmsmcommd_la.vala.stamp
+	libmsmcomm_specs_la.vala.stamp
 
 DISTCLEANFILES = \
 	Makefile.in
