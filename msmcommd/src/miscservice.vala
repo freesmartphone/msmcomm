@@ -1,7 +1,7 @@
 /**
  * This file is part of msmcommd.
  *
- * (C) 2010 Simon Busch <morphis@gravedo.de>
+ * (C) 2010-2011 Simon Busch <morphis@gravedo.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,14 @@ namespace Msmcomm.Daemon
 
         public async RadioFirmwareVersionInfo get_radio_firmware_version() throws GLib.Error, Msmcomm.Error
         {
-            return RadioFirmwareVersionInfo();
+            var response = yield channel.enqueueAsync(new MiscGetRadioFirmwareVersionCommandMessage()) as MiscGetRadioFirmwareVersionResponseMessage;
+            checkResponse(response);
+
+            var info = RadioFirmwareVersionInfo();
+            info.carrier_id = response.carrier_id;
+            info.firmware_version = response.firmware_version;
+
+            return info;
         }
 
         public async ChargerStatusInfo get_charger_status() throws GLib.Error, Msmcomm.Error
