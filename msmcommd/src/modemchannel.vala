@@ -19,6 +19,8 @@
  *
  **/
 
+using Msmcomm.LowLevel;
+
 namespace Msmcomm.Daemon
 {
     public class ModemChannel : AbstractObject
@@ -27,9 +29,10 @@ namespace Msmcomm.Daemon
         private uint timeoutWatch;
         protected CommandHandler current;
         private int current_event_type;
+        private MessageAssembler masm;
+        private MessageDisassembler mdis;
 
         public ModemControl modem;
-        // public static Msmcomm.LowLevel.Context context;
         public uint32 current_ref_id;
 
         //
@@ -40,16 +43,18 @@ namespace Msmcomm.Daemon
         {
             this.modem = modem;
 
+            masm = new MessageAssembler();
+            mdis = new MessageDisassembler();
+
             q = new Gee.LinkedList<CommandHandler>();
             current_ref_id = 0;
-//            context = new Msmcomm.LowLevel.Context();
+
             modem.registerChannel(this);
+
         }
 
         public async bool open()
         {
-//            context.registerResponseHandler( handleMsmcommEvent );
-//            context.registerWriteHandler( handleMsmcommWriteRequest );
             return true;
         }
 
@@ -57,8 +62,7 @@ namespace Msmcomm.Daemon
         // signals
         //
 
-        public signal void requestHandleUnsolicitedResponse(Msmcomm.LowLevel.MessageType type, 
-                                                            Msmcomm.LowLevel.BaseMessage message);
+        public signal void requestHandleUnsolicitedResponse(Msmcomm.LowLevel.BaseMessage message);
 
         //
         // private API
@@ -77,15 +81,28 @@ namespace Msmcomm.Daemon
             }
         }
 
+        /**
+         * Write next command to modem and add timeout for resending
+         **/
         protected void writeNextCommand()
         {
+            uint8[] data;
+
             current = q.poll_head();
-            current.write();
+            writeCommand(current);
+
             assert( logger.debug( @"Wrote '$current'. Waiting ($(current.timeout)s) for answer..." ) );
             if ( current.timeout > 0 )
             {
                 timeoutWatch = GLib.Timeout.add_seconds( current.timeout, onTimeout );
             }
+        }
+
+        protected void writeCommand(CommandHandler handler)
+        {
+            uint8[] data;
+            data = masm.pack_message(handler.command);
+            modem.sendData(data);
         }
 
         protected void resetTimeout()
@@ -103,14 +120,15 @@ namespace Msmcomm.Daemon
             {
                 current.retry--;
                 assert( logger.debug( @"Retrying '$current', retry counter = $(current.retry)" ) );
-                current.write();
-                return true; // call me again
+                writeCommand(current);
+                return true;
             }
             else
             {
-                onResponseTimeout( current ); // derived class is responsible for relaunching the command queue
+                // derived class is responsible for relaunching the command queue
+                onResponseTimeout( current );
             }
-            return false; // don't call me again
+            return false;
         }
 
         protected void onResponseTimeout( CommandHandler ach )
@@ -130,15 +148,12 @@ namespace Msmcomm.Daemon
             q.clear();
         }
 
-        private void handleMsmcommWriteRequest(uint8[] data)
-        {
-            modem.send(data, data.length);
-        }
-
         private bool checkResponseForCommandHandler(Msmcomm.LowLevel.BaseMessage response, CommandHandler bundle)
         {
-            logger.debug("+checkResponseForCommandHandler");
             bool result = false;
+
+            // Check wether command and response have the same reference id
+            result = response.ref_id == bundle.command.ref_id;
 
 #if 0
             // Ugly, ugly hack: As the GET_PHONEBOOK_PROPERTIES response does not
@@ -149,7 +164,6 @@ namespace Msmcomm.Daemon
             }
 #endif
 
-            logger.debug("-checkResponseForCommandHandler");
             return true;
         }
 
@@ -204,27 +218,23 @@ namespace Msmcomm.Daemon
             enqueueCommand( handler );
         }
 
+        /**
+         * Process incomming data stream for new messages and forward them to the
+         * connected client handlers
+         **/
         public void handleIncommingData(uint8[] data)
         {
-            // context.processData((void*) data, data.length);
-        }
+            BaseMessage? message = mdis.unpack_message(data);
 
-        public void handleMsmcommEvent( Msmcomm.LowLevel.MessageType event, Msmcomm.LowLevel.BaseMessage message )
-        {
-            var et = Msmcomm.LowLevel.messageTypeToString( event );
-            logger.debug( et );
-
-            current_event_type = event;
-
-#if 0
-            if ( message.type == Msmcomm.LowLevel.BaseMessageType.EVENT_RESET_RADIO_IND )
+            if (message == null)
             {
-                /* Modem was reseted, we should do the same */
-                logger.debug( "Modem was reseted, we should do the same ..." );
-                reset();
+                logger.error("Could not unpack incomming message; Ignoring it ...");
+                return;
             }
 
-            if ( message.class == Msmcomm.LowLevel.BaseMessageClass.RESPONSE )
+            logger.debug( messageTypeToString(message.message_type) );
+
+            if (message.message_class == MessageClass.SOLICITED_RESPONSE)
             {
                 if (current == null)
                 {
@@ -233,15 +243,28 @@ namespace Msmcomm.Daemon
                     return;
                 }
 
-                onSolicitedResponse( (CommandHandler) current, message );
+                onSolicitedResponse((CommandHandler) current, message);
                 current = null;
-                Idle.add( checkRestartingQueue );
+                Idle.add(checkRestartingQueue);
             }
-            else if ( message.class == Msmcomm.LowLevel.BaseMessageClass.EVENT )
+            else if (message.message_class == MessageClass.UNSOLICITED_RESPONSE)
             {
-                requestHandleUnsolicitedResponse(event, message);
+                handleSpecificUnsolicitedResponse(message);
+                requestHandleUnsolicitedResponse(message);
             }
-#endif
+        }
+
+        /**
+         * Some unsolicited response needed to be handled here first before passing them
+         * to the connect client handlers
+         **/
+        private void handleSpecificUnsolicitedResponse(BaseMessage message)
+        {
+            if (message.message_type == MessageType.UNSOLICITED_RESPONSE_MISC_RADIO_RESET_IND)
+            {
+                logger.debug("Modem was reseted, we should do the same ...");
+                reset();
+            }
         }
 
         public override string repr()

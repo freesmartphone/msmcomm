@@ -19,6 +19,8 @@
  *
  **/
 
+using Msmcomm.LowLevel;
+
 namespace Msmcomm.Daemon
 {
     private const string DBUS_SERVICE_BUS               = "org.freedesktop.DBus";
@@ -36,6 +38,8 @@ namespace Msmcomm.Daemon
         private string objectpath;
         private MiscService miscservice;
 
+        private Gee.HashMap<GLib.Type, BaseService> services;
+
         //
         // private API
         //
@@ -44,7 +48,9 @@ namespace Msmcomm.Daemon
         {
             try
             {
-                usage = yield dbusconn.get_proxy<FreeSmartphone.Usage>(FsoFramework.Usage.ServiceDBusName, FsoFramework.Usage.ServicePathPrefix, GLib.DBusProxyFlags.NONE);
+                usage = yield dbusconn.get_proxy<FreeSmartphone.Usage>(FsoFramework.Usage.ServiceDBusName,
+                                                                      FsoFramework.Usage.ServicePathPrefix,
+                                                                      GLib.DBusProxyFlags.NONE);
                 yield usage.register_resource("Modem", new GLib.ObjectPath("/org/msmcomm"));
                 logger.info(@"Successfully registered resource with org.freesmartphone.ousaged");
             }
@@ -73,6 +79,37 @@ namespace Msmcomm.Daemon
             return "";
         }
 
+        /**
+         * Find the correct service for the unsolcited response message
+         **/
+        private void dispatchUnsolicitedResponse(BaseMessage message)
+        {
+            foreach(BaseService service in services.values)
+            {
+                if (service.handleUnsolicitedResponse(message))
+                {
+                    break;
+                }
+            }
+        }
+
+        /**
+         * Register the service of type T to the bus (services are stored internally in
+         * the services hash map and created on class construction)
+         **/
+        private void registerService<T>()
+        {
+            T service = services[typeof(T)];
+
+            if (service == null)
+            {
+                logger.error(@"Could not register dbus service: $(typeof(T).name())");
+                return;
+            }
+
+            dbusconn.register_object<T>(objectpath, service);
+        }
+
         //
         // public API
         //
@@ -83,14 +120,15 @@ namespace Msmcomm.Daemon
 
             /* Forward modem status to connect clients */
             this.modem.statusUpdate.connect((status) => modem_status(status));
-
-            // this.modem.requestHandleUnsolicitedResponse.connect(dispatchUnsolicitedResponse);
+            /* Handle all incomming unsolicited response */
+            this.modem.requestHandleUnsolicitedResponse.connect(dispatchUnsolicitedResponse);
 
             servicename = "org.msmcomm";
             objectpath = "/org/msmcomm";
 
             /* Create all services */
-            miscservice = new MiscService(modem);
+            services = new Gee.HashMap<GLib.Type,BaseService>();
+            services[typeof(Msmcomm.Misc)] = new MiscService(modem);
         }
 
         public bool register()
@@ -99,6 +137,7 @@ namespace Msmcomm.Daemon
             {
                 dbusconn = GLib.Bus.get_sync(GLib.BusType.SYSTEM);
 
+                Idle.add(() => { registerWithResource(); return false; });
 
                 GLib.Bus.own_name_on_connection( dbusconn, servicename, 0, 
                     ( conn, name ) => {
@@ -111,9 +150,9 @@ namespace Msmcomm.Daemon
 
                 dbusconn.register_object<FreeSmartphone.Resource>(objectpath, this);
                 dbusconn.register_object<Msmcomm.Management>(objectpath, this);
-                dbusconn.register_object<Msmcomm.Misc>(objectpath, miscservice);
 
-                Idle.add( () => { registerWithResource(); return false; } );
+                /* register all specific command services */
+                registerService<Msmcomm.Misc>();
             }
             catch (GLib.Error err)
             {

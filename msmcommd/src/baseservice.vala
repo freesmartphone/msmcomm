@@ -19,15 +19,19 @@
  *
  **/
 
+using Msmcomm.LowLevel;
+
 namespace Msmcomm.Daemon
 {
     public abstract class BaseService : AbstractObject
     {
         protected ModemControl modem;
+        protected ModemChannel channel;
 
         protected BaseService(ModemControl modem)
         {
             this.modem = modem;
+            this.channel = modem.retrieveChannel();
         }
 
         protected void checkModemActivity() throws Msmcomm.Error
@@ -37,6 +41,20 @@ namespace Msmcomm.Daemon
                 var msg = "Modem is currently inactive; start it first!";
                 throw new Msmcomm.Error.MODEM_INACTIVE(msg);
             }
+        }
+
+        protected void checkResponse(Msmcomm.LowLevel.BaseMessage response) throws Msmcomm.Error
+        {
+            if (response.result != Msmcomm.LowLevel.MessageResultType.RESULT_OK)
+            {
+                var msg = @"$(LowLevel.messageTypeToString(response.message_type)) command failed with: $(LowLevel.messageResultTypeToString(response.result))";
+                throw new Msmcomm.Error.FAILED(msg);
+            }
+        }
+
+        public virtual bool handleUnsolicitedResponse(BaseMessage message)
+        {
+            return false;
         }
     }
 }

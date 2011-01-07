@@ -19,6 +19,8 @@
  *
  **/
 
+using Msmcomm.LowLevel;
+
 namespace Msmcomm.Daemon
 {
     public class MiscService : BaseService, Msmcomm.Misc
@@ -28,6 +30,25 @@ namespace Msmcomm.Daemon
             base(modem);
         }
 
+        public override bool handleUnsolicitedResponse(BaseMessage message)
+        {
+            bool handled = false;
+
+            switch (message.message_type)
+            {
+                case MessageType.UNSOLICITED_RESPONSE_MISC_RADIO_RESET_IND:
+                    radio_reset_ind();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS:
+                    charger_status(ChargerStatusInfo());
+                    handled = true;
+                    break;
+            }
+
+            return handled;
+        }
+
         protected override string repr()
         {
             return "";
@@ -35,6 +56,8 @@ namespace Msmcomm.Daemon
 
         public async void test_alive() throws GLib.Error, Msmcomm.Error
         {
+            var response = yield channel.enqueueAsync(new MiscTestAliveCommandMessage());
+            checkResponse(response);
         }
 
         public async RadioFirmwareVersionInfo get_radio_firmware_version() throws GLib.Error, Msmcomm.Error

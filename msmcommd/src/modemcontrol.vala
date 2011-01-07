@@ -217,11 +217,11 @@ namespace Msmcomm.Daemon
         /*
          * Send a data package to the attached modem
          */
-        public void send(uint8[] data, int length)
+        public void sendData(uint8[] data)
         {
             if (active)
             {
-                llc.sendDataFrame(data, length);
+                llc.sendDataFrame(data);
             }
         }
 
@@ -292,13 +292,12 @@ namespace Msmcomm.Daemon
         public void registerChannel(ModemChannel channel)
         {
             this.channel = channel;
-            channel.requestHandleUnsolicitedResponse.connect((type, msg) => { requestHandleUnsolicitedResponse(type, msg); } );
+            channel.requestHandleUnsolicitedResponse.connect((message) => { requestHandleUnsolicitedResponse(message); });
         }
 
-        public async void processCommand(BaseCommand command) throws Msmcomm.Error
+        public ModemChannel retrieveChannel()
         {
-            command.channel = channel;
-            yield command.run();
+            return channel;
         }
 
         public override string repr()
@@ -306,8 +305,7 @@ namespace Msmcomm.Daemon
             return "<>";
         }
 
-        public signal void requestHandleUnsolicitedResponse(Msmcomm.LowLevel.MessageType type, 
-                                                            Msmcomm.LowLevel.BaseMessage message);
+        public signal void requestHandleUnsolicitedResponse(Msmcomm.LowLevel.BaseMessage message);
         public signal void statusUpdate(Msmcomm.ModemStatus status);
     }
 } // namespace Msmcomm

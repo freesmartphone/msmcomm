@@ -39,16 +39,16 @@ namespace Msmcomm.Daemon
             context.stateChanged.connect(onStateChanged);
 
             Crc16.setup();
-                    
+
             handlers = new Gee.ArrayList<AbstractLinkHandler>();
             handlers.add(new SetupLinkHandler(context, this));
             handlers.add(new FlowControlHandler(context, this));
             handlers.add(new ActiveLinkHandler(context, this));
-            
+
             transmission_handler = new TransmissionHandler(context, this);
-            
+
             in_buffer = new ByteArray();
-            
+
             configure();
         }
 
@@ -56,7 +56,7 @@ namespace Msmcomm.Daemon
         {
             return "<>";
         }
-        
+
         public void start()
         {
             logger.debug("starting ...");
@@ -77,7 +77,7 @@ namespace Msmcomm.Daemon
                 handler.stop();
             }
         }
-        
+
         public void reset()
         {
             stop();
@@ -88,17 +88,17 @@ namespace Msmcomm.Daemon
         {
             uint start = 0;
             uint n = 0;
-            
+
             in_buffer.append(data);
-            
+
             var tmp = new uint8[in_buffer.len];
             Memory.copy(tmp, in_buffer.data, in_buffer.len);
-            
+
             // try to find a valid frame within the incomming data
             foreach (var byte in tmp)
             {
                 n++;
-                
+
                 // search for the frame end byte, if we found it then we
                 // have found a valid frame
                 if (byte == 0x7e)
@@ -114,12 +114,12 @@ namespace Msmcomm.Daemon
                         start = n + 1;
                         continue;
                     }
-                    
+
                     handleIncommingFrame(frame);
                     start = n + 1;
                 }
             }
-            
+
             // Append not handled bytes to input buffer so we can handle 
             // them later together with some additional arrived data
             in_buffer = new ByteArray();
@@ -130,27 +130,27 @@ namespace Msmcomm.Daemon
                 in_buffer.append(tmp2);
             }
         }
-        
-        public void sendDataFrame(uint8[] data, int size)
+
+        public void sendDataFrame(uint8[] data)
         {
             Frame frame = new Frame();
             frame.fr_type = FrameType.DATA;
-            
+
             frame.payload.append(data);
-            logger.debug(@"send a DATA frame to modem (length = $(size))");
-        
+            logger.debug(@"send a DATA frame to modem (length = $(data.length))");
+
             transmission_handler.enequeFrame(frame);
         }
-        
+
         public void sendFrame(Frame frame)
         {
             transmission_handler.enequeFrame(frame);
         }
-        
+
         //
         // private API
         //
-        
+
         private void onStateChanged(LinkStateType new_state)
         {
             if (new_state == LinkStateType.ACTIVE)
@@ -158,7 +158,7 @@ namespace Msmcomm.Daemon
                 requestHandleLinkSetupComplete();
             }
         }
-        
+
         private void configure()
         {
             context.window_size = (uint8) config.intValue("flowcontrol", "window_size", 8);
@@ -174,7 +174,7 @@ namespace Msmcomm.Daemon
                 // If the handler decides that no other handler should take a look at this
                 // frame, we stop iterating over the last handlers.
                 if (handler.handleFrame(frame))
-                {   
+                {
                     break;
                 }
             }

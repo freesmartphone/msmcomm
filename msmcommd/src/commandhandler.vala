@@ -37,11 +37,6 @@ namespace Msmcomm.Daemon
             this.retry = retries;
         }
 
-        public void write()
-        {
-            // ModemChannel.context.sendMessage( command );
-        }
-
         public string to_string()
         {
             if ( response != null )
