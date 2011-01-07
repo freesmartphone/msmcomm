@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = msmcommd-specs-2.0.pc
+pkgconfig_DATA = msmcomm-specs-2.0.pc
 
 SUBDIRS = \
 	src

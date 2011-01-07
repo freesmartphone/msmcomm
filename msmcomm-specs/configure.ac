@@ -45,6 +45,6 @@ AC_SUBST(DEPS_LIBS)
 AC_CONFIG_FILES([
 	Makefile
 	src/Makefile
-	msmcommd-specs-2.0.pc
+	msmcomm-specs-2.0.pc
 ])
 AC_OUTPUT
