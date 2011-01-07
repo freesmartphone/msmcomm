@@ -32,6 +32,7 @@ namespace Msmcomm
     [DBus (name = "org.msmcomm")]
     public errordomain Error
     {
+        NOT_IMPLEMENTED,
         INVALID_ARGUMENTS,
         FAILED,
         MODEM_INACTIVE,
