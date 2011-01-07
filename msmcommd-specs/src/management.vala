@@ -22,14 +22,14 @@
 namespace Msmcomm
 {
     [DBus (use_string_marshalling = true)]
-    public enum ModemControlStatus
+    public enum ModemStatus
     {
         INACTIVE,
         ACTIVE,
         UNKNOWN,
     }
 
-    [DBus (name = "org.msmcomm.Management")]
+    [DBus (name = "org.msmcomm")]
     public errordomain Error
     {
         INVALID_ARGUMENTS,
@@ -38,34 +38,33 @@ namespace Msmcomm
     }
 
 
-    public string modemControlStatusToString(ModemControlStatus status)
+    public string modemStatusToString(ModemStatus status)
     {
         string result = "<UNKNOWN>";
 
         switch (status)
         {
-            case ModemControlStatus.INACTIVE:
+            case ModemStatus.INACTIVE:
                 result = "INACTIVE";
                 break;
-            case ModemControlStatus.ACTIVE:
+            case ModemStatus.ACTIVE:
                 result = "ACTIVE";
                 break;
-            case ModemControlStatus.UNKNOWN:
+            case ModemStatus.UNKNOWN:
                 result = "UNKNOWN";
                 break;
         }
 
         return result;
     }
-    
+
     [DBus (timeout = 120000, name = "org.msmcomm.Management")]
     public interface Management : GLib.Object
     {
         public abstract async void reset() throws GLib.Error, Msmcomm.Error;
         public abstract async void initialize() throws GLib.Error, Msmcomm.Error;
         public abstract async void shutdown() throws GLib.Error, Msmcomm.Error;
-        public abstract async bool get_active() throws GLib.Error, Msmcomm.Error;
 
-        public signal void status_update(ModemControlStatus status);
+        public signal void modem_status(ModemStatus status);
     }
 }
