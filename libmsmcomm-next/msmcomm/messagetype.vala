@@ -72,17 +72,58 @@ namespace Msmcomm.LowLevel
             case MessageType.COMMAND_CALL_SUPS:
                 result = "COMMAND_CALL_SUPS";
                 break;
+
             case MessageType.COMMAND_STATE_CHANGE_OPERATION_MODE_REQUEST:
                 result = "COMMAND_STATE_CHANGE_OPERATION_MODE_REQUEST";
                 break;
+
+            case MessageType.COMMAND_MISC_TEST_ALIVE:
+                result = "COMMAND_MISC_TEST_ALIVE";
+                break;
+            case MessageType.COMMAND_MISC_GET_RADIO_FIRMWARE_VERSION:
+                result = "COMMAND_MISC_GET_RADIO_FIRMWARE_VERSION";
+                break;
+            case MessageType.COMMAND_MISC_GET_CHARGER_STATUS:
+                result = "COMMAND_MISC_GET_CHARGER_STATUS";
+                break;
+            case MessageType.COMMAND_MISC_SET_CHARGE:
+                result = "COMMAND_MISC_SET_CHARGE";
+                break;
+            case MessageType.COMMAND_MISC_SET_DATE:
+                result = "COMMAND_MISC_SET_DATE";
+                break;
+            case MessageType.COMMAND_MISC_GET_IMEI:
+                result = "COMMAND_MISC_GET_IMEI";
+                break;
+
             case MessageType.RESPONSE_CALL_CALLBACK:
                 result = "RESPONSE_CALL_CALLBACK";
                 break;
             case MessageType.RESPONSE_CALL_RETURN:
                 result = "RESPONSE_CALL_RETURN";
                 break;
+
             case MessageType.RESPONSE_STATE_CALLBACK:
                 result = "RESPONSE_STATE_CALLBACK";
+                break;
+
+            case MessageType.RESPONSE_MISC_TEST_ALIVE:
+                result = "RESPONSE_MISC_TEST_ALIVE";
+                break;
+            case MessageType.RESPONSE_MISC_GET_RADIO_FIRMWARE_VERSION:
+                result = "RESPONSE_MISC_GET_RADIO_FIRMWARE_VERSION";
+                break;
+            case MessageType.RESPONSE_MISC_GET_CHARGER_STATUS:
+                result = "RESPONSE_MISC_GET_CHARGER_STATUS";
+                break;
+            case MessageType.RESPONSE_MISC_SET_CHARGE:
+                result = "RESPONSE_MISC_SET_CHARGE";
+                break;
+            case MessageType.RESPONSE_MISC_SET_DATE:
+                result = "RESPONSE_MISC_SET_DATE";
+                break;
+            case MessageType.RESPONSE_MISC_GET_IMEI:
+                result = "RESPONSE_MISC_GET_IMEI";
                 break;
         }
 
