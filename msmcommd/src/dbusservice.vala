@@ -26,29 +26,19 @@ namespace Msmcomm.Daemon
     private const string DBUS_INTERFACE_DBUS            = "org.freedesktop.DBus";
 
     public class DBusService :
-        GLib.Object,
+        BaseService,
         FreeSmartphone.Resource,
         Msmcomm.Management
     {
-        private FsoFramework.Logger logger;
         private FreeSmartphone.Usage usage;
-        private ModemControl modem;
         private GLib.DBusConnection dbusconn;
         private string servicename;
         private string objectpath;
+        private MiscService miscservice;
 
         //
         // private API
         //
-
-        private void checkModemActivity() throws Msmcomm.Error
-        {
-            if (!modem.active)
-            {
-                var msg = "Modem is currently inactive; start it first!";
-                throw new Msmcomm.Error.MODEM_INACTIVE(msg);
-            }
-        }
 
         private async void registerWithResource()
         {
@@ -78,22 +68,29 @@ namespace Msmcomm.Daemon
             }
         }
 
+        protected override string repr()
+        {
+            return "";
+        }
+
         //
         // public API
         //
 
         public DBusService(ModemControl modem)
         {
-            logger = FsoFramework.theLogger;
-
-            this.modem = modem;
-            // this.modem.requestHandleUnsolicitedResponse.connect(dispatchUnsolicitedResponse);
+            base(modem);
 
             /* Forward modem status to connect clients */
             this.modem.statusUpdate.connect((status) => modem_status(status));
 
+            // this.modem.requestHandleUnsolicitedResponse.connect(dispatchUnsolicitedResponse);
+
             servicename = "org.msmcomm";
             objectpath = "/org/msmcomm";
+
+            /* Create all services */
+            miscservice = new MiscService(modem);
         }
 
         public bool register()
@@ -114,6 +111,7 @@ namespace Msmcomm.Daemon
 
                 dbusconn.register_object<FreeSmartphone.Resource>(objectpath, this);
                 dbusconn.register_object<Msmcomm.Management>(objectpath, this);
+                dbusconn.register_object<Msmcomm.Misc>(objectpath, miscservice);
 
                 Idle.add( () => { registerWithResource(); return false; } );
             }

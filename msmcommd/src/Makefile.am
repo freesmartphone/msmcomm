@@ -44,6 +44,8 @@ msmcommd_VALASOURCES = \
 	modemcontrol.vala \
 	lowlevelcontrol.vala \
 	dbusservice.vala \
+	baseservice.vala \
+	miscservice.vala \
 	commandhandler.vala \
 	commands.vala \
 	modemchannel.vala \
