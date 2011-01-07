@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:state>
+	<description></description>
+	<structures>
+		<structure name="state_change_operation_mode_msg" length="5">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="mode" start="4" type="uint8_t">
+				<descripton>
+				Possible values are:
+				- reset: Reset the modem to it's internal default configuration
+				- online: Set the modem into online mode (network access)
+				- offline: Set the modem into offline mode (no network access)
+				</descripton>
+			</field>
+		</structure>
+
+		<structure name="state_callback_resp" length="12">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="result" start="11" type="uint8_t">
+				<description>
+				Maybe this field contains a result code as response to various messages. Meaning
+				of the different values is current unknown. Possible values for this field are:
+				- 26: seen as response to get_networklist_msg/set_mode_preference_msg in offline mode
+				</description>
+			</field>
+		</structure>
+
+		<structure name="state_operation_mode_event" length="4098">
+			<field name="mode" start="1" type="uint8_t"/>
+			<field name="als_allowed" start="4079" type="uint8_t"/>
+			<field name="line" start="4080" type="uint8_t"/>
+		</structure>
+	</structures>
+</namespace:state>
+
