@@ -201,6 +201,22 @@ struct MiscSetDateResponse
 }
 
 
+[CCode (cname = "struct misc_charger_status_event", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscChargerStatusEvent
+{
+	public uint8[] unknown0;
+	public uint16 voltage;
+	public uint8[] unknown1;
+}
+
+
+[CCode (cname = "struct misc_radio_reset_ind_event", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscRadioResetIndEvent
+{
+	public uint8[] unknown0;
+}
+
+
 [CCode (cname = "struct state_change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct StateChangeOperationModeMessage
 {

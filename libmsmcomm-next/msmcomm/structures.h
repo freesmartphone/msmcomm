@@ -188,6 +188,20 @@ struct misc_set_date_resp
 } __attribute__ ((packed));
 
 
+struct misc_charger_status_event
+{
+	uint8_t unknown0[5];
+	uint16_t voltage;
+	uint8_t unknown1[6];
+} __attribute__ ((packed));
+
+
+struct misc_radio_reset_ind_event
+{
+	uint8_t unknown0[76];
+} __attribute__ ((packed));
+
+
 struct state_change_operation_mode_msg
 {
 	uint32_t ref_id;

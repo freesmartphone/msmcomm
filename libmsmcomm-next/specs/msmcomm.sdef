@@ -110,6 +110,13 @@ start misc_set_date_resp 6
 [4] uint8_t rc
 end
 
+start misc_charger_status_event 13
+[5-6] uint16_t voltage
+end
+
+start misc_radio_reset_ind_event 76
+end
+
 #-------------------------------------------------------------------
 # STATE
 #-------------------------------------------------------------------

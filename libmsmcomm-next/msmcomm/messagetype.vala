@@ -49,6 +49,9 @@ namespace Msmcomm.LowLevel
         RESPONSE_MISC_SET_CHARGE,
         RESPONSE_MISC_SET_DATE,
         RESPONSE_MISC_GET_IMEI,
+
+        UNSOLICITED_RESPONSE_MISC_RADIO_RESET_IND,
+        UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS,
     }
 
     public string messageTypeToString(MessageType type)
@@ -124,6 +127,13 @@ namespace Msmcomm.LowLevel
                 break;
             case MessageType.RESPONSE_MISC_GET_IMEI:
                 result = "RESPONSE_MISC_GET_IMEI";
+                break;
+
+            case MessageType.UNSOLICITED_RESPONSE_MISC_RADIO_RESET_IND:
+                result = "UNSOLICITED_RESPONSE_MISC_RADIO_RESET_IND";
+                break;
+            case MessageType.UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS:
+                result = "UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS";
                 break;
         }
 

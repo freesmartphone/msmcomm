@@ -346,4 +346,36 @@ namespace Msmcomm.LowLevel
             }
         }
     }
+
+    public class MiscRadioResetIndUnsolicitedRespMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x1d;
+        public static const uint16 MESSAGE_ID = 0x0;
+
+        private MiscRadioResetIndEvent _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_MISC_RADIO_RESET_IND, MessageClass.UNSOLICITED_RESPONSE);
+
+            _message = MiscRadioResetIndEvent();
+            set_payload((void*)(&_message), sizeof(MiscRadioResetIndEvent));
+        }
+    }
+
+    public class MiscChargerStatusUnsolicitedRespMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x1d;
+        public static const uint16 MESSAGE_ID = 0x1;
+
+        private MiscChargerStatusEvent _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS, MessageClass.UNSOLICITED_RESPONSE);
+
+            _message = MiscChargerStatusEvent();
+            set_payload((void*)(&_message), sizeof(MiscChargerStatusEvent));
+        }
+    }
 }

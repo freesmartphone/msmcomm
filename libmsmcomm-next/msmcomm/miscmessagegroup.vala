@@ -46,6 +46,9 @@ namespace Msmcomm.LowLevel
         public MiscUnsolicitedResponseMessageGroup()
         {
             base(MiscUnsolicitedResponseMessageGroup.GROUP_ID);
+
+            message_types[MiscRadioResetIndUnsolicitedRespMessage.GROUP_ID] = typeof(MiscRadioResetIndUnsolicitedRespMessage);
+            message_types[MiscChargerStatusUnsolicitedRespMessage.GROUP_ID] = typeof(MiscChargerStatusUnsolicitedRespMessage);
         }
     }
 }
