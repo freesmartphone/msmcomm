@@ -20,6 +20,7 @@ lib_LTLIBRARIES = libmsmcommd.la
 libmsmcommd_la_VALASOURCES = \
 	management.vala \
 	error.vala \
+	misc.vala \
 	$(NULL)
 
 libmsmcommddir = $(includedir)/msmcommd-2.0
