@@ -37,7 +37,7 @@ girdir = $(datadir)/gir-1.0
 gir_DATA = msmcomm-specs-2.0.gir
 
 libmsmcomm_specs_la_SOURCES = \
-	$(libmsmcomm_la_VALASOURCES:.vala=.c)
+	$(libmsmcomm_specs_la_VALASOURCES:.vala=.c)
 
 msmcomm-specs.h msmcomm-specs-2.0.deps libmsmcomm_specs_la.vala.stamp: 
 	$(VALAC) -C ${VALACFLAGS} --basedir . $(libmsmcomm_specs_la_VALASOURCES)
