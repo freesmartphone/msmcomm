@@ -23,25 +23,24 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-    public class StateChangeOperationModeRequestCommandMessage : BaseMessage
+    public abstract class StateBaseOperationModeMessage : BaseMessage
+    {
+        public enum Mode
+        {
+            ONLINE = 0x5,
+            OFFLINE = 0x6,
+            RESET = 0x7,
+        }
+
+        public Mode mode;
+    }
+
+    public class StateChangeOperationModeRequestCommandMessage : StateBaseOperationModeMessage
     {
         public static const uint8 GROUP_ID = 0x3;
         public static const uint16 MESSAGE_ID = 0x0;
 
-        private static const uint8 MODE_ONLINE_VALUE = 0x5;
-        private static const uint8 MODE_OFFLINE_VALUE = 0x6;
-        private static const uint8 MODE_RESET_VALUE = 0x7;
-
         private StateChangeOperationModeMessage _message;
-
-        public enum Mode
-        {
-            ONLINE,
-            OFFLINE,
-            RESET,
-        }
-
-        public Mode mode;
 
         construct
         {
@@ -54,26 +53,14 @@ namespace Msmcomm.LowLevel
         protected override void prepare_data()
         {
             _message.ref_id = ref_id;
-
-            switch (mode)
-            {
-                case Mode.ONLINE:
-                    _message.operation_mode = MODE_ONLINE_VALUE;
-                    break;
-                case Mode.OFFLINE:
-                    _message.operation_mode = MODE_OFFLINE_VALUE;
-                    break;
-                case Mode.RESET:
-                    _message.operation_mode = MODE_RESET_VALUE;
-                    break;
-            }
+            _message.mode = (uint8) mode;
         }
     }
 
     public class StateCallbackResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x4;
-        public static const uint8 MESSAGE_ID = 0x1;
+        public static const uint16 MESSAGE_ID = 0x1;
 
         private StateCallbackResponse _message;
 
@@ -101,6 +88,32 @@ namespace Msmcomm.LowLevel
                     result = MessageResultType.ERROR_UNKNOWN;
                     break;
             }
+        }
+    }
+
+    public class StateOperationModeUnsolicitedResponseMessage : StateBaseOperationModeMessage
+    {
+        public static const uint8 GROUP_ID = 0x5;
+        public static const uint16 MESSAGE_ID = 0x0;
+
+        public uint8 line;
+        public uint8 als_allowed;
+
+        private StateOperationModeEvent _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_STATE_OPERATION_MODE, MessageClass.UNSOLICITED_RESPONSE);
+
+            _message = StateOperationModeEvent();
+            set_payload((void*)(&_message), sizeof(StateOperationModeEvent));
+        }
+
+        protected override void evaluate_data()
+        {
+            mode = (StateBaseOperationModeMessage.Mode) _message.mode;
+            line = _message.line;
+            als_allowed = _message.als_allowed;
         }
     }
 }

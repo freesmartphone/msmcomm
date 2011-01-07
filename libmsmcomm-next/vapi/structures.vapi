@@ -221,7 +221,7 @@ struct MiscRadioResetIndEvent
 struct StateChangeOperationModeMessage
 {
 	public uint32 ref_id;
-	public uint8 operation_mode;
+	public uint8 mode;
 }
 
 
@@ -231,6 +231,18 @@ struct StateCallbackResponse
 	public uint32 ref_id;
 	public uint8[] unknown0;
 	public uint8 result;
+}
+
+
+[CCode (cname = "struct state_operation_mode_event", cheader_filename = "structures.h", destroy_function = "")]
+struct StateOperationModeEvent
+{
+	public uint8 unknown0;
+	public uint8 mode;
+	public uint8[] unknown1;
+	public uint8 als_allowed;
+	public uint8 line;
+	public uint8[] unknown2;
 }
 
 } /* namespace Msmcomm.LowLevel.Structures */ 

@@ -205,7 +205,7 @@ struct misc_radio_reset_ind_event
 struct state_change_operation_mode_msg
 {
 	uint32_t ref_id;
-	uint8_t operation_mode;
+	uint8_t mode;
 } __attribute__ ((packed));
 
 
@@ -214,6 +214,17 @@ struct state_callback_resp
 	uint32_t ref_id;
 	uint8_t unknown0[7];
 	uint8_t result;
+} __attribute__ ((packed));
+
+
+struct state_operation_mode_event
+{
+	uint8_t unknown0;
+	uint8_t mode;
+	uint8_t unknown1[4077];
+	uint8_t als_allowed;
+	uint8_t line;
+	uint8_t unknown2[17];
 } __attribute__ ((packed));
 
 #endif
