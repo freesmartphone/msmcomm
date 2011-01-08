@@ -234,8 +234,8 @@ struct StateCallbackResponse
 }
 
 
-[CCode (cname = "struct state_operation_mode_event", cheader_filename = "structures.h", destroy_function = "")]
-struct StateOperationModeEvent
+[CCode (cname = "struct state_event", cheader_filename = "structures.h", destroy_function = "")]
+struct StateEvent
 {
 	public uint8 unknown0;
 	public uint8 mode;

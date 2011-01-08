@@ -21,6 +21,30 @@
 
 namespace Msmcomm.LowLevel
 {
+    public abstract class UniformMessageGroup<T> : BaseMessageGroup
+    {
+        protected UniformMessageGroup(uint8 id)
+        {
+            base(id);
+        }
+
+        public override BaseMessage? unpack_message(uint16 id, void *data, int size)
+        {
+            BaseMessage? message = null;
+
+            message = Object.new(typeof(T)) as BaseMessage;
+            assert(message != null);
+
+            message.unpack(data, size);
+
+            set_message_type(id, message);
+
+            return message;
+        }
+
+        protected abstract void set_message_type(uint16 id, BaseMessage messsage);
+    }
+
     public abstract class BaseMessageGroup
     {
         public uint8 id { get; private set; }
@@ -33,7 +57,7 @@ namespace Msmcomm.LowLevel
             this.id = id;
         }
 
-        public BaseMessage? unpack_message(uint16 id, void *data, int size)
+        public virtual BaseMessage? unpack_message(uint16 id, void *data, int size)
         {
             BaseMessage? message = null;
 

@@ -23,10 +23,10 @@ namespace Msmcomm.LowLevel
 {
     public abstract class BaseMessage : GLib.Object
     {
-        public uint8 group_id { get; private set;  }
-        public uint16 message_id { get; private set;  }
+        public uint8 group_id { get; set;  }
+        public uint16 message_id { get; set; }
         public uint32 ref_id { get; set; default = 0x0; }
-        public MessageType message_type { get; private set; }
+        public MessageType message_type { get; set; }
         public MessageResultType result { get; protected set; default = MessageResultType.RESULT_OK; }
         public MessageClass message_class { get; protected set; default = MessageClass.UNKNOWN; }
 

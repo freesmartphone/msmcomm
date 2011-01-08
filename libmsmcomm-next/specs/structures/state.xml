@@ -25,7 +25,7 @@
 			</field>
 		</structure>
 
-		<structure name="state_operation_mode_event" length="4098">
+		<structure name="state_event" length="4098">
 			<field name="mode" start="1" type="uint8_t"/>
 			<field name="als_allowed" start="4079" type="uint8_t"/>
 			<field name="line" start="4080" type="uint8_t"/>

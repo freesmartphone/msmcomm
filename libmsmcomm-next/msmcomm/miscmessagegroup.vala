@@ -47,8 +47,8 @@ namespace Msmcomm.LowLevel
         {
             base(MiscUnsolicitedResponseMessageGroup.GROUP_ID);
 
-            message_types[MiscRadioResetIndUnsolicitedRespMessage.GROUP_ID] = typeof(MiscRadioResetIndUnsolicitedRespMessage);
-            message_types[MiscChargerStatusUnsolicitedRespMessage.GROUP_ID] = typeof(MiscChargerStatusUnsolicitedRespMessage);
+            message_types[MiscRadioResetIndUnsolicitedRespMessage.MESSAGE_ID] = typeof(MiscRadioResetIndUnsolicitedRespMessage);
+            message_types[MiscChargerStatusUnsolicitedRespMessage.MESSAGE_ID] = typeof(MiscChargerStatusUnsolicitedRespMessage);
         }
     }
 }

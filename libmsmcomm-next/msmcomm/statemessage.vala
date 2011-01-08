@@ -91,22 +91,19 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class StateOperationModeUnsolicitedResponseMessage : StateBaseOperationModeMessage
+    public class StateUnsolicitedResponseMessage : StateBaseOperationModeMessage
     {
         public static const uint8 GROUP_ID = 0x5;
-        public static const uint16 MESSAGE_ID = 0x0;
 
         public uint8 line;
         public uint8 als_allowed;
 
-        private StateOperationModeEvent _message;
+        private StateEvent _message;
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_STATE_OPERATION_MODE, MessageClass.UNSOLICITED_RESPONSE);
-
-            _message = StateOperationModeEvent();
-            set_payload((void*)(&_message), sizeof(StateOperationModeEvent));
+            _message = StateEvent();
+            set_payload((void*)(&_message), sizeof(StateEvent));
         }
 
         protected override void evaluate_data()

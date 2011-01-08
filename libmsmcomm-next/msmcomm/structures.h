@@ -217,7 +217,7 @@ struct state_callback_resp
 } __attribute__ ((packed));
 
 
-struct state_operation_mode_event
+struct state_event
 {
 	uint8_t unknown0;
 	uint8_t mode;
