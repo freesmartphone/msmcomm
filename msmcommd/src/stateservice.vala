@@ -34,15 +34,15 @@ namespace Msmcomm.Daemon
         {
             switch (message.message_type)
             {
-                case MessageType.UNSOLICITED_RESPONSE_STATE_OPERATION_MODE:
-                    handleUrcStateOperationMode(message as StateOperationModeUnsolicitedResponseMessage);
+                case MessageType.UNSOLICITED_RESPONSE_STATE_OPRT_MODE:
+                    handleUrcStateOperationMode(message as StateUnsolicitedResponseMessage);
                     return true;
             }
 
             return false;
         }
 
-        private void handleUrcStateOperationMode(StateOperationModeUnsolicitedResponseMessage message)
+        private void handleUrcStateOperationMode(StateUnsolicitedResponseMessage message)
         {
             OperationModeInfo info = OperationModeInfo();
 
