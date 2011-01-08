@@ -236,8 +236,8 @@ namespace Msmcomm.LowLevel
 
         public enum TimeSource 
         {
-            AUTO = 1,
             MANUAL = 3,
+            NETWORK = 1,
         }
 
         public uint8 year;
