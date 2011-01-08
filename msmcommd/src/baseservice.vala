@@ -45,7 +45,11 @@ namespace Msmcomm.Daemon
 
         protected void checkResponse(Msmcomm.LowLevel.BaseMessage response) throws Msmcomm.Error
         {
-            if (response.result != Msmcomm.LowLevel.MessageResultType.RESULT_OK)
+            if (response == null)
+            {
+                throw new Msmcomm.Error.FAILED("Did not get the right response for the send message");
+            }
+            else if (response.result != Msmcomm.LowLevel.MessageResultType.RESULT_OK)
             {
                 var msg = @"$(LowLevel.messageTypeToString(response.message_type)) command failed with: $(LowLevel.messageResultTypeToString(response.result))";
                 throw new Msmcomm.Error.FAILED(msg);

@@ -74,15 +74,40 @@ namespace Msmcomm.Daemon
 
         public async ChargerStatusInfo get_charger_status() throws GLib.Error, Msmcomm.Error
         {
-            return ChargerStatusInfo();
+            var response = yield channel.enqueueAsync(new MiscGetChargerStatusCommandMessage()) as MiscGetChargerStatusResponseMessage;
+            checkResponse(response);
+
+            var info = ChargerStatusInfo();
+            info.mode = convertChargerModeForService(response.mode);
+            info.voltage = convertVoltageForService(response.voltage);
+
+            return info;
         }
 
         public async void set_charge(ChargerStatusInfo info) throws GLib.Error, Msmcomm.Error
         {
+            var message = new MiscSetChargeCommandMessage();
+            message.voltage = convertVoltageForModem(info.voltage);
+            message.mode = convertChargerModeForModem(info.mode);
+
+            var response = yield channel.enqueueAsync(message) as MiscSetChargeResponseMessage;
+            checkResponse(response);
         }
 
         public async void set_date(DateInfo info) throws GLib.Error, Msmcomm.Error
         {
+            var message = new MiscSetDateCommandMessage();
+            message.year = (uint8) info.year;
+            message.month = (uint8) info.month;
+            message.day = (uint8) info.day;
+            message.hour = (uint8) info.hours;
+            message.minutes = (uint8) info.minutes;
+            message.seconds = (uint8) info.seconds;
+            message.timezone_offset = (uint8) info.timezone_offset;
+            message.time_source = convertTimeSourceForModem(info.time_source);
+
+            var response = yield channel.enqueueAsync(message);
+            checkResponse(message);
         }
 
         public async DateInfo get_date() throws GLib.Error, Msmcomm.Error
@@ -92,7 +117,8 @@ namespace Msmcomm.Daemon
 
         public async string get_imei() throws GLib.Error, Msmcomm.Error
         {
-            return "";
+            var response = yield channel.enqueueAsync(new MiscGetImeiCommandMessage()) as MiscGetImeiResponseMessage;
+            return response.imei;
         }
     }
 }
