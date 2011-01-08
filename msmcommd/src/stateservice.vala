@@ -32,25 +32,30 @@ namespace Msmcomm.Daemon
 
         public override bool handleUnsolicitedResponse(BaseMessage message)
         {
+            var info = parseUrcMessage(message as StateUnsolicitedResponseMessage);
+
             switch (message.message_type)
             {
                 case MessageType.UNSOLICITED_RESPONSE_STATE_OPRT_MODE:
-                    handleUrcStateOperationMode(message as StateUnsolicitedResponseMessage);
+                    operation_mode(info);
+                    return true;
+                case MessageType.UNSOLICITED_RESPONSE_STATE_INFO_AVAIL:
+                    info_avail(info);
                     return true;
             }
 
             return false;
         }
 
-        private void handleUrcStateOperationMode(StateUnsolicitedResponseMessage message)
+        private StateInfo parseUrcMessage(StateUnsolicitedResponseMessage message)
         {
-            OperationModeInfo info = OperationModeInfo();
+            var info = StateInfo();
 
             info.mode = convertOperationModeForService(message.mode);
             info.line = message.line;
             info.als_allowed = message.als_allowed;
 
-            operation_mode(info);
+            return info;
         }
 
         protected override string repr()

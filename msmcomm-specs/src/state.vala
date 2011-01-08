@@ -30,8 +30,8 @@ namespace Msmcomm
         ONLINE,
     }
 
-    [CCode (type_id = "MSMCOMM_OPERATION_MODE_INFO", cheader_filename = "msmcomm-specs.h")]
-    public struct OperationModeInfo
+    [CCode (type_id = "MSMCOMM_STATE_INFO", cheader_filename = "msmcomm-specs.h")]
+    public struct StateInfo
     {
         public OperationMode mode;
         public uint line;
@@ -43,6 +43,7 @@ namespace Msmcomm
     {
         public abstract async void change_operation_mode(OperationMode mode) throws GLib.Error, Msmcomm.Error;
 
-        public signal void operation_mode(OperationModeInfo info);
+        public signal void operation_mode(StateInfo info);
+        public signal void info_avail(StateInfo info);
     }
 }
