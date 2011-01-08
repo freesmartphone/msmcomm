@@ -228,7 +228,8 @@ namespace Msmcomm.Daemon
 
             if (message == null)
             {
-                logger.error("Could not unpack incomming message; Ignoring it ...");
+                logger.error("Could not unpack incomming message: groupId = %02x, messageId = %02x".printf(
+                        mdis.unpack_group_id(data), mdis.unpack_message_id(data)));
                 return;
             }
 
