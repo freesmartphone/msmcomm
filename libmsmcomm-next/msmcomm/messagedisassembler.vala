@@ -39,6 +39,18 @@ namespace Msmcomm.LowLevel
             groups[MiscUnsolicitedResponseMessageGroup.GROUP_ID] = new MiscUnsolicitedResponseMessageGroup();
         }
 
+        public uint8 unpack_group_id(uint8[] data)
+        {
+            assert(data.length >= MESSAGE_HEADER_SIZE);
+            return data[0];
+        }
+
+        public uint16 unpack_message_id(uint8[] data)
+        {
+            assert(data.length >= MESSAGE_HEADER_SIZE);
+            return (data[1] | (data[2] << 8));
+        }
+
         public BaseMessage? unpack_message(uint8[] data)
         {
             BaseMessage? message = null;
@@ -50,8 +62,8 @@ namespace Msmcomm.LowLevel
             }
 
             /* Extract group and message id from the first three bytes */
-            uint8 groupId = data[0];
-            uint16 messageId = data[1] | (data[2] << 8);
+            uint8 groupId = unpack_group_id(data);
+            uint16 messageId = unpack_message_id(data);
 
             /* Check for message group and unpack message for byte stream */
             if (groups.has_key(groupId))
