@@ -139,3 +139,22 @@ end
 #-------------------------------------------------------------------
 # SMS
 #-------------------------------------------------------------------
+#-------------------------------------------------------------------
+# SIM
+#-------------------------------------------------------------------
+start sim_pin_status_msg 14
+[0-3] uint32_t ref_id
+[4] uint8_t pin_type
+[5-12] uint8_t pin
+end
+
+start sim_callback_resp 1934
+[4] uint8_t result0
+[5-8] uint32_t ref_id
+[9] uint8_t resp_type
+[10-11] uint16_t field_type
+[12] uint8_t result1
+[14] uint8_t field_length
+[15-22] uint8_t field_data
+end
+

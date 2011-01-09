@@ -170,4 +170,21 @@ namespace Msmcomm.Daemon
 
         return result;
     }
+
+    public SimPinStatusBaseMessage.PinType convertSimPinTypeForModem(SimPinType pin_type)
+    {
+        SimPinStatusBaseMessage.PinType result = SimPinStatusBaseMessage.PinType.PIN1;
+
+        switch (pin_type)
+        {
+            case SimPinType.PIN1:
+                result = SimPinStatusBaseMessage.PinType.PIN1;
+                break;
+            case SimPinType.PIN2:
+                result = SimPinStatusBaseMessage.PinType.PIN2;
+                break;
+        }
+
+        return result;
+    }
 }

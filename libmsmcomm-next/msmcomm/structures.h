@@ -227,5 +227,29 @@ struct state_event
 	uint8_t unknown2[17];
 } __attribute__ ((packed));
 
+
+struct sim_pin_status_msg
+{
+	uint32_t ref_id;
+	uint8_t pin_type;
+	uint8_t pin[8];
+	uint8_t unknown0;
+} __attribute__ ((packed));
+
+
+struct sim_callback_resp
+{
+	uint8_t unknown0[4];
+	uint8_t result0;
+	uint32_t ref_id;
+	uint8_t resp_type;
+	uint16_t field_type;
+	uint8_t result1;
+	uint8_t unknown1;
+	uint8_t field_length;
+	uint8_t field_data[8];
+	uint8_t unknown2[1911];
+} __attribute__ ((packed));
+
 #endif
 

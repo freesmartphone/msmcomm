@@ -130,6 +130,7 @@ namespace Msmcomm.Daemon
             services = new Gee.HashMap<GLib.Type,BaseService>();
             services[typeof(Msmcomm.Misc)] = new MiscService(modem);
             services[typeof(Msmcomm.State)] = new StateService(modem);
+            services[typeof(Msmcomm.Sim)] = new SimService(modem);
         }
 
         public bool register()
@@ -155,6 +156,7 @@ namespace Msmcomm.Daemon
                 /* register all specific command services */
                 registerService<Msmcomm.Misc>();
                 registerService<Msmcomm.State>();
+                registerService<Msmcomm.Sim>();
             }
             catch (GLib.Error err)
             {

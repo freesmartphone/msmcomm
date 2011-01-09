@@ -25,6 +25,7 @@ namespace Msmcomm.LowLevel
     {
         RESULT_OK,
         ERROR_BAD_CALL_ID,
+        ERROR_BAD_SIM_STATE,
         ERROR_UNKNOWN,
     }
 
@@ -39,6 +40,9 @@ namespace Msmcomm.LowLevel
                 break;
             case MessageResultType.ERROR_BAD_CALL_ID:
                 result = "ERROR_BAD_CALL_ID";
+                break;
+            case MessageResultType.ERROR_BAD_SIM_STATE:
+                result = "ERROR_BAD_SIM_STATE";
                 break;
             case MessageResultType.ERROR_UNKNOWN:
                 result = "ERROR_UNKNOWN";

@@ -37,6 +37,8 @@ namespace Msmcomm.LowLevel
             groups[StateUnsolicitedResponseMessageGroup.GROUP_ID] = new StateUnsolicitedResponseMessageGroup();
             groups[MiscResponseMessageGroup.GROUP_ID] = new MiscResponseMessageGroup();
             groups[MiscUnsolicitedResponseMessageGroup.GROUP_ID] = new MiscUnsolicitedResponseMessageGroup();
+            groups[SimResponseMessageGroup.GROUP_ID] = new SimResponseMessageGroup();
+            groups[SimUnsolicitedResponseMessageGroup.GROUP_ID] = new SimUnsolicitedResponseMessageGroup();
         }
 
         public uint8 unpack_group_id(uint8[] data)
@@ -56,10 +58,7 @@ namespace Msmcomm.LowLevel
             BaseMessage? message = null;
 
             /* Minimum required size to have a valid message are four bytes */
-            if (data.length < MESSAGE_HEADER_SIZE + 1)
-            {
-                return null;
-            }
+            assert(data.length >= MESSAGE_HEADER_SIZE);
 
             /* Extract group and message id from the first three bytes */
             uint8 groupId = unpack_group_id(data);

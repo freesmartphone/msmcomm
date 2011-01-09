@@ -27,7 +27,8 @@ STRUCTURE_SPECS = \
 	specs/structures/call.xml \
 	specs/structures/misc.xml \
 	specs/structures/state.xml \
-	specs/structures/sms.xml
+	specs/structures/sms.xml \
+	specs/structures/sim.xml
 
 generate-structures:
 	$(top_srcdir)/tools/xml-to-sdef.py $(STRUCTURE_SPECS) > $(top_srcdir)/specs/msmcomm.sdef

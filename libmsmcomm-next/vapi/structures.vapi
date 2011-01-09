@@ -245,5 +245,31 @@ struct StateEvent
 	public uint8[] unknown2;
 }
 
+
+[CCode (cname = "struct sim_pin_status_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimPinStatusMessage
+{
+	public uint32 ref_id;
+	public uint8 pin_type;
+	public uint8[] pin;
+	public uint8 unknown0;
+}
+
+
+[CCode (cname = "struct sim_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SimCallbackResponse
+{
+	public uint8[] unknown0;
+	public uint8 result0;
+	public uint32 ref_id;
+	public uint8 resp_type;
+	public uint16 field_type;
+	public uint8 result1;
+	public uint8 unknown1;
+	public uint8 field_length;
+	public uint8[] field_data;
+	public uint8[] unknown2;
+}
+
 } /* namespace Msmcomm.LowLevel.Structures */ 
 
