@@ -158,3 +158,18 @@ start sim_callback_resp 1934
 [15-22] uint8_t field_data
 end
 
+start sim_change_pin_msg 23
+[0-3] uint32_t ref_id
+[5-13] uint8_t old_pin
+[14-22] uint8_t new_pin
+end
+
+start sim_get_sim_capabilities_msg 41
+[0-3] uint32_t ref_id
+[4-5] uint16_t sim_file
+end
+
+start sim_get_all_pin_status_info_msg 5
+[0-3] uint32_t ref_id
+end
+

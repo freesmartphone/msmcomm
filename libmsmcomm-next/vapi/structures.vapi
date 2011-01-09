@@ -271,5 +271,32 @@ struct SimCallbackResponse
 	public uint8[] unknown2;
 }
 
+
+[CCode (cname = "struct sim_change_pin_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimChangePinMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0;
+	public uint8[] old_pin;
+	public uint8[] new_pin;
+}
+
+
+[CCode (cname = "struct sim_get_sim_capabilities_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimGetSimCapabilitiesMessage
+{
+	public uint32 ref_id;
+	public uint16 sim_file;
+	public uint8[] unknown0;
+}
+
+
+[CCode (cname = "struct sim_get_all_pin_status_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimGetAllPinStatusInfoMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0;
+}
+
 } /* namespace Msmcomm.LowLevel.Structures */ 
 

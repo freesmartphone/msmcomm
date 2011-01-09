@@ -39,6 +39,11 @@ namespace Msmcomm.LowLevel
         COMMAND_MISC_GET_IMEI,
 
         COMMAND_SIM_VERIFY_PIN,
+        COMMAND_SIM_ENABLE_PIN,
+        COMMAND_SIM_DISABLE_PIN,
+        COMMAND_SIM_CHANGE_PIN,
+        COMMAND_SIM_GET_SIM_CAPABILITIES,
+        COMMAND_SIM_GET_ALL_PIN_STATUS_INFO,
 
         RESPONSE_CALL_CALLBACK,
         RESPONSE_CALL_RETURN,
@@ -282,6 +287,25 @@ namespace Msmcomm.LowLevel
                 result = "COMMAND_MISC_GET_IMEI";
                 break;
 
+            case MessageType.COMMAND_SIM_VERIFY_PIN:
+                result = "COMMAND_SIM_VERIFY_PIN";
+                break;
+            case MessageType.COMMAND_SIM_ENABLE_PIN:
+                result = "COMMAND_SIM_ENABLE_PIN";
+                break;
+            case MessageType.COMMAND_SIM_DISABLE_PIN:
+                result = "COMMAND_SIM_DISABLE_PIN";
+                break;
+            case MessageType.COMMAND_SIM_CHANGE_PIN:
+                result = "COMMAND_SIM_CHANGE_PIN";
+                break;
+            case MessageType.COMMAND_SIM_GET_SIM_CAPABILITIES:
+                result = "COMMAND_SIM_GET_SIM_CAPABILITIES";
+                break;
+            case MessageType.COMMAND_SIM_GET_ALL_PIN_STATUS_INFO:
+                result = "COMMAND_SIM_GET_ALL_PIN_STATUS_INFO";
+                break;
+
             case MessageType.RESPONSE_CALL_CALLBACK:
                 result = "RESPONSE_CALL_CALLBACK";
                 break;
@@ -310,6 +334,10 @@ namespace Msmcomm.LowLevel
                 break;
             case MessageType.RESPONSE_MISC_GET_IMEI:
                 result = "RESPONSE_MISC_GET_IMEI";
+                break;
+
+            case MessageType.RESPONSE_SIM_CALLBACK:
+                result = "RESPONSE_SIM_CALLBACK";
                 break;
 
             case MessageType.UNSOLICITED_RESPONSE_STATE_OPRT_MODE:

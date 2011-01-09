@@ -45,22 +45,13 @@ namespace Msmcomm.LowLevel
 
         public PinType pin_type;
         public string pin;
-    }
-
-    public class SimVerfiyPinCommandMessage : SimPinStatusBaseMessage
-    {
-        public static const uint8 GROUP_ID = 0xf;
-        public static const uint16 MESSAGE_ID = 0xe;
 
         private SimPinStatusMessage _message;
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_VERIFY_PIN, MessageClass.COMMAND);
-
             _message = SimPinStatusMessage();
             set_payload((void*)(&_message), sizeof(SimPinStatusMessage));
-
         }
 
         protected override void prepare_data()
@@ -70,6 +61,108 @@ namespace Msmcomm.LowLevel
 
             /* FIXME we currently support only pin's of length 4 */
             Memory.copy(_message.pin, pin.data, 4);
+        }
+    }
+
+    public class SimVerfiyPinCommandMessage : SimPinStatusBaseMessage
+    {
+        public static const uint8 GROUP_ID = 0xf;
+        public static const uint16 MESSAGE_ID = 0xe;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_VERIFY_PIN, MessageClass.COMMAND);
+        }
+    }
+
+    public class SimChangePinCommandMessage : SimPinStatusBaseMessage
+    {
+        public static const uint8 GROUP_ID = 0xf;
+        public static const uint16 MESSAGE_ID = 0xf;
+
+        private SimChangePinMessage _message;
+
+        public string old_pin;
+        public string new_pin;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_CHANGE_PIN, MessageClass.COMMAND);
+
+            _message = SimChangePinMessage();
+            set_payload((void*)(&_message), sizeof(SimChangePinMessage));
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+            Memory.copy(_message.old_pin, old_pin.data, 4);
+            Memory.copy(_message.new_pin, new_pin.data, 4);
+        }
+    }
+
+    public class SimEnablePinCommandMessage : SimPinStatusBaseMessage
+    {
+        public static const uint8 GROUP_ID = 0xf;
+        public static const uint16 MESSAGE_ID = 0x12;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_ENABLE_PIN, MessageClass.COMMAND);
+        }
+    }
+
+    public class SimDisablePinCommandMessage : SimPinStatusBaseMessage
+    {
+        public static const uint8 GROUP_ID = 0xf;
+        public static const uint16 MESSAGE_ID = 0x11;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_DISABLE_PIN, MessageClass.COMMAND);
+        }
+    }
+
+    public class SimGetSimCapabilitiesCommandMessage : SimInfoBaseMessage
+    {
+        public static const uint8 GROUP_ID = 0xf;
+        public static const uint16 MESSAGE_ID = 0x3;
+
+        private SimGetSimCapabilitiesMessage _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_GET_SIM_CAPABILITIES, MessageClass.COMMAND);
+
+             _message = SimGetSimCapabilitiesMessage();
+            set_payload((void*)(&_message), sizeof(SimGetSimCapabilitiesMessage));
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+            _message.sim_file = (uint8) field_type;
+        }
+    }
+
+    public class SimGetAllPinStatusInfoCommandMessage : BaseMessage
+    {
+        public static uint8 GROUP_ID = 0xf;
+        public static uint16 MESSAGE_ID = 0x1a;
+
+        private SimGetAllPinStatusInfoMessage _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_GET_ALL_PIN_STATUS_INFO, MessageClass.COMMAND);
+
+             _message = SimGetAllPinStatusInfoMessage();
+            set_payload((void*)(&_message), sizeof(SimGetAllPinStatusInfoMessage));
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
         }
     }
 

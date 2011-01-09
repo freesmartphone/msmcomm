@@ -187,4 +187,21 @@ namespace Msmcomm.Daemon
 
         return result;
     }
+
+    public SimInfoBaseMessage.SimField convertSimFieldForModem(SimField field_type)
+    {
+        SimInfoBaseMessage.SimField result = SimInfoBaseMessage.SimField.IMSI;
+
+        switch (field_type)
+        {
+            case SimField.IMSI:
+                result = SimInfoBaseMessage.SimField.IMSI;
+                break;
+            case SimField.MSISDN:
+                result = SimInfoBaseMessage.SimField.MSISDN;
+                break;
+        }
+
+        return result;
+    }
 }

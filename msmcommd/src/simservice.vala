@@ -457,23 +457,51 @@ namespace Msmcomm.Daemon
 
         public async void change_pin(string old_pin, string new_pin) throws GLib.Error, Msmcomm.Error
         {
+            var message = new SimChangePinCommandMessage();
+            message.old_pin = old_pin;
+            message.new_pin = new_pin;
+
+            var response = yield channel.enqueueAsync(message) as SimCallbackResponseMessage;
+            checkResponse(response);
         }
 
         public async void enable_pin(string pin) throws GLib.Error, Msmcomm.Error
         {
+            var message = new SimEnablePinCommandMessage();
+            message.pin = pin;
+
+            var response = yield channel.enqueueAsync(message) as SimCallbackResponseMessage;
+            checkResponse(response);
+
         }
 
         public async void disable_pin(string pin) throws GLib.Error, Msmcomm.Error
         {
+            var message = new SimDisablePinCommandMessage();
+            message.pin = pin;
+
+            var response = yield channel.enqueueAsync(message) as SimCallbackResponseMessage;
+            checkResponse(response);
         }
 
         public async SimCapabilitiesInfo get_sim_capabilities(SimField field_type) throws GLib.Error, Msmcomm.Error
         {
+            var message = new SimGetSimCapabilitiesCommandMessage();
+            message.field_type = convertSimFieldForModem(field_type);
+
+            var response = yield channel.enqueueAsync(message) as SimCallbackResponseMessage;
+            checkResponse(response);
+
             return SimCapabilitiesInfo();
         }
 
         public async void get_all_pin_status_info() throws GLib.Error, Msmcomm.Error
         {
+            var message = new SimGetAllPinStatusInfoCommandMessage();
+
+            var response = yield channel.enqueueAsync(message) as SimCallbackResponseMessage;
+            checkResponse(response);
+
         }
     }
 }

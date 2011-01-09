@@ -251,5 +251,29 @@ struct sim_callback_resp
 	uint8_t unknown2[1911];
 } __attribute__ ((packed));
 
+
+struct sim_change_pin_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint8_t old_pin[9];
+	uint8_t new_pin[9];
+} __attribute__ ((packed));
+
+
+struct sim_get_sim_capabilities_msg
+{
+	uint32_t ref_id;
+	uint16_t sim_file;
+	uint8_t unknown0[35];
+} __attribute__ ((packed));
+
+
+struct sim_get_all_pin_status_info_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+} __attribute__ ((packed));
+
 #endif
 
