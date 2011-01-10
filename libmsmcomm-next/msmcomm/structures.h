@@ -275,5 +275,27 @@ struct sim_get_all_pin_status_info_msg
 	uint8_t unknown0;
 } __attribute__ ((packed));
 
+
+struct phonebook_read_record_msg
+{
+	uint32_t ref_id;
+	uint8_t position;
+	uint8_t book_type;
+} __attribute__ ((packed));
+
+
+struct phonebook_return_resp
+{
+	uint32_t ref_id;
+	uint8_t modify_id;
+	uint8_t unknown0;
+	uint8_t result;
+	uint8_t position;
+	uint8_t book_type;
+	uint8_t number[42];
+	uint8_t title[90];
+	uint8_t encoding_type;
+} __attribute__ ((packed));
+
 #endif
 

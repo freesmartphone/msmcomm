@@ -298,5 +298,29 @@ struct SimGetAllPinStatusInfoMessage
 	public uint8 unknown0;
 }
 
+
+[CCode (cname = "struct phonebook_read_record_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookReadRecordMessage
+{
+	public uint32 ref_id;
+	public uint8 position;
+	public uint8 book_type;
+}
+
+
+[CCode (cname = "struct phonebook_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookReturnResponse
+{
+	public uint32 ref_id;
+	public uint8 modify_id;
+	public uint8 unknown0;
+	public uint8 result;
+	public uint8 position;
+	public uint8 book_type;
+	public uint8[] number;
+	public uint8[] title;
+	public uint8 encoding_type;
+}
+
 } /* namespace Msmcomm.LowLevel.Structures */ 
 
