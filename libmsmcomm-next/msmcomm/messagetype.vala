@@ -244,6 +244,8 @@ namespace Msmcomm.LowLevel
         UNSOLICITED_RESPONSE_SIM_PERSO_EVT_INIT_COMPLETED,
         UNSOLICITED_RESPONSE_SIM_PLMN_SEL_MENU_ENABLE,
         UNSOLICITED_RESPONSE_SIM_PLMN_SEL_MENU_DISABLE,
+
+        UNSOLICITED_RESPONSE_PHONEBOOK_PHONEBOOK_READY,
     }
 
     public string messageTypeToString(MessageType type)
@@ -310,6 +312,10 @@ namespace Msmcomm.LowLevel
                 result = "COMMAND_SIM_GET_ALL_PIN_STATUS_INFO";
                 break;
 
+            case MessageType.COMMAND_PHONEBOOK_READ_RECORD:
+                result = "COMMAND_PHONEBOOK_READ_RECORD";
+                break;
+
             case MessageType.RESPONSE_CALL_CALLBACK:
                 result = "RESPONSE_CALL_CALLBACK";
                 break;
@@ -342,6 +348,10 @@ namespace Msmcomm.LowLevel
 
             case MessageType.RESPONSE_SIM_CALLBACK:
                 result = "RESPONSE_SIM_CALLBACK";
+                break;
+
+            case MessageType.RESPONSE_PHONEBOOK_RETURN:
+                result = "RESPONSE_PHONEBOOK_RETURN";
                 break;
 
             case MessageType.UNSOLICITED_RESPONSE_STATE_OPRT_MODE:
@@ -883,6 +893,10 @@ namespace Msmcomm.LowLevel
                 break;
             case MessageType.UNSOLICITED_RESPONSE_SIM_PLMN_SEL_MENU_DISABLE:
                 result = "UNSOLICITED_RESPONSE_SIM_PLMN_SEL_MENU_D";
+                break;
+
+            case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_PHONEBOOK_READY:
+                result = "UNSOLICITED_RESPONSE_PHONEBOOK_PHONEBOOK_READY";
                 break;
         }
 

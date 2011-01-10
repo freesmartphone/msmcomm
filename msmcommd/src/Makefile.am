@@ -48,6 +48,7 @@ msmcommd_VALASOURCES = \
 	miscservice.vala \
 	stateservice.vala \
 	simservice.vala \
+	phonebookservice.vala \
 	serviceconv.vala \
 	commandhandler.vala \
 	commands.vala \

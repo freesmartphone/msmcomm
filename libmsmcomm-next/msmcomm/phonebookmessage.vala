@@ -49,6 +49,12 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class PhonebookWriteRecordCommandMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x18;
+        public static const uint16 MESSAGE_ID = 0x2;
+    }
+
     public class PhonebookReturnResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x19;
@@ -89,6 +95,29 @@ namespace Msmcomm.LowLevel
             book_type = _message.book_type;
             number = convertBytesToString((uint8*) _message.number, NUMBER_LENGTH);
             title = convertBytesToString((uint8*) _message.title, TITLE_LENGTH);
+        }
+    }
+
+    public class PhonebookPhonebookReadyUnsolicitedResponseMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x1a;
+        public static const uint16 MESSAGE_ID = 0x6;
+
+        private PhonebookPhonebookReadyEvent _message;
+
+        public uint8 book_type;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_PHONEBOOK_READY, MessageClass.UNSOLICITED_RESPONSE);
+
+            _message = PhonebookPhonebookReadyEvent();
+            set_payload((void*)(&_message), sizeof(PhonebookPhonebookReadyEvent));
+        }
+
+        protected override void evaluate_data()
+        {
+            book_type = _message.book_type;
         }
     }
 }

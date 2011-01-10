@@ -193,3 +193,7 @@ start phonebook_return_resp 142
 [141] uint8_t encoding_type
 end
 
+start phonebook_phonebook_ready_event 203
+[2] uint8_t book_type
+end
+

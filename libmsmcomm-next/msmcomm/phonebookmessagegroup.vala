@@ -41,6 +41,8 @@ namespace Msmcomm.LowLevel
         public PhonebookUnsolicitedResponseMessageGroup()
         {
             base(PhonebookUnsolicitedResponseMessageGroup.GROUP_ID);
+
+            message_types[PhonebookPhonebookReadyUnsolicitedResponseMessage.MESSAGE_ID] = typeof(PhonebookPhonebookReadyUnsolicitedResponseMessage);
         }
     }
 }

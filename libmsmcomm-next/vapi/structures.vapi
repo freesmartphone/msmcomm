@@ -322,5 +322,14 @@ struct PhonebookReturnResponse
 	public uint8 encoding_type;
 }
 
+
+[CCode (cname = "struct phonebook_phonebook_ready_event", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookPhonebookReadyEvent
+{
+	public uint8[] unknown0;
+	public uint8 book_type;
+	public uint8[] unknown1;
+}
+
 } /* namespace Msmcomm.LowLevel.Structures */ 
 
