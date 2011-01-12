@@ -23,14 +23,28 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-    public class PhonebookReadRecordCommandMessage : BaseMessage
+    private static const uint PHONEBOOK_NUMBER_LENGTH = 42;
+    private static const uint PHONEBOOK_TITLE_LENGTH = 90;
+
+    public abstract class PhonebookBaseMessage : BaseMessage
+    {
+        public enum EncodingType
+        {
+            NO_ENCODING = 0,
+            ASCII = 4,
+            BUCS2 = 9,
+        }
+
+        public uint8 book_type;
+    }
+
+    public class PhonebookReadRecordCommandMessage : PhonebookBaseMessage
     {
         public static const uint8 GROUP_ID = 0x18;
         public static const uint16 MESSAGE_ID = 0x0;
 
         private PhonebookReadRecordMessage _message;
 
-        public uint8 book_type;
         public uint8 position;
 
         construct
@@ -49,21 +63,41 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class PhonebookWriteRecordCommandMessage : BaseMessage
+    public class PhonebookWriteRecordCommandMessage : PhonebookBaseMessage
     {
         public static const uint8 GROUP_ID = 0x18;
         public static const uint16 MESSAGE_ID = 0x2;
+
+        private PhonebookWriteRecordMessage _message;
+
+        public uint8 position;
+        public string number;
+        public string title;
+
+        construct 
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_PHONEBOOK_WRITE_RECORD, MessageClass.COMMAND);
+
+            _message = PhonebookWriteRecordMessage();
+            set_payload((void*)(&_message), sizeof(PhonebookWriteRecordMessage));
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+            _message.book_type = book_type;
+            _message.position = position;
+            Memory.copy(_message.number, number.data, PHONEBOOK_NUMBER_LENGTH);
+            Memory.copy(_message.title, title.data, PHONEBOOK_TITLE_LENGTH);
+        }
     }
 
-    public class PhonebookReturnResponseMessage : BaseMessage
+    public class PhonebookReturnResponseMessage : PhonebookBaseMessage
     {
         public static const uint8 GROUP_ID = 0x19;
         public static const uint16 MESSAGE_ID = 0x0;
 
         private PhonebookReturnResponse _message;
-
-        private static const uint NUMBER_LENGTH = 42;
-        private static const uint TITLE_LENGTH = 90;
 
         public enum EncodingType
         {
@@ -74,7 +108,6 @@ namespace Msmcomm.LowLevel
 
         public uint8 modify_id;
         public uint8 position;
-        public uint8 book_type;
         public string number;
         public string title;
         public EncodingType encoding_type;
@@ -93,26 +126,21 @@ namespace Msmcomm.LowLevel
             modify_id = _message.modify_id;
             position = _message.position;
             book_type = _message.book_type;
-            number = convertBytesToString((uint8*) _message.number, NUMBER_LENGTH);
-            title = convertBytesToString((uint8*) _message.title, TITLE_LENGTH);
+            number = convertBytesToString((uint8*) _message.number, PHONEBOOK_NUMBER_LENGTH);
+            title = convertBytesToString((uint8*) _message.title, PHONEBOOK_TITLE_LENGTH);
         }
     }
 
-    public class PhonebookPhonebookReadyUnsolicitedResponseMessage : BaseMessage
+    public class PhonebookUnsolicitedResponseMessage : PhonebookBaseMessage
     {
         public static const uint8 GROUP_ID = 0x1a;
-        public static const uint16 MESSAGE_ID = 0x6;
 
-        private PhonebookPhonebookReadyEvent _message;
-
-        public uint8 book_type;
+        private PhonebookEvent _message;
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_PHONEBOOK_READY, MessageClass.UNSOLICITED_RESPONSE);
-
-            _message = PhonebookPhonebookReadyEvent();
-            set_payload((void*)(&_message), sizeof(PhonebookPhonebookReadyEvent));
+            _message = PhonebookEvent();
+            set_payload((void*)(&_message), sizeof(PhonebookEvent));
         }
 
         protected override void evaluate_data()

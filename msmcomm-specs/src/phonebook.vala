@@ -44,27 +44,23 @@ namespace Msmcomm
     public interface Phonebook : GLib.Object
     {
         public abstract async PhonebookRecord read_record(uint book_type, uint position) throws GLib.Error, Msmcomm.Error;
-
-        public signal void phonebook_ready(uint book_type);
-
-#if 0
-        public abstract async PhonebookRecord read_record_build() throws GLib.Error, Msmcomm.Error;
         public abstract async void write_record(PhonebookRecord record) throws GLib.Error, Msmcomm.Error;
+        public abstract async void read_record_bulk() throws GLib.Error, Msmcomm.Error;
         public abstract async void get_all_record_id() throws GLib.Error, Msmcomm.Error;
         public abstract async void extended_file_info() throws GLib.Error, Msmcomm.Error;
 
+        public signal void ready(uint book_type);
         public signal void record_added();
         public signal void record_deleted();
         public signal void record_updated();
         public signal void record_failed();
-        public signal void phonebook_refresh_start();
-        public signal void phonebook_refresh_done();
+        public signal void refresh_start();
+        public signal void refresh_done();
         public signal void locked();
         public signal void unlocked();
         public signal void ph_unique_ids_validated();
         public signal void record_write_event();
         public signal void get_all_record_id_event();
         public signal void extended_file_info_event();
-#endif
     }
 }

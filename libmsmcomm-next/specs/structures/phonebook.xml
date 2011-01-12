@@ -7,6 +7,15 @@
 			<field name="book_type" start="5" type="uint8_t"/>
 		</structure>
 
+		<structure name="phonebook_write_record_msg" length="139">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="position" start="4" type="uint8_t"/>
+			<field name="book_type" start="5" type="uint8_t"/>
+			<field name="number" start="6" end="46" type="uint8_t"/>
+			<field name="title" start="48" end="137" type="uint8_t"/>
+			<field name="value0" start="138" type="uint8_t"/>
+		</structure>
+
 		<structure name="phonebook_return_resp" length="142">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="modify_id" start="4" type="uint8_t"/>
@@ -25,7 +34,7 @@
 			</field>
 		</structure>
 
-		<structure name="phonebook_phonebook_ready_event" length="203">
+		<structure name="phonebook_event" length="203">
 		  <field name="book_type" start="2" type="uint8_t"/>
 		</structure>
 

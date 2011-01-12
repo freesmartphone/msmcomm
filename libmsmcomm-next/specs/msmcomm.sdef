@@ -182,6 +182,15 @@ start phonebook_read_record_msg 6
 [5] uint8_t book_type
 end
 
+start phonebook_write_record_msg 139
+[0-3] uint32_t ref_id
+[4] uint8_t position
+[5] uint8_t book_type
+[6-46] uint8_t number
+[48-137] uint8_t title
+[138] uint8_t value0
+end
+
 start phonebook_return_resp 142
 [0-3] uint32_t ref_id
 [4] uint8_t modify_id
@@ -193,7 +202,7 @@ start phonebook_return_resp 142
 [141] uint8_t encoding_type
 end
 
-start phonebook_phonebook_ready_event 203
+start phonebook_event 203
 [2] uint8_t book_type
 end
 

@@ -284,6 +284,18 @@ struct phonebook_read_record_msg
 } __attribute__ ((packed));
 
 
+struct phonebook_write_record_msg
+{
+	uint32_t ref_id;
+	uint8_t position;
+	uint8_t book_type;
+	uint8_t number[41];
+	uint8_t unknown0;
+	uint8_t title[90];
+	uint8_t value0;
+} __attribute__ ((packed));
+
+
 struct phonebook_return_resp
 {
 	uint32_t ref_id;
@@ -298,7 +310,7 @@ struct phonebook_return_resp
 } __attribute__ ((packed));
 
 
-struct phonebook_phonebook_ready_event
+struct phonebook_event
 {
 	uint8_t unknown0[2];
 	uint8_t book_type;

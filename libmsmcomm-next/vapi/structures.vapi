@@ -308,6 +308,19 @@ struct PhonebookReadRecordMessage
 }
 
 
+[CCode (cname = "struct phonebook_write_record_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookWriteRecordMessage
+{
+	public uint32 ref_id;
+	public uint8 position;
+	public uint8 book_type;
+	public uint8[] number;
+	public uint8 unknown0;
+	public uint8[] title;
+	public uint8 value0;
+}
+
+
 [CCode (cname = "struct phonebook_return_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct PhonebookReturnResponse
 {
@@ -323,8 +336,8 @@ struct PhonebookReturnResponse
 }
 
 
-[CCode (cname = "struct phonebook_phonebook_ready_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookPhonebookReadyEvent
+[CCode (cname = "struct phonebook_event", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookEvent
 {
 	public uint8[] unknown0;
 	public uint8 book_type;

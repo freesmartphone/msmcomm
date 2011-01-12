@@ -37,8 +37,56 @@ namespace Msmcomm.Daemon
             switch (message.message_type)
             {
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_PHONEBOOK_READY:
-                    var pb_message = message as PhonebookPhonebookReadyUnsolicitedResponseMessage;
-                    phonebook_ready(pb_message.book_type);
+                    var pb_message = message as PhonebookUnsolicitedResponseMessage;
+                    ready(pb_message.book_type);
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_ADDED:
+                    record_added();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_UPDATED:
+                    record_updated();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_DELETED:
+                    record_deleted();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_FAILED:
+                    record_failed();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_REFRESH_START:
+                    refresh_start();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_REFRESH_DONE:
+                    refresh_done();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_LOCKED:
+                    locked();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_UNLOCKED:
+                    unlocked();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_PH_UNIQUE_IDS_VALIDATED:
+                    ph_unique_ids_validated();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_WRITE:
+                    record_write_event();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_GET_ALL_RECORD_ID:
+                    get_all_record_id_event();
+                    handled = true;
+                    break;
+                case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO:
+                    extended_file_info_event();
                     handled = true;
                     break;
             }
@@ -67,6 +115,23 @@ namespace Msmcomm.Daemon
             // record.encoding_type = convertPhonebookEncodingTypeForService(response.encoding_type);
 
             return record;
+        }
+
+        public async void write_record(PhonebookRecord record)
+        {
+
+        }
+
+        public async void read_record_bulk()
+        {
+        }
+
+        public async void get_all_record_id()
+        {
+        }
+
+        public async void extended_file_info()
+        {
         }
     }
 }
