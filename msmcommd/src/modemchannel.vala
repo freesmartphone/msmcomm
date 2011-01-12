@@ -233,7 +233,7 @@ namespace Msmcomm.Daemon
                 return;
             }
 
-            logger.debug( messageTypeToString(message.message_type) );
+            logger.debug( message.message_type.to_string() );
 
             if (message.message_class == MessageClass.SOLICITED_RESPONSE)
             {

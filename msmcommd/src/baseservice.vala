@@ -51,7 +51,7 @@ namespace Msmcomm.Daemon
             }
             else if (response.result != Msmcomm.LowLevel.MessageResultType.RESULT_OK)
             {
-                var msg = @"$(LowLevel.messageTypeToString(response.message_type)) command failed with: $(LowLevel.messageResultTypeToString(response.result))";
+                var msg = @"$(response.message_type) command failed with: $(response.result)";
                 throw new Msmcomm.Error.FAILED(msg);
             }
         }

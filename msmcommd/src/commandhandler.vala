@@ -41,12 +41,11 @@ namespace Msmcomm.Daemon
         {
             if ( response != null )
             {
-                return "\"%s\" -> %s".printf( Msmcomm.LowLevel.messageTypeToString( command.message_type ), 
-                                              Msmcomm.LowLevel.messageTypeToString( response.message_type ) );
+                return @"\"$(command.message_type)\" -> $(response.message_type)";
             }
             else
             {
-                return Msmcomm.LowLevel.messageTypeToString( command.message_type );
+                return @"$(command.message_type)";
             }
         }
     }
