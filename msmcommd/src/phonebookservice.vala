@@ -133,8 +133,14 @@ namespace Msmcomm.Daemon
             var response = yield channel.enqueueAsync(message) as PhonebookReturnResponseMessage;
         }
 
-        public async void read_record_bulk()
+        public async void read_record_bulk(uint book_type, uint first, uint last)
         {
+            var message = new PhonebookReadRecordBulkCommandMessage();
+            message.book_type = (uint8) book_type;
+            message.first = (uint8) first;
+            message.last = (uint8) last;
+
+            var response = yield channel.enqueueAsync(message) as PhonebookReturnResponseMessage;
         }
 
         public async void get_all_record_id()

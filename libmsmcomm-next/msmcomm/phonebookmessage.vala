@@ -63,6 +63,34 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class PhonebookReadRecordBulkCommandMessage : PhonebookBaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x18;
+        public static const uint16 MESSAGE_ID = 0x1;
+
+        private PhonebookReadRecordBulkMessage _message;
+
+        public uint8 first;
+        public uint8 last;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_PHONEBOOK_READ_RECORD_BULK, MessageClass.COMMAND);
+
+            _message = PhonebookReadRecordBulkMessage();
+            set_payload((void*)(&_message), sizeof(PhonebookReadRecordBulkMessage));
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+            _message.first_position = first;
+            _message.first_book_type = book_type;
+            _message.last_position = last;
+            _message.last_book_type = book_type;
+        }
+    }
+
     public class PhonebookWriteRecordCommandMessage : PhonebookBaseMessage
     {
         public static const uint8 GROUP_ID = 0x18;

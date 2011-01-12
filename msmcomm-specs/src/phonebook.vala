@@ -45,7 +45,7 @@ namespace Msmcomm
     {
         public abstract async PhonebookRecord read_record(uint book_type, uint position) throws GLib.Error, Msmcomm.Error;
         public abstract async void write_record(uint book_type, uint position, string title, string number) throws GLib.Error, Msmcomm.Error;
-        public abstract async void read_record_bulk() throws GLib.Error, Msmcomm.Error;
+        public abstract async void read_record_bulk(uint book_type, uint first, uint last) throws GLib.Error, Msmcomm.Error;
         public abstract async void get_all_record_id() throws GLib.Error, Msmcomm.Error;
         public abstract async void extended_file_info() throws GLib.Error, Msmcomm.Error;
 

@@ -7,6 +7,14 @@
 			<field name="book_type" start="5" type="uint8_t"/>
 		</structure>
 
+		<structure name="phonebook_read_record_bulk_msg" length="8">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="first_position" start="4" type="uint8_t"/>
+			<field name="first_book_type" start="5" type="uint8_t"/>
+			<field name="last_position" start="6" type="uint8_t"/>
+			<field name="last_book_type" start="7" type="uint8_t"/>
+		</structure>
+
 		<structure name="phonebook_write_record_msg" length="139">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="position" start="4" type="uint8_t"/>

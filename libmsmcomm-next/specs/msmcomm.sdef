@@ -182,6 +182,14 @@ start phonebook_read_record_msg 6
 [5] uint8_t book_type
 end
 
+start phonebook_read_record_bulk_msg 8
+[0-3] uint32_t ref_id
+[4] uint8_t first_position
+[5] uint8_t first_book_type
+[6] uint8_t last_position
+[7] uint8_t last_book_type
+end
+
 start phonebook_write_record_msg 139
 [0-3] uint32_t ref_id
 [4] uint8_t position

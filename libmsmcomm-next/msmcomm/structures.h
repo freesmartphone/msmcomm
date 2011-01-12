@@ -284,6 +284,16 @@ struct phonebook_read_record_msg
 } __attribute__ ((packed));
 
 
+struct phonebook_read_record_bulk_msg
+{
+	uint32_t ref_id;
+	uint8_t first_position;
+	uint8_t first_book_type;
+	uint8_t last_position;
+	uint8_t last_book_type;
+} __attribute__ ((packed));
+
+
 struct phonebook_write_record_msg
 {
 	uint32_t ref_id;

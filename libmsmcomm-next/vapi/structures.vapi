@@ -308,6 +308,17 @@ struct PhonebookReadRecordMessage
 }
 
 
+[CCode (cname = "struct phonebook_read_record_bulk_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookReadRecordBulkMessage
+{
+	public uint32 ref_id;
+	public uint8 first_position;
+	public uint8 first_book_type;
+	public uint8 last_position;
+	public uint8 last_book_type;
+}
+
+
 [CCode (cname = "struct phonebook_write_record_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct PhonebookWriteRecordMessage
 {
