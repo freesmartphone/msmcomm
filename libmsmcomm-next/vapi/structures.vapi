@@ -339,9 +339,9 @@ struct PhonebookReturnResponse
 [CCode (cname = "struct phonebook_event", cheader_filename = "structures.h", destroy_function = "")]
 struct PhonebookEvent
 {
-	public uint8[] unknown0;
+	public uint8 position;
 	public uint8 book_type;
-	public uint8[] unknown1;
+	public uint8[] unknown0;
 }
 
 } /* namespace Msmcomm.LowLevel.Structures */ 

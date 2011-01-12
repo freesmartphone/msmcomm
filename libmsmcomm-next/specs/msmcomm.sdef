@@ -203,6 +203,7 @@ start phonebook_return_resp 142
 end
 
 start phonebook_event 203
-[2] uint8_t book_type
+[0] uint8_t position
+[1] uint8_t book_type
 end
 

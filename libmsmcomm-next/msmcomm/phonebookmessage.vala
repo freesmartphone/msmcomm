@@ -99,18 +99,11 @@ namespace Msmcomm.LowLevel
 
         private PhonebookReturnResponse _message;
 
-        public enum EncodingType
-        {
-            NO_ENCODING = 0,
-            ASCII = 4,
-            BUCS2 = 9,
-        }
-
         public uint8 modify_id;
         public uint8 position;
         public string number;
         public string title;
-        public EncodingType encoding_type;
+        public PhonebookBaseMessage.EncodingType encoding_type;
 
         construct
         {
@@ -137,15 +130,19 @@ namespace Msmcomm.LowLevel
 
         private PhonebookEvent _message;
 
+        public uint position;
+
         construct
         {
             _message = PhonebookEvent();
+            message_class = MessageClass.UNSOLICITED_RESPONSE;
             set_payload((void*)(&_message), sizeof(PhonebookEvent));
         }
 
         protected override void evaluate_data()
         {
             book_type = _message.book_type;
+            position = _message.position;
         }
     }
 }

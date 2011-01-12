@@ -42,19 +42,23 @@ namespace Msmcomm.Daemon
                     handled = true;
                     break;
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_ADDED:
-                    record_added();
+                    var pb_message = message as PhonebookUnsolicitedResponseMessage;
+                    record_added(pb_message.book_type, pb_message.position);
                     handled = true;
                     break;
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_UPDATED:
-                    record_updated();
+                    var pb_message = message as PhonebookUnsolicitedResponseMessage;
+                    record_updated(pb_message.book_type, pb_message.position);
                     handled = true;
                     break;
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_DELETED:
-                    record_deleted();
+                    var pb_message = message as PhonebookUnsolicitedResponseMessage;
+                    record_deleted(pb_message.book_type, pb_message.position);
                     handled = true;
                     break;
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_FAILED:
-                    record_failed();
+                    var pb_message = message as PhonebookUnsolicitedResponseMessage;
+                    record_failed(pb_message.book_type, pb_message.position);
                     handled = true;
                     break;
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_REFRESH_START:
@@ -78,7 +82,8 @@ namespace Msmcomm.Daemon
                     handled = true;
                     break;
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_WRITE:
-                    record_write_event();
+                    var pb_message = message as PhonebookUnsolicitedResponseMessage;
+                    record_write_event(pb_message.book_type, pb_message.position);
                     handled = true;
                     break;
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_GET_ALL_RECORD_ID:
@@ -112,14 +117,20 @@ namespace Msmcomm.Daemon
             record.position = response.position;
             record.number = response.number;
             record.title = response.title;
-            // record.encoding_type = convertPhonebookEncodingTypeForService(response.encoding_type);
+            record.encoding_type = convertPhonebookEncodingTypeForService(response.encoding_type);
 
             return record;
         }
 
-        public async void write_record(PhonebookRecord record)
+        public async void write_record(uint book_type, uint position, string title, string number)
         {
+            var message = new PhonebookWriteRecordCommandMessage();
+            message.book_type = (uint8) book_type;
+            message.position = (uint8) position;
+            message.title = title;
+            message.number = number;
 
+            var response = yield channel.enqueueAsync(message) as PhonebookReturnResponseMessage;
         }
 
         public async void read_record_bulk()

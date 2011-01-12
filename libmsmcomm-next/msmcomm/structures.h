@@ -312,9 +312,9 @@ struct phonebook_return_resp
 
 struct phonebook_event
 {
-	uint8_t unknown0[2];
+	uint8_t position;
 	uint8_t book_type;
-	uint8_t unknown1[200];
+	uint8_t unknown0[201];
 } __attribute__ ((packed));
 
 #endif
