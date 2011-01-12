@@ -52,13 +52,18 @@ namespace Msmcomm.LowLevel
 
         public void unpack(void *data, int size)
         {
-            assert(size == _payload_size);
+            check_size(size, (int) _payload_size);
 
             if (_payload != null && data != null)
             {
                 Memory.copy(_payload, data, size);
                 evaluate_data();
             }
+        }
+
+        protected virtual void check_size(int size, int payload_size)
+        {
+            assert(size == payload_size);
         }
 
         protected virtual void evaluate_data()
