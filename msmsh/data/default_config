@@ -1,4 +1,0 @@
-[global]
-structures_path=<basepath>/msmcomm/libmsmcomm/specs/xml
-packetdef_path=<basepath>/msmcomm/libmsmcomm/specs/packet_definitions
-
