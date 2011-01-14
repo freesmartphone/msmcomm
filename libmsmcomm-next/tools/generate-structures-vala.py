@@ -5,6 +5,7 @@ import string
 import re
 
 indent_type = '\t'
+indent = 1
 
 byte_size = {
   'uint8_t':  1,
@@ -30,7 +31,7 @@ if not len(sys.argv) == 2:
   sys.exit(1)
 
 def print_indent(str):
-  print "%s%s" % (indent_type, str)
+  print "%s%s" % (indent_type * indent, str)
 
 def print_object_header():
   print "\n"
@@ -50,6 +51,7 @@ def format_name(name):
   return new_name
 
 def build_object(name, len, parts):
+  global indent
   vala_name = format_name(name)
 
   print "[CCode (cname = \"struct %s\", cheader_filename = \"structures.h\", destroy_function = \"\")]" % name
@@ -70,6 +72,17 @@ def build_object(name, len, parts):
     else:
       continue
     print_indent(to_print)
+  print_indent("public unowned uint8[] data {")
+  indent += 1
+  print_indent("get {")
+  indent += 1
+  print_indent("unowned uint8[] res = (uint8[])this;")
+  print_indent("res.length = (int)sizeof( %s );" % (vala_name, ))
+  print_indent("return res;")
+  print_indent("}")
+  indent -= 1
+  print_indent("}")
+  indent -= 1
 
   print "}"
 
