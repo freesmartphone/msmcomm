@@ -68,6 +68,18 @@
 			<field name="rc" start="4" type="uint8_t"/>
 		</structure>
 
+		<structure name="misc_get_home_network_name_msg" length="4">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+
+		<structure name="misc_get_home_network_name_resp" length="118">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="operator_name_length" start="98" type="uint8_t"/>
+			<field name="operator_name" start="99" end="114" type="uint8_t"/>
+			<field name="mcc" start="115" end="116" type="uint16_t"/>
+			<field name="mnc" start="117" type="uint8_t"/>
+		</structure>
+
 		<structure name="misc_charger_status_event" length="13">
 			<field name="voltage" start="5" end="6" type="uint16_t"/>
 		</structure>

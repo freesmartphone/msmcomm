@@ -110,6 +110,18 @@ start misc_set_date_resp 6
 [4] uint8_t rc
 end
 
+start misc_get_home_network_name_msg 4
+[0-3] uint32_t ref_id
+end
+
+start misc_get_home_network_name_resp 118
+[0-3] uint32_t ref_id
+[98] uint8_t operator_name_length
+[99-114] uint8_t operator_name
+[115-116] uint16_t mcc
+[117] uint8_t mnc
+end
+
 start misc_charger_status_event 13
 [5-6] uint16_t voltage
 end

@@ -73,6 +73,15 @@ namespace Msmcomm
         public TimeSource time_source;
     }
 
+    [CCode (type_id = "MSMCOMM_HOME_NETWORK_INFO", cheader_filename = "msmcomm-specs.h")]
+    public struct HomeNetworkInfo
+    {
+        public string operator_name;
+        public uint mcc;
+        public uint mnc;
+    }
+
+
     [DBus (timeout = 120000, name = "org.msmcomm.Misc")]
     public interface Misc : GLib.Object
     {
@@ -83,6 +92,7 @@ namespace Msmcomm
         public abstract async void set_date(DateInfo info) throws GLib.Error, Msmcomm.Error;
         public abstract async DateInfo get_date() throws GLib.Error, Msmcomm.Error;
         public abstract async string get_imei() throws GLib.Error, Msmcomm.Error;
+        public abstract async HomeNetworkInfo get_home_network_name() throws GLib.Error, Msmcomm.Error;
 
         public signal void radio_reset_ind();
         public signal void charger_status(ChargerStatusInfo info);

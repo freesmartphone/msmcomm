@@ -347,6 +347,61 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class MiscGetHomeNetworkNameCommandMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x1b;
+        public static const uint16 MESSAGE_ID = 0x16;
+
+        private MiscGetHomeNetworkNameMessage _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_HOME_NETWORK_NAME, MessageClass.COMMAND);
+
+            _message = MiscGetHomeNetworkNameMessage();
+            set_payload((void*)(&_message), sizeof(MiscGetHomeNetworkNameMessage));
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+        }
+    }
+
+    public class MiscGetHomeNetworkNameResponseMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x1c;
+        public static const uint16 MESSAGE_ID = 0x17;
+
+        private MiscGetHomeNetworkNameResponse _message;
+
+        public string operator_name;
+        public uint16 mcc;
+        public uint8 mnc;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_HOME_NETWORK_NAME, MessageClass.SOLICITED_RESPONSE);
+
+            _message = MiscGetHomeNetworkNameResponse();
+            set_payload((void*)(&_message), sizeof(MiscGetHomeNetworkNameResponse));
+        }
+
+        protected override void evaluate_data()
+        {
+            ref_id = _message.ref_id;
+
+            string *tmp0 = GLib.malloc0(_message.operator_name_length);
+            char *tmp1 = (char*) tmp0;
+            Memory.copy(tmp1, _message.operator_name, _message.operator_name_length);
+
+            operator_name = (owned) tmp0;
+
+            mcc = _message.mcc;
+            mnc = _message.mnc;
+        }
+    }
+
     public class MiscRadioResetIndUnsolicitedRespMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x1d;

@@ -201,6 +201,25 @@ struct MiscSetDateResponse
 }
 
 
+[CCode (cname = "struct misc_get_home_network_name_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscGetHomeNetworkNameMessage
+{
+	public uint32 ref_id;
+}
+
+
+[CCode (cname = "struct misc_get_home_network_name_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscGetHomeNetworkNameResponse
+{
+	public uint32 ref_id;
+	public uint8[] unknown0;
+	public uint8 operator_name_length;
+	public uint8[] operator_name;
+	public uint16 mcc;
+	public uint8 mnc;
+}
+
+
 [CCode (cname = "struct misc_charger_status_event", cheader_filename = "structures.h", destroy_function = "")]
 struct MiscChargerStatusEvent
 {

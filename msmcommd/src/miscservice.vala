@@ -120,5 +120,17 @@ namespace Msmcomm.Daemon
             var response = yield channel.enqueueAsync(new MiscGetImeiCommandMessage()) as MiscGetImeiResponseMessage;
             return response.imei;
         }
+
+        public async HomeNetworkInfo get_home_network_name() throws GLib.Error, Msmcomm.Error
+        {
+            var response = yield channel.enqueueAsync(new MiscGetHomeNetworkNameCommandMessage()) as MiscGetHomeNetworkNameResponseMessage;
+
+            var info = HomeNetworkInfo();
+            info.operator_name = response.operator_name;
+            info.mcc = response.mcc;
+            info.mnc = response.mnc;
+
+            return info;
+        }
     }
 }
