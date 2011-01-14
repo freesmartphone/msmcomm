@@ -76,7 +76,7 @@ def build_object(name, len, parts):
   indent += 1
   print_indent("get {")
   indent += 1
-  print_indent("unowned uint8[] res = (uint8[])this;")
+  print_indent("unowned uint8[] res = (uint8[])(&this);")
   print_indent("res.length = (int)sizeof( %s );" % (vala_name, ))
   print_indent("return res;")
   print_indent("}")
