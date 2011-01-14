@@ -33,13 +33,6 @@ namespace Msmcomm.LowLevel
         private void *_payload;
         private ulong _payload_size;
 
-        construct
-        {
-            this.group_id = group_id;
-            this.message_id = message_id;
-            this.message_type = message_type;
-        }
-
         public uint8[] pack()
         {
             uint8[] buffer = new uint8[_payload_size];
