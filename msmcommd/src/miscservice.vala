@@ -124,6 +124,7 @@ namespace Msmcomm.Daemon
         public async HomeNetworkInfo get_home_network_name() throws GLib.Error, Msmcomm.Error
         {
             var response = yield channel.enqueueAsync(new MiscGetHomeNetworkNameCommandMessage()) as MiscGetHomeNetworkNameResponseMessage;
+            checkResponse(response);
 
             var info = HomeNetworkInfo();
             info.operator_name = response.operator_name;
