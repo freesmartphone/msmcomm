@@ -71,5 +71,14 @@ namespace Msmcomm.Daemon
             var response = yield channel.enqueueAsync(message);
             checkResponse(response);
         }
+
+        public async void sys_sel_pref(NetworkPreferenceMode mode) throws GLib.Error, Msmcomm.Error
+        {
+            var message = new StateSysSelPrefCommandMessage();
+            message.mode = convertNetworkPreferenceModeForModem(mode);
+
+            var response = yield channel.enqueueAsync(message);
+            checkResponse(response);
+        }
     }
 }

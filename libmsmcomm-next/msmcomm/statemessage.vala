@@ -57,6 +57,44 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class StateSysSelPrefCommandMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x3;
+        public static const uint16 MESSAGE_ID = 0x1;
+
+        private StateSysSelPrefMessage _message;
+
+        public enum Mode
+        {
+            AUTOMATIC = 0x2,
+            GSM = 0xd,
+            UMTS = 0xe,
+        }
+
+        public Mode mode;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_STATE_SYS_SEL_PREF, MessageClass.COMMAND);
+
+            _message = StateSysSelPrefMessage();
+            set_payload((void*)(&_message), sizeof(StateSysSelPrefMessage));
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+            _message.mode = mode;
+
+            _message.value0 = 0x3;
+            _message.value1 = 0x40;
+            _message.value2 = 0x40;
+            _message.value3 = 0x1;
+            _message.value4 = 0x2;
+            _message.value5 = 0x4;
+        }
+    }
+
     public class StateCallbackResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x4;

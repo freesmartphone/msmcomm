@@ -244,6 +244,25 @@ struct StateChangeOperationModeMessage
 }
 
 
+[CCode (cname = "struct state_sys_sel_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct StateSysSelPrefMessage
+{
+	public uint32 ref_id;
+	public uint8 mode;
+	public uint8[] unknown0;
+	public uint8 value0;
+	public uint8[] unknown1;
+	public uint8 value1;
+	public uint8[] unknown2;
+	public uint8 value2;
+	public uint8 unknown3;
+	public uint8 value3;
+	public uint8 value4;
+	public uint8 value5;
+	public uint8[] unknown4;
+}
+
+
 [CCode (cname = "struct state_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct StateCallbackResponse
 {

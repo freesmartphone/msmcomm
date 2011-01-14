@@ -224,4 +224,24 @@ namespace Msmcomm.Daemon
 
         return result;
     }
+
+    public StateSysSelPrefCommandMessage.Mode convertNetworkPreferenceModeForModem(NetworkPreferenceMode mode)
+    {
+        StateSysSelPrefCommandMessage.Mode result = StateSysSelPrefCommandMessage.Mode.AUTOMATIC;
+
+        switch (mode)
+        {
+            case NetworkPreferenceMode.AUTOMATIC:
+                result = StateSysSelPrefCommandMessage.Mode.AUTOMATIC;
+                break;
+            case NetworkPreferenceMode.GSM:
+                result = StateSysSelPrefCommandMessage.Mode.GSM;
+                break;
+            case NetworkPreferenceMode.UMTS:
+                result = StateSysSelPrefCommandMessage.Mode.UMTS;
+                break;
+        }
+
+        return result;
+    }
 }

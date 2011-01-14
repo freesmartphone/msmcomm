@@ -38,10 +38,20 @@ namespace Msmcomm
         public uint als_allowed;
     }
 
+    [CCode (cprefix = "MSMCOMM_NETWORK_PREFERENCE_MODE_", cheader_filename = "msmcomm-specs.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum NetworkPreferenceMode
+    {
+        AUTOMATIC,
+        GSM,
+        UMTS
+    }
+
     [DBus (timeout = 120000, name = "org.msmcomm.State")]
     public interface State : GLib.Object
     {
         public abstract async void change_operation_mode(OperationMode mode) throws GLib.Error, Msmcomm.Error;
+        public abstract async void sys_sel_pref(NetworkPreferenceMode mode) throws GLib.Error, Msmcomm.Error;
 
         public signal void operation_mode(StateInfo info);
         public signal void info_avail(StateInfo info);

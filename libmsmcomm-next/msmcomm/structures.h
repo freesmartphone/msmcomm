@@ -226,6 +226,24 @@ struct state_change_operation_mode_msg
 } __attribute__ ((packed));
 
 
+struct state_sys_sel_pref_msg
+{
+	uint32_t ref_id;
+	uint8_t mode;
+	uint8_t unknown0[5];
+	uint8_t value0;
+	uint8_t unknown1[3];
+	uint8_t value1;
+	uint8_t unknown2[5];
+	uint8_t value2;
+	uint8_t unknown3;
+	uint8_t value3;
+	uint8_t value4;
+	uint8_t value5;
+	uint8_t unknown4[4];
+} __attribute__ ((packed));
+
+
 struct state_callback_resp
 {
 	uint32_t ref_id;
