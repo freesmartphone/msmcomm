@@ -48,7 +48,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_STATE_CHANGE_OPERATION_MODE_REQUEST, MessageClass.COMMAND);
 
             _message = StateChangeOperationModeMessage();
-            set_payload((void*)(&_message), sizeof(StateChangeOperationModeMessage));
+            set_payload(_message.data);
         }
 
         protected override void prepare_data()
@@ -85,7 +85,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_STATE_CALLBACK, MessageClass.SOLICITED_RESPONSE);
 
             _message = StateCallbackResponse();
-            set_payload((void*)(&_message), sizeof(StateCallbackResponse));
+            set_payload(_message.data);
         }
 
         protected override void evaluate_data()

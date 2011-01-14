@@ -33,7 +33,7 @@ namespace Msmcomm.LowLevel
             this.id = id;
         }
 
-        public BaseMessage? unpack_message(uint16 id, void *data, int size)
+        public BaseMessage? unpack_message(uint16 id, uint8[] data)
         {
             BaseMessage? message = null;
 
@@ -50,7 +50,7 @@ namespace Msmcomm.LowLevel
                 message = Object.new(typ) as BaseMessage;
                 assert(message != null);
 
-                message.unpack(data, size);
+                message.unpack(data);
             }
 
             return message;
