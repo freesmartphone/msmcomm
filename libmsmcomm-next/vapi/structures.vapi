@@ -46,7 +46,7 @@ struct CallStatusEvent
 	public uint8[] unknown7;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( CallStatusEvent );
 			return res;
 			}
@@ -64,7 +64,7 @@ struct CallCallbackResponse
 	public uint8[] unknown1;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( CallCallbackResponse );
 			return res;
 			}
@@ -82,7 +82,7 @@ struct CallAnswerMessage
 	public uint8 value2;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( CallAnswerMessage );
 			return res;
 			}
@@ -99,7 +99,7 @@ struct CallEndMessage
 	public uint8[] unknown0;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( CallEndMessage );
 			return res;
 			}
@@ -123,7 +123,7 @@ struct CallOriginationMessage
 	public uint8 unknown4;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( CallOriginationMessage );
 			return res;
 			}
@@ -142,7 +142,7 @@ struct CallSupsMessage
 	public uint8[] unknown1;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( CallSupsMessage );
 			return res;
 			}
@@ -157,7 +157,7 @@ struct MiscTestAliveMessage
 	public uint8 some_value1;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( MiscTestAliveMessage );
 			return res;
 			}
@@ -171,7 +171,7 @@ struct MiscGetImeiMessage
 	public uint32 ref_id;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( MiscGetImeiMessage );
 			return res;
 			}
@@ -186,7 +186,7 @@ struct MiscGetImeiResponse
 	public uint8[] imei;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( MiscGetImeiResponse );
 			return res;
 			}
@@ -200,7 +200,7 @@ struct MiscGetRadioFirmwareVersionMessage
 	public uint32 ref_id;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( MiscGetRadioFirmwareVersionMessage );
 			return res;
 			}
@@ -218,7 +218,7 @@ struct MiscGetRadioFirmwareVersionResponse
 	public uint8[] unknown1;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( MiscGetRadioFirmwareVersionResponse );
 			return res;
 			}
@@ -238,7 +238,7 @@ struct MiscGetChargerStatusMessage
 	public uint8 rc;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( MiscGetChargerStatusMessage );
 			return res;
 			}
@@ -256,7 +256,7 @@ struct MiscSetChargeMessage
 	public uint8 rc;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( MiscSetChargeMessage );
 			return res;
 			}
@@ -282,7 +282,7 @@ struct MiscSetDateMessage
 	public uint8 unknown2;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( MiscSetDateMessage );
 			return res;
 			}
@@ -298,7 +298,7 @@ struct MiscSetDateResponse
 	public uint8 unknown0;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( MiscSetDateResponse );
 			return res;
 			}
@@ -313,7 +313,7 @@ struct StateChangeOperationModeMessage
 	public uint8 operation_mode;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( StateChangeOperationModeMessage );
 			return res;
 			}
@@ -329,7 +329,7 @@ struct StateCallbackResponse
 	public uint8 result;
 	public unowned uint8[] data {
 		get {
-			unowned uint8[] res = (uint8[])this;
+			unowned uint8[] res = (uint8[])(&this);
 			res.length = (int)sizeof( StateCallbackResponse );
 			return res;
 			}
