@@ -72,17 +72,19 @@ def build_object(name, len, parts):
     else:
       continue
     print_indent(to_print)
-  print_indent("public unowned uint8[] data {")
+  print_indent("public unowned uint8[] data")
+  print_indent("{")
   indent += 1
-  print_indent("get {")
+  print_indent("get")
+  print_indent("{")
   indent += 1
   print_indent("unowned uint8[] res = (uint8[])(&this);")
   print_indent("res.length = (int)sizeof( %s );" % (vala_name, ))
   print_indent("return res;")
-  print_indent("}")
   indent -= 1
   print_indent("}")
   indent -= 1
+  print_indent("}")
 
   print "}"
 
