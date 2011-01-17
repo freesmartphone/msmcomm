@@ -168,7 +168,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_CHARGER_STATUS, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_CHARGER_STATUS, MessageClass.SOLICITED_RESPONSE);
 
             _message = MiscGetChargerStatusMessage();
             set_payload((void*)(&_message), sizeof(MiscGetChargerStatusMessage));
