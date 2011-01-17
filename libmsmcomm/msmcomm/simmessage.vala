@@ -166,6 +166,33 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class SimReturnResponseMessage : SimInfoBaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x10;
+        public static const uint8 MESSAGE_ID = 0x0;
+
+        private SimReturnResponse _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_SIM_RETURN, MessageClass.SOLICITED_RESPONSE);
+
+            _message = SimReturnResponse();
+            set_payload((void*)(&_message), sizeof(SimReturnResponse));
+        }
+
+        protected override void evaluate_data()
+        {
+            ref_id = _message.ref_id;
+
+            stdout.printf("message.rc = %02x\n".printf(_message.rc));
+            if (_message.rc == 0x101)
+            {
+                result = MessageResultType.ERROR_UNKNOWN;
+            }
+        }
+    }
+
     public class SimCallbackResponseMessage : SimInfoBaseMessage
     {
         public static const uint8 GROUP_ID = 0x10;

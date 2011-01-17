@@ -272,6 +272,15 @@ struct sim_pin_status_msg
 } __attribute__ ((packed));
 
 
+struct sim_return_resp
+{
+	uint32_t ref_id;
+	uint8_t unknown0[2];
+	uint16_t rc;
+	uint8_t unknown1[260];
+} __attribute__ ((packed));
+
+
 struct sim_callback_resp
 {
 	uint8_t unknown0[4];

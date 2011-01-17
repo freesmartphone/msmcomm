@@ -8,6 +8,11 @@
 		<field name="pin" start="5" end="12" type="uint8_t"/>
 	</structure>
 
+	<structure name="sim_return_resp" length="268">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="rc" start="6" end="7" type="uint16_t"/>
+	</structure>
+
 	<structure name="sim_callback_resp" length="1934">
 		<field name="result0" start="4" type="uint8_t"/>
 		<field name="ref_id" start="5" end="8" type="uint32_t"/>

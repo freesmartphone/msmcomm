@@ -30,6 +30,7 @@ namespace Msmcomm.LowLevel
         {
             base(SimResponseMessageGroup.GROUP_ID);
 
+            message_types[SimReturnResponseMessage.MESSAGE_ID] = typeof(SimReturnResponseMessage);
             message_types[SimCallbackResponseMessage.MESSAGE_ID] = typeof(SimCallbackResponseMessage);
         }
     }

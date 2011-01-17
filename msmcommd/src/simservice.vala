@@ -451,7 +451,7 @@ namespace Msmcomm.Daemon
             message.pin_type = convertSimPinTypeForModem(pin_type);
             message.pin = pin;
 
-            var response = yield channel.enqueueAsync(message) as SimCallbackResponseMessage;
+            var response = yield channel.enqueueAsync(message);
             checkResponse(response);
         }
 

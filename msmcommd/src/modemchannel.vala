@@ -102,6 +102,7 @@ namespace Msmcomm.Daemon
         {
             uint8[] data;
             data = masm.pack_message(handler.command);
+            hexdump2(true, data, logger);
             modem.sendData(data);
         }
 
