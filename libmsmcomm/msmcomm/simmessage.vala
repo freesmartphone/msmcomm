@@ -51,7 +51,7 @@ namespace Msmcomm.LowLevel
         construct
         {
             _message = SimPinStatusMessage();
-            set_payload((void*)(&_message), sizeof(SimPinStatusMessage));
+            set_payload(_message.data);
         }
 
         protected override void prepare_data()
@@ -90,7 +90,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_CHANGE_PIN, MessageClass.COMMAND);
 
             _message = SimChangePinMessage();
-            set_payload((void*)(&_message), sizeof(SimChangePinMessage));
+            set_payload(_message.data);
         }
 
         protected override void prepare_data()
@@ -135,7 +135,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_GET_SIM_CAPABILITIES, MessageClass.COMMAND);
 
              _message = SimGetSimCapabilitiesMessage();
-            set_payload((void*)(&_message), sizeof(SimGetSimCapabilitiesMessage));
+            set_payload(_message.data);
         }
 
         protected override void prepare_data()
@@ -157,7 +157,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_GET_ALL_PIN_STATUS_INFO, MessageClass.COMMAND);
 
              _message = SimGetAllPinStatusInfoMessage();
-            set_payload((void*)(&_message), sizeof(SimGetAllPinStatusInfoMessage));
+            set_payload(_message.data);
         }
 
         protected override void prepare_data()
@@ -180,7 +180,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_SIM_CALLBACK, MessageClass.SOLICITED_RESPONSE);
 
             _message = SimCallbackResponse();
-            set_payload((void*)(&_message), sizeof(SimCallbackResponse));
+            set_payload(_message.data);
         }
 
         protected override void evaluate_data()
@@ -211,7 +211,6 @@ namespace Msmcomm.LowLevel
         construct
         {
             message_class = MessageClass.UNSOLICITED_RESPONSE;
-            set_payload(null, 0);
         }
     }
 

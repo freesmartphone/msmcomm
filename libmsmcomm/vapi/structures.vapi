@@ -44,6 +44,19 @@ struct CallStatusEvent
 	public uint8[] unknown6;
 	public uint8 is_tty;
 	public uint8[] unknown7;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( CallStatusEvent );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(CallStatusEvent)));
+		}
+	}
 }
 
 
@@ -55,6 +68,19 @@ struct CallCallbackResponse
 	public uint8 unknown0;
 	public uint8 result;
 	public uint8[] unknown1;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( CallCallbackResponse );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(CallCallbackResponse)));
+		}
+	}
 }
 
 
@@ -66,6 +92,19 @@ struct CallAnswerMessage
 	public uint8 value0;
 	public uint8 value1;
 	public uint8 value2;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( CallAnswerMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(CallAnswerMessage)));
+		}
+	}
 }
 
 
@@ -76,6 +115,19 @@ struct CallEndMessage
 	public uint8 value0;
 	public uint8 call_id;
 	public uint8[] unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( CallEndMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(CallEndMessage)));
+		}
+	}
 }
 
 
@@ -93,6 +145,19 @@ struct CallOriginationMessage
 	public uint8[] unknown3;
 	public uint8 block;
 	public uint8 unknown4;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( CallOriginationMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(CallOriginationMessage)));
+		}
+	}
 }
 
 
@@ -105,6 +170,19 @@ struct CallSupsMessage
 	public uint8[] unknown0;
 	public uint8 value0;
 	public uint8[] unknown1;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( CallSupsMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(CallSupsMessage)));
+		}
+	}
 }
 
 
@@ -113,6 +191,19 @@ struct MiscTestAliveMessage
 {
 	public uint32 ref_id;
 	public uint8 some_value1;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscTestAliveMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscTestAliveMessage)));
+		}
+	}
 }
 
 
@@ -120,6 +211,19 @@ struct MiscTestAliveMessage
 struct MiscGetImeiMessage
 {
 	public uint32 ref_id;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscGetImeiMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscGetImeiMessage)));
+		}
+	}
 }
 
 
@@ -128,6 +232,19 @@ struct MiscGetImeiResponse
 {
 	public uint32 ref_id;
 	public uint8[] imei;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscGetImeiResponse );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscGetImeiResponse)));
+		}
+	}
 }
 
 
@@ -135,6 +252,19 @@ struct MiscGetImeiResponse
 struct MiscGetRadioFirmwareVersionMessage
 {
 	public uint32 ref_id;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscGetRadioFirmwareVersionMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscGetRadioFirmwareVersionMessage)));
+		}
+	}
 }
 
 
@@ -146,6 +276,19 @@ struct MiscGetRadioFirmwareVersionResponse
 	public uint8[] unknown0;
 	public uint8[] firmware_version;
 	public uint8[] unknown1;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscGetRadioFirmwareVersionResponse );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscGetRadioFirmwareVersionResponse)));
+		}
+	}
 }
 
 
@@ -159,6 +302,19 @@ struct MiscGetChargerStatusMessage
 	public uint8 mode;
 	public uint8[] unknown2;
 	public uint8 rc;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscGetChargerStatusMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscGetChargerStatusMessage)));
+		}
+	}
 }
 
 
@@ -170,6 +326,19 @@ struct MiscSetChargeMessage
 	public uint8 mode;
 	public uint16 voltage;
 	public uint8 rc;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscSetChargeMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscSetChargeMessage)));
+		}
+	}
 }
 
 
@@ -189,6 +358,19 @@ struct MiscSetDateMessage
 	public uint8 unknown1;
 	public uint8 time_source;
 	public uint8 unknown2;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscSetDateMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscSetDateMessage)));
+		}
+	}
 }
 
 
@@ -198,6 +380,19 @@ struct MiscSetDateResponse
 	public uint32 ref_id;
 	public uint8 rc;
 	public uint8 unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscSetDateResponse );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscSetDateResponse)));
+		}
+	}
 }
 
 
@@ -205,6 +400,19 @@ struct MiscSetDateResponse
 struct MiscGetHomeNetworkNameMessage
 {
 	public uint32 ref_id;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscGetHomeNetworkNameMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscGetHomeNetworkNameMessage)));
+		}
+	}
 }
 
 
@@ -217,6 +425,19 @@ struct MiscGetHomeNetworkNameResponse
 	public uint8[] operator_name;
 	public uint16 mcc;
 	public uint8 mnc;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscGetHomeNetworkNameResponse );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscGetHomeNetworkNameResponse)));
+		}
+	}
 }
 
 
@@ -226,6 +447,19 @@ struct MiscChargerStatusEvent
 	public uint8[] unknown0;
 	public uint16 voltage;
 	public uint8[] unknown1;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscChargerStatusEvent );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscChargerStatusEvent)));
+		}
+	}
 }
 
 
@@ -233,6 +467,19 @@ struct MiscChargerStatusEvent
 struct MiscRadioResetIndEvent
 {
 	public uint8[] unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscRadioResetIndEvent );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(MiscRadioResetIndEvent)));
+		}
+	}
 }
 
 
@@ -241,6 +488,19 @@ struct StateChangeOperationModeMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( StateChangeOperationModeMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(StateChangeOperationModeMessage)));
+		}
+	}
 }
 
 
@@ -260,6 +520,19 @@ struct StateSysSelPrefMessage
 	public uint8 value4;
 	public uint8 value5;
 	public uint8[] unknown4;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( StateSysSelPrefMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(StateSysSelPrefMessage)));
+		}
+	}
 }
 
 
@@ -269,6 +542,19 @@ struct StateCallbackResponse
 	public uint32 ref_id;
 	public uint8[] unknown0;
 	public uint8 result;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( StateCallbackResponse );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(StateCallbackResponse)));
+		}
+	}
 }
 
 
@@ -281,6 +567,19 @@ struct StateEvent
 	public uint8 als_allowed;
 	public uint8 line;
 	public uint8[] unknown2;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( StateEvent );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(StateEvent)));
+		}
+	}
 }
 
 
@@ -291,6 +590,19 @@ struct SimPinStatusMessage
 	public uint8 pin_type;
 	public uint8[] pin;
 	public uint8 unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimPinStatusMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(SimPinStatusMessage)));
+		}
+	}
 }
 
 
@@ -307,6 +619,19 @@ struct SimCallbackResponse
 	public uint8 field_length;
 	public uint8[] field_data;
 	public uint8[] unknown2;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimCallbackResponse );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(SimCallbackResponse)));
+		}
+	}
 }
 
 
@@ -317,6 +642,19 @@ struct SimChangePinMessage
 	public uint8 unknown0;
 	public uint8[] old_pin;
 	public uint8[] new_pin;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimChangePinMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(SimChangePinMessage)));
+		}
+	}
 }
 
 
@@ -326,6 +664,19 @@ struct SimGetSimCapabilitiesMessage
 	public uint32 ref_id;
 	public uint16 sim_file;
 	public uint8[] unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimGetSimCapabilitiesMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(SimGetSimCapabilitiesMessage)));
+		}
+	}
 }
 
 
@@ -334,6 +685,19 @@ struct SimGetAllPinStatusInfoMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimGetAllPinStatusInfoMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(SimGetAllPinStatusInfoMessage)));
+		}
+	}
 }
 
 
@@ -343,6 +707,19 @@ struct PhonebookReadRecordMessage
 	public uint32 ref_id;
 	public uint8 position;
 	public uint8 book_type;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookReadRecordMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(PhonebookReadRecordMessage)));
+		}
+	}
 }
 
 
@@ -354,6 +731,19 @@ struct PhonebookReadRecordBulkMessage
 	public uint8 first_book_type;
 	public uint8 last_position;
 	public uint8 last_book_type;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookReadRecordBulkMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(PhonebookReadRecordBulkMessage)));
+		}
+	}
 }
 
 
@@ -367,6 +757,19 @@ struct PhonebookWriteRecordMessage
 	public uint8 unknown0;
 	public uint8[] title;
 	public uint8 value0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookWriteRecordMessage );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(PhonebookWriteRecordMessage)));
+		}
+	}
 }
 
 
@@ -382,6 +785,19 @@ struct PhonebookReturnResponse
 	public uint8[] number;
 	public uint8[] title;
 	public uint8 encoding_type;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookReturnResponse );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(PhonebookReturnResponse)));
+		}
+	}
 }
 
 
@@ -391,6 +807,19 @@ struct PhonebookEvent
 	public uint8 position;
 	public uint8 book_type;
 	public uint8[] unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookEvent );
+			return res;
+		}
+		set
+		{
+			GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(PhonebookEvent)));
+		}
+	}
 }
 
 } /* namespace Msmcomm.LowLevel.Structures */ 
