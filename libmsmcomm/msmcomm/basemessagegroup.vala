@@ -28,14 +28,14 @@ namespace Msmcomm.LowLevel
             base(id);
         }
 
-        public override BaseMessage? unpack_message(uint16 id, uint8[] data)
+        public override BaseMessage? unpack_message(uint16 id, void *data, int size)
         {
             BaseMessage? message = null;
 
             message = Object.new(typeof(T)) as BaseMessage;
             assert(message != null);
 
-            message.unpack(data);
+            message.unpack(data, size);
 
             set_message_type(id, message);
 
@@ -57,7 +57,7 @@ namespace Msmcomm.LowLevel
             this.id = id;
         }
 
-        public virtual BaseMessage? unpack_message(uint16 id, uint8[] data)
+        public virtual BaseMessage? unpack_message(uint16 id, void *data, int size)
         {
             BaseMessage? message = null;
 
@@ -74,7 +74,7 @@ namespace Msmcomm.LowLevel
                 message = Object.new(typ) as BaseMessage;
                 assert(message != null);
 
-                message.unpack(data);
+                message.unpack(data, size);
             }
 
             return message;

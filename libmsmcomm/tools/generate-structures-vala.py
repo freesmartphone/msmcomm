@@ -83,12 +83,6 @@ def build_object(name, len, parts):
   print_indent("return res;")
   indent -= 1
   print_indent("}")
-  print_indent("set")
-  print_indent("{")
-  indent += 1
-  print_indent("GLib.Memory.copy((uint8[])(&this), value, (int)(sizeof(%s)));" % vala_name)
-  indent -= 1
-  print_indent("}")
   indent -= 1
   print_indent("}")
 

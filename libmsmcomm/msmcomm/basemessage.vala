@@ -30,19 +30,28 @@ namespace Msmcomm.LowLevel
         public MessageResultType result { get; protected set; default = MessageResultType.RESULT_OK; }
         public MessageClass message_class { get; protected set; default = MessageClass.UNKNOWN; }
 
-        private uint8[] _payload;
+        private void *_payload;
+        private ulong _payload_size;
 
         public uint8[] pack()
         {
+            uint8[] buffer = new uint8[_payload_size];
+
             prepare_data();
-            return _payload;
+            Memory.copy(buffer, _payload, _payload_size);
+
+            return buffer;
         }
 
-        public void unpack(uint8[] data)
+        public void unpack(void *data, int size)
         {
-            check_size(data.length, (int) _payload.length);
-            _payload = data;
-            evaluate_data();
+            check_size(size, (int) _payload_size);
+
+            if (_payload != null && data != null)
+            {
+                Memory.copy(_payload, data, size);
+                evaluate_data();
+            }
         }
 
         protected virtual void check_size(int size, int payload_size)
@@ -58,9 +67,10 @@ namespace Msmcomm.LowLevel
         {
         }
 
-        protected void set_payload(uint8[] payload)
+        protected void set_payload(void *payload, ulong payload_size)
         {
             _payload = payload;
+            _payload_size = payload_size;
         }
 
         protected void set_description(uint8 group_id, uint16 message_id, MessageType message_type, MessageClass message_class)

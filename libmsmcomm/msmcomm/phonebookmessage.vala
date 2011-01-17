@@ -52,7 +52,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_PHONEBOOK_READ_RECORD, MessageClass.COMMAND);
 
             _message = PhonebookReadRecordMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(PhonebookReadRecordMessage));
         }
 
         protected override void prepare_data()
@@ -78,7 +78,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_PHONEBOOK_READ_RECORD_BULK, MessageClass.COMMAND);
 
             _message = PhonebookReadRecordBulkMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(PhonebookReadRecordBulkMessage));
         }
 
         protected override void prepare_data()
@@ -107,7 +107,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_PHONEBOOK_WRITE_RECORD, MessageClass.COMMAND);
 
             _message = PhonebookWriteRecordMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(PhonebookWriteRecordMessage));
         }
 
         protected override void prepare_data()
@@ -138,7 +138,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_PHONEBOOK_RETURN, MessageClass.SOLICITED_RESPONSE);
 
             _message = PhonebookReturnResponse();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(PhonebookReturnResponse));
         }
 
         protected override void evaluate_data()
@@ -164,7 +164,7 @@ namespace Msmcomm.LowLevel
         {
             _message = PhonebookEvent();
             message_class = MessageClass.UNSOLICITED_RESPONSE;
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(PhonebookEvent));
         }
 
         protected override void evaluate_data()

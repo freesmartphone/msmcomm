@@ -35,7 +35,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_TEST_ALIVE, MessageClass.COMMAND);
 
             _message = MiscTestAliveMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscTestAliveMessage));
 
         }
 
@@ -57,7 +57,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_TEST_ALIVE, MessageClass.SOLICITED_RESPONSE);
 
             _message = MiscTestAliveMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscTestAliveMessage));
 
         }
 
@@ -79,7 +79,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_RADIO_FIRMWARE_VERSION, MessageClass.COMMAND);
 
             _message = MiscGetRadioFirmwareVersionMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscGetRadioFirmwareVersionMessage));
         }
 
         protected override void prepare_data()
@@ -105,7 +105,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_RADIO_FIRMWARE_VERSION, MessageClass.SOLICITED_RESPONSE);
 
             _message = MiscGetRadioFirmwareVersionResponse();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscGetRadioFirmwareVersionResponse));
         }
 
         public override void evaluate_data()
@@ -150,7 +150,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_CHARGER_STATUS, MessageClass.COMMAND);
 
             _message = MiscGetChargerStatusMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscGetChargerStatusMessage));
         }
 
         protected override void prepare_data()
@@ -171,7 +171,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_CHARGER_STATUS, MessageClass.COMMAND);
 
             _message = MiscGetChargerStatusMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscGetChargerStatusMessage));
         }
 
         protected override void evaluate_data()
@@ -195,7 +195,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_SET_CHARGE, MessageClass.COMMAND);
 
             _message = MiscSetChargeMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscSetChargeMessage));
         }
 
         protected override void prepare_data()
@@ -218,7 +218,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_SET_CHARGE, MessageClass.SOLICITED_RESPONSE);
 
             _message = MiscSetChargeMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscSetChargeMessage));
         }
 
         protected override void evaluate_data()
@@ -256,7 +256,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_SET_DATE, MessageClass.COMMAND);
 
             _message = MiscSetDateMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscSetDateMessage));
         }
 
         protected override void prepare_data()
@@ -286,7 +286,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_SET_DATE, MessageClass.SOLICITED_RESPONSE);
 
             _message = MiscSetDateResponse();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscSetDateResponse));
         }
 
         protected override void evaluate_data()
@@ -308,7 +308,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_IMEI, MessageClass.COMMAND);
 
             _message = MiscGetImeiMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscGetImeiMessage));
         }
 
         protected override void prepare_data()
@@ -332,7 +332,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_IMEI, MessageClass.SOLICITED_RESPONSE);
 
             _message = MiscGetImeiResponse();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscGetImeiResponse));
         }
 
         protected override void evaluate_data()
@@ -359,7 +359,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_HOME_NETWORK_NAME, MessageClass.COMMAND);
 
             _message = MiscGetHomeNetworkNameMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscGetHomeNetworkNameMessage));
         }
 
         protected override void prepare_data()
@@ -384,7 +384,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_HOME_NETWORK_NAME, MessageClass.SOLICITED_RESPONSE);
 
             _message = MiscGetHomeNetworkNameResponse();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscGetHomeNetworkNameResponse));
         }
 
         protected override void evaluate_data()
@@ -414,7 +414,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_MISC_RADIO_RESET_IND, MessageClass.UNSOLICITED_RESPONSE);
 
             _message = MiscRadioResetIndEvent();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscRadioResetIndEvent));
         }
     }
 
@@ -430,7 +430,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS, MessageClass.UNSOLICITED_RESPONSE);
 
             _message = MiscChargerStatusEvent();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(MiscChargerStatusEvent));
         }
     }
 }

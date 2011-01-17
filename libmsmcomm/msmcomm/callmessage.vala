@@ -44,7 +44,7 @@ namespace Msmcomm.LowLevel
             suppress_own_number = false;
 
             _message = CallOriginationMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(CallOriginationMessage));
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x4;
@@ -74,7 +74,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ANSWER, MessageClass.COMMAND);
 
             _message = CallAnswerMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(CallAnswerMessage));
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x2;
@@ -103,7 +103,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_END, MessageClass.COMMAND);
 
             _message = CallEndMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(CallEndMessage));
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x1;
@@ -142,7 +142,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_SUPS, MessageClass.COMMAND);
 
             _message = CallSupsMessage();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(CallSupsMessage));
         }
 
         protected override void prepare_data()
@@ -171,7 +171,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK, MessageClass.SOLICITED_RESPONSE);
 
             _message = CallCallbackResponse();
-            set_payload(_message.data);
+            set_payload((void*)(&_message), sizeof(CallCallbackResponse));
         }
 
         protected override void evaluate_data()
