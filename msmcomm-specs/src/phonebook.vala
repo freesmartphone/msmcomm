@@ -21,7 +21,7 @@
 
 namespace Msmcomm
 {
-    [CCode (cprefix = "MSMCOMM_PhonebookENCODING_TYPE_", cheader_filename = "msmcomm-specs.h")]
+    [CCode (cprefix = "MSMCOMM_PHONEBOOK_ENCODING_TYPE_", cheader_filename = "msmcomm-specs.h")]
     [DBus (use_string_marshalling = true)]
     public enum PhonebookEncodingType
     {

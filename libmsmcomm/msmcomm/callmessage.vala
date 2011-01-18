@@ -23,6 +23,15 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
+    public abstract class CallBaseMessage : BaseMessage
+    {
+        public enum Type
+        {
+            DATA = 0x1,
+            AUDIO = 0x2,
+        }
+    }
+
     public class CallOriginationCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x0;
@@ -199,6 +208,39 @@ namespace Msmcomm.LowLevel
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK, MessageClass.SOLICITED_RESPONSE);
+        }
+    }
+
+    public class CallUnsolicitedResponseMessage : CallBaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x2;
+
+        private CallEvent _message;
+
+        public uint8 call_id;
+        public CallBaseMessage.Type call_type;
+        public uint8 cause_value;
+        public string number;
+        public uint8 reject_type;
+        public uint8 reject_value;
+
+        construct 
+        {
+            set_description(GROUP_ID, 0x0, MessageType.INVALID, MessageClass.UNSOLICITED_RESPONSE);
+
+            _message = CallEvent();
+            set_payload((void*)(&_message), sizeof(CallEvent));
+        }
+
+        protected override void evaluate_data()
+        {
+            call_id = _message.call_id;
+            call_type = (CallBaseMessage.Type) _message.call_type;
+            reject_type = _message.reject_type;
+            reject_value = _message.reject_value;
+            number = "%s".printf((string) _message.caller_id[0:_message.caller_id_len]);
+
+            // FIXME cause_value ...
         }
     }
 }

@@ -36,7 +36,6 @@ namespace Msmcomm.Daemon
         private GLib.DBusConnection dbusconn;
         private string servicename;
         private string objectpath;
-        private MiscService miscservice;
 
         private Gee.HashMap<GLib.Type, BaseService> services;
 
@@ -132,6 +131,7 @@ namespace Msmcomm.Daemon
             services[typeof(Msmcomm.State)] = new StateService(modem);
             services[typeof(Msmcomm.Sim)] = new SimService(modem);
             services[typeof(Msmcomm.Phonebook)] = new PhonebookService(modem);
+            services[typeof(Msmcomm.Call)] = new CallService(modem);
         }
 
         public bool register()
@@ -159,6 +159,7 @@ namespace Msmcomm.Daemon
                 registerService<Msmcomm.State>();
                 registerService<Msmcomm.Sim>();
                 registerService<Msmcomm.Phonebook>();
+                registerService<Msmcomm.Call>();
             }
             catch (GLib.Error err)
             {

@@ -22,8 +22,8 @@
 
 namespace Msmcomm.LowLevel.Structures
 {
-[CCode (cname = "struct call_status_event", cheader_filename = "structures.h", destroy_function = "")]
-struct CallStatusEvent
+[CCode (cname = "struct call_event", cheader_filename = "structures.h", destroy_function = "")]
+struct CallEvent
 {
 	public uint8 call_id;
 	public uint8 call_type;
@@ -49,7 +49,7 @@ struct CallStatusEvent
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( CallStatusEvent );
+			res.length = (int)sizeof( CallEvent );
 			return res;
 		}
 	}

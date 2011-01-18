@@ -24,6 +24,7 @@ libmsmcomm_specs_la_VALASOURCES = \
 	state.vala \
 	sim.vala \
 	phonebook.vala \
+	call.vala \
 	$(NULL)
 
 libmsmcomm_specsdir = $(includedir)/msmcomm-specs-2.0

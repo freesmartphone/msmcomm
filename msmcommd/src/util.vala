@@ -20,9 +20,17 @@
  **/
 
 using GLib;
+using Msmcomm.LowLevel;
 
 namespace Msmcomm.Daemon
 {
+    internal string messageTypeNickName(MessageType message_type)
+    {
+        var enum_class = (EnumClass) typeof(MessageType).class_ref();
+        var enum_value = enum_class.get_value(message_type);
+        return enum_value.value_nick;
+    }
+
     internal void hexdump2(bool write, uint8[] data, FsoFramework.Logger logger)
     {
         if (data.length < 1)

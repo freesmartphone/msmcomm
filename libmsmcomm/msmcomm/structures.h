@@ -24,7 +24,7 @@
 
 #include <stdint.h>
 
-struct call_status_event
+struct call_event
 {
 	uint8_t call_id;
 	uint8_t call_type;
