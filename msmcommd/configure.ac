@@ -1,4 +1,4 @@
-AC_INIT([msmcommd], [0.5.0], [morphis@gravedo.de], [msmcommd])
+AC_INIT([msmcommd], [0.6.0], [morphis@gravedo.de], [msmcommd])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])
