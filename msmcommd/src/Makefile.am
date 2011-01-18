@@ -20,6 +20,7 @@ VALAC_ARGS = \
 AM_CFLAGS = \
 	$(DEPS_CFLAGS) \
 	-include $(CONFIG_HEADER) \
+	-DG_LOG_DOMAIN=\"msmcommd\" \
 	$(NULL)
 
 BUILT_SOURCES = .vala.stamp
