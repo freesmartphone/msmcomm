@@ -4,6 +4,7 @@ NULL =
 
 AM_CFLAGS = \
 	$(DEPS_CFLAGS) \
+	-DG_LOG_DOMAIN=\"libmsmcomm\" \
 	$(NULL)
 
 VALAC_ARGS = \
