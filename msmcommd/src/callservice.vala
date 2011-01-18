@@ -33,7 +33,7 @@ namespace Msmcomm.Daemon
         public override bool handleUnsolicitedResponse(BaseMessage message)
         {
             var handled = false;
-            var urc_service_name = messageTypeNickName(message.message_type);
+            var urc_service_name = messageTypeNickName(message.message_type, "call-");
             var call_message = message as CallUnsolicitedResponseMessage;
             var info = CallStatusInfo();
 
@@ -56,7 +56,7 @@ namespace Msmcomm.Daemon
             return "";
         }
 
-        public async void originate_call(string number, bool suppress_own_number) throws Msmcomm.Error, GLib.Error
+        public async void originate(string number, bool suppress_own_number) throws Msmcomm.Error, GLib.Error
         {
             var message = new CallOriginationCommandMessage();
             message.number = number;
@@ -66,7 +66,7 @@ namespace Msmcomm.Daemon
             checkResponse(response);
         }
 
-        public async void answer_call(uint id) throws Msmcomm.Error, GLib.Error
+        public async void answer(uint id) throws Msmcomm.Error, GLib.Error
         {
             var message = new CallAnswerCommandMessage();
             message.call_id = (uint8) id;
@@ -75,7 +75,7 @@ namespace Msmcomm.Daemon
             checkResponse(response);
         }
 
-        public async void end_call(uint id) throws Msmcomm.Error, GLib.Error
+        public async void end(uint id) throws Msmcomm.Error, GLib.Error
         {
             var message = new CallEndCommandMessage();
             message.call_id = (uint8) id;
@@ -84,7 +84,7 @@ namespace Msmcomm.Daemon
             checkResponse(response);
         }
 
-        public async void sups_call(uint id, SupsAction action) throws Msmcomm.Error, GLib.Error
+        public async void sups(uint id, SupsAction action) throws Msmcomm.Error, GLib.Error
         {
             var message = new CallSupsCommandMessage();
             message.call_id = (uint8) id;
