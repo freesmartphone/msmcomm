@@ -24,11 +24,27 @@ using Msmcomm.LowLevel;
 
 namespace Msmcomm.Daemon
 {
-    internal string messageTypeNickName(MessageType message_type)
+    internal string messageTypeNickName(MessageType message_type, string prefix_to_remove = "")
     {
         var enum_class = (EnumClass) typeof(MessageType).class_ref();
         var enum_value = enum_class.get_value(message_type);
-        return enum_value.value_nick;
+        var result = enum_value.value_nick.replace("unsolicited-response-", "");
+
+#if 0
+        var result0 = result;
+
+        try
+        {
+            var regex = new GLib.Regex(GLib.Regex.escape_string("^sim-"));
+            result = regex.replace_literal(result, -1, 0, "");
+        }
+        catch (GLib.RegexError e)
+        {
+            result = result0;
+        }
+#endif
+
+        return result;
     }
 
     internal void hexdump2(bool write, uint8[] data, FsoFramework.Logger logger)
