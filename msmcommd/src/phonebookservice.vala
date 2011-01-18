@@ -110,7 +110,7 @@ namespace Msmcomm.Daemon
             message.book_type = (uint8) book_type;
             message.position = (uint8) position;
 
-            var response = yield channel.enqueueAsync(message) as PhonebookReturnResponseMessage;
+            var response = (yield channel.enqueueAsync(message)) as PhonebookReturnResponseMessage;
 
             var record = PhonebookRecord();
             record.book_type = response.book_type;
@@ -130,7 +130,7 @@ namespace Msmcomm.Daemon
             message.title = title;
             message.number = number;
 
-            var response = yield channel.enqueueAsync(message) as PhonebookReturnResponseMessage;
+            var response = (yield channel.enqueueAsync(message)) as PhonebookReturnResponseMessage;
         }
 
         public async void read_record_bulk(uint book_type, uint first, uint last)
@@ -140,7 +140,7 @@ namespace Msmcomm.Daemon
             message.first = (uint8) first;
             message.last = (uint8) last;
 
-            var response = yield channel.enqueueAsync(message) as PhonebookReturnResponseMessage;
+            var response = (yield channel.enqueueAsync(message)) as PhonebookReturnResponseMessage;
         }
 
         public async void get_all_record_id()

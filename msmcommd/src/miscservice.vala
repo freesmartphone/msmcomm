@@ -62,7 +62,7 @@ namespace Msmcomm.Daemon
 
         public async RadioFirmwareVersionInfo get_radio_firmware_version() throws GLib.Error, Msmcomm.Error
         {
-            var response = yield channel.enqueueAsync(new MiscGetRadioFirmwareVersionCommandMessage()) as MiscGetRadioFirmwareVersionResponseMessage;
+            var response = (yield channel.enqueueAsync(new MiscGetRadioFirmwareVersionCommandMessage())) as MiscGetRadioFirmwareVersionResponseMessage;
             checkResponse(response);
 
             var info = RadioFirmwareVersionInfo();
@@ -74,7 +74,7 @@ namespace Msmcomm.Daemon
 
         public async ChargerStatusInfo get_charger_status() throws GLib.Error, Msmcomm.Error
         {
-            var response = yield channel.enqueueAsync(new MiscGetChargerStatusCommandMessage()) as MiscGetChargerStatusResponseMessage;
+            var response = (yield channel.enqueueAsync(new MiscGetChargerStatusCommandMessage())) as MiscGetChargerStatusResponseMessage;
             checkResponse(response);
 
             var info = ChargerStatusInfo();
@@ -90,7 +90,7 @@ namespace Msmcomm.Daemon
             message.voltage = convertVoltageForModem(info.voltage);
             message.mode = convertChargerModeForModem(info.mode);
 
-            var response = yield channel.enqueueAsync(message) as MiscSetChargeResponseMessage;
+            var response = (yield channel.enqueueAsync(message)) as MiscSetChargeResponseMessage;
             checkResponse(response);
         }
 
@@ -106,7 +106,7 @@ namespace Msmcomm.Daemon
             message.timezone_offset = (uint8) info.timezone_offset;
             message.time_source = convertTimeSourceForModem(info.time_source);
 
-            var response = yield channel.enqueueAsync(message);
+            var response = (yield channel.enqueueAsync(message));
             checkResponse(message);
         }
 
@@ -117,13 +117,13 @@ namespace Msmcomm.Daemon
 
         public async string get_imei() throws GLib.Error, Msmcomm.Error
         {
-            var response = yield channel.enqueueAsync(new MiscGetImeiCommandMessage()) as MiscGetImeiResponseMessage;
+            var response = (yield channel.enqueueAsync(new MiscGetImeiCommandMessage())) as MiscGetImeiResponseMessage;
             return response.imei;
         }
 
         public async HomeNetworkInfo get_home_network_name() throws GLib.Error, Msmcomm.Error
         {
-            var response = yield channel.enqueueAsync(new MiscGetHomeNetworkNameCommandMessage()) as MiscGetHomeNetworkNameResponseMessage;
+            var response = (yield channel.enqueueAsync(new MiscGetHomeNetworkNameCommandMessage())) as MiscGetHomeNetworkNameResponseMessage;
             checkResponse(response);
 
             var info = HomeNetworkInfo();
