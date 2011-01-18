@@ -1,0 +1,8 @@
+
+This is the implementation of the msmcomm protocol used mostly on the Palm Pre smartphone
+devices. It consists of three software components:
+
+- libmsmcomm: Implementation of the messages sent between userland and modem
+- msmcomm-specs: DBus specification for the msmcomm daemon
+- msmcommd: daemon which establishes the connection to the modem on link layer level and
+  sents and recieves messages to and from the modem
