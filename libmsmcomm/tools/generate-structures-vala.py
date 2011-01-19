@@ -54,6 +54,13 @@ def build_object(name, len, parts):
   global indent
   vala_name = format_name(name)
 
+  for part in parts:
+    if part['len'] > 1:
+      for len_part in parts:
+        if len_part['name'] == part['name'] + "_len":
+          part['len_name'] = len_part['name']
+          parts.remove(len_part)
+
   print "[CCode (cname = \"struct %s\", cheader_filename = \"structures.h\", destroy_function = \"\")]" % name
   print "struct %s" % vala_name
   print "{"
@@ -68,7 +75,9 @@ def build_object(name, len, parts):
     if len == 1:
       to_print = "%s;" % to_print
     elif len > 1:
-      to_print = "public %s[] %s;" % (vala_types[type], name)
+      if 'len_name' in part:
+        print_indent("[CCode (array_length_cname = \"%s\")]" % (part['len_name'], ))
+      to_print = "public %s %s[%i];" % (vala_types[type], name, len)
     else:
       continue
     print_indent(to_print)
