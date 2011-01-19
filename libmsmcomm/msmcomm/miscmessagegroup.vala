@@ -36,6 +36,7 @@ namespace Msmcomm.LowLevel
             message_types[MiscSetChargeResponseMessage.MESSAGE_ID] = typeof(MiscSetChargeResponseMessage);
             message_types[MiscSetDateResponseMessage.MESSAGE_ID] = typeof(MiscSetDateResponseMessage);
             message_types[MiscGetImeiResponseMessage.MESSAGE_ID] = typeof(MiscGetImeiResponseMessage);
+            message_types[MiscGetHomeNetworkNameResponseMessage.MESSAGE_ID] = typeof(MiscGetHomeNetworkNameResponseMessage);
         }
     }
 
