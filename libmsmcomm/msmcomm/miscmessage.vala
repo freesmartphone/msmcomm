@@ -209,7 +209,7 @@ namespace Msmcomm.LowLevel
     public class MiscSetChargeResponseMessage : MiscBaseChargingMessage
     {
         public static const uint8 GROUP_ID = 0x1c;
-        public static const uint16 MESSAGE_ID = 0x16;
+        public static const uint16 MESSAGE_ID = 0x14;
 
         private MiscSetChargeMessage _message;
 
