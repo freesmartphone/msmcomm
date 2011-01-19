@@ -240,6 +240,6 @@ end
 
 start phonebook_event 203
 [0] uint8_t position
-[1] uint8_t book_type
+[2] uint8_t book_type
 end
 

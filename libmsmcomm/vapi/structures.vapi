@@ -696,8 +696,9 @@ struct PhonebookReturnResponse
 struct PhonebookEvent
 {
 	public uint8 position;
+	public uint8 unknown0;
 	public uint8 book_type;
-	public uint8 unknown0[201];
+	public uint8 unknown1[200];
 	public unowned uint8[] data
 	{
 		get
