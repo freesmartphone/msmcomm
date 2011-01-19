@@ -198,7 +198,7 @@ struct misc_get_home_network_name_resp
 {
 	uint32_t ref_id;
 	uint8_t unknown0[94];
-	uint8_t operator_name_length;
+	uint8_t operator_name_len;
 	uint8_t operator_name[16];
 	uint16_t mcc;
 	uint8_t mnc;
@@ -290,8 +290,8 @@ struct sim_callback_resp
 	uint16_t field_type;
 	uint8_t result1;
 	uint8_t unknown1;
-	uint8_t field_length;
-	uint8_t field_data[8];
+	uint8_t field_len;
+	uint8_t field[8];
 	uint8_t unknown2[1911];
 } __attribute__ ((packed));
 

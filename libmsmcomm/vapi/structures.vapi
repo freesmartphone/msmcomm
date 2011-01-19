@@ -28,22 +28,22 @@ struct CallEvent
 	public uint8 call_id;
 	public uint8 call_type;
 	public uint8 unknown0;
-	public uint8[] caller_id;
-	public uint8[] unknown1;
-	public uint8[] plmn;
-	public uint8[] unknown2;
-	public uint8 caller_id_len;
-	public uint8[] unknown3;
+	[CCode (array_length_cname = "caller_id_len")]
+	public uint8 caller_id[15];
+	public uint8 unknown1[39];
+	public uint8 plmn[3];
+	public uint8 unknown2[7];
+	public uint8 unknown3[522];
 	public uint8 cause_value0;
-	public uint8[] unknown4;
+	public uint8 unknown4[4];
 	public uint8 cause_value1;
-	public uint8[] unknown5;
+	public uint8 unknown5[28];
 	public uint8 cause_value2;
 	public uint8 reject_type;
 	public uint8 reject_value;
-	public uint8[] unknown6;
+	public uint8 unknown6[306];
 	public uint8 is_tty;
-	public uint8[] unknown7;
+	public uint8 unknown7[173];
 	public unowned uint8[] data
 	{
 		get
@@ -63,7 +63,7 @@ struct CallCallbackResponse
 	public uint16 cmd_type;
 	public uint8 unknown0;
 	public uint8 result;
-	public uint8[] unknown1;
+	public uint8 unknown1[2];
 	public unowned uint8[] data
 	{
 		get
@@ -102,7 +102,7 @@ struct CallEndMessage
 	public uint32 ref_id;
 	public uint8 value0;
 	public uint8 call_id;
-	public uint8[] unknown0;
+	public uint8 unknown0[55];
 	public unowned uint8[] data
 	{
 		get
@@ -121,12 +121,12 @@ struct CallOriginationMessage
 	public uint32 ref_id;
 	public uint8 unknown0;
 	public uint8 value0;
-	public uint8[] unknown1;
-	public uint8[] caller_id;
-	public uint8 caller_id_len;
-	public uint8[] unknown2;
+	public uint8 unknown1[99];
+	[CCode (array_length_cname = "caller_id_len")]
+	public uint8 caller_id[64];
+	public uint8 unknown2[2];
 	public uint8 value1;
-	public uint8[] unknown3;
+	public uint8 unknown3[31];
 	public uint8 block;
 	public uint8 unknown4;
 	public unowned uint8[] data
@@ -147,9 +147,9 @@ struct CallSupsMessage
 	public uint32 ref_id;
 	public uint8 command;
 	public uint8 call_id;
-	public uint8[] unknown0;
+	public uint8 unknown0[79];
 	public uint8 value0;
-	public uint8[] unknown1;
+	public uint8 unknown1[20];
 	public unowned uint8[] data
 	{
 		get
@@ -199,7 +199,7 @@ struct MiscGetImeiMessage
 struct MiscGetImeiResponse
 {
 	public uint32 ref_id;
-	public uint8[] imei;
+	public uint8 imei[17];
 	public unowned uint8[] data
 	{
 		get
@@ -233,9 +233,9 @@ struct MiscGetRadioFirmwareVersionResponse
 {
 	public uint32 ref_id;
 	public uint8 carrier_id;
-	public uint8[] unknown0;
-	public uint8[] firmware_version;
-	public uint8[] unknown1;
+	public uint8 unknown0[3];
+	public uint8 firmware_version[13];
+	public uint8 unknown1[122];
 	public unowned uint8[] data
 	{
 		get
@@ -256,7 +256,7 @@ struct MiscGetChargerStatusMessage
 	public uint16 voltage;
 	public uint8 unknown1;
 	public uint8 mode;
-	public uint8[] unknown2;
+	public uint8 unknown2[3];
 	public uint8 rc;
 	public unowned uint8[] data
 	{
@@ -300,7 +300,7 @@ struct MiscSetDateMessage
 	public uint16 hour;
 	public uint16 minutes;
 	public uint16 seconds;
-	public uint8[] unknown0;
+	public uint8 unknown0[2];
 	public int32 timezone_offset;
 	public uint8 value0;
 	public uint8 unknown1;
@@ -356,9 +356,9 @@ struct MiscGetHomeNetworkNameMessage
 struct MiscGetHomeNetworkNameResponse
 {
 	public uint32 ref_id;
-	public uint8[] unknown0;
-	public uint8 operator_name_length;
-	public uint8[] operator_name;
+	public uint8 unknown0[94];
+	[CCode (array_length_cname = "operator_name_len")]
+	public uint8 operator_name[16];
 	public uint16 mcc;
 	public uint8 mnc;
 	public unowned uint8[] data
@@ -376,9 +376,9 @@ struct MiscGetHomeNetworkNameResponse
 [CCode (cname = "struct misc_charger_status_event", cheader_filename = "structures.h", destroy_function = "")]
 struct MiscChargerStatusEvent
 {
-	public uint8[] unknown0;
+	public uint8 unknown0[5];
 	public uint16 voltage;
-	public uint8[] unknown1;
+	public uint8 unknown1[6];
 	public unowned uint8[] data
 	{
 		get
@@ -394,7 +394,7 @@ struct MiscChargerStatusEvent
 [CCode (cname = "struct misc_radio_reset_ind_event", cheader_filename = "structures.h", destroy_function = "")]
 struct MiscRadioResetIndEvent
 {
-	public uint8[] unknown0;
+	public uint8 unknown0[76];
 	public unowned uint8[] data
 	{
 		get
@@ -429,17 +429,17 @@ struct StateSysSelPrefMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
-	public uint8[] unknown0;
+	public uint8 unknown0[5];
 	public uint8 value0;
-	public uint8[] unknown1;
+	public uint8 unknown1[3];
 	public uint8 value1;
-	public uint8[] unknown2;
+	public uint8 unknown2[5];
 	public uint8 value2;
 	public uint8 unknown3;
 	public uint8 value3;
 	public uint8 value4;
 	public uint8 value5;
-	public uint8[] unknown4;
+	public uint8 unknown4[4];
 	public unowned uint8[] data
 	{
 		get
@@ -456,7 +456,7 @@ struct StateSysSelPrefMessage
 struct StateCallbackResponse
 {
 	public uint32 ref_id;
-	public uint8[] unknown0;
+	public uint8 unknown0[7];
 	public uint8 result;
 	public unowned uint8[] data
 	{
@@ -475,10 +475,10 @@ struct StateEvent
 {
 	public uint8 unknown0;
 	public uint8 mode;
-	public uint8[] unknown1;
+	public uint8 unknown1[4077];
 	public uint8 als_allowed;
 	public uint8 line;
-	public uint8[] unknown2;
+	public uint8 unknown2[17];
 	public unowned uint8[] data
 	{
 		get
@@ -496,7 +496,7 @@ struct SimPinStatusMessage
 {
 	public uint32 ref_id;
 	public uint8 pin_type;
-	public uint8[] pin;
+	public uint8 pin[8];
 	public uint8 unknown0;
 	public unowned uint8[] data
 	{
@@ -514,9 +514,9 @@ struct SimPinStatusMessage
 struct SimReturnResponse
 {
 	public uint32 ref_id;
-	public uint8[] unknown0;
+	public uint8 unknown0[2];
 	public uint16 rc;
-	public uint8[] unknown1;
+	public uint8 unknown1[260];
 	public unowned uint8[] data
 	{
 		get
@@ -532,16 +532,16 @@ struct SimReturnResponse
 [CCode (cname = "struct sim_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct SimCallbackResponse
 {
-	public uint8[] unknown0;
+	public uint8 unknown0[4];
 	public uint8 result0;
 	public uint32 ref_id;
 	public uint8 resp_type;
 	public uint16 field_type;
 	public uint8 result1;
 	public uint8 unknown1;
-	public uint8 field_length;
-	public uint8[] field_data;
-	public uint8[] unknown2;
+	[CCode (array_length_cname = "field_len")]
+	public uint8 field[8];
+	public uint8 unknown2[1911];
 	public unowned uint8[] data
 	{
 		get
@@ -559,8 +559,8 @@ struct SimChangePinMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
-	public uint8[] old_pin;
-	public uint8[] new_pin;
+	public uint8 old_pin[9];
+	public uint8 new_pin[9];
 	public unowned uint8[] data
 	{
 		get
@@ -578,7 +578,7 @@ struct SimGetSimCapabilitiesMessage
 {
 	public uint32 ref_id;
 	public uint16 sim_file;
-	public uint8[] unknown0;
+	public uint8 unknown0[35];
 	public unowned uint8[] data
 	{
 		get
@@ -652,9 +652,9 @@ struct PhonebookWriteRecordMessage
 	public uint32 ref_id;
 	public uint8 position;
 	public uint8 book_type;
-	public uint8[] number;
+	public uint8 number[41];
 	public uint8 unknown0;
-	public uint8[] title;
+	public uint8 title[90];
 	public uint8 value0;
 	public unowned uint8[] data
 	{
@@ -677,8 +677,8 @@ struct PhonebookReturnResponse
 	public uint8 result;
 	public uint8 position;
 	public uint8 book_type;
-	public uint8[] number;
-	public uint8[] title;
+	public uint8 number[42];
+	public uint8 title[90];
 	public uint8 encoding_type;
 	public unowned uint8[] data
 	{
@@ -697,7 +697,7 @@ struct PhonebookEvent
 {
 	public uint8 position;
 	public uint8 book_type;
-	public uint8[] unknown0;
+	public uint8 unknown0[201];
 	public unowned uint8[] data
 	{
 		get
