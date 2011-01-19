@@ -30,24 +30,16 @@ namespace Msmcomm.LowLevel
         public MessageResultType result { get; protected set; default = MessageResultType.RESULT_OK; }
         public MessageClass message_class { get; protected set; default = MessageClass.UNKNOWN; }
 
-        private unowned uint8[] _payload;
+        protected unowned uint8[] _payload;
 
         public uint8[] pack()
         {
             prepare_data();
-
             return _payload;
         }
 
-        public void unpack(uint8[] data)
+        protected virtual void prepare_data()
         {
-            check_size(data.length, _payload.length);
-
-            if (_payload != null && data != null)
-            {
-                _payload = data;
-                evaluate_data();
-            }
         }
 
         protected virtual void check_size(int size, int payload_size)
@@ -55,11 +47,14 @@ namespace Msmcomm.LowLevel
             assert(size == payload_size);
         }
 
-        protected virtual void evaluate_data()
+        public void unpack(uint8[] payload)
         {
+            check_size(payload.length, _payload.length);
+            Memory.copy(_payload, payload, _payload.length);
+            evaluate_data();
         }
 
-        protected virtual void prepare_data()
+        protected virtual void evaluate_data()
         {
         }
 
