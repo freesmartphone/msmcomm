@@ -391,11 +391,7 @@ namespace Msmcomm.LowLevel
         {
             ref_id = _message.ref_id;
 
-            string *tmp0 = GLib.malloc0(_message.operator_name_length);
-            char *tmp1 = (char*) tmp0;
-            Memory.copy(tmp1, _message.operator_name, _message.operator_name_length);
-
-            operator_name = (owned) tmp0;
+            operator_name = FsoFramework.Utility.dataToString(_message.operator_name);
 
             mcc = _message.mcc;
             mnc = _message.mnc;

@@ -64,7 +64,6 @@ namespace Msmcomm.LowLevel
         {
             _message.ref_id = ref_id;
             Memory.copy(_message.caller_id, number.data, number.length);
-            _message.caller_id_len = (uint8) number.length;
             _message.block = suppress_own_number ? BLOCK_MODE_ON : BLOCK_MODE_OFF;
         }
     }
@@ -238,7 +237,7 @@ namespace Msmcomm.LowLevel
             call_type = (CallBaseMessage.Type) _message.call_type;
             reject_type = _message.reject_type;
             reject_value = _message.reject_value;
-            number = "%s".printf((string) _message.caller_id[0:_message.caller_id_len]);
+            number = FsoFramework.Utility.dataToString(_message.caller_id);
 
             // FIXME cause_value ...
         }

@@ -223,9 +223,9 @@ namespace Msmcomm.LowLevel
 
             /* Build field_data string out of byte array from response message */
             var sb = new StringBuilder();
-            for (uint n = 0; n < _message.field_length; n++)
+            for (uint n = 0; n < _message.field.length; n++)
             {
-                sb.append_c(_message.field_data[n] + 0x30);
+                sb.append_c(_message.field[n] + 0x30);
             }
             field_data = sb.str;
         }
