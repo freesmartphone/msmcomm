@@ -421,12 +421,21 @@ namespace Msmcomm.LowLevel
 
         private MiscChargerStatusEvent _message;
 
+        public MiscBaseChargingMessage.Voltage voltage;
+        public MiscBaseChargingMessage.Mode mode;
+
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS, MessageClass.UNSOLICITED_RESPONSE);
 
             _message = MiscChargerStatusEvent();
             set_payload(_message.data);
+        }
+
+        protected override void evaluate_data()
+        {
+            voltage = (MiscBaseChargingMessage.Voltage)_message.voltage;
+            //TODO: mode byte unknown
         }
     }
 }
