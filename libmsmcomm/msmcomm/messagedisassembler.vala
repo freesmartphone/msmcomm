@@ -70,7 +70,7 @@ namespace Msmcomm.LowLevel
             if (groups.has_key(groupId))
             {
                 var group = groups[groupId];
-                message = group.unpack_message(messageId, data[3:data.length], data.length - 3);
+                message = group.unpack_message(messageId, data[3:data.length]);
             }
 
             return message;

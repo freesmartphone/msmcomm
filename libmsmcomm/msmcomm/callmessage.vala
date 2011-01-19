@@ -53,7 +53,7 @@ namespace Msmcomm.LowLevel
             suppress_own_number = false;
 
             _message = CallOriginationMessage();
-            set_payload((void*)(&_message), sizeof(CallOriginationMessage));
+            set_payload(_message.data);
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x4;
@@ -83,7 +83,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_ANSWER, MessageClass.COMMAND);
 
             _message = CallAnswerMessage();
-            set_payload((void*)(&_message), sizeof(CallAnswerMessage));
+            set_payload(_message.data);
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x2;
@@ -112,7 +112,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_END, MessageClass.COMMAND);
 
             _message = CallEndMessage();
-            set_payload((void*)(&_message), sizeof(CallEndMessage));
+            set_payload(_message.data);
 
             /* Some unknown values which have to be set */
             _message.value0 = 0x1;
@@ -151,7 +151,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_CALL_SUPS, MessageClass.COMMAND);
 
             _message = CallSupsMessage();
-            set_payload((void*)(&_message), sizeof(CallSupsMessage));
+            set_payload(_message.data);
         }
 
         protected override void prepare_data()
@@ -180,7 +180,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK, MessageClass.SOLICITED_RESPONSE);
 
             _message = CallCallbackResponse();
-            set_payload((void*)(&_message), sizeof(CallCallbackResponse));
+            set_payload(_message.data);
         }
 
         protected override void evaluate_data()
@@ -229,7 +229,7 @@ namespace Msmcomm.LowLevel
             set_description(GROUP_ID, 0x0, MessageType.INVALID, MessageClass.UNSOLICITED_RESPONSE);
 
             _message = CallEvent();
-            set_payload((void*)(&_message), sizeof(CallEvent));
+            set_payload(_message.data);
         }
 
         protected override void evaluate_data()
