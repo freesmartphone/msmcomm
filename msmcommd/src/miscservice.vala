@@ -41,7 +41,12 @@ namespace Msmcomm.Daemon
                     handled = true;
                     break;
                 case MessageType.UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS:
-                    charger_status(ChargerStatusInfo());
+                    var csi = ChargerStatusInfo();
+                    var cs_msg = message as MiscChargerStatusUnsolicitedRespMessage;
+                    csi.voltage = (Msmcomm.ChargerVoltage)cs_msg.voltage;
+                    csi.mode = (Msmcomm.ChargerMode)cs_msg.mode;
+                    charger_status(csi);
+
                     handled = true;
                     break;
             }
