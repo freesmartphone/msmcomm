@@ -33,7 +33,7 @@ namespace Msmcomm.Daemon
         public override bool handleUnsolicitedResponse(BaseMessage message)
         {
             var handled = false;
-            var urc_service_name = messageTypeNickName(message.message_type);
+            var urc_service_name = messageTypeNickName(message.message_type, "sim-");
             var sim_message = message as SimUnsolicitedResponseMessage;
 
             if (sim_message != null)

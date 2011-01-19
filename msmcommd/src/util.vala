@@ -30,19 +30,12 @@ namespace Msmcomm.Daemon
         var enum_value = enum_class.get_value(message_type);
         var result = enum_value.value_nick.replace("unsolicited-response-", "");
 
-#if 0
-        var result0 = result;
-
-        try
+        if (prefix_to_remove.length > 0 && 
+            prefix_to_remove.length < result.length &&
+            result.has_prefix(prefix_to_remove))
         {
-            var regex = new GLib.Regex(GLib.Regex.escape_string("^sim-"));
-            result = regex.replace_literal(result, -1, 0, "");
+            result = result.substring(prefix_to_remove.length);
         }
-        catch (GLib.RegexError e)
-        {
-            result = result0;
-        }
-#endif
 
         return result;
     }
