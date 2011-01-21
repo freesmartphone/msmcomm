@@ -668,12 +668,28 @@ struct PhonebookWriteRecordMessage
 }
 
 
+[CCode (cname = "struct phonebook_extended_file_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookExtendedFileInfoMessage
+{
+	public uint32 ref_id;
+	public uint8 book_type;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookExtendedFileInfoMessage );
+			return res;
+		}
+	}
+}
+
+
 [CCode (cname = "struct phonebook_return_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct PhonebookReturnResponse
 {
 	public uint32 ref_id;
-	public uint8 modify_id;
-	public uint8 unknown0;
+	public uint16 command_id;
 	public uint8 result;
 	public uint8 position;
 	public uint8 book_type;

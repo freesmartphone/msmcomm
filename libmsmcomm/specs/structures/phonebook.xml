@@ -24,9 +24,14 @@
 			<field name="value0" start="138" type="uint8_t"/>
 		</structure>
 
+		<structure name="phonebook_extended_file_info_msg" length="5">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="book_type" start="4" type="uint8_t"/>
+		</structure>
+
 		<structure name="phonebook_return_resp" length="142">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="modify_id" start="4" type="uint8_t"/>
+			<field name="command_id" start="4" end="5" type="uint16_t"/>
 			<field name="result" start="6" type="uint8_t"/>
 			<field name="position" start="7" type="uint8_t"/>
 			<field name="book_type" start="8" type="uint8_t"/>

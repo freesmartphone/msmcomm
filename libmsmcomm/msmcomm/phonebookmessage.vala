@@ -120,6 +120,28 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class PhonebookExtendedFileInfoCommandMessage : PhonebookBaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x18;
+        public static const uint16 MESSAGE_ID = 0x4;
+
+        private PhonebookExtendedFileInfoMessage _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_PHONEBOOK_EXTENDED_FILE_INFO, MessageClass.COMMAND);
+
+            _message = PhonebookExtendedFileInfoMessage();
+            set_payload(_message.data);
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+            _message.book_type = book_type;
+        }
+    }
+
     public class PhonebookReturnResponseMessage : PhonebookBaseMessage
     {
         public static const uint8 GROUP_ID = 0x19;
@@ -127,7 +149,7 @@ namespace Msmcomm.LowLevel
 
         private PhonebookReturnResponse _message;
 
-        public uint8 modify_id;
+        public uint16 command_id;
         public uint8 position;
         public string number;
         public string title;
@@ -144,7 +166,7 @@ namespace Msmcomm.LowLevel
         protected override void evaluate_data()
         {
             ref_id = _message.ref_id;
-            modify_id = _message.modify_id;
+            command_id = _message.command_id;
             position = _message.position;
             book_type = _message.book_type;
             number = convertBytesToString((uint8*) _message.number, PHONEBOOK_NUMBER_LENGTH);

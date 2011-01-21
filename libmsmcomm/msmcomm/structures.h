@@ -350,11 +350,17 @@ struct phonebook_write_record_msg
 } __attribute__ ((packed));
 
 
+struct phonebook_extended_file_info_msg
+{
+	uint32_t ref_id;
+	uint8_t book_type;
+} __attribute__ ((packed));
+
+
 struct phonebook_return_resp
 {
 	uint32_t ref_id;
-	uint8_t modify_id;
-	uint8_t unknown0;
+	uint16_t command_id;
 	uint8_t result;
 	uint8_t position;
 	uint8_t book_type;
