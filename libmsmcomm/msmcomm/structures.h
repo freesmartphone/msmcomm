@@ -263,6 +263,95 @@ struct state_event
 } __attribute__ ((packed));
 
 
+struct wms_msg_group_event
+{
+	uint8_t unknown0[23];
+	uint8_t sender_length;
+	uint8_t sender[36];
+	uint8_t unknown1[2];
+	uint32_t pdu_length;
+	uint8_t pdu_start;
+	uint8_t pdu[2016];
+} __attribute__ ((packed));
+
+
+struct wms_acknowledge_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[4];
+	uint8_t value0;
+	uint8_t value1;
+	uint8_t unknown1[1891];
+} __attribute__ ((packed));
+
+
+struct wms_send_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[17];
+	uint8_t recipient_length;
+	uint8_t recipient[36];
+	uint8_t unknown1[2];
+	uint32_t pdu_length;
+	uint8_t pdu[255];
+} __attribute__ ((packed));
+
+
+struct wms_read_template_msg
+{
+	uint32_t ref_id;
+	uint16_t record;
+	uint8_t unknown0[3];
+} __attribute__ ((packed));
+
+
+struct wms_cfg_set_gw_domain_msg
+{
+	uint32_t ref_id;
+	uint8_t mode;
+} __attribute__ ((packed));
+
+
+struct wms_cfg_set_routes_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[25];
+} __attribute__ ((packed));
+
+
+struct wms_cfg_get_message_list_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[3];
+} __attribute__ ((packed));
+
+
+struct wms_read_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[5];
+} __attribute__ ((packed));
+
+
+struct wms_delete_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[5];
+} __attribute__ ((packed));
+
+
+struct wms_return_resp
+{
+} __attribute__ ((packed));
+
+
+struct wms_callback_resp
+{
+	uint8_t command_id;
+	uint8_t unknown0[9];
+} __attribute__ ((packed));
+
+
 struct sim_pin_status_msg
 {
 	uint32_t ref_id;

@@ -162,6 +162,61 @@ end
 #-------------------------------------------------------------------
 # SMS
 #-------------------------------------------------------------------
+start wms_msg_group_event 2083
+[23] uint8_t sender_length
+[24-59] uint8_t sender
+[62-65] uint32_t pdu_length
+[66] uint8_t pdu_start
+[67-2082] uint8_t pdu
+end
+
+start wms_acknowledge_msg 1901
+[0-3] uint32_t ref_id
+[8] uint8_t value0
+[9] uint8_t value1
+end
+
+start wms_send_msg 319
+[0-3] uint32_t ref_id
+[21] uint8_t recipient_length
+[22-57] uint8_t recipient
+[60-63] uint32_t pdu_length
+[64-318] uint8_t pdu
+end
+
+start wms_read_template_msg 9
+[0-3] uint32_t ref_id
+[4-5] uint16_t record
+end
+
+start wms_cfg_set_gw_domain_msg 5
+[0-3] uint32_t ref_id
+[4] uint8_t mode
+end
+
+start wms_cfg_set_routes_msg 29
+[0-3] uint32_t ref_id
+end
+
+start wms_cfg_get_message_list_msg 7
+[0-3] uint32_t ref_id
+end
+
+start wms_read_msg 9
+[0-3] uint32_t ref_id
+end
+
+start wms_delete_msg 9
+[0-3] uint32_t ref_id
+end
+
+start wms_return_resp 0
+end
+
+start wms_callback_resp 10
+[0] uint8_t command_id
+end
+
 #-------------------------------------------------------------------
 # SIM
 #-------------------------------------------------------------------

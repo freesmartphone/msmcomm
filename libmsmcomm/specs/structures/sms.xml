@@ -1,5 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <namespace:sms>
 	<structures>
+
+		<structure name="wms_msg_group_event" length="2083">
+			<field name="sender_length" start="23" type="uint8_t"/>
+			<field name="sender" start="24" end="59" type="uint8_t"/>
+			<field name="pdu_length" start="62" end="65" type="uint32_t"/>
+			<field name="pdu_start" start="66" type="uint8_t"/>
+			<field name="pdu" start="67" end="2082" type="uint8_t"/>
+		</structure>
+
+		<structure name="wms_acknowledge_msg" length="1901">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="value0" start="8" type="uint8_t"/>
+			<field name="value1" start="9" type="uint8_t"/>
+		</structure>
+
+		<structure name="wms_send_msg" length="319">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="recipient_length" start="21" type="uint8_t"/>
+			<field name="recipient" start="22" end="57" type="uint8_t"/>
+			<field name="pdu_length" start="60" end="63" type="uint32_t"/>
+			<field name="pdu" start="64" end="318" type="uint8_t"/>
+		</structure>
+
+		<structure name="wms_read_template_msg" length="9">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="record" start="4" end="5" type="uint16_t"/>
+		</structure>
+
+		<structure name="wms_cfg_set_gw_domain_msg" length="5">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="mode" start="4" type="uint8_t"/>
+		</structure>
+
+		<structure name="wms_cfg_set_routes_msg" length="29">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+
+		<structure name="wms_cfg_get_message_list_msg" length="7">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+
+		<structure name="wms_read_msg" length="9">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+
+		<structure name="wms_delete_msg" length="9">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+
+		<structure name="wms_return_resp" length="0">
+		</structure>
+
+		<structure name="wms_callback_resp" length="10">
+			<field name="command_id" start="0" type="uint8_t"/>
+		</structure>
+
 	</structures>
 </namespace:sms>

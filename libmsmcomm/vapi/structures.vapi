@@ -491,6 +491,205 @@ struct StateEvent
 }
 
 
+[CCode (cname = "struct wms_msg_group_event", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsMsgGroupEvent
+{
+	public uint8 unknown0[23];
+	public uint8 sender_length;
+	public uint8 sender[36];
+	public uint8 unknown1[2];
+	public uint32 pdu_length;
+	public uint8 pdu_start;
+	public uint8 pdu[2016];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsMsgGroupEvent );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct wms_acknowledge_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsAcknowledgeMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[4];
+	public uint8 value0;
+	public uint8 value1;
+	public uint8 unknown1[1891];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsAcknowledgeMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct wms_send_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsSendMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[17];
+	public uint8 recipient_length;
+	public uint8 recipient[36];
+	public uint8 unknown1[2];
+	public uint32 pdu_length;
+	public uint8 pdu[255];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsSendMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct wms_read_template_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsReadTemplateMessage
+{
+	public uint32 ref_id;
+	public uint16 record;
+	public uint8 unknown0[3];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsReadTemplateMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct wms_cfg_set_gw_domain_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsCfgSetGwDomainMessage
+{
+	public uint32 ref_id;
+	public uint8 mode;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsCfgSetGwDomainMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct wms_cfg_set_routes_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsCfgSetRoutesMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[25];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsCfgSetRoutesMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct wms_cfg_get_message_list_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsCfgGetMessageListMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[3];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsCfgGetMessageListMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct wms_read_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsReadMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[5];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsReadMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct wms_delete_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsDeleteMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[5];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsDeleteMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct wms_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsReturnResponse
+{
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsReturnResponse );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct wms_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsCallbackResponse
+{
+	public uint8 command_id;
+	public uint8 unknown0[9];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsCallbackResponse );
+			return res;
+		}
+	}
+}
+
+
 [CCode (cname = "struct sim_pin_status_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct SimPinStatusMessage
 {
