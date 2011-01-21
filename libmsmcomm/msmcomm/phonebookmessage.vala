@@ -174,7 +174,7 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class PhonebookExtendedFileInfoUnsolicitedResponseMessage : PhonebookBaseMessage
+    public class PhonebookExtendedFileInfoUrcMessage : PhonebookBaseMessage
     {
         public static const uint8 GROUP_ID = 0x1a;
         public static const uint16 MESSAGE_ID = 0xc;
@@ -224,6 +224,17 @@ namespace Msmcomm.LowLevel
         {
             book_type = _message.book_type;
             position = _message.position;
+        }
+    }
+
+    public class PhonebookReadyUrcMessage : PhonebookUrcBaseMessage
+    {
+        public static const uint16 MESSAGE_ID = 0x6;
+
+        construct
+        {
+            message_id = MESSAGE_ID;
+            message_type = MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_PHONEBOOK_READY;
         }
     }
 }

@@ -42,7 +42,8 @@ namespace Msmcomm.LowLevel
         {
             base(PhonebookUnsolicitedResponseMessageGroup.GROUP_ID);
 
-            message_types[PhonebookExtendedFileInfoUnsolicitedResponseMessage.MESSAGE_ID] = typeof(PhonebookExtendedFileInfoUnsolicitedResponseMessage);
+            message_types[PhonebookExtendedFileInfoUrcMessage.MESSAGE_ID] = typeof(PhonebookExtendedFileInfoUrcMessage);
+            message_types[PhonebookReadyUrcMessage.MESSAGE_ID] = typeof(PhonebookReadyUrcMessage);
         }
     }
 }
