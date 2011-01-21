@@ -241,12 +241,17 @@ namespace Msmcomm.LowLevel
             response_type = _message.resp_type;
 
             /* Build field_data string out of byte array from response message */
-            var sb = new StringBuilder();
-            for (uint n = 0; n < _message.field_data.length; n++)
+            if (field_type == SimFieldType.IMSI)
             {
-                sb.append_c(_message.field_data[n] + 0x30);
+                var sb = new StringBuilder();
+                sb.append("%i".printf(_message.field_data[0] >> 4));
+                for (var n = 1; n < _message.field_data.length; n++)
+                {
+                    sb.append("%i".printf(_message.field_data[n] & 0xf));
+                    sb.append("%i".printf((_message.field_data[n] & 0xf0) >> 4));
+                }
+                field_data = sb.str;
             }
-            field_data = sb.str;
         }
     }
 
