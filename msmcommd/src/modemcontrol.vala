@@ -30,6 +30,7 @@ namespace Msmcomm.Daemon
         private bool use_lowlevel;
         private GLib.ByteArray in_buffer;
         private ModemChannel channel;
+        private bool in_link_setup;
 
         public bool active { get; private set; default = false; }
 
@@ -44,13 +45,15 @@ namespace Msmcomm.Daemon
 
             bread = t.read(data, data.length);
 
-            if (!active)
+            if (in_link_setup || active)
+            {
+                 llc.processIncommingData(data[0:bread]);
+            }
+            else
             {
                 logger.debug("Could not read to any data from modem, as we are in in-active mode!");
                 return;
             }
-
-            llc.processIncommingData(data[0:bread]);
         }
 
         private void onTransportHangup(FsoFramework.Transport t)
@@ -128,7 +131,7 @@ namespace Msmcomm.Daemon
          */
         private void handleModemRequestFrameContent(uint8[] data)
         {
-            if (active)
+            if (in_link_setup || active)
             {
                 channel.handleIncommingData(data);
             }
@@ -139,13 +142,15 @@ namespace Msmcomm.Daemon
          */
         private void handleModemRequestSendData(uint8[] data)
         {
-            if (!active)
+            if (in_link_setup || active)
+            {
+                transport.write(data, data.length);
+            }
+            else
             {
                 logger.debug("Could not send to any data to modem, as we are in in-active mode!");
                 return;
             }
-
-            transport.write(data, data.length);
         }
 
         /*
@@ -170,6 +175,8 @@ namespace Msmcomm.Daemon
 
         private void handleLinkSetupComplete()
         {
+            active = true;
+            in_link_setup = false;
             statusUpdate(Msmcomm.ModemStatus.ACTIVE);
         }
 
@@ -182,6 +189,7 @@ namespace Msmcomm.Daemon
             modem_config = new Gee.HashMap<string,string>();
             lowlevel = new LowLevelControl();
             in_buffer = new GLib.ByteArray();
+            in_link_setup = false;
             statusUpdate.connect(handleStatusUpdate);
         }
 
@@ -219,7 +227,7 @@ namespace Msmcomm.Daemon
          */
         public void sendData(uint8[] data)
         {
-            if (active)
+            if (in_link_setup || active)
             {
                 llc.sendDataFrame(data);
             }
@@ -249,8 +257,8 @@ namespace Msmcomm.Daemon
                 return false;
             }
 
+            in_link_setup = true;
             llc.start();
-            active = true;
 
             return true;
         }
