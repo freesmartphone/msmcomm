@@ -174,6 +174,37 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class PhonebookExtendedFileInfoUnsolicitedResponseMessage : PhonebookBaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x1a;
+        public static const uint16 MESSAGE_ID = 0xc;
+
+        private PhonebookExtendedFileInfoEvent _message;
+
+        public uint32 slots_used;
+        public uint32 slot_count;
+        public uint32 max_chars_per_title;
+        public uint32 max_chars_per_number;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO, MessageClass.UNSOLICITED_RESPONSE);
+
+            _message = PhonebookExtendedFileInfoEvent();
+            set_payload(_message.data);
+        }
+
+        protected override void evaluate_data()
+        {
+            book_type = _message.book_type;
+            slots_used = _message.slots_used;
+            slot_count = _message.slot_count;
+            max_chars_per_title = _message.max_chars_per_title;
+            max_chars_per_number = _message.max_chars_per_number;
+        }
+    }
+
+#if 0
     public class PhonebookUnsolicitedResponseMessage : PhonebookBaseMessage
     {
         public static const uint8 GROUP_ID = 0x1a;
@@ -195,4 +226,6 @@ namespace Msmcomm.LowLevel
             position = _message.position;
         }
     }
+#endif
+
 }
