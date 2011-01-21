@@ -378,5 +378,17 @@ struct phonebook_event
 	uint8_t unknown1[200];
 } __attribute__ ((packed));
 
+
+struct phonebook_extended_file_info_event
+{
+	uint8_t unknown0;
+	uint8_t book_type;
+	uint32_t slots_used;
+	uint32_t slot_count;
+	uint32_t max_chars_per_title;
+	uint32_t max_chars_per_number;
+	uint8_t unknown1[185];
+} __attribute__ ((packed));
+
 #endif
 

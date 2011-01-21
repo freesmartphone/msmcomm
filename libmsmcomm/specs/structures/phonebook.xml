@@ -52,5 +52,13 @@
 			<field name="book_type" start="2" type="uint8_t"/>
 		</structure>
 
+		<structure name="phonebook_extended_file_info_event" length="203">
+			<field name="book_type" start="1" type="uint8_t"/>
+			<field name="slots_used" start="2" end="5" type="uint32_t"/>
+			<field name="slot_count" start="6" end="9" type="uint32_t"/>
+			<field name="max_chars_per_title" start="10" end="13" type="uint32_t"/>
+			<field name="max_chars_per_number" start="14" end="17" type="uint32_t"/>
+		</structure>
+
 	</structures>
 </namespace:phonebook>

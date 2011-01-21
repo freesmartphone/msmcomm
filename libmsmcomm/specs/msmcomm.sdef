@@ -248,3 +248,11 @@ start phonebook_event 203
 [2] uint8_t book_type
 end
 
+start phonebook_extended_file_info_event 203
+[1] uint8_t book_type
+[2-5] uint32_t slots_used
+[6-9] uint32_t slot_count
+[10-13] uint32_t max_chars_per_title
+[14-17] uint32_t max_chars_per_number
+end
+

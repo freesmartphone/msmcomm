@@ -726,5 +726,27 @@ struct PhonebookEvent
 	}
 }
 
+
+[CCode (cname = "struct phonebook_extended_file_info_event", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookExtendedFileInfoEvent
+{
+	public uint8 unknown0;
+	public uint8 book_type;
+	public uint32 slots_used;
+	public uint32 slot_count;
+	public uint32 max_chars_per_title;
+	public uint32 max_chars_per_number;
+	public uint8 unknown1[185];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookExtendedFileInfoEvent );
+			return res;
+		}
+	}
+}
+
 } /* namespace Msmcomm.LowLevel.Structures */ 
 
