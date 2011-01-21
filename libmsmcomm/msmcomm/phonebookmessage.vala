@@ -204,8 +204,7 @@ namespace Msmcomm.LowLevel
         }
     }
 
-#if 0
-    public class PhonebookUnsolicitedResponseMessage : PhonebookBaseMessage
+    public abstract class PhonebookUrcBaseMessage : PhonebookBaseMessage
     {
         public static const uint8 GROUP_ID = 0x1a;
 
@@ -215,6 +214,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
+            group_id = GROUP_ID;
             _message = PhonebookEvent();
             message_class = MessageClass.UNSOLICITED_RESPONSE;
             set_payload(_message.data);
@@ -226,6 +226,4 @@ namespace Msmcomm.LowLevel
             position = _message.position;
         }
     }
-#endif
-
 }
