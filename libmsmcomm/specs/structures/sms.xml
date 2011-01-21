@@ -3,9 +3,9 @@
 	<structures>
 
 		<structure name="wms_msg_group_event" length="2083">
-			<field name="sender_length" start="23" type="uint8_t"/>
+			<field name="sender_len" start="23" type="uint8_t"/>
 			<field name="sender" start="24" end="59" type="uint8_t"/>
-			<field name="pdu_length" start="62" end="65" type="uint32_t"/>
+			<field name="pdu_len" start="62" end="65" type="uint32_t"/>
 			<field name="pdu_start" start="66" type="uint8_t"/>
 			<field name="pdu" start="67" end="2082" type="uint8_t"/>
 		</structure>
@@ -18,9 +18,9 @@
 
 		<structure name="wms_send_msg" length="319">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="recipient_length" start="21" type="uint8_t"/>
+			<field name="recipient_len" start="21" type="uint8_t"/>
 			<field name="recipient" start="22" end="57" type="uint8_t"/>
-			<field name="pdu_length" start="60" end="63" type="uint32_t"/>
+			<field name="pdu_len" start="60" end="63" type="uint32_t"/>
 			<field name="pdu" start="64" end="318" type="uint8_t"/>
 		</structure>
 
