@@ -43,6 +43,7 @@ namespace Msmcomm
     [CCode (type_id = "MSMCOMM_PHONEBOOK_INFO", cheader_filename="msmcomm-specs.h")]
     public struct PhonebookInfo
     {
+        public uint book_type;
         public uint slot_count;
         public uint slots_used;
         public uint max_chars_per_title;

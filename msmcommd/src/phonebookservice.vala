@@ -97,6 +97,7 @@ namespace Msmcomm.Daemon
                     var pb_message = message as PhonebookExtendedFileInfoUrcMessage;
 
                     PhonebookInfo info = PhonebookInfo();
+                    info.book_type = pb_message.book_type;
                     info.slot_count = pb_message.slot_count;
                     info.slots_used = pb_message.slots_used;
                     info.max_chars_per_number = pb_message.max_chars_per_number;
