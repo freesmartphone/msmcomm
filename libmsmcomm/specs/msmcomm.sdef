@@ -284,12 +284,12 @@ end
 #-------------------------------------------------------------------
 # STATE
 #-------------------------------------------------------------------
-start state_change_operation_mode_msg 5
+start state_change_operation_mode_msg 5 0x05 0x00
 [0-3] uint32_t ref_id
 [4] uint8_t mode
 end
 
-start state_sys_sel_pref_msg 29
+start state_sys_sel_pref_msg 29 0x03 0x01
 [0-3] uint32_t ref_id
 [4] uint8_t mode
 [10] uint8_t value0

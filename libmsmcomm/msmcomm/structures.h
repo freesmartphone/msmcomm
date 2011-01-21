@@ -436,12 +436,18 @@ struct wms_callback_resp
 } __attribute__ ((packed));
 
 
+#define STATE_CHANGE_OPERATION_MODE_MSG_GROUP_ID 0x05
+#define STATE_CHANGE_OPERATION_MODE_MSG_MESSAGE_ID 0x00
+
 struct state_change_operation_mode_msg
 {
 	uint32_t ref_id;
 	uint8_t mode;
 } __attribute__ ((packed));
 
+
+#define STATE_SYS_SEL_PREF_MSG_GROUP_ID 0x03
+#define STATE_SYS_SEL_PREF_MSG_MESSAGE_ID 0x01
 
 struct state_sys_sel_pref_msg
 {

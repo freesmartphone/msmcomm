@@ -867,6 +867,11 @@ struct WmsCallbackResponse
 [CCode (cname = "struct state_change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct StateChangeOperationModeMessage
 {
+	[CCode (cname="STATE_CHANGE_OPERATION_MODE_MSG_GROUP_ID")]
+	public static const uint8 GROUP_ID;
+	[CCode (cname="STATE_CHANGE_OPERATION_MODE_MSG_MESSAGE_ID")]
+	public static const uint16 MESSAGE_ID;
+
 	public uint32 ref_id;
 	public uint8 mode;
 	public unowned uint8[] data
@@ -884,6 +889,11 @@ struct StateChangeOperationModeMessage
 [CCode (cname = "struct state_sys_sel_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct StateSysSelPrefMessage
 {
+	[CCode (cname="STATE_SYS_SEL_PREF_MSG_GROUP_ID")]
+	public static const uint8 GROUP_ID;
+	[CCode (cname="STATE_SYS_SEL_PREF_MSG_MESSAGE_ID")]
+	public static const uint16 MESSAGE_ID;
+
 	public uint32 ref_id;
 	public uint8 mode;
 	public uint8 unknown0[5];
