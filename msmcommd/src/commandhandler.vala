@@ -26,15 +26,18 @@ namespace Msmcomm.Daemon
     {
         public unowned Msmcomm.LowLevel.BaseMessage command;
         public unowned Msmcomm.LowLevel.BaseMessage response;
-        
+
         public uint timeout;
         public uint retry;
         public SourceFunc callback;
+        public bool timed_out;
 
-        public CommandHandler( Msmcomm.LowLevel.BaseMessage command, int retries )
+        public CommandHandler( Msmcomm.LowLevel.BaseMessage command, int retries = 0, int timeout = 0 )
         {
             this.command = command;
             this.retry = retries;
+            this.timeout = timeout;
+            this.timed_out = false;
         }
 
         public string to_string()

@@ -117,7 +117,7 @@ namespace Msmcomm.Daemon
             return "";
         }
 
-        public async PhonebookRecord read_record(uint book_type, uint position)
+        public async PhonebookRecord read_record(uint book_type, uint position) throws Msmcomm.Error, GLib.Error
         {
             var message = new PhonebookReadRecordCommandMessage();
             message.book_type = (uint8) book_type;
@@ -136,7 +136,7 @@ namespace Msmcomm.Daemon
             return record;
         }
 
-        public async void write_record(uint book_type, uint position, string title, string number)
+        public async void write_record(uint book_type, uint position, string title, string number) throws Msmcomm.Error, GLib.Error
         {
             var message = new PhonebookWriteRecordCommandMessage();
             message.book_type = (uint8) book_type;
@@ -148,7 +148,7 @@ namespace Msmcomm.Daemon
             checkResponse(response);
         }
 
-        public async void read_record_bulk(uint book_type, uint first, uint last)
+        public async void read_record_bulk(uint book_type, uint first, uint last) throws Msmcomm.Error, GLib.Error
         {
             var message = new PhonebookReadRecordBulkCommandMessage();
             message.book_type = (uint8) book_type;
@@ -159,16 +159,16 @@ namespace Msmcomm.Daemon
             checkResponse(response);
         }
 
-        public async void get_all_record_id()
+        public async void get_all_record_id() throws Msmcomm.Error, GLib.Error
         {
         }
 
-        public async void extended_file_info(uint book_type)
+        public async void extended_file_info(uint book_type) throws Msmcomm.Error, GLib.Error
         {
             var message = new PhonebookExtendedFileInfoCommandMessage();
             message.book_type = (uint8) book_type;
 
-            var response = (yield channel.enqueueAsync(message)) as PhonebookReturnResponseMessage;
+            var response = (yield channel.enqueueAsync(message, 0, 1)) as PhonebookReturnResponseMessage;
             checkResponse(response);
         }
     }

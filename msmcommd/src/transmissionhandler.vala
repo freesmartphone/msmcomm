@@ -28,11 +28,11 @@ namespace Msmcomm.Daemon
         private FsoFramework.Logger logger;
         private Timer timer;
         private ITransmissionControl control;
-        
+
         // 
         // public API
         //
-        
+
         public TransmissionHandler(LinkContext context, ITransmissionControl control)
         {
             this.context = context;
@@ -43,21 +43,21 @@ namespace Msmcomm.Daemon
             timer.requestHandleEvent.connect(handleFrameTransmissionRequest);
             queue = new Gee.LinkedList<Frame>();
         }
-        
+
         public void enequeFrame(Frame frame)
         {
             logger.debug(@"eneque $(frameTypeToString(frame.fr_type)) frame for sending");
-            
+
             frame.attempts = 0;
             queue.add(frame);
-            
+
             timer.start();
         }
-        
+
         //
         // private API
         //
-        
+
         private bool handleFrameTransmissionRequest(Timer timer)
         {
             foreach (Frame frame in queue)
@@ -65,16 +65,16 @@ namespace Msmcomm.Daemon
                 // FIXME implement different exception for better error handling while
                 // frame packing
                 logger.debug(@"Send a $(frameTypeToString(frame.fr_type)) frame to modem");
-                
+
                 if (frame.fr_type == FrameType.DATA)
                 {
                     frame.seq = context.nextSequenceNumber();
                     frame.ack = context.next_ack;
                 }
-                
+
                 control.requestHandleSendData(frame.pack());
                 frame.attempts++;
-                
+
                 if (frame.fr_type == FrameType.DATA)
                 {
                     // Current frame is a DATA frame and should be acked by the
@@ -84,9 +84,9 @@ namespace Msmcomm.Daemon
                     context.ack_timer.start();
                 }
             }
-            
+
             queue.clear();
-            
+
             return false;
         }
     }

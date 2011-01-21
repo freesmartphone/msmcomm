@@ -116,6 +116,10 @@ namespace Msmcomm.Daemon
 
         protected bool onTimeout()
         {
+            /* If command got a response while waiting for it, abort here */
+            if (current == null)
+                return false;
+
             assert( logger.warning( @"Timeout while waiting for an answer to '$current'" ) );
             if ( current.retry > 0 )
             {
@@ -132,8 +136,13 @@ namespace Msmcomm.Daemon
             return false;
         }
 
-        protected void onResponseTimeout( CommandHandler ach )
+        protected void onResponseTimeout( CommandHandler ch )
         {
+            resetTimeout();
+
+            /* Mark command as timed out and return to enqueueAsync method */
+            ch.timed_out = true;
+            ch.callback();
         }
 
         protected void enqueueCommand( CommandHandler command )
@@ -151,21 +160,8 @@ namespace Msmcomm.Daemon
 
         private bool checkResponseForCommandHandler(Msmcomm.LowLevel.BaseMessage response, CommandHandler bundle)
         {
-            bool result = false;
-
             // Check wether command and response have the same reference id
-            result = response.ref_id == bundle.command.ref_id;
-
-#if 0
-            // Ugly, ugly hack: As the GET_PHONEBOOK_PROPERTIES response does not
-            // has a ref_id field, we disable the check only for this response !!!
-            if (current_event_type != Msmcomm.LowLevel.BaseMessageType.RESPONSE_GET_PHONEBOOK_PROPERTIES)
-            {
-                result = response.ref_id == bundle.command.ref_id;
-            }
-#endif
-
-            return true;
+            return response.ref_id == bundle.command.ref_id;
         }
 
         private uint32 nextValidMessageRefId()
@@ -202,13 +198,24 @@ namespace Msmcomm.Daemon
             }
         }
 
-        public async unowned Msmcomm.LowLevel.BaseMessage enqueueAsync( owned Msmcomm.LowLevel.BaseMessage command, int retries = 0, int timeout = 0 )
+        public async unowned Msmcomm.LowLevel.BaseMessage enqueueAsync( owned Msmcomm.LowLevel.BaseMessage command, int retries = 0, int timeout = 0 ) throws Msmcomm.Error
         {
+            logger.debug("test");
             command.ref_id = nextValidMessageRefId();
-            var handler = new CommandHandler( command, retries );
+            var handler = new CommandHandler( command, retries, timeout );
             handler.callback = enqueueAsync.callback;
             enqueueCommand( handler );
             yield;
+
+            if (handler.timed_out)
+            {
+                /* Unset current command handler, otherwise queue hangs */
+                current = null;
+
+                var msg = @"Timed out while waiting for a response for command '$(command.message_type)'";
+                throw new Msmcomm.Error.TIMEOUT(msg);
+            }
+
             return handler.response;
         }
 
