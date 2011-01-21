@@ -23,6 +23,7 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
+#if 0
     private string convertBytesToString(uint8 *bytes, uint bytes_length)
     {
         string *tmp = GLib.malloc0(bytes_length); 
@@ -30,4 +31,5 @@ namespace Msmcomm.LowLevel
         Memory.copy(dest, bytes, bytes_length);
         return (owned) tmp;
     }
+#endif
 }
