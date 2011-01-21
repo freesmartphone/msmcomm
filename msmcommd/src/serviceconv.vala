@@ -188,22 +188,41 @@ namespace Msmcomm.Daemon
         return result;
     }
 
-    public SimInfoBaseMessage.SimField convertSimFieldForModem(SimField field_type)
+    public LowLevel.SimFieldType convertSimFieldTypeForModem(SimFieldType field_type)
     {
-        SimInfoBaseMessage.SimField result = SimInfoBaseMessage.SimField.IMSI;
+        LowLevel.SimFieldType result = LowLevel.SimFieldType.IMSI;
 
         switch (field_type)
         {
-            case SimField.IMSI:
-                result = SimInfoBaseMessage.SimField.IMSI;
+            case SimFieldType.IMSI:
+                result = LowLevel.SimFieldType.IMSI;
                 break;
-            case SimField.MSISDN:
-                result = SimInfoBaseMessage.SimField.MSISDN;
+            case SimFieldType.MSISDN:
+                result = LowLevel.SimFieldType.MSISDN;
                 break;
         }
 
         return result;
     }
+
+    public SimFieldType convertSimFieldTypeForService(LowLevel.SimFieldType field_type)
+    {
+        SimFieldType result = SimFieldType.IMSI;
+
+        switch (field_type)
+        {
+            case LowLevel.SimFieldType.IMSI:
+                result = SimFieldType.IMSI;
+                break;
+            case LowLevel.SimFieldType.MSISDN:
+                result = SimFieldType.MSISDN;
+                break;
+        }
+
+        return result;
+    }
+
+
 
     public PhonebookEncodingType convertPhonebookEncodingTypeForService(PhonebookBaseMessage.EncodingType encoding_type)
     {

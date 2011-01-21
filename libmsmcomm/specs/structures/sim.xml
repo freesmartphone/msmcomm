@@ -19,8 +19,8 @@
 		<field name="resp_type" start="9" type="uint8_t"/>
 		<field name="field_type" start="10" end="11" type="uint16_t"/>
 		<field name="result1" start="12" type="uint8_t"/>
-		<field name="field_len" start="14" type="uint8_t"/>
-		<field name="field" start="15" end="22" type="uint8_t"/>
+		<field name="field_data_len" start="14" type="uint8_t"/>
+		<field name="field_data" start="15" end="22" type="uint8_t"/>
 	</structure>
 
 	<structure name="sim_change_pin_msg" length="23">
@@ -29,9 +29,13 @@
 		<field name="new_pin" start="14" end="22" type="uint8_t"/>
 	</structure>
 
-	<structure name="sim_get_sim_capabilities_msg" length="41">
+	<structure name="sim_get_sim_capabilities_msg" length="4">
 		<field name="ref_id" start="0" end="3" type="uint32_t"/>
-		<field name="sim_file" start="4" end="5" type="uint16_t"/>
+	</structure>
+
+	<structure name="sim_read_msg" length="41">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="field_type" start="4" end="5" type="uint16_t"/>
 	</structure>
 
 	<structure name="sim_get_all_pin_status_info_msg" length="5">

@@ -219,131 +219,53 @@ struct misc_radio_reset_ind_event
 } __attribute__ ((packed));
 
 
-struct phonebook_read_record_msg
+#define STATE_CHANGE_OPERATION_MODE_MSG_GROUP_ID 0x03
+#define STATE_CHANGE_OPERATION_MODE_MSG_MESSAGE_ID 0x00
+
+struct state_change_operation_mode_msg
 {
 	uint32_t ref_id;
-	uint8_t position;
-	uint8_t book_type;
+	uint8_t mode;
 } __attribute__ ((packed));
 
 
-struct phonebook_read_record_bulk_msg
+#define STATE_SYS_SEL_PREF_MSG_GROUP_ID 0x03
+#define STATE_SYS_SEL_PREF_MSG_MESSAGE_ID 0x01
+
+struct state_sys_sel_pref_msg
 {
 	uint32_t ref_id;
-	uint8_t first_position;
-	uint8_t first_book_type;
-	uint8_t last_position;
-	uint8_t last_book_type;
-} __attribute__ ((packed));
-
-
-struct phonebook_write_record_msg
-{
-	uint32_t ref_id;
-	uint8_t position;
-	uint8_t book_type;
-	uint8_t number[41];
-	uint8_t unknown0;
-	uint8_t title[90];
+	uint8_t mode;
+	uint8_t unknown0[5];
 	uint8_t value0;
+	uint8_t unknown1[3];
+	uint8_t value1;
+	uint8_t unknown2[5];
+	uint8_t value2;
+	uint8_t unknown3;
+	uint8_t value3;
+	uint8_t value4;
+	uint8_t value5;
+	uint8_t unknown4[4];
 } __attribute__ ((packed));
 
 
-struct phonebook_extended_file_info_msg
+struct state_callback_resp
 {
 	uint32_t ref_id;
-	uint8_t book_type;
-} __attribute__ ((packed));
-
-
-struct phonebook_return_resp
-{
-	uint32_t ref_id;
-	uint16_t command_id;
+	uint8_t unknown0[7];
 	uint8_t result;
-	uint8_t position;
-	uint8_t book_type;
-	uint8_t number[42];
-	uint8_t title[90];
-	uint8_t encoding_type;
 } __attribute__ ((packed));
 
 
-struct phonebook_event
-{
-	uint8_t position;
-	uint8_t unknown0;
-	uint8_t book_type;
-	uint8_t unknown1[200];
-} __attribute__ ((packed));
-
-
-struct phonebook_extended_file_info_event
+struct state_event
 {
 	uint8_t unknown0;
-	uint8_t book_type;
-	uint32_t slots_used;
-	uint32_t slot_count;
-	uint32_t max_chars_per_title;
-	uint32_t max_chars_per_number;
-	uint8_t unknown1[185];
-} __attribute__ ((packed));
-
-
-struct sim_pin_status_msg
-{
-	uint32_t ref_id;
-	uint8_t pin_type;
-	uint8_t pin[8];
-	uint8_t unknown0;
-} __attribute__ ((packed));
-
-
-struct sim_return_resp
-{
-	uint32_t ref_id;
-	uint8_t unknown0[2];
-	uint16_t rc;
-	uint8_t unknown1[260];
-} __attribute__ ((packed));
-
-
-struct sim_callback_resp
-{
-	uint8_t unknown0[4];
-	uint8_t result0;
-	uint32_t ref_id;
-	uint8_t resp_type;
-	uint16_t field_type;
-	uint8_t result1;
-	uint8_t unknown1;
-	uint8_t field_len;
-	uint8_t field[8];
-	uint8_t unknown2[1911];
-} __attribute__ ((packed));
-
-
-struct sim_change_pin_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0;
-	uint8_t old_pin[9];
-	uint8_t new_pin[9];
-} __attribute__ ((packed));
-
-
-struct sim_get_sim_capabilities_msg
-{
-	uint32_t ref_id;
-	uint16_t sim_file;
-	uint8_t unknown0[35];
-} __attribute__ ((packed));
-
-
-struct sim_get_all_pin_status_info_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0;
+	uint8_t mode;
+	uint8_t unknown1[4077];
+	uint8_t als_allowed;
+	uint8_t line;
+	uint8_t unknown2[17];
 } __attribute__ ((packed));
 
 
@@ -436,53 +358,137 @@ struct wms_callback_resp
 } __attribute__ ((packed));
 
 
-#define STATE_CHANGE_OPERATION_MODE_MSG_GROUP_ID 0x03
-#define STATE_CHANGE_OPERATION_MODE_MSG_MESSAGE_ID 0x00
-
-struct state_change_operation_mode_msg
+struct sim_pin_status_msg
 {
 	uint32_t ref_id;
-	uint8_t mode;
+	uint8_t pin_type;
+	uint8_t pin[8];
+	uint8_t unknown0;
 } __attribute__ ((packed));
 
 
-#define STATE_SYS_SEL_PREF_MSG_GROUP_ID 0x03
-#define STATE_SYS_SEL_PREF_MSG_MESSAGE_ID 0x01
-
-struct state_sys_sel_pref_msg
+struct sim_return_resp
 {
 	uint32_t ref_id;
-	uint8_t mode;
-	uint8_t unknown0[5];
+	uint8_t unknown0[2];
+	uint16_t rc;
+	uint8_t unknown1[260];
+} __attribute__ ((packed));
+
+
+struct sim_callback_resp
+{
+	uint8_t unknown0[4];
+	uint8_t result0;
+	uint32_t ref_id;
+	uint8_t resp_type;
+	uint16_t field_type;
+	uint8_t result1;
+	uint8_t unknown1;
+	uint8_t field_data_len;
+	uint8_t field_data[8];
+	uint8_t unknown2[1911];
+} __attribute__ ((packed));
+
+
+struct sim_change_pin_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint8_t old_pin[9];
+	uint8_t new_pin[9];
+} __attribute__ ((packed));
+
+
+struct sim_get_sim_capabilities_msg
+{
+	uint32_t ref_id;
+} __attribute__ ((packed));
+
+
+struct sim_read_msg
+{
+	uint32_t ref_id;
+	uint16_t field_type;
+	uint8_t unknown0[35];
+} __attribute__ ((packed));
+
+
+struct sim_get_all_pin_status_info_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+} __attribute__ ((packed));
+
+
+struct phonebook_read_record_msg
+{
+	uint32_t ref_id;
+	uint8_t position;
+	uint8_t book_type;
+} __attribute__ ((packed));
+
+
+struct phonebook_read_record_bulk_msg
+{
+	uint32_t ref_id;
+	uint8_t first_position;
+	uint8_t first_book_type;
+	uint8_t last_position;
+	uint8_t last_book_type;
+} __attribute__ ((packed));
+
+
+struct phonebook_write_record_msg
+{
+	uint32_t ref_id;
+	uint8_t position;
+	uint8_t book_type;
+	uint8_t number[41];
+	uint8_t unknown0;
+	uint8_t title[90];
 	uint8_t value0;
-	uint8_t unknown1[3];
-	uint8_t value1;
-	uint8_t unknown2[5];
-	uint8_t value2;
-	uint8_t unknown3;
-	uint8_t value3;
-	uint8_t value4;
-	uint8_t value5;
-	uint8_t unknown4[4];
 } __attribute__ ((packed));
 
 
-struct state_callback_resp
+struct phonebook_extended_file_info_msg
 {
 	uint32_t ref_id;
-	uint8_t unknown0[7];
-	uint8_t result;
+	uint8_t book_type;
 } __attribute__ ((packed));
 
 
-struct state_event
+struct phonebook_return_resp
+{
+	uint32_t ref_id;
+	uint16_t command_id;
+	uint8_t result;
+	uint8_t position;
+	uint8_t book_type;
+	uint8_t number[42];
+	uint8_t title[90];
+	uint8_t encoding_type;
+} __attribute__ ((packed));
+
+
+struct phonebook_event
+{
+	uint8_t position;
+	uint8_t unknown0;
+	uint8_t book_type;
+	uint8_t unknown1[200];
+} __attribute__ ((packed));
+
+
+struct phonebook_extended_file_info_event
 {
 	uint8_t unknown0;
-	uint8_t mode;
-	uint8_t unknown1[4077];
-	uint8_t als_allowed;
-	uint8_t line;
-	uint8_t unknown2[17];
+	uint8_t book_type;
+	uint32_t slots_used;
+	uint32_t slot_count;
+	uint32_t max_chars_per_title;
+	uint32_t max_chars_per_number;
+	uint8_t unknown1[185];
 } __attribute__ ((packed));
 
 #endif

@@ -31,17 +31,23 @@ namespace Msmcomm
 
     [CCode (cprefix = "MSMCOMM_SIM_FIELD_", cheader_filename = "msmcomm-specs.h")]
     [DBus (use_string_marshalling = true)]
-    public enum SimField
+    public enum SimFieldType
     {
         IMSI,
         MSISDN,
     }
 
-    [CCode (type_id = "MSMCOMM_SIM_CAPABILITIES_INFO", cheader_filename="msmcomm-specs.h")]
+    [CCode (type_id = "MSMCOMM_SIM_CAPABILITIES_INFO", cheader_filename = "msmcomm-specs.h")]
     public struct SimCapabilitiesInfo
     {
-        SimField field_type;
-        string field_data;
+        public uint replace_me; // FIXME
+    }
+
+    [CCode (type_id = "MSMCOMM_SIM_FIELD_INFO", cheader_filename = "msmcomm-specs.h")]
+    public struct SimFieldInfo
+    {
+        SimFieldType type;
+        public string data;
     }
 
     [DBus (timeout = 120000, name = "org.msmcomm.SIM")]
@@ -51,8 +57,9 @@ namespace Msmcomm
         public abstract async void change_pin(string old_pin, string new_pin) throws GLib.Error, Msmcomm.Error;
         public abstract async void enable_pin(string pin) throws GLib.Error, Msmcomm.Error;
         public abstract async void disable_pin(string pin) throws GLib.Error, Msmcomm.Error;
-        public abstract async SimCapabilitiesInfo get_sim_capabilities(SimField field_type) throws GLib.Error, Msmcomm.Error;
+        public abstract async SimCapabilitiesInfo get_sim_capabilities() throws GLib.Error, Msmcomm.Error;
         public abstract async void get_all_pin_status_info() throws GLib.Error, Msmcomm.Error;
+        public abstract async SimFieldInfo read(SimFieldType field_type) throws GLib.Error, Msmcomm.Error;
 
         public signal void sim_status(string name);
     }

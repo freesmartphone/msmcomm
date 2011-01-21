@@ -23,16 +23,10 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-    public abstract class SimInfoBaseMessage : BaseMessage
+    public enum SimFieldType
     {
-        public enum SimField
-        {
-            IMSI = 0x401,
-            MSISDN = 0x419,
-        }
-
-        public SimField field_type;
-        public string field_data;
+        IMSI = 0x401,
+        MSISDN = 0x419,
     }
 
     public abstract class SimPinStatusBaseMessage : BaseMessage
@@ -123,10 +117,10 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class SimGetSimCapabilitiesCommandMessage : SimInfoBaseMessage
+    public class SimGetSimCapabilitiesCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0xf;
-        public static const uint16 MESSAGE_ID = 0x3;
+        public static const uint16 MESSAGE_ID = 0x2;
 
         private SimGetSimCapabilitiesMessage _message;
 
@@ -141,14 +135,13 @@ namespace Msmcomm.LowLevel
         protected override void prepare_data()
         {
             _message.ref_id = ref_id;
-            _message.sim_file = (uint8) field_type;
         }
     }
 
     public class SimGetAllPinStatusInfoCommandMessage : BaseMessage
     {
-        public static uint8 GROUP_ID = 0xf;
-        public static uint16 MESSAGE_ID = 0x1a;
+        public static const uint8 GROUP_ID = 0xf;
+        public static const uint16 MESSAGE_ID = 0x1a;
 
         private SimGetAllPinStatusInfoMessage _message;
 
@@ -166,7 +159,31 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class SimReturnResponseMessage : SimInfoBaseMessage
+    public class SimReadCommandMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0xf;
+        public static const uint16 MESSAGE_ID = 0x3;
+
+        private SimReadMessage _message;
+
+        public SimFieldType field_type;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_READ, MessageClass.COMMAND);
+
+            _message = SimReadMessage();
+            set_payload(_message.data);
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+            _message.field_type = (uint16) field_type;
+        }
+    }
+
+    public class SimReturnResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x10;
         public static const uint8 MESSAGE_ID = 0x0;
@@ -193,7 +210,7 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class SimCallbackResponseMessage : SimInfoBaseMessage
+    public class SimCallbackResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x10;
         public static const uint16 MESSAGE_ID = 0x1;
@@ -201,6 +218,8 @@ namespace Msmcomm.LowLevel
         private SimCallbackResponse _message;
 
         public uint8 response_type;
+        public SimFieldType field_type;
+        public string field_data;
 
         construct
         {
@@ -218,14 +237,14 @@ namespace Msmcomm.LowLevel
             }
 
             ref_id = _message.ref_id;
-            field_type = (SimInfoBaseMessage.SimField) _message.field_type;
+            field_type = (SimFieldType) _message.field_type;
             response_type = _message.resp_type;
 
             /* Build field_data string out of byte array from response message */
             var sb = new StringBuilder();
-            for (uint n = 0; n < _message.field.length; n++)
+            for (uint n = 0; n < _message.field_data.length; n++)
             {
-                sb.append_c(_message.field[n] + 0x30);
+                sb.append_c(_message.field_data[n] + 0x30);
             }
             field_data = sb.str;
         }

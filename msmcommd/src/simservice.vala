@@ -89,10 +89,9 @@ namespace Msmcomm.Daemon
             checkResponse(response);
         }
 
-        public async SimCapabilitiesInfo get_sim_capabilities(SimField field_type) throws GLib.Error, Msmcomm.Error
+        public async SimCapabilitiesInfo get_sim_capabilities() throws GLib.Error, Msmcomm.Error
         {
             var message = new SimGetSimCapabilitiesCommandMessage();
-            message.field_type = convertSimFieldForModem(field_type);
 
             var response = (yield channel.enqueueAsync(message)) as SimCallbackResponseMessage;
             checkResponse(response);
@@ -106,7 +105,20 @@ namespace Msmcomm.Daemon
 
             var response = (yield channel.enqueueAsync(message)) as SimCallbackResponseMessage;
             checkResponse(response);
+        }
 
+        public async SimFieldInfo read(SimFieldType field_type) throws GLib.Error, Msmcomm.Error
+        {
+            var message = new SimReadCommandMessage();
+            message.field_type = convertSimFieldTypeForModem(field_type);
+
+            var response = (yield channel.enqueueAsync(message)) as SimCallbackResponseMessage;
+            checkResponse(response);
+
+            var info = SimFieldInfo();
+            info.type = convertSimFieldTypeForService(response.field_type);
+            info.data = response.field_data;
+            return info;
         }
     }
 }
