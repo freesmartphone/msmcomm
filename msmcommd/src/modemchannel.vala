@@ -86,8 +86,6 @@ namespace Msmcomm.Daemon
          **/
         protected void writeNextCommand()
         {
-            uint8[] data;
-
             current = q.poll_head();
             writeCommand(current);
 
@@ -200,7 +198,15 @@ namespace Msmcomm.Daemon
 
         public async unowned Msmcomm.LowLevel.BaseMessage enqueueAsync( owned Msmcomm.LowLevel.BaseMessage command, int retries = 0, int timeout = 0 ) throws Msmcomm.Error
         {
-            logger.debug("test");
+            string msg = "";
+
+            /* Check wether modem is already ready for processing commands */
+            if (!modem.active)
+            {
+                msg = "Modem is not ready for command processing; initialize it first!";
+                throw new Msmcomm.Error.MODEM_INACTIVE(msg);
+            }
+
             command.ref_id = nextValidMessageRefId();
             var handler = new CommandHandler( command, retries, timeout );
             handler.callback = enqueueAsync.callback;
@@ -212,7 +218,7 @@ namespace Msmcomm.Daemon
                 /* Unset current command handler, otherwise queue hangs */
                 current = null;
 
-                var msg = @"Timed out while waiting for a response for command '$(command.message_type)'";
+                msg = @"Timed out while waiting for a response for command '$(command.message_type)'";
                 throw new Msmcomm.Error.TIMEOUT(msg);
             }
 
