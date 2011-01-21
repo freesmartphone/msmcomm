@@ -115,8 +115,10 @@ namespace Msmcomm.LowLevel
             _message.ref_id = ref_id;
             _message.book_type = book_type;
             _message.position = position;
-            Memory.copy(_message.number, number.data, PHONEBOOK_NUMBER_LENGTH);
-            Memory.copy(_message.title, title.data, PHONEBOOK_TITLE_LENGTH);
+            int len = number.data.length > PHONEBOOK_NUMBER_LENGTH ? PHONEBOOK_TITLE_LENGTH : number.data.length;
+            Memory.copy(_message.number, number.data, len);
+            len = number.data.length > PHONEBOOK_TITLE_LENGTH ? PHONEBOOK_TITLE_LENGTH : number.data.length;
+            Memory.copy(_message.title, title.data, len);
         }
     }
 
