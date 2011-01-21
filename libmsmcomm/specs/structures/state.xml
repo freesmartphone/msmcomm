@@ -2,7 +2,7 @@
 <namespace:state>
 	<description></description>
 	<structures>
-		<structure name="state_change_operation_mode_msg" length="5" group_id="0x05" message_id="0x00">
+		<structure name="state_change_operation_mode_msg" length="5" group_id="0x03" message_id="0x00">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="mode" start="4" type="uint8_t">
 				<descripton>

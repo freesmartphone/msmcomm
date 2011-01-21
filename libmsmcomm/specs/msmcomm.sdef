@@ -284,7 +284,7 @@ end
 #-------------------------------------------------------------------
 # STATE
 #-------------------------------------------------------------------
-start state_change_operation_mode_msg 5 0x05 0x00
+start state_change_operation_mode_msg 5 0x03 0x00
 [0-3] uint32_t ref_id
 [4] uint8_t mode
 end
