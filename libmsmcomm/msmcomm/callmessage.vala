@@ -204,9 +204,22 @@ namespace Msmcomm.LowLevel
         public static const uint8 GROUP_ID = 0x1;
         public static const uint16 MESSAGE_ID = 0x1;
 
+        private CallCallbackResponse _message;
+
+        public CallBaseMessage.Type command_type;
+
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_CALL_CALLBACK, MessageClass.SOLICITED_RESPONSE);
+            _message = CallCallbackResponse();
+            set_payload(_message.data);
+        }
+
+        protected override void evaluate_data()
+        {
+            ref_id = _message.ref_id;
+            command_type = (CallBaseMessage.Type)_message.cmd_type;
+            result = (Msmcomm.LowLevel.MessageResultType)_message.result;
         }
     }
 
