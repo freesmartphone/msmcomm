@@ -15,6 +15,8 @@ byte_size = {
   'int32_t': 4,
 }
 
+base_types = byte_size.keys()
+
 if not len(sys.argv) == 2:
   print "usage: generate_structs.py <struct definition file>"
   sys.exit(1)
@@ -34,6 +36,8 @@ def build_object(name, len, parts):
     name = part['name']
     len = part['len']
 
+    if not type in base_types:
+        type = "struct " + type
     to_print = "%s %s" % (type, name)
 
     if len == 1:
@@ -131,6 +135,7 @@ with open(sys.argv[1]) as f:
       # create current part
       part = {}
       part['name'] = rparts[2]
+
       part['type'] = rparts[1]
       if not part['type'] in byte_size:
         print "fatal error: no valid type '%s'" % line
@@ -147,6 +152,7 @@ with open(sys.argv[1]) as f:
         unknown_counter += 1
         gap['type'] = 'uint8_t'
         gap['len'] = object_len - last_end_offset
+        byte_size[object_name] = object_len
         object_parts.append(gap)
       
       if not first_object:

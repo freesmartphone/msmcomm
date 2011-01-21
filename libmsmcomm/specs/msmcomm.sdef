@@ -130,133 +130,6 @@ start misc_radio_reset_ind_event 76
 end
 
 #-------------------------------------------------------------------
-# STATE
-#-------------------------------------------------------------------
-start state_change_operation_mode_msg 5
-[0-3] uint32_t ref_id
-[4] uint8_t mode
-end
-
-start state_sys_sel_pref_msg 29
-[0-3] uint32_t ref_id
-[4] uint8_t mode
-[10] uint8_t value0
-[14] uint8_t value1
-[20] uint8_t value2
-[22] uint8_t value3
-[23] uint8_t value4
-[24] uint8_t value5
-end
-
-start state_callback_resp 12
-[0-3] uint32_t ref_id
-[11] uint8_t result
-end
-
-start state_event 4098
-[1] uint8_t mode
-[4079] uint8_t als_allowed
-[4080] uint8_t line
-end
-
-#-------------------------------------------------------------------
-# SMS
-#-------------------------------------------------------------------
-start wms_msg_group_event 2083
-[23] uint8_t sender_length
-[24-59] uint8_t sender
-[62-65] uint32_t pdu_length
-[66] uint8_t pdu_start
-[67-2082] uint8_t pdu
-end
-
-start wms_acknowledge_msg 1901
-[0-3] uint32_t ref_id
-[8] uint8_t value0
-[9] uint8_t value1
-end
-
-start wms_send_msg 319
-[0-3] uint32_t ref_id
-[21] uint8_t recipient_length
-[22-57] uint8_t recipient
-[60-63] uint32_t pdu_length
-[64-318] uint8_t pdu
-end
-
-start wms_read_template_msg 9
-[0-3] uint32_t ref_id
-[4-5] uint16_t record
-end
-
-start wms_cfg_set_gw_domain_msg 5
-[0-3] uint32_t ref_id
-[4] uint8_t mode
-end
-
-start wms_cfg_set_routes_msg 29
-[0-3] uint32_t ref_id
-end
-
-start wms_cfg_get_message_list_msg 7
-[0-3] uint32_t ref_id
-end
-
-start wms_read_msg 9
-[0-3] uint32_t ref_id
-end
-
-start wms_delete_msg 9
-[0-3] uint32_t ref_id
-end
-
-start wms_return_resp 0
-end
-
-start wms_callback_resp 10
-[0] uint8_t command_id
-end
-
-#-------------------------------------------------------------------
-# SIM
-#-------------------------------------------------------------------
-start sim_pin_status_msg 14
-[0-3] uint32_t ref_id
-[4] uint8_t pin_type
-[5-12] uint8_t pin
-end
-
-start sim_return_resp 268
-[0-3] uint32_t ref_id
-[6-7] uint16_t rc
-end
-
-start sim_callback_resp 1934
-[4] uint8_t result0
-[5-8] uint32_t ref_id
-[9] uint8_t resp_type
-[10-11] uint16_t field_type
-[12] uint8_t result1
-[14] uint8_t field_len
-[15-22] uint8_t field
-end
-
-start sim_change_pin_msg 23
-[0-3] uint32_t ref_id
-[5-13] uint8_t old_pin
-[14-22] uint8_t new_pin
-end
-
-start sim_get_sim_capabilities_msg 41
-[0-3] uint32_t ref_id
-[4-5] uint16_t sim_file
-end
-
-start sim_get_all_pin_status_info_msg 5
-[0-3] uint32_t ref_id
-end
-
-#-------------------------------------------------------------------
 # PHONEBOOK
 #-------------------------------------------------------------------
 start phonebook_read_record_msg 6
@@ -309,5 +182,143 @@ start phonebook_extended_file_info_event 203
 [6-9] uint32_t slot_count
 [10-13] uint32_t max_chars_per_title
 [14-17] uint32_t max_chars_per_number
+end
+
+#-------------------------------------------------------------------
+# SIM
+#-------------------------------------------------------------------
+start sim_pin_status_msg 14
+[0-3] uint32_t ref_id
+[4] uint8_t pin_type
+[5-12] uint8_t pin
+end
+
+start sim_return_resp 268
+[0-3] uint32_t ref_id
+[6-7] uint16_t rc
+end
+
+start sim_callback_resp 1934
+[4] uint8_t result0
+[5-8] uint32_t ref_id
+[9] uint8_t resp_type
+[10-11] uint16_t field_type
+[12] uint8_t result1
+[14] uint8_t field_len
+[15-22] uint8_t field
+end
+
+start sim_change_pin_msg 23
+[0-3] uint32_t ref_id
+[5-13] uint8_t old_pin
+[14-22] uint8_t new_pin
+end
+
+start sim_get_sim_capabilities_msg 41
+[0-3] uint32_t ref_id
+[4-5] uint16_t sim_file
+end
+
+start sim_get_all_pin_status_info_msg 5
+[0-3] uint32_t ref_id
+end
+
+#-------------------------------------------------------------------
+# SMS
+#-------------------------------------------------------------------
+start wms_msg_group_event 2083
+[23] uint8_t sender_len
+[24-59] uint8_t sender
+[62-65] uint32_t pdu_len
+[66] uint8_t pdu_start
+[67-2082] uint8_t pdu
+end
+
+start wms_acknowledge_msg 1901
+[0-3] uint32_t ref_id
+[8] uint8_t value0
+[9] uint8_t value1
+end
+
+start wms_send_msg 319
+[0-3] uint32_t ref_id
+[21] uint8_t recipient_len
+[22-57] uint8_t recipient
+[60-63] uint32_t pdu_len
+[64-318] uint8_t pdu
+end
+
+start wms_read_template_msg 9
+[0-3] uint32_t ref_id
+[4-5] uint16_t record
+end
+
+start wms_cfg_set_gw_domain_msg 5
+[0-3] uint32_t ref_id
+[4] uint8_t mode
+end
+
+start wms_cfg_set_routes_msg 29
+[0-3] uint32_t ref_id
+end
+
+start wms_cfg_get_message_list_msg 7
+[0-3] uint32_t ref_id
+end
+
+start wms_read_msg 9
+[0-3] uint32_t ref_id
+end
+
+start wms_delete_msg 9
+[0-3] uint32_t ref_id
+end
+
+start wms_return_resp 0
+end
+
+start wms_callback_resp 10
+[0] uint8_t command_id
+end
+
+#-------------------------------------------------------------------
+# STATE
+#-------------------------------------------------------------------
+start state_change_operation_mode_msg 5
+[0-3] uint32_t ref_id
+[4] uint8_t mode
+end
+
+start state_sys_sel_pref_msg 29
+[0-3] uint32_t ref_id
+[4] uint8_t mode
+[10] uint8_t value0
+[14] uint8_t value1
+[20] uint8_t value2
+[22] uint8_t value3
+[23] uint8_t value4
+[24] uint8_t value5
+end
+
+start state_callback_resp 12
+[0-3] uint32_t ref_id
+[11] uint8_t result
+end
+
+start state_event 4098
+[1] uint8_t mode
+[4079] uint8_t als_allowed
+[4080] uint8_t line
+end
+
+#-------------------------------------------------------------------
+# TEST
+#-------------------------------------------------------------------
+start foo_field 40
+[15-22] uint8_t field
+end
+
+start bar_msg 1000
+[100-220] foo_field fields
 end
 

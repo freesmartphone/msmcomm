@@ -51,6 +51,7 @@ class Handler(ContentHandler):
 			self.structure['name'] = attrs.get('name')
 			self.structure['length'] = attrs.get('length')
 			self.structure['fields'] = []
+                        type_size[self.structure['name']] = self.structure['length']
 		elif element == "field":
 			self.field = {}
 			self.field['name'] = attrs.get('name')

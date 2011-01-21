@@ -219,196 +219,6 @@ struct misc_radio_reset_ind_event
 } __attribute__ ((packed));
 
 
-struct state_change_operation_mode_msg
-{
-	uint32_t ref_id;
-	uint8_t mode;
-} __attribute__ ((packed));
-
-
-struct state_sys_sel_pref_msg
-{
-	uint32_t ref_id;
-	uint8_t mode;
-	uint8_t unknown0[5];
-	uint8_t value0;
-	uint8_t unknown1[3];
-	uint8_t value1;
-	uint8_t unknown2[5];
-	uint8_t value2;
-	uint8_t unknown3;
-	uint8_t value3;
-	uint8_t value4;
-	uint8_t value5;
-	uint8_t unknown4[4];
-} __attribute__ ((packed));
-
-
-struct state_callback_resp
-{
-	uint32_t ref_id;
-	uint8_t unknown0[7];
-	uint8_t result;
-} __attribute__ ((packed));
-
-
-struct state_event
-{
-	uint8_t unknown0;
-	uint8_t mode;
-	uint8_t unknown1[4077];
-	uint8_t als_allowed;
-	uint8_t line;
-	uint8_t unknown2[17];
-} __attribute__ ((packed));
-
-
-struct wms_msg_group_event
-{
-	uint8_t unknown0[23];
-	uint8_t sender_length;
-	uint8_t sender[36];
-	uint8_t unknown1[2];
-	uint32_t pdu_length;
-	uint8_t pdu_start;
-	uint8_t pdu[2016];
-} __attribute__ ((packed));
-
-
-struct wms_acknowledge_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0[4];
-	uint8_t value0;
-	uint8_t value1;
-	uint8_t unknown1[1891];
-} __attribute__ ((packed));
-
-
-struct wms_send_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0[17];
-	uint8_t recipient_length;
-	uint8_t recipient[36];
-	uint8_t unknown1[2];
-	uint32_t pdu_length;
-	uint8_t pdu[255];
-} __attribute__ ((packed));
-
-
-struct wms_read_template_msg
-{
-	uint32_t ref_id;
-	uint16_t record;
-	uint8_t unknown0[3];
-} __attribute__ ((packed));
-
-
-struct wms_cfg_set_gw_domain_msg
-{
-	uint32_t ref_id;
-	uint8_t mode;
-} __attribute__ ((packed));
-
-
-struct wms_cfg_set_routes_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0[25];
-} __attribute__ ((packed));
-
-
-struct wms_cfg_get_message_list_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0[3];
-} __attribute__ ((packed));
-
-
-struct wms_read_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0[5];
-} __attribute__ ((packed));
-
-
-struct wms_delete_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0[5];
-} __attribute__ ((packed));
-
-
-struct wms_return_resp
-{
-} __attribute__ ((packed));
-
-
-struct wms_callback_resp
-{
-	uint8_t command_id;
-	uint8_t unknown0[9];
-} __attribute__ ((packed));
-
-
-struct sim_pin_status_msg
-{
-	uint32_t ref_id;
-	uint8_t pin_type;
-	uint8_t pin[8];
-	uint8_t unknown0;
-} __attribute__ ((packed));
-
-
-struct sim_return_resp
-{
-	uint32_t ref_id;
-	uint8_t unknown0[2];
-	uint16_t rc;
-	uint8_t unknown1[260];
-} __attribute__ ((packed));
-
-
-struct sim_callback_resp
-{
-	uint8_t unknown0[4];
-	uint8_t result0;
-	uint32_t ref_id;
-	uint8_t resp_type;
-	uint16_t field_type;
-	uint8_t result1;
-	uint8_t unknown1;
-	uint8_t field_len;
-	uint8_t field[8];
-	uint8_t unknown2[1911];
-} __attribute__ ((packed));
-
-
-struct sim_change_pin_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0;
-	uint8_t old_pin[9];
-	uint8_t new_pin[9];
-} __attribute__ ((packed));
-
-
-struct sim_get_sim_capabilities_msg
-{
-	uint32_t ref_id;
-	uint16_t sim_file;
-	uint8_t unknown0[35];
-} __attribute__ ((packed));
-
-
-struct sim_get_all_pin_status_info_msg
-{
-	uint32_t ref_id;
-	uint8_t unknown0;
-} __attribute__ ((packed));
-
-
 struct phonebook_read_record_msg
 {
 	uint32_t ref_id;
@@ -477,6 +287,212 @@ struct phonebook_extended_file_info_event
 	uint32_t max_chars_per_title;
 	uint32_t max_chars_per_number;
 	uint8_t unknown1[185];
+} __attribute__ ((packed));
+
+
+struct sim_pin_status_msg
+{
+	uint32_t ref_id;
+	uint8_t pin_type;
+	uint8_t pin[8];
+	uint8_t unknown0;
+} __attribute__ ((packed));
+
+
+struct sim_return_resp
+{
+	uint32_t ref_id;
+	uint8_t unknown0[2];
+	uint16_t rc;
+	uint8_t unknown1[260];
+} __attribute__ ((packed));
+
+
+struct sim_callback_resp
+{
+	uint8_t unknown0[4];
+	uint8_t result0;
+	uint32_t ref_id;
+	uint8_t resp_type;
+	uint16_t field_type;
+	uint8_t result1;
+	uint8_t unknown1;
+	uint8_t field_len;
+	uint8_t field[8];
+	uint8_t unknown2[1911];
+} __attribute__ ((packed));
+
+
+struct sim_change_pin_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint8_t old_pin[9];
+	uint8_t new_pin[9];
+} __attribute__ ((packed));
+
+
+struct sim_get_sim_capabilities_msg
+{
+	uint32_t ref_id;
+	uint16_t sim_file;
+	uint8_t unknown0[35];
+} __attribute__ ((packed));
+
+
+struct sim_get_all_pin_status_info_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+} __attribute__ ((packed));
+
+
+struct wms_msg_group_event
+{
+	uint8_t unknown0[23];
+	uint8_t sender_len;
+	uint8_t sender[36];
+	uint8_t unknown1[2];
+	uint32_t pdu_len;
+	uint8_t pdu_start;
+	uint8_t pdu[2016];
+} __attribute__ ((packed));
+
+
+struct wms_acknowledge_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[4];
+	uint8_t value0;
+	uint8_t value1;
+	uint8_t unknown1[1891];
+} __attribute__ ((packed));
+
+
+struct wms_send_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[17];
+	uint8_t recipient_len;
+	uint8_t recipient[36];
+	uint8_t unknown1[2];
+	uint32_t pdu_len;
+	uint8_t pdu[255];
+} __attribute__ ((packed));
+
+
+struct wms_read_template_msg
+{
+	uint32_t ref_id;
+	uint16_t record;
+	uint8_t unknown0[3];
+} __attribute__ ((packed));
+
+
+struct wms_cfg_set_gw_domain_msg
+{
+	uint32_t ref_id;
+	uint8_t mode;
+} __attribute__ ((packed));
+
+
+struct wms_cfg_set_routes_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[25];
+} __attribute__ ((packed));
+
+
+struct wms_cfg_get_message_list_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[3];
+} __attribute__ ((packed));
+
+
+struct wms_read_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[5];
+} __attribute__ ((packed));
+
+
+struct wms_delete_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[5];
+} __attribute__ ((packed));
+
+
+struct wms_return_resp
+{
+} __attribute__ ((packed));
+
+
+struct wms_callback_resp
+{
+	uint8_t command_id;
+	uint8_t unknown0[9];
+} __attribute__ ((packed));
+
+
+struct state_change_operation_mode_msg
+{
+	uint32_t ref_id;
+	uint8_t mode;
+} __attribute__ ((packed));
+
+
+struct state_sys_sel_pref_msg
+{
+	uint32_t ref_id;
+	uint8_t mode;
+	uint8_t unknown0[5];
+	uint8_t value0;
+	uint8_t unknown1[3];
+	uint8_t value1;
+	uint8_t unknown2[5];
+	uint8_t value2;
+	uint8_t unknown3;
+	uint8_t value3;
+	uint8_t value4;
+	uint8_t value5;
+	uint8_t unknown4[4];
+} __attribute__ ((packed));
+
+
+struct state_callback_resp
+{
+	uint32_t ref_id;
+	uint8_t unknown0[7];
+	uint8_t result;
+} __attribute__ ((packed));
+
+
+struct state_event
+{
+	uint8_t unknown0;
+	uint8_t mode;
+	uint8_t unknown1[4077];
+	uint8_t als_allowed;
+	uint8_t line;
+	uint8_t unknown2[17];
+} __attribute__ ((packed));
+
+
+struct foo_field
+{
+	uint8_t unknown0[15];
+	uint8_t field[8];
+	uint8_t unknown1[17];
+} __attribute__ ((packed));
+
+
+struct bar_msg
+{
+	uint8_t unknown0[100];
+	struct foo_field fields[3];
+	uint8_t unknown1[780];
 } __attribute__ ((packed));
 
 #endif

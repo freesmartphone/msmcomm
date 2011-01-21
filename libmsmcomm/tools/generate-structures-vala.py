@@ -40,6 +40,7 @@ message_type_name_map = {
   'msg' : 'Message',
   'resp' : 'Response',
   'event' : 'Event',
+  'field' : 'Field',
 }
 
 def format_name(name):
@@ -48,6 +49,7 @@ def format_name(name):
   for part in parts[:-1]:
     new_name += part.capitalize()
   new_name += message_type_name_map[parts[len(parts)-1]]
+  vala_types[name] = new_name
   return new_name
 
 def build_object(name, len, parts):
@@ -202,6 +204,7 @@ with open(sys.argv[1]) as f:
       if not first_object:
         print_object_header()
       first_object = False
+      byte_size[object_name] = object_len
       build_object(object_name, object_len, object_parts)
 
       # reset everything
