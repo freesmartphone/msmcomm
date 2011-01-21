@@ -479,21 +479,5 @@ struct state_event
 	uint8_t unknown2[17];
 } __attribute__ ((packed));
 
-
-struct foo_field
-{
-	uint8_t unknown0[15];
-	uint8_t field[8];
-	uint8_t unknown1[17];
-} __attribute__ ((packed));
-
-
-struct bar_msg
-{
-	uint8_t unknown0[100];
-	struct foo_field fields[3];
-	uint8_t unknown1[780];
-} __attribute__ ((packed));
-
 #endif
 

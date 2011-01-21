@@ -947,41 +947,5 @@ struct StateEvent
 	}
 }
 
-
-[CCode (cname = "struct foo_field", cheader_filename = "structures.h", destroy_function = "")]
-struct FooField
-{
-	public uint8 unknown0[15];
-	public uint8 field[8];
-	public uint8 unknown1[17];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( FooField );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct bar_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct BarMessage
-{
-	public uint8 unknown0[100];
-	public FooField fields[3];
-	public uint8 unknown1[780];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( BarMessage );
-			return res;
-		}
-	}
-}
-
 } /* namespace Msmcomm.LowLevel.Structures */ 
 
