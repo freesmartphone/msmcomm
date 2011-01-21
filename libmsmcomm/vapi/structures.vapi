@@ -977,7 +977,7 @@ struct PhonebookExtendedFileInfoEvent
 [CCode (cname = "struct network_report_rssi_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct NetworkReportRssiMessage
 {
-	public uint8 ref_id[4];
+	public uint32 ref_id;
 	public uint8 mode;
 	public unowned uint8[] data
 	{
@@ -994,7 +994,7 @@ struct NetworkReportRssiMessage
 [CCode (cname = "struct network_report_health_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct NetworkReportHealthMessage
 {
-	public uint8 ref_id[4];
+	public uint32 ref_id;
 	public uint8 mode;
 	public unowned uint8[] data
 	{
@@ -1036,7 +1036,8 @@ struct NetworkStateInfoEvent
 	public uint8 gprs_attached;
 	public uint16 roam;
 	public uint8 unknown0;
-	public uint8 plmn[3];
+	public uint16 mcc;
+	public uint8 mnc;
 	public uint8 unknown1[3];
 	[CCode (array_length_cname = "operator_name_len")]
 	public uint8 operator_name[80];

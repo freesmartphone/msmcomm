@@ -494,14 +494,14 @@ struct phonebook_extended_file_info_event
 
 struct network_report_rssi_msg
 {
-	uint8_t ref_id[4];
+	uint32_t ref_id;
 	uint8_t mode;
 } __attribute__ ((packed));
 
 
 struct network_report_health_msg
 {
-	uint8_t ref_id[4];
+	uint32_t ref_id;
 	uint8_t mode;
 } __attribute__ ((packed));
 
@@ -523,7 +523,8 @@ struct network_state_info_event
 	uint8_t gprs_attached;
 	uint16_t roam;
 	uint8_t unknown0;
-	uint8_t plmn[3];
+	uint16_t mcc;
+	uint8_t mnc;
 	uint8_t unknown1[3];
 	uint8_t operator_name_len;
 	uint8_t operator_name[80];

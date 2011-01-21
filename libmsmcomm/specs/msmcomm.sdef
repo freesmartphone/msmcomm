@@ -319,12 +319,12 @@ end
 # NETWORK
 #-------------------------------------------------------------------
 start network_report_rssi_msg 5
-[0-3] uint8_t ref_id
+[0-3] uint32_t ref_id
 [4] uint8_t mode
 end
 
 start network_report_health_msg 5
-[0-3] uint8_t ref_id
+[0-3] uint32_t ref_id
 [4] uint8_t mode
 end
 
@@ -340,7 +340,8 @@ start network_state_info_event 677
 [10] uint8_t service_capability
 [11] uint8_t gprs_attached
 [12-13] uint16_t roam
-[15-17] uint8_t plmn
+[15-16] uint16_t mcc
+[17] uint8_t mnc
 [21] uint8_t operator_name_len
 [22-101] uint8_t operator_name
 [105] uint8_t hplmn_or_spdi

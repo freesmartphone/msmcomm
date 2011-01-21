@@ -2,7 +2,7 @@
 <namespace:network>
 	<structures>
 		<structure name="network_report_rssi_msg" length="5">
-			<field name="ref_id" start="0" end="3" type="uint8_t"/>
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="mode" start="4" type="uint8_t">
 				<description>
 					Possible values:
@@ -13,7 +13,7 @@
 		</structure>
 
 		<structure name="network_report_health_msg" length="5">
-			<field name="ref_id" start="0" end="3" type="uint8_t"/>
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="mode" start="4" type="uint8_t">
 				<description>
 					Possible values:
@@ -35,7 +35,8 @@
 			<field name="service_capability" start="10" type="uint8_t"/>
 			<field name="gprs_attached" start="11" type="uint8_t"/>
 			<field name="roam" start="12" end="13" type="uint16_t"/>
-			<field name="plmn" start="15" end="17" type="uint8_t"/>
+			<field name="mcc" start="15" end="16" type="uint16_t"/>
+			<field name="mnc" start="17" type="uint8_t"/>
 			<field name="operator_name_len" start="21" type="uint8_t"/>
 			<field name="operator_name" start="22" end="101" type="uint8_t"/>
 			<field name="hplmn_or_spdi" start="105" type="uint8_t"/>
