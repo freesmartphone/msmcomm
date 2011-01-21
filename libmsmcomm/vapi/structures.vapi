@@ -973,5 +973,94 @@ struct PhonebookExtendedFileInfoEvent
 	}
 }
 
+
+[CCode (cname = "struct network_report_rssi_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkReportRssiMessage
+{
+	public uint8 ref_id[4];
+	public uint8 mode;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( NetworkReportRssiMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct network_report_health_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkReportHealthMessage
+{
+	public uint8 ref_id[4];
+	public uint8 mode;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( NetworkReportHealthMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct network_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkCallbackResponse
+{
+	public uint32 ref_id;
+	public uint16 command;
+	public uint8 unknown0[2];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( NetworkCallbackResponse );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct network_state_info_event", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkStateInfoEvent
+{
+	public uint8 change_field[8];
+	public uint8 serv_status;
+	public uint8 servce_domain;
+	public uint8 service_capability;
+	public uint8 gprs_attached;
+	public uint16 roam;
+	public uint8 unknown0;
+	public uint8 plmn[3];
+	public uint8 unknown1[3];
+	[CCode (array_length_cname = "operator_name_len")]
+	public uint8 operator_name[80];
+	public uint8 unknown2[3];
+	public uint8 hplmn_or_spdi;
+	public uint8 hplmn_length;
+	public uint8 unknown3[16];
+	public uint16 rssi;
+	public uint16 ecio;
+	public uint8 unknown4[4];
+	public uint8 with_nitz_update;
+	public uint8 unknown5[543];
+	public uint8 reg_status;
+	public uint8 unknown6;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( NetworkStateInfoEvent );
+			return res;
+		}
+	}
+}
+
 } /* namespace Msmcomm.LowLevel.Structures */ 
 

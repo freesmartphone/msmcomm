@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:network>
+	<structures>
+		<structure name="network_report_rssi_msg" length="5">
+			<field name="ref_id" start="0" end="3" type="uint8_t"/>
+			<field name="mode" start="4" type="uint8_t">
+				<description>
+					Possible values:
+					- 0: don't report rssi updates
+					- 1: report rssi updates
+				</description>
+			</field>
+		</structure>
+
+		<structure name="network_report_health_msg" length="5">
+			<field name="ref_id" start="0" end="3" type="uint8_t"/>
+			<field name="mode" start="4" type="uint8_t">
+				<description>
+					Possible values:
+					- 0: don't report network health
+					- 1: report network health
+				</description>
+			</field>
+		</structure>
+
+		<structure name="network_callback_resp" length="8">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="command" start="4" end="5" type="uint16_t"/>
+		</structure>
+
+		<structure name="network_state_info_event" length="677">677
+			<field name="change_field" start="0" end="7" type="uint8_t"/>
+			<field name="serv_status" start="8" type="uint8_t"/>
+			<field name="servce_domain" start="9" type="uint8_t"/>
+			<field name="service_capability" start="10" type="uint8_t"/>
+			<field name="gprs_attached" start="11" type="uint8_t"/>
+			<field name="roam" start="12" end="13" type="uint16_t"/>
+			<field name="plmn" start="15" end="17" type="uint8_t"/>
+			<field name="operator_name_len" start="21" type="uint8_t"/>
+			<field name="operator_name" start="22" end="101" type="uint8_t"/>
+			<field name="hplmn_or_spdi" start="105" type="uint8_t"/>
+			<field name="hplmn_length" start="106" type="uint8_t"/>
+			<field name="rssi" start="123" end="124" type="uint16_t"/>
+			<field name="ecio" start="125" end="126" type="uint16_t"/>
+			<field name="with_nitz_update" start="131" type="uint8_t"/>
+			<field name="reg_status" start="675" type="uint8_t">
+				<description>
+					Possible values:
+					- 0: no service
+					- 1: home
+					- 2: searching
+					- 3: denied
+					- 4: roaming
+				</description>
+			</field>
+		</structure>
+
+	</structures>
+</namespace:network>
+

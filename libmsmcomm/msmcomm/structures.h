@@ -491,5 +491,54 @@ struct phonebook_extended_file_info_event
 	uint8_t unknown1[185];
 } __attribute__ ((packed));
 
+
+struct network_report_rssi_msg
+{
+	uint8_t ref_id[4];
+	uint8_t mode;
+} __attribute__ ((packed));
+
+
+struct network_report_health_msg
+{
+	uint8_t ref_id[4];
+	uint8_t mode;
+} __attribute__ ((packed));
+
+
+struct network_callback_resp
+{
+	uint32_t ref_id;
+	uint16_t command;
+	uint8_t unknown0[2];
+} __attribute__ ((packed));
+
+
+struct network_state_info_event
+{
+	uint8_t change_field[8];
+	uint8_t serv_status;
+	uint8_t servce_domain;
+	uint8_t service_capability;
+	uint8_t gprs_attached;
+	uint16_t roam;
+	uint8_t unknown0;
+	uint8_t plmn[3];
+	uint8_t unknown1[3];
+	uint8_t operator_name_len;
+	uint8_t operator_name[80];
+	uint8_t unknown2[3];
+	uint8_t hplmn_or_spdi;
+	uint8_t hplmn_length;
+	uint8_t unknown3[16];
+	uint16_t rssi;
+	uint16_t ecio;
+	uint8_t unknown4[4];
+	uint8_t with_nitz_update;
+	uint8_t unknown5[543];
+	uint8_t reg_status;
+	uint8_t unknown6;
+} __attribute__ ((packed));
+
 #endif
 

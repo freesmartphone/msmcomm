@@ -315,3 +315,39 @@ start phonebook_extended_file_info_event 203
 [14-17] uint32_t max_chars_per_number
 end
 
+#-------------------------------------------------------------------
+# NETWORK
+#-------------------------------------------------------------------
+start network_report_rssi_msg 5
+[0-3] uint8_t ref_id
+[4] uint8_t mode
+end
+
+start network_report_health_msg 5
+[0-3] uint8_t ref_id
+[4] uint8_t mode
+end
+
+start network_callback_resp 8
+[0-3] uint32_t ref_id
+[4-5] uint16_t command
+end
+
+start network_state_info_event 677
+[0-7] uint8_t change_field
+[8] uint8_t serv_status
+[9] uint8_t servce_domain
+[10] uint8_t service_capability
+[11] uint8_t gprs_attached
+[12-13] uint16_t roam
+[15-17] uint8_t plmn
+[21] uint8_t operator_name_len
+[22-101] uint8_t operator_name
+[105] uint8_t hplmn_or_spdi
+[106] uint8_t hplmn_length
+[123-124] uint16_t rssi
+[125-126] uint16_t ecio
+[131] uint8_t with_nitz_update
+[675] uint8_t reg_status
+end
+
