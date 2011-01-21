@@ -37,10 +37,11 @@ namespace Msmcomm.Daemon
             switch (message.message_type)
             {
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_PHONEBOOK_READY:
-                    var pb_message = message as PhonebookUnsolicitedResponseMessage;
+                    var pb_message = message as PhonebookReadyUrcMessage;
                     ready(pb_message.book_type);
                     handled = true;
                     break;
+#if 0
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_RECORD_ADDED:
                     var pb_message = message as PhonebookUnsolicitedResponseMessage;
                     record_added(pb_message.book_type, pb_message.position);
@@ -90,6 +91,8 @@ namespace Msmcomm.Daemon
                     get_all_record_id_event();
                     handled = true;
                     break;
+#endif
+
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO:
                     extended_file_info_event();
                     handled = true;
