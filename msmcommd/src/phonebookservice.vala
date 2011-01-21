@@ -94,7 +94,16 @@ namespace Msmcomm.Daemon
 #endif
 
                 case MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO:
-                    extended_file_info_event();
+                    var pb_message = message as PhonebookExtendedFileInfoUrcMessage;
+
+                    PhonebookInfo info = PhonebookInfo();
+                    info.slot_count = pb_message.slot_count;
+                    info.slots_used = pb_message.slots_used;
+                    info.max_chars_per_number = pb_message.max_chars_per_number;
+                    info.max_chars_per_title = pb_message.max_chars_per_title;
+
+                    extended_file_info_event(info);
+
                     handled = true;
                     break;
             }
@@ -114,6 +123,7 @@ namespace Msmcomm.Daemon
             message.position = (uint8) position;
 
             var response = (yield channel.enqueueAsync(message)) as PhonebookReturnResponseMessage;
+            checkResponse(response);
 
             var record = PhonebookRecord();
             record.book_type = response.book_type;
@@ -134,6 +144,7 @@ namespace Msmcomm.Daemon
             message.number = number;
 
             var response = (yield channel.enqueueAsync(message)) as PhonebookReturnResponseMessage;
+            checkResponse(response);
         }
 
         public async void read_record_bulk(uint book_type, uint first, uint last)
@@ -144,14 +155,20 @@ namespace Msmcomm.Daemon
             message.last = (uint8) last;
 
             var response = (yield channel.enqueueAsync(message)) as PhonebookReturnResponseMessage;
+            checkResponse(response);
         }
 
         public async void get_all_record_id()
         {
         }
 
-        public async void extended_file_info()
+        public async void extended_file_info(uint book_type)
         {
+            var message = new PhonebookExtendedFileInfoCommandMessage();
+            message.book_type = (uint8) book_type;
+
+            var response = (yield channel.enqueueAsync(message)) as PhonebookReturnResponseMessage;
+            checkResponse(response);
         }
     }
 }

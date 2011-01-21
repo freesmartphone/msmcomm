@@ -40,6 +40,15 @@ namespace Msmcomm
         public PhonebookEncodingType encoding_type;
     }
 
+    [CCode (type_id = "MSMCOMM_PHONEBOOK_INFO", cheader_filename="msmcomm-specs.h")]
+    public struct PhonebookInfo
+    {
+        public uint slot_count;
+        public uint slots_used;
+        public uint max_chars_per_title;
+        public uint max_chars_per_number;
+    }
+
     [DBus (timeout = 120000, name = "org.msmcomm.Phonebook")]
     public interface Phonebook : GLib.Object
     {
@@ -47,7 +56,7 @@ namespace Msmcomm
         public abstract async void write_record(uint book_type, uint position, string title, string number) throws GLib.Error, Msmcomm.Error;
         public abstract async void read_record_bulk(uint book_type, uint first, uint last) throws GLib.Error, Msmcomm.Error;
         public abstract async void get_all_record_id() throws GLib.Error, Msmcomm.Error;
-        public abstract async void extended_file_info() throws GLib.Error, Msmcomm.Error;
+        public abstract async void extended_file_info(uint book_type) throws GLib.Error, Msmcomm.Error;
 
         public signal void ready(uint book_type);
         public signal void record_added(uint book_type, uint position);
@@ -61,6 +70,6 @@ namespace Msmcomm
         public signal void ph_unique_ids_validated();
         public signal void record_write_event(uint book_type, uint position);
         public signal void get_all_record_id_event();
-        public signal void extended_file_info_event();
+        public signal void extended_file_info_event(PhonebookInfo pb_info);
     }
 }
