@@ -36,6 +36,7 @@ namespace Msmcomm
         INVALID_ARGUMENTS,
         FAILED,
         MODEM_INACTIVE,
+        TIMEOUT,
     }
 
 
