@@ -23,8 +23,8 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-    private static const uint PHONEBOOK_NUMBER_LENGTH = 42;
-    private static const uint PHONEBOOK_TITLE_LENGTH = 90;
+    private static const int PHONEBOOK_NUMBER_LENGTH = 42;
+    private static const int PHONEBOOK_TITLE_LENGTH = 90;
 
     public abstract class PhonebookBaseMessage : BaseMessage
     {
@@ -169,8 +169,8 @@ namespace Msmcomm.LowLevel
             command_id = _message.command_id;
             position = _message.position;
             book_type = _message.book_type;
-            number = convertBytesToString((uint8*) _message.number, PHONEBOOK_NUMBER_LENGTH);
-            title = convertBytesToString((uint8*) _message.title, PHONEBOOK_TITLE_LENGTH);
+            number = FsoFramework.Utility.dataToString(_message.number, PHONEBOOK_NUMBER_LENGTH);
+            title = FsoFramework.Utility.dataToString(_message.title, PHONEBOOK_TITLE_LENGTH);
         }
     }
 
