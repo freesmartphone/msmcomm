@@ -239,6 +239,7 @@ namespace Msmcomm.LowLevel
             ref_id = _message.ref_id;
             field_type = (SimFieldType) _message.field_type;
             response_type = _message.resp_type;
+            field_data = "";
 
             /* Build field_data string out of byte array from response message */
             if (field_type == SimFieldType.IMSI)
