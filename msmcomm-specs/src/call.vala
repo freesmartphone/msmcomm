@@ -53,10 +53,10 @@ namespace Msmcomm
     [DBus (timeout = 12000, name = "org.msmcomm.Call")]
     public interface Call : GLib.Object
     {
-        public abstract async void originate(string number, bool suppress_own_number) throws Msmcomm.Error, GLib.Error;
-        public abstract async void answer(uint id) throws Msmcomm.Error, GLib.Error;
-        public abstract async void end(uint id) throws Msmcomm.Error, GLib.Error;
-        public abstract async void sups(uint id, SupsAction action) throws Msmcomm.Error, GLib.Error;
+        public abstract async void originate_call(string number, bool suppress_own_number) throws Msmcomm.Error, GLib.Error;
+        public abstract async void answer_call(uint id) throws Msmcomm.Error, GLib.Error;
+        public abstract async void end_call(uint id) throws Msmcomm.Error, GLib.Error;
+        public abstract async void sups_call(uint id, SupsAction action) throws Msmcomm.Error, GLib.Error;
 
         public signal void call_status(string type, CallStatusInfo info);
     }
