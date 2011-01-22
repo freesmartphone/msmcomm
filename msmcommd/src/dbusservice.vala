@@ -53,10 +53,13 @@ namespace Msmcomm.Daemon
                 yield usage.register_resource("Modem", new GLib.ObjectPath("/org/msmcomm"));
                 logger.info(@"Successfully registered resource with org.freesmartphone.ousaged");
             }
-            catch (IOError e)
+            catch (IOError err0)
             {
-                logger.error(@"Can't register resource with org.freesmartphone.ousaged ($(e.message)); enabling unconditionally" );
+                logger.error(@"Can't register resource with org.freesmartphone.ousaged ($(err0.message)); enabling unconditionally" );
                 enable();
+            }
+            catch (DBusError err1)
+            {
             }
         }
 
