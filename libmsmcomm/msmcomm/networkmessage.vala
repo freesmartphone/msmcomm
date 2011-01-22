@@ -32,6 +32,13 @@ namespace Msmcomm.LowLevel
         ROAMING = 4,
     }
 
+    public enum NetworkServiceStatus
+    {
+        NO_SERVICE = 0,
+        LIMITED = 1,
+        FULL = 2,
+    }
+
     public class NetworkReportRssiCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x6;
@@ -116,6 +123,7 @@ namespace Msmcomm.LowLevel
         public uint16 ecio;
         public string operator_name;
         public NetworkRegistrationStatus reg_status;
+        public NetworkServiceStatus service_status;
         public bool gprs_attached;
         public bool roam;
 
@@ -136,6 +144,7 @@ namespace Msmcomm.LowLevel
             ecio = _message.ecio;
             operator_name = convertBytesToString(_message.operator_name);
             reg_status = (NetworkRegistrationStatus) _message.reg_status;
+            service_status = (NetworkServiceStatus) _message.serv_status;
             gprs_attached = _message.gprs_attached == 1 ? true : false;
             roam = _message.roam == 1 ? true : false;
         }

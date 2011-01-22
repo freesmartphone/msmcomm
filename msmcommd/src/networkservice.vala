@@ -46,6 +46,7 @@ namespace Msmcomm.Daemon
                 info.roam = network_message.roam;
                 info.gprs_attached = network_message.gprs_attached;
                 info.reg_status = convertEnum<LowLevel.NetworkRegistrationStatus,NetworkRegistrationStatus>(network_message.reg_status);
+                info.service_status = convertEnum<LowLevel.NetworkServiceStatus,NetworkServiceStatus>(network_message.service_status);
                 info.mcc = (uint) network_message.mcc;
                 info.mnc = (uint) network_message.mnc;
 

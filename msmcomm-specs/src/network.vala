@@ -27,6 +27,7 @@ namespace Msmcomm
         public uint mcc;
         public uint mnc;
         public NetworkRegistrationStatus reg_status;
+        public NetworkServiceStatus service_status;
         public string operator_name;
         public uint rssi;
         public uint ecio;
@@ -43,6 +44,15 @@ namespace Msmcomm
         SEARCHING,
         DENIED,
         ROAMING,
+    }
+
+    [CCode (cprefix = "MSMCOMM_NETWORK_SERVICE_STATUS_", cheader_filename = "msmcomm-specs.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum NetworkServiceStatus
+    {
+        NO_SERVICE,
+        LIMITED,
+        FULL,
     }
 
     [DBus (timeout = 12000, name = "org.msmcomm.Network")]
