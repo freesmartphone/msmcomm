@@ -61,7 +61,7 @@ def build_object(name, len, parts, gid, mid):
       for len_part in parts:
         if len_part['name'] == part['name'] + "_len":
           part['len_name'] = len_part['name']
-          parts.remove(len_part)
+          # parts.remove(len_part)
 
   print "[CCode (cname = \"struct %s\", cheader_filename = \"structures.h\", destroy_function = \"\")]" % name
   print "struct %s" % vala_name

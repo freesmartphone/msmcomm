@@ -33,6 +33,7 @@ struct CallEvent
 	public uint8 unknown1[39];
 	public uint8 plmn[3];
 	public uint8 unknown2[7];
+	public uint8 caller_id_len;
 	public uint8 unknown3[522];
 	public uint8 cause_value0;
 	public uint8 unknown4[4];
@@ -124,6 +125,7 @@ struct CallOriginationMessage
 	public uint8 unknown1[99];
 	[CCode (array_length_cname = "caller_id_len")]
 	public uint8 caller_id[64];
+	public uint8 caller_id_len;
 	public uint8 unknown2[2];
 	public uint8 value1;
 	public uint8 unknown3[31];
@@ -357,6 +359,7 @@ struct MiscGetHomeNetworkNameResponse
 {
 	public uint32 ref_id;
 	public uint8 unknown0[86];
+	public uint8 operator_name_len;
 	[CCode (array_length_cname = "operator_name_len")]
 	public uint8 operator_name[16];
 	public uint16 mcc;
@@ -505,9 +508,11 @@ struct StateEvent
 struct WmsMsgGroupEvent
 {
 	public uint8 unknown0[23];
+	public uint8 sender_len;
 	[CCode (array_length_cname = "sender_len")]
 	public uint8 sender[36];
 	public uint8 unknown1[2];
+	public uint32 pdu_len;
 	public uint8 pdu_start;
 	[CCode (array_length_cname = "pdu_len")]
 	public uint8 pdu[2016];
@@ -548,9 +553,11 @@ struct WmsSendMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0[17];
+	public uint8 recipient_len;
 	[CCode (array_length_cname = "recipient_len")]
 	public uint8 recipient[36];
 	public uint8 unknown1[2];
+	public uint32 pdu_len;
 	[CCode (array_length_cname = "pdu_len")]
 	public uint8 pdu[255];
 	public unowned uint8[] data
@@ -748,6 +755,7 @@ struct SimCallbackResponse
 	public uint16 field_type;
 	public uint8 result1;
 	public uint8 unknown1;
+	public uint8 field_data_len;
 	[CCode (array_length_cname = "field_data_len")]
 	public uint8 field_data[8];
 	public uint8 unknown2[1911];
@@ -1039,6 +1047,7 @@ struct NetworkStateInfoEvent
 	public uint16 mcc;
 	public uint8 mnc;
 	public uint8 unknown1[3];
+	public uint8 operator_name_len;
 	[CCode (array_length_cname = "operator_name_len")]
 	public uint8 operator_name[80];
 	public uint8 unknown2[3];
