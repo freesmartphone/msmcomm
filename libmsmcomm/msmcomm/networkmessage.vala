@@ -130,8 +130,8 @@ namespace Msmcomm.LowLevel
 
         protected override void evaluate_data()
         {
-            mcc = _message.mcc;
-            mnc = _message.mnc;
+            mcc = parseMcc(_message.mcc);
+            mnc = parseMnc(_message.mnc);
             rssi = _message.rssi;
             ecio = _message.ecio;
             operator_name = convertBytesToString(_message.operator_name);

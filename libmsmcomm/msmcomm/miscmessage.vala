@@ -394,8 +394,8 @@ namespace Msmcomm.LowLevel
 
             operator_name = FsoFramework.Utility.dataToString(_message.operator_name);
 
-            mcc = _message.mcc;
-            mnc = _message.mnc;
+            mcc = parseMcc(_message.mcc);
+            mnc = parseMnc(_message.mnc);
         }
     }
 

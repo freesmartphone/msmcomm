@@ -197,7 +197,7 @@ struct misc_get_home_network_name_msg
 struct misc_get_home_network_name_resp
 {
 	uint32_t ref_id;
-	uint8_t unknown0[94];
+	uint8_t unknown0[86];
 	uint8_t operator_name_len;
 	uint8_t operator_name[16];
 	uint16_t mcc;

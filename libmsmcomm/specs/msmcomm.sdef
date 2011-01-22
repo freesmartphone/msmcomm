@@ -114,12 +114,12 @@ start misc_get_home_network_name_msg 4
 [0-3] uint32_t ref_id
 end
 
-start misc_get_home_network_name_resp 118
+start misc_get_home_network_name_resp 110
 [0-3] uint32_t ref_id
-[98] uint8_t operator_name_len
-[99-114] uint8_t operator_name
-[115-116] uint16_t mcc
-[117] uint8_t mnc
+[90] uint8_t operator_name_len
+[91-106] uint8_t operator_name
+[107-108] uint16_t mcc
+[109] uint8_t mnc
 end
 
 start misc_charger_status_event 13
