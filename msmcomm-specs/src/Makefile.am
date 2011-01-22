@@ -25,6 +25,7 @@ libmsmcomm_specs_la_VALASOURCES = \
 	sim.vala \
 	phonebook.vala \
 	call.vala \
+	network.vala \
 	$(NULL)
 
 libmsmcomm_specsdir = $(includedir)/msmcomm-specs-2.0
@@ -42,7 +43,7 @@ gir_DATA = msmcomm-specs-2.0.gir
 libmsmcomm_specs_la_SOURCES = \
 	$(libmsmcomm_specs_la_VALASOURCES:.vala=.c)
 
-msmcomm-specs.h msmcomm-specs-2.0.deps libmsmcomm_specs_la.vala.stamp: 
+msmcomm-specs.h msmcomm-specs-2.0.deps libmsmcomm_specs_la.vala.stamp: $(libmsmcomm_specs_la_VALASOURCES)
 	$(VALAC) -C ${VALACFLAGS} --basedir . $(libmsmcomm_specs_la_VALASOURCES)
 	touch $@
 

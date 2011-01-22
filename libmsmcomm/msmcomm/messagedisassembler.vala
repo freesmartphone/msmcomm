@@ -41,6 +41,8 @@ namespace Msmcomm.LowLevel
             groups[SimUnsolicitedResponseMessageGroup.GROUP_ID] = new SimUnsolicitedResponseMessageGroup();
             groups[PhonebookResponseMessageGroup.GROUP_ID] = new PhonebookResponseMessageGroup();
             groups[PhonebookUnsolicitedResponseMessageGroup.GROUP_ID] = new PhonebookUnsolicitedResponseMessageGroup();
+            groups[NetworkResponseMessageGroup.GROUP_ID] = new NetworkResponseMessageGroup();
+            groups[NetworkUrcMessageGroup.GROUP_ID] = new NetworkUrcMessageGroup();
         }
 
         public uint8 unpack_group_id(uint8[] data)

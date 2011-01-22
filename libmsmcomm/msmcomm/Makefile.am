@@ -47,6 +47,7 @@ libmsmcomm_la_VALASOURCES = \
 	miscmessagegroup.vala \
 	simmessagegroup.vala \
 	phonebookmessagegroup.vala \
+	networkmessagegroup.vala \
 	messageassembler.vala \
 	messagedisassembler.vala \
 	$(NULL)

@@ -83,7 +83,7 @@ namespace Msmcomm.LowLevel
     public class NetworkCallbackResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x7;
-        public static const uint16 MESSAGE_ID = 0x0;
+        public static const uint16 MESSAGE_ID = 0x1;
 
         private NetworkCallbackResponse _message;
 
@@ -101,6 +101,43 @@ namespace Msmcomm.LowLevel
         {
             ref_id = _message.ref_id;
             command = _message.command;
+        }
+    }
+
+    public class NetworkUrcMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x8;
+
+        private NetworkStateInfoEvent _message;
+
+        public uint16 mcc;
+        public uint8 mnc;
+        public uint16 rssi;
+        public uint16 ecio;
+        public string operator_name;
+        public NetworkRegistrationStatus reg_status;
+        public bool gprs_attached;
+        public bool roam;
+
+        construct
+        {
+            group_id = GROUP_ID;
+            message_class = MessageClass.UNSOLICITED_RESPONSE;
+
+            _message = NetworkStateInfoEvent();
+            set_payload(_message.data);
+        }
+
+        protected override void evaluate_data()
+        {
+            mcc = _message.mcc;
+            mnc = _message.mnc;
+            rssi = _message.rssi;
+            ecio = _message.ecio;
+            operator_name = convertBytesToString(_message.operator_name);
+            reg_status = (NetworkRegistrationStatus) _message.reg_status;
+            gprs_attached = _message.gprs_attached == 1 ? true : false;
+            roam = _message.roam == 1 ? true : false;
         }
     }
 }

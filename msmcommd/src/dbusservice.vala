@@ -132,6 +132,7 @@ namespace Msmcomm.Daemon
             services[typeof(Msmcomm.Sim)] = new SimService(modem);
             services[typeof(Msmcomm.Phonebook)] = new PhonebookService(modem);
             services[typeof(Msmcomm.Call)] = new CallService(modem);
+            services[typeof(Msmcomm.Network)] = new NetworkService(modem);
         }
 
         public bool register()
@@ -160,6 +161,7 @@ namespace Msmcomm.Daemon
                 registerService<Msmcomm.Sim>();
                 registerService<Msmcomm.Phonebook>();
                 registerService<Msmcomm.Call>();
+                registerService<Msmcomm.Network>();
             }
             catch (GLib.Error err)
             {

@@ -23,13 +23,11 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-#if 0
-    private string convertBytesToString(uint8 *bytes, uint bytes_length)
+    private string convertBytesToString(uint8[] bytes)
     {
-        string *tmp = GLib.malloc0(bytes_length); 
+        string *tmp = GLib.malloc0(bytes.length); 
         char *dest = (char*) tmp;
-        Memory.copy(dest, bytes, bytes_length);
+        Memory.copy(dest, (uint8*) bytes, bytes.length);
         return (owned) tmp;
     }
-#endif
 }
