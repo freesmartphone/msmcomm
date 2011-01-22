@@ -37,8 +37,8 @@ namespace Msmcomm.LowLevel
         public static const uint8 GROUP_ID = 0x0;
         public static const uint16 MESSAGE_ID = 0x0;
 
-        private const uint8 BLOCK_MODE_ON = 0xc;
-        private const uint8 BLOCK_MODE_OFF = 0xb;
+        private const uint8 BLOCK_MODE_ON = 0xb;
+        private const uint8 BLOCK_MODE_OFF = 0xc;
 
         private CallOriginationMessage _message;
 
@@ -64,6 +64,7 @@ namespace Msmcomm.LowLevel
         {
             _message.ref_id = ref_id;
             Memory.copy(_message.caller_id, number.data, number.length);
+            _message.caller_id_len = (uint8) number.length;
             _message.block = suppress_own_number ? BLOCK_MODE_ON : BLOCK_MODE_OFF;
         }
     }
@@ -250,9 +251,17 @@ namespace Msmcomm.LowLevel
             call_type = (CallBaseMessage.Type) _message.call_type;
             reject_type = _message.reject_type;
             reject_value = _message.reject_value;
-            number = FsoFramework.Utility.dataToString(_message.caller_id);
 
-            // FIXME cause_value ...
+            number = "";
+            if (_message.caller_id_len > 0)
+            {
+                var sb = new StringBuilder();
+                for (int n = 0; n < _message.caller_id_len; n++)
+                {
+                    sb.append("%c".printf(_message.caller_id[n]));
+                }
+                number = sb.str;
+            }
         }
     }
 }
