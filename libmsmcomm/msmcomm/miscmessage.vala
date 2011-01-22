@@ -110,6 +110,7 @@ namespace Msmcomm.LowLevel
 
         public override void evaluate_data()
         {
+            ref_id = _message.ref_id;
             carrier_id = _message.carrier_id;
 
             string *tmp = GLib.malloc0(FWVERSION_STRING_LENGTH);
