@@ -223,27 +223,6 @@ namespace Msmcomm.Daemon
     }
 
 
-
-    public PhonebookEncodingType convertPhonebookEncodingTypeForService(PhonebookBaseMessage.EncodingType encoding_type)
-    {
-        PhonebookEncodingType result = PhonebookEncodingType.NO_ENCODING;
-
-        switch (encoding_type)
-        {
-            case PhonebookBaseMessage.EncodingType.NO_ENCODING:
-                result = PhonebookEncodingType.NO_ENCODING;
-                break;
-            case PhonebookBaseMessage.EncodingType.ASCII:
-                result = PhonebookEncodingType.ASCII;
-                break;
-            case PhonebookBaseMessage.EncodingType.BUCS2:
-                result = PhonebookEncodingType.BUCS2;
-                break;
-        }
-
-        return result;
-    }
-
     public StateSysSelPrefCommandMessage.Mode convertNetworkPreferenceModeForModem(NetworkPreferenceMode mode)
     {
         StateSysSelPrefCommandMessage.Mode result = StateSysSelPrefCommandMessage.Mode.AUTOMATIC;

@@ -26,25 +26,90 @@ namespace Msmcomm.LowLevel
     private static const int PHONEBOOK_NUMBER_LENGTH = 42;
     private static const int PHONEBOOK_TITLE_LENGTH = 90;
 
-    public abstract class PhonebookBaseMessage : BaseMessage
+    public enum PhonebookBookType
     {
-        public enum EncodingType
-        {
-            NO_ENCODING = 0,
-            ASCII = 4,
-            BUCS2 = 9,
-        }
-
-        public uint8 book_type;
+        ADN,
+        FDN,
+        SDN,
+        UNKNOWN,
     }
 
-    public class PhonebookReadRecordCommandMessage : PhonebookBaseMessage
+    public enum PhonebookEncodingType
+    {
+        NO_ENCODING = 0,
+        ASCII = 4,
+        BUCS2 = 9,
+    }
+
+    private uint8 bookTypeToId(PhonebookBookType book_type, bool ext_info = false)
+    {
+        uint8 result = 0x0;
+
+        switch (book_type)
+        {
+            case PhonebookBookType.ADN:
+                result = ext_info ? 0x1 : 0x10;
+                break;
+            case PhonebookBookType.FDN:
+                result = ext_info ? 0x3 : 0x20;
+                break;
+            case PhonebookBookType.SDN:
+                result = ext_info ? 0xe : 0x8;
+                break;
+            default:
+                assert_not_reached();
+        }
+
+        return result;
+    }
+
+    private PhonebookBookType bookTypeFromId(uint8 id, MessageClass message_class = MessageClass.SOLICITED_RESPONSE)
+    {
+        PhonebookBookType book_type = PhonebookBookType.UNKNOWN;
+
+        if (message_class == MessageClass.SOLICITED_RESPONSE)
+        {
+            switch (id)
+            {
+                case 0x10:
+                    book_type = PhonebookBookType.ADN;
+                    break;
+                case 0x20:
+                    book_type = PhonebookBookType.FDN;
+                    break;
+                case 0x8:
+                    book_type = PhonebookBookType.SDN;
+                    break;
+            }
+        }
+        else if (message_class == MessageClass.UNSOLICITED_RESPONSE)
+        {
+            switch (id)
+            {
+                case 0x1:
+                    book_type = PhonebookBookType.ADN;
+                    break;
+                case 0x3:
+                    book_type = PhonebookBookType.FDN;
+                    break;
+                case 0xe:
+                    book_type = PhonebookBookType.SDN;
+                    break;
+            }
+        }
+
+        return book_type;
+
+    }
+
+    public class PhonebookReadRecordCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x18;
         public static const uint16 MESSAGE_ID = 0x0;
 
         private PhonebookReadRecordMessage _message;
 
+        public PhonebookBookType book_type;
         public uint8 position;
 
         construct
@@ -59,19 +124,21 @@ namespace Msmcomm.LowLevel
         {
             _message.ref_id = ref_id;
             _message.position = position;
-            _message.book_type = book_type;
+            _message.book_type = bookTypeToId(book_type);
         }
     }
 
-    public class PhonebookReadRecordBulkCommandMessage : PhonebookBaseMessage
+    public class PhonebookReadRecordBulkCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x18;
         public static const uint16 MESSAGE_ID = 0x1;
 
         private PhonebookReadRecordBulkMessage _message;
 
-        public uint8 first;
-        public uint8 last;
+        public PhonebookBookType first_book_type;
+        public uint8 first_position;
+        public PhonebookBookType last_book_type;
+        public uint8 last_position;
 
         construct
         {
@@ -84,20 +151,21 @@ namespace Msmcomm.LowLevel
         protected override void prepare_data()
         {
             _message.ref_id = ref_id;
-            _message.first_position = first;
-            _message.first_book_type = book_type;
-            _message.last_position = last;
-            _message.last_book_type = book_type;
+            _message.first_position = first_position;
+            _message.first_book_type = bookTypeToId(first_book_type);
+            _message.last_position = last_position;
+            _message.last_book_type = bookTypeToId(last_book_type);
         }
     }
 
-    public class PhonebookWriteRecordCommandMessage : PhonebookBaseMessage
+    public class PhonebookWriteRecordCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x18;
         public static const uint16 MESSAGE_ID = 0x2;
 
         private PhonebookWriteRecordMessage _message;
 
+        public PhonebookBookType book_type;
         public uint8 position;
         public string number;
         public string title;
@@ -113,7 +181,7 @@ namespace Msmcomm.LowLevel
         protected override void prepare_data()
         {
             _message.ref_id = ref_id;
-            _message.book_type = book_type;
+            _message.book_type = bookTypeToId(book_type);
             _message.position = position;
             int len = number.data.length > PHONEBOOK_NUMBER_LENGTH ? PHONEBOOK_TITLE_LENGTH : number.data.length;
             Memory.copy(_message.number, number.data, len);
@@ -122,12 +190,14 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class PhonebookExtendedFileInfoCommandMessage : PhonebookBaseMessage
+    public class PhonebookExtendedFileInfoCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x18;
         public static const uint16 MESSAGE_ID = 0x4;
 
         private PhonebookExtendedFileInfoMessage _message;
+
+        public PhonebookBookType book_type;
 
         construct
         {
@@ -140,22 +210,23 @@ namespace Msmcomm.LowLevel
         protected override void prepare_data()
         {
             _message.ref_id = ref_id;
-            _message.book_type = book_type;
+            _message.book_type = bookTypeToId(book_type, true);
         }
     }
 
-    public class PhonebookReturnResponseMessage : PhonebookBaseMessage
+    public class PhonebookReturnResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x19;
         public static const uint16 MESSAGE_ID = 0x0;
 
         private PhonebookReturnResponse _message;
 
+        public PhonebookBookType book_type;
         public uint16 command_id;
         public uint8 position;
         public string number;
         public string title;
-        public PhonebookBaseMessage.EncodingType encoding_type;
+        public PhonebookEncodingType encoding_type;
 
         construct
         {
@@ -170,19 +241,25 @@ namespace Msmcomm.LowLevel
             ref_id = _message.ref_id;
             command_id = _message.command_id;
             position = _message.position;
-            book_type = _message.book_type;
+            book_type = bookTypeFromId(_message.book_type);
             number = FsoFramework.Utility.dataToString(_message.number, PHONEBOOK_NUMBER_LENGTH);
             title = FsoFramework.Utility.dataToString(_message.title, PHONEBOOK_TITLE_LENGTH);
+
+            if (_message.result == 0x12)
+            {
+                result = MessageResultType.ERROR_PHONEBOOK_NOT_ACTIVE;
+            }
         }
     }
 
-    public class PhonebookExtendedFileInfoUrcMessage : PhonebookBaseMessage
+    public class PhonebookExtendedFileInfoUrcMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x1a;
         public static const uint16 MESSAGE_ID = 0xc;
 
         private PhonebookExtendedFileInfoEvent _message;
 
+        public PhonebookBookType book_type;
         public uint32 slots_used;
         public uint32 slot_count;
         public uint32 max_chars_per_title;
@@ -198,7 +275,7 @@ namespace Msmcomm.LowLevel
 
         protected override void evaluate_data()
         {
-            book_type = _message.book_type;
+            book_type = bookTypeFromId(_message.book_type, MessageClass.UNSOLICITED_RESPONSE);
             slots_used = _message.slots_used;
             slot_count = _message.slot_count;
             max_chars_per_title = _message.max_chars_per_title;
@@ -206,12 +283,13 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public abstract class PhonebookUrcBaseMessage : PhonebookBaseMessage
+    public abstract class PhonebookUrcBaseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x1a;
 
         private PhonebookEvent _message;
 
+        public PhonebookBookType book_type;
         public uint position;
 
         construct
@@ -224,7 +302,7 @@ namespace Msmcomm.LowLevel
 
         protected override void evaluate_data()
         {
-            book_type = _message.book_type;
+            book_type = bookTypeFromId(_message.book_type, MessageClass.UNSOLICITED_RESPONSE);
             position = _message.position;
         }
     }

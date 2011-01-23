@@ -30,20 +30,29 @@ namespace Msmcomm
         BUCS2,
     }
 
+    [CCode (cprefix = "MSMCOMM_PHONEBOOK_BOOK_TYPE_", cheader_filename = "msmcomm-specs.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum PhonebookBookType
+    {
+        ADN,
+        SDN,
+        FDN
+    }
+
     [CCode (type_id = "MSMCOMM_PHONEBOOK_RECORD", cheader_filename="msmcomm-specs.h")]
     public struct PhonebookRecord
     {
         public string title;
         public string number;
         public uint position;
-        public uint book_type;
+        public PhonebookBookType book_type;
         public PhonebookEncodingType encoding_type;
     }
 
     [CCode (type_id = "MSMCOMM_PHONEBOOK_INFO", cheader_filename="msmcomm-specs.h")]
     public struct PhonebookInfo
     {
-        public uint book_type;
+        public PhonebookBookType book_type;
         public uint slot_count;
         public uint slots_used;
         public uint max_chars_per_title;
@@ -53,23 +62,23 @@ namespace Msmcomm
     [DBus (timeout = 120000, name = "org.msmcomm.Phonebook")]
     public interface Phonebook : GLib.Object
     {
-        public abstract async PhonebookRecord read_record(uint book_type, uint position) throws GLib.Error, Msmcomm.Error;
-        public abstract async void write_record(uint book_type, uint position, string title, string number) throws GLib.Error, Msmcomm.Error;
-        public abstract async void read_record_bulk(uint book_type, uint first, uint last) throws GLib.Error, Msmcomm.Error;
+        public abstract async PhonebookRecord read_record(PhonebookBookType book_type, uint position) throws GLib.Error, Msmcomm.Error;
+        public abstract async void write_record(PhonebookBookType book_type, uint position, string title, string number) throws GLib.Error, Msmcomm.Error;
+        public abstract async void read_record_bulk(PhonebookBookType book_type, uint first, uint last) throws GLib.Error, Msmcomm.Error;
         public abstract async void get_all_record_id() throws GLib.Error, Msmcomm.Error;
-        public abstract async void extended_file_info(uint book_type) throws GLib.Error, Msmcomm.Error;
+        public abstract async void extended_file_info(PhonebookBookType book_type) throws GLib.Error, Msmcomm.Error;
 
-        public signal void ready(uint book_type);
-        public signal void record_added(uint book_type, uint position);
-        public signal void record_deleted(uint book_type, uint position);
-        public signal void record_updated(uint book_type, uint position);
-        public signal void record_failed(uint book_type, uint position);
+        public signal void ready(PhonebookBookType book_type);
+        public signal void record_added(PhonebookBookType book_type, uint position);
+        public signal void record_deleted(PhonebookBookType book_type, uint position);
+        public signal void record_updated(PhonebookBookType book_type, uint position);
+        public signal void record_failed(PhonebookBookType book_type, uint position);
         public signal void refresh_start();
         public signal void refresh_done();
         public signal void locked();
         public signal void unlocked();
         public signal void ph_unique_ids_validated();
-        public signal void record_write_event(uint book_type, uint position);
+        public signal void record_write_event(PhonebookBookType book_type, uint position);
         public signal void get_all_record_id_event();
         public signal void extended_file_info_event(PhonebookInfo pb_info);
     }
