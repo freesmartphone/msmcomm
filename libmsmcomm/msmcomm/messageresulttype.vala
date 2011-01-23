@@ -27,29 +27,8 @@ namespace Msmcomm.LowLevel
         ERROR_BAD_CALL_ID,
         ERROR_BAD_SIM_STATE,
         ERROR_PHONEBOOK_NOT_ACTIVE,
+        ERROR_PHONEBOOK_RECORD_EMPTY,
+        ERROR_PHONEBOOK_FAILED_TO_WRITE_RECORD,
         ERROR_UNKNOWN,
-    }
-
-    public string messageResultTypeToString(MessageResultType rt)
-    {
-        string result = "UNKNOWN";
-
-        switch (rt)
-        {
-            case MessageResultType.RESULT_OK:
-                result = "RESULT_OK";
-                break;
-            case MessageResultType.ERROR_BAD_CALL_ID:
-                result = "ERROR_BAD_CALL_ID";
-                break;
-            case MessageResultType.ERROR_BAD_SIM_STATE:
-                result = "ERROR_BAD_SIM_STATE";
-                break;
-            case MessageResultType.ERROR_UNKNOWN:
-                result = "ERROR_UNKNOWN";
-                break;
-        }
-
-        return result;
     }
 }
