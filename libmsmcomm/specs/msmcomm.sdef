@@ -308,6 +308,7 @@ start phonebook_event 203
 end
 
 start phonebook_extended_file_info_event 203
+[0] uint8_t result
 [1] uint8_t book_type
 [2-5] uint32_t slots_used
 [6-9] uint32_t slot_count

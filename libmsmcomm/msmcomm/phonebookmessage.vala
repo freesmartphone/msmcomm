@@ -252,6 +252,7 @@ namespace Msmcomm.LowLevel
 
             switch (_message.result)
             {
+                case 0x4:
                 case 0x12:
                     result = MessageResultType.ERROR_PHONEBOOK_NOT_ACTIVE;
                     break;
@@ -293,6 +294,16 @@ namespace Msmcomm.LowLevel
             slot_count = _message.slot_count;
             max_chars_per_title = _message.max_chars_per_title;
             max_chars_per_number = _message.max_chars_per_number;
+
+            switch (_message.result)
+            {
+                case 0x4:
+                    result = MessageResultType.ERROR_PHONEBOOK_NOT_ACTIVE;
+                    break;
+                case 0x12:
+                    result = MessageResultType.ERROR_UNKNOWN;
+                    break;
+            }
         }
     }
 
