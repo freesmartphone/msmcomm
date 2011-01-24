@@ -124,8 +124,18 @@ namespace Msmcomm.Daemon
             return "";
         }
 
+        private void checkBookType(PhonebookBookType book_type)
+        {
+            if (book_type == PhonebookBookType.UNKNOWN)
+            {
+                throw new Msmcomm.Error.INVALID_ARGUMENTS("No valid phonebook book type specified");
+            }
+        }
+
         public async PhonebookRecord read_record(PhonebookBookType book_type, uint position) throws Msmcomm.Error, GLib.Error
         {
+            checkBookType(book_type);
+
             var message = new LowLevel.PhonebookReadRecordCommandMessage();
             message.book_type = convertEnum<PhonebookBookType,LowLevel.PhonebookBookType>(book_type);
             message.position = (uint8) position;
@@ -145,6 +155,8 @@ namespace Msmcomm.Daemon
 
         public async void write_record(PhonebookBookType book_type, uint position, string title, string number) throws Msmcomm.Error, GLib.Error
         {
+            checkBookType(book_type);
+
             var message = new LowLevel.PhonebookWriteRecordCommandMessage();
             message.book_type = convertEnum<PhonebookBookType,LowLevel.PhonebookBookType>(book_type);
             message.position = (uint8) position;
@@ -176,6 +188,8 @@ namespace Msmcomm.Daemon
 
         public async void extended_file_info(PhonebookBookType book_type) throws Msmcomm.Error, GLib.Error
         {
+            checkBookType(book_type);
+
             var message = new LowLevel.PhonebookExtendedFileInfoCommandMessage();
             message.book_type = convertEnum<PhonebookBookType,LowLevel.PhonebookBookType>(book_type);
 

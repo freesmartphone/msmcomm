@@ -36,7 +36,8 @@ namespace Msmcomm
     {
         ADN,
         SDN,
-        FDN
+        FDN,
+        UNKNOWN,
     }
 
     [CCode (type_id = "MSMCOMM_PHONEBOOK_RECORD", cheader_filename="msmcomm-specs.h")]
