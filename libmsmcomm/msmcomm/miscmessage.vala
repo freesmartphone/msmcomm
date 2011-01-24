@@ -436,7 +436,8 @@ namespace Msmcomm.LowLevel
         protected override void evaluate_data()
         {
             voltage = (MiscBaseChargingMessage.Voltage)_message.voltage;
-            //TODO: mode byte unknown
+            // TODO: byte for the charging mode is unknown - set it as default to USB
+            mode = MiscBaseChargingMessage.Mode.USB;
         }
     }
 }
