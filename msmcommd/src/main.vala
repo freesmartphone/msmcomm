@@ -22,29 +22,47 @@
 using GLib;
 
 public MainLoop loop;
+public Msmcomm.Daemon.ModemControl modem;
+public Msmcomm.Daemon.ModemChannel channel;
 
 public static void SIGINT_handler( int signum )
 {
     Posix.signal( signum, null ); // restore original signal handler
-    loop.quit();
+    FsoFramework.theLogger.info("received signal -%d, exiting.".printf(signum));
+
+    if (signum == Posix.SIGSEGV)
+    {
+        var backtrace = FsoFramework.Utility.createBacktrace();
+        foreach (var line in backtrace)
+        {
+            FsoFramework.theLogger.error(line);
+        }
+    }
+
+    Idle.add(() => {
+        modem.stop();
+        loop.quit();
+        return false;
+    });
 }
 
 public int main( string[] args )
 {
     loop = new MainLoop( null, false );
-    Posix.signal( Posix.SIGINT, SIGINT_handler );
-    
-    var modem = new Msmcomm.Daemon.ModemControl();
-    var channel = new Msmcomm.Daemon.ModemChannel(modem);
+    Posix.signal(Posix.SIGINT, SIGINT_handler);
+    Posix.signal(Posix.SIGTERM, SIGINT_handler);
+    Posix.signal(Posix.SIGBUS, SIGINT_handler);
+    Posix.signal(Posix.SIGSEGV, SIGINT_handler);
+
+    modem = new Msmcomm.Daemon.ModemControl();
+    channel = new Msmcomm.Daemon.ModemChannel(modem);
     Idle.add(() => {
         if (!modem.setup())
         {
             FsoFramework.theLogger.error("Could not setup the modem process!");
             loop.quit();
         }
-        
         channel.open();
-    
         return false;
     });
 
