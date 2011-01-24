@@ -20,6 +20,7 @@
  **/
 
 using Msmcomm.LowLevel;
+using FsoFramework.StringHandling;
 
 namespace Msmcomm.Daemon
 {
@@ -43,8 +44,8 @@ namespace Msmcomm.Daemon
                 case MessageType.UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS:
                     var csi = ChargerStatusInfo();
                     var cs_msg = message as MiscChargerStatusUnsolicitedRespMessage;
-                    csi.voltage = (Msmcomm.ChargerVoltage)cs_msg.voltage;
-                    csi.mode = (Msmcomm.ChargerMode)cs_msg.mode;
+                    csi.voltage = convertEnum<MiscBaseChargingMessage.Voltage, Msmcomm.ChargerVoltage>(cs_msg.voltage);
+                    csi.mode = convertEnum<MiscBaseChargingMessage.Mode, Msmcomm.ChargerMode>(cs_msg.mode);
                     charger_status(csi);
 
                     handled = true;
