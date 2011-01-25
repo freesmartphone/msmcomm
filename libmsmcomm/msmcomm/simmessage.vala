@@ -223,7 +223,6 @@ namespace Msmcomm.LowLevel
         {
             ref_id = _message.ref_id;
 
-            stdout.printf("message.rc = %02x\n".printf(_message.rc));
             if (_message.rc == 0x101)
             {
                 result = MessageResultType.ERROR_UNKNOWN;
