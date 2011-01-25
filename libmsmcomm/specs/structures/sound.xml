@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:sound>
+	<structures>
+
+		<structure name="sound_set_device_msg" length="10">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+
+		<structure name="sound_callback_resp" length="11">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+
+	</structures>
+</namespace:sound>
+

@@ -30,7 +30,8 @@ STRUCTURE_SPECS = \
 	specs/structures/sms.xml \
 	specs/structures/sim.xml \
 	specs/structures/phonebook.xml \
-	specs/structures/network.xml
+	specs/structures/network.xml \
+	specs/structures/sound.xml
 
 generate-structures:
 	$(top_srcdir)/tools/xml-to-sdef.py $(STRUCTURE_SPECS) > $(top_srcdir)/specs/msmcomm.sdef

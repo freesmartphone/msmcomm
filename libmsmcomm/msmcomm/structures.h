@@ -547,5 +547,19 @@ struct network_state_info_event
 	uint8_t unknown6;
 } __attribute__ ((packed));
 
+
+struct sound_set_device_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0[6];
+} __attribute__ ((packed));
+
+
+struct sound_callback_resp
+{
+	uint32_t ref_id;
+	uint8_t unknown0[7];
+} __attribute__ ((packed));
+
 #endif
 

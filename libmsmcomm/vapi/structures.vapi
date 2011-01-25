@@ -1088,5 +1088,39 @@ struct NetworkStateInfoEvent
 	}
 }
 
+
+[CCode (cname = "struct sound_set_device_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SoundSetDeviceMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[6];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SoundSetDeviceMessage );
+			return res;
+		}
+	}
+}
+
+
+[CCode (cname = "struct sound_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SoundCallbackResponse
+{
+	public uint32 ref_id;
+	public uint8 unknown0[7];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SoundCallbackResponse );
+			return res;
+		}
+	}
+}
+
 } /* namespace Msmcomm.LowLevel.Structures */ 
 
