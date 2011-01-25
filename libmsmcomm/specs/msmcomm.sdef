@@ -226,8 +226,13 @@ start sim_pin_status_msg 14
 [5-12] uint8_t pin
 end
 
+start sim_get_call_forward_info_msg 4
+[0-3] uint32_t ref_id
+end
+
 start sim_return_resp 268
 [0-3] uint32_t ref_id
+[4-5] uint16_t command
 [6-7] uint16_t rc
 end
 

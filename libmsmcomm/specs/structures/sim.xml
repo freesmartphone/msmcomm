@@ -8,8 +8,14 @@
 		<field name="pin" start="5" end="12" type="uint8_t"/>
 	</structure>
 
+
+	<structure name="sim_get_call_forward_info_msg" length="4">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+	</structure>
+
 	<structure name="sim_return_resp" length="268">
 		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="command" start="4" end="5" type="uint16_t"/>
 		<field name="rc" start="6" end="7" type="uint16_t"/>
 	</structure>
 

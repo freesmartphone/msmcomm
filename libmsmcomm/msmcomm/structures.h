@@ -367,12 +367,18 @@ struct sim_pin_status_msg
 } __attribute__ ((packed));
 
 
+struct sim_get_call_forward_info_msg
+{
+	uint32_t ref_id;
+} __attribute__ ((packed));
+
+
 struct sim_return_resp
 {
 	uint32_t ref_id;
-	uint8_t unknown0[2];
+	uint16_t command;
 	uint16_t rc;
-	uint8_t unknown1[260];
+	uint8_t unknown0[260];
 } __attribute__ ((packed));
 
 

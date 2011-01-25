@@ -120,5 +120,12 @@ namespace Msmcomm.Daemon
             info.data = response.field_data;
             return info;
         }
+
+        public async void get_call_forward_info() throws GLib.Error, Msmcomm.Error
+        {
+            var message = new SimGetCallForwardInfoCommandMessage();
+            var response = yield channel.enqueueAsync(message);
+            checkResponse(response);
+        }
     }
 }

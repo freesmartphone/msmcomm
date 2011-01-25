@@ -726,13 +726,29 @@ struct SimPinStatusMessage
 }
 
 
+[CCode (cname = "struct sim_get_call_forward_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimGetCallForwardInfoMessage
+{
+	public uint32 ref_id;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimGetCallForwardInfoMessage );
+			return res;
+		}
+	}
+}
+
+
 [CCode (cname = "struct sim_return_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct SimReturnResponse
 {
 	public uint32 ref_id;
-	public uint8 unknown0[2];
+	public uint16 command;
 	public uint16 rc;
-	public uint8 unknown1[260];
+	public uint8 unknown0[260];
 	public unowned uint8[] data
 	{
 		get

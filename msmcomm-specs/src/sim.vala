@@ -60,6 +60,7 @@ namespace Msmcomm
         public abstract async SimCapabilitiesInfo get_sim_capabilities() throws GLib.Error, Msmcomm.Error;
         public abstract async void get_all_pin_status_info() throws GLib.Error, Msmcomm.Error;
         public abstract async SimFieldInfo read(SimFieldType field_type) throws GLib.Error, Msmcomm.Error;
+        public abstract async void get_call_forward_info() throws GLib.Error, Msmcomm.Error;
 
         public signal void sim_status(string name);
     }

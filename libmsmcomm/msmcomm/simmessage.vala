@@ -183,10 +183,31 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class SimGetCallForwardInfoCommandMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0xf;
+        public static const uint16 MESSAGE_ID = 0x21;
+
+        private SimGetCallForwardInfoMessage _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SIM_GET_CALL_FORWARD_INFO, MessageClass.COMMAND);
+
+            _message = SimGetCallForwardInfoMessage();
+            set_payload(_message.data);
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+        }
+    }
+
     public class SimReturnResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x10;
-        public static const uint8 MESSAGE_ID = 0x0;
+        public static const uint16 MESSAGE_ID = 0x0;
 
         private SimReturnResponse _message;
 
