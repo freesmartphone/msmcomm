@@ -27,18 +27,7 @@ def print_indent(str):
 def print_object_header():
   print "\n"
 
-def has_len(members, name):
-  for n in members:
-    if name + "_len" == n['name']:
-      return True
-  return False
-
-def build_object(name, member_len, parts, gid, mid):
-  if not mid is None and not gid is None:
-    print "#define %s_GROUP_ID %s" % (string.upper(name), gid)
-    print "#define %s_MESSAGE_ID %s" % (string.upper(name), mid)
-    print ""
-
+def build_object(name, len, parts):
   print "struct %s" % name
   print "{"
 
@@ -77,8 +66,6 @@ in_object = False
 object_name = ""
 object_len = 0
 object_parts = []
-object_gid = None
-object_mid = None
 unknown_counter = 0
 last_end_offset = 0
 first_object = True
@@ -124,9 +111,6 @@ with open(sys.argv[1]) as f:
       parts = line.split(' ')
       object_name = parts[1]
       object_len = int(parts[2])
-      if len(parts) == 5:
-        object_gid = parts[3]
-        object_mid = parts[4]
     elif line.startswith('[') and in_object:
       start = 0
       rparts = line.split(' ')
@@ -186,14 +170,12 @@ with open(sys.argv[1]) as f:
       if not first_object:
         print_object_header()
       first_object = False
-      build_object(object_name, object_len, object_parts, object_gid, object_mid)
+      build_object(object_name, object_len, object_parts)
 
       # reset everything
       object_parts = []
       object_name = ""
       object_len = 0
-      object_gid = None
-      object_mid = None
       unknown_counter = 0
       in_object = False
       last_end_offset = 0

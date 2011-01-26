@@ -520,7 +520,7 @@ struct network_callback_resp
 } __attribute__ ((packed));
 
 
-struct network_state_info_event
+struct state_sys_sel_pref_msg
 {
 	uint8_t change_field[8];
 	uint8_t serv_status;

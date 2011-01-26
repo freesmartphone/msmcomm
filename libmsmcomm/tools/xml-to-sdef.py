@@ -51,10 +51,7 @@ class Handler(ContentHandler):
 			self.structure['name'] = attrs.get('name')
 			self.structure['length'] = attrs.get('length')
 			self.structure['fields'] = []
-			if not attrs.get('group_id') is None and not attrs.get('message_id') is None:
-				self.structure['gid'] = attrs.get('group_id')
-				self.structure['mid'] = attrs.get('message_id')
-			type_size[self.structure['name']] = self.structure['length']
+                        type_size[self.structure['name']] = self.structure['length']
 		elif element == "field":
 			self.field = {}
 			self.field['name'] = attrs.get('name')
@@ -80,10 +77,7 @@ class Handler(ContentHandler):
 		f.write("#-------------------------------------------------------------------\n")
 		f.write("")
 		for s in self.structures:
-			if len(s) == 5:
-				f.write("start %s %s %s %s\n" % (s['name'], s['length'], s['gid'], s['mid']))
-			else:
-				f.write("start %s %s\n" % (s['name'], s['length']))
+			f.write("start %s %s\n" % (s['name'], s['length']))
 			for field in s['fields']:
 				r = ""
 				start = int(field['start'])

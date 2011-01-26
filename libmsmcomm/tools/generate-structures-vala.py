@@ -52,7 +52,7 @@ def format_name(name):
   vala_types[name] = new_name
   return new_name
 
-def build_object(name, type_len, parts, gid, mid):
+def build_object(name, len, parts):
   global indent
   vala_name = format_name(name)
 
@@ -67,14 +67,6 @@ def build_object(name, type_len, parts, gid, mid):
   print "struct %s" % vala_name
   print "{"
 
-  if not gid is None and not mid is None:
-    print_indent("[CCode (cname=\"%s_GROUP_ID\")]" % (string.upper(name),))
-    print_indent("public static const uint8 GROUP_ID;")
-    print_indent("[CCode (cname=\"%s_MESSAGE_ID\")]" % (string.upper(name),))
-    print_indent("public static const uint16 MESSAGE_ID;")
-    print ""
-
-  len_params = {}
   for part in parts:
     type = part['type']
     member_name = part['name']
@@ -122,8 +114,6 @@ in_object = False
 object_name = ""
 object_len = 0
 object_parts = []
-object_gid = None
-object_mid = None
 unknown_counter = 0
 last_end_offset = 0
 first_object = True
@@ -168,9 +158,6 @@ with open(sys.argv[1]) as f:
       parts = line.split(' ')
       object_name = parts[1]
       object_len = int(parts[2])
-      if len(parts) == 5:
-        object_gid = parts[3]
-        object_mid = parts[4]
     elif line.startswith('[') and in_object:
       start = 0
       rparts = line.split(' ')
@@ -229,14 +216,12 @@ with open(sys.argv[1]) as f:
         print_object_header()
       first_object = False
       byte_size[object_name] = object_len
-      build_object(object_name, object_len, object_parts, object_gid, object_mid)
+      build_object(object_name, object_len, object_parts)
 
       # reset everything
       object_parts = []
       object_name = ""
       object_len = 0
-      object_gid = None
-      object_mid = None
       unknown_counter = 0
       in_object = False
       last_end_offset = 0

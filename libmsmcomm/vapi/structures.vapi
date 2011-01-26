@@ -1053,15 +1053,10 @@ struct NetworkCallbackResponse
 [CCode (cname = "struct network_state_info_event", cheader_filename = "structures.h", destroy_function = "")]
 struct NetworkStateInfoEvent
 {
-	public uint8 change_field[8];
-	public uint8 serv_status;
-	public uint8 servce_domain;
-	public uint8 service_capability;
-	public uint8 gprs_attached;
-	public uint16 roam;
-	public uint8 unknown0;
-	public uint16 mcc;
-	public uint8 mnc;
+	public uint32 ref_id;
+	public uint8 mode;
+	public uint8 unknown0[5];
+	public uint8 value0;
 	public uint8 unknown1[3];
 	public uint8 operator_name_len;
 	[CCode (array_length_cname = "operator_name_len")]
