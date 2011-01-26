@@ -52,7 +52,7 @@ def format_name(name):
   vala_types[name] = new_name
   return new_name
 
-def build_object(name, len, parts, gid, mid):
+def build_object(name, type_len, parts, gid, mid):
   global indent
   vala_name = format_name(name)
 
@@ -74,19 +74,23 @@ def build_object(name, len, parts, gid, mid):
     print_indent("public static const uint16 MESSAGE_ID;")
     print ""
 
+  len_params = {}
   for part in parts:
     type = part['type']
-    name = part['name']
-    len = part['len']
+    member_name = part['name']
+    type_len = part['len']
 
-    to_print = "public %s %s" % (vala_types[type], name)
+    to_print = "public %s %s" % (vala_types[type], member_name)
 
-    if len == 1:
+    if type_len == 1:
       to_print = "%s;" % to_print
-    elif len > 1:
+    elif type_len > 1:
       if 'len_name' in part:
         print_indent("[CCode (array_length_cname = \"%s\")]" % (part['len_name'], ))
-      to_print = "public %s %s[%i];" % (vala_types[type], name, len)
+        to_print = "public %s %s[];" % (vala_types[type], member_name)
+        len_params[member_name] = type_len
+      else:
+        to_print = "public %s %s[%i];" % (vala_types[type], member_name, type_len)
     else:
       continue
     print_indent(to_print)
@@ -103,6 +107,14 @@ def build_object(name, len, parts, gid, mid):
   print_indent("}")
   indent -= 1
   print_indent("}")
+  print_indent("[CCode (cname = \"msmcomm_low_level_structures_%s_init\")]" % name)
+  print_indent("public %s();" % vala_name)
+    #print_indent("{")
+    #indent += 1
+    #for n, l in len_params.iteritems():
+    #  print_indent("%s.length = %i;" % (n,l))
+    #indent -= 1
+    #print_indent("}")
 
   print "}"
 

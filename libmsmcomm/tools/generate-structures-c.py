@@ -27,7 +27,13 @@ def print_indent(str):
 def print_object_header():
   print "\n"
 
-def build_object(name, len, parts, gid, mid):
+def has_len(members, name):
+  for n in members:
+    if name + "_len" == n['name']:
+      return True
+  return False
+
+def build_object(name, member_len, parts, gid, mid):
   if not mid is None and not gid is None:
     print "#define %s_GROUP_ID %s" % (string.upper(name), gid)
     print "#define %s_MESSAGE_ID %s" % (string.upper(name), mid)
@@ -36,24 +42,36 @@ def build_object(name, len, parts, gid, mid):
   print "struct %s" % name
   print "{"
 
+  lengths = {}
+
   for part in parts:
     type = part['type']
-    name = part['name']
-    len = part['len']
+    member_name = part['name']
+    member_len = part['len']
 
     if not type in base_types:
         type = "struct " + type
-    to_print = "%s %s" % (type, name)
+    to_print = "%s %s" % (type, member_name)
 
-    if len == 1:
+    if member_len == 1:
       to_print = "%s;" % to_print
-    elif len > 1:
-      to_print = "%s[%i];" % (to_print, len)
-    elif len == 0:
+    elif member_len > 1:
+      to_print = "%s[%i];" % (to_print, member_len)
+      if has_len(parts, member_name):
+        lengths[member_name + "_len"] = member_len
+      print "#define %s_%s_SIZE %i" % (name.upper(), member_name.upper(), member_len)
+    elif member_len == 0:
       continue
     print_indent(to_print)
 
   print "} __attribute__ ((packed));"
+
+  print ""
+  print "static void msmcomm_low_level_structures_%s_init(struct %s* self)" % (name, name)
+  print "{"
+  for n,l in lengths.iteritems():
+    print_indent("self->%s = %i;" % (n, l))
+  print "}"
 
 in_object = False
 object_name = ""
