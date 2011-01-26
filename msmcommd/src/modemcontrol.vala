@@ -59,7 +59,7 @@ namespace Msmcomm.Daemon
         private void onTransportHangup(FsoFramework.Transport t)
         {
             logger.error("[HUP] Modem transport closed from other side");
-            // FIXME block everything until modem transport comes back
+            stop();
         }
 
         private void configure()
