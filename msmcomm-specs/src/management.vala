@@ -37,6 +37,7 @@ namespace Msmcomm
         FAILED,
         MODEM_INACTIVE,
         TIMEOUT,
+        ENCODING_NOT_SUPPORTED
     }
 
 
