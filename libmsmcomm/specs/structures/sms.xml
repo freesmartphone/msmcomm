@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <namespace:sms>
 	<structures>
-
 		<structure name="wms_msg_group_event" length="2083">
 			<field name="sender_len" start="23" type="uint8_t"/>
 			<field name="sender" start="24" end="59" type="uint8_t"/>
@@ -14,20 +13,50 @@
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="value0" start="8" type="uint8_t"/>
 			<field name="value1" start="9" type="uint8_t"/>
+			<field name="value2" start="1" type="uint8_t"/>
+        </structure>
+
+		<structure name="wms_message_send_event" length="2083">
 		</structure>
 
 		<structure name="wms_send_msg" length="319">
-			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="recipient_len" start="21" type="uint8_t"/>
-			<field name="recipient" start="22" end="57" type="uint8_t"/>
+            <field name="ref_id" start="0" end="3" type="uint32_t"/>
+            <field name="nr" start="6" type="uint8_t"/>
+            <field name="five" start="7" type="uint8_t"/>
+            <field name="ffffffff" start="9" end="12" type="uint32_t"/>
+            <!--guessing. always 1-->
+            <field name="number_type" start="19" type="uint8_t"/>
+            <field name="number_plan" start="20" type="uint8_t"/>
+			<field name="service_center_len" start="21" type="uint8_t"/>
+            <field name="service_center" start="22" end="57" type="uint8_t"/>
+            <field name="six_three" start="58" end="59" type="uint16_t"/>
+            <!--PDU Format:
+                 * first 2 byte: unknown
+                 * 3rd byte: recipient length of the number
+                 * 4th byte: number format: 0x91 international format
+                             0x81 national format
+                             http://www.dreamfabric.com/sms/type_of_address.htm
+                 * 4-11: number in decimal semi-octets: 0172 -> 10 27
+                 -->
 			<field name="pdu_len" start="60" end="63" type="uint32_t"/>
 			<field name="pdu" start="64" end="318" type="uint8_t"/>
+		</structure>
+
+		<structure name="sms_get_info_msg" length="9">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="value0" start="4" type="uint8_t"/>
+			<field name="value1" start="5" type="uint8_t"/>
 		</structure>
 
 		<structure name="wms_read_template_msg" length="9">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="record" start="4" end="5" type="uint16_t"/>
-		</structure>
+        </structure>
+
+        <structure name="wms_read_template_event" length="2083">
+            <field name="digit_mode" start="224" type="uint8_t"/>
+        </structure>
+
 
 		<structure name="wms_cfg_set_gw_domain_msg" length="5">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
@@ -44,7 +73,7 @@
 
 		<structure name="wms_read_msg" length="9">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-		</structure>
+        </structure>
 
 		<structure name="wms_delete_msg" length="9">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
@@ -55,7 +84,12 @@
 
 		<structure name="wms_callback_resp" length="10">
 			<field name="command_id" start="0" type="uint8_t"/>
-		</structure>
+			<field name="ref_id" start="4" end="7" type="uint32_t"/>
+        </structure>
+
+        <structure name="wms_msg_group" length="1534">
+            <field name="ref_id" start="0" end="3" type="uint32_t"/>
+        <structure>
 
 	</structures>
 </namespace:sms>
