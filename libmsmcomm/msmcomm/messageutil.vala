@@ -31,7 +31,6 @@ namespace Msmcomm.LowLevel
         return (owned) tmp;
     }
 
-
     private uint16 parseMcc(uint16 input)
     {
         // Example: input = 0xf262, output = 262
@@ -48,5 +47,57 @@ namespace Msmcomm.LowLevel
         uint8 b0 = (input & 0xf0) >> 4; b0 = b0 > 9 ? 0 : b0;
         uint8 b1 = (input & 0x0f) >> 0; b1 = b1 > 9 ? 0 : b1;
         return b1 * 10 + b0;
+    }
+
+    public uint8[] encodeBinary(string number)
+    {
+        var result = new uint8[number.length];
+        int i = 0;
+
+        foreach(var u in number.data)
+            result[i++] = u - '0';
+
+        return result;
+    }
+
+    public string decodeBinary(uint8[] data)
+    {
+        var s = new StringBuilder();
+        foreach(var c in data)
+                s.append_c((char)c + '0');
+        return s.str;
+    }
+
+    public uint8[] encodeBCD(string number)
+    {
+        var result = new uint8[(number.length + 1) / 2];
+        int i = 0;
+
+        foreach(var c in number.data)
+        {
+            if((i % 2) == 0)
+                 result[i/2] = c - '0';
+            else
+                 result[i/2] |= (c - '0') << 4;
+            i ++;
+        }
+
+        if((i % 2) == 0)
+             result[i/2] |= 0xf << 4;
+
+        return result;
+    }
+
+    public string decodeBCD(uint8[] data)
+    {
+        var s = new StringBuilder();
+        foreach(var c in data)
+        {
+            s.append_c(((char)(c & 0xF) + '0'));
+            if(((c & 0xF) >> 4) <= 9)
+                 s.append_c(((char)((c & 0xF0) >> 4) + '0'));
+        }
+
+        return s.str;
     }
 }
