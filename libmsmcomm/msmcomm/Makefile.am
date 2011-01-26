@@ -40,6 +40,7 @@ libmsmcomm_la_VALASOURCES = \
 	miscmessage.vala \
 	simmessage.vala \
 	networkmessage.vala \
+	smsmessage.vala \
 	phonebookmessage.vala \
 	soundmessage.vala \
 	basemessagegroup.vala \
@@ -47,6 +48,7 @@ libmsmcomm_la_VALASOURCES = \
 	statemessagegroup.vala \
 	miscmessagegroup.vala \
 	simmessagegroup.vala \
+	smsmessagegroup.vala \
 	phonebookmessagegroup.vala \
 	networkmessagegroup.vala \
 	soundmessagegroup.vala \
@@ -75,6 +77,7 @@ vapidir = $(datadir)/vala/vapi
 
 dist_vapi_DATA = \
 	msmcomm-2.0.vapi \
+	msmcomm-2.0.deps \
 	$(NULL)
 
 EXTRA_DIST += \
