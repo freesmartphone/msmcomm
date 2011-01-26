@@ -29,7 +29,7 @@ struct CallEvent
 	public uint8 call_type;
 	public uint8 unknown0;
 	[CCode (array_length_cname = "caller_id_len")]
-	public uint8 caller_id[15];
+	public uint8 caller_id[];
 	public uint8 unknown1[39];
 	public uint8 plmn[3];
 	public uint8 unknown2[7];
@@ -54,6 +54,8 @@ struct CallEvent
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_call_event_init")]
+	public CallEvent();
 }
 
 
@@ -74,6 +76,8 @@ struct CallCallbackResponse
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_call_callback_resp_init")]
+	public CallCallbackResponse();
 }
 
 
@@ -94,6 +98,8 @@ struct CallAnswerMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_call_answer_msg_init")]
+	public CallAnswerMessage();
 }
 
 
@@ -113,6 +119,8 @@ struct CallEndMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_call_end_msg_init")]
+	public CallEndMessage();
 }
 
 
@@ -124,7 +132,7 @@ struct CallOriginationMessage
 	public uint8 value0;
 	public uint8 unknown1[99];
 	[CCode (array_length_cname = "caller_id_len")]
-	public uint8 caller_id[64];
+	public uint8 caller_id[];
 	public uint8 caller_id_len;
 	public uint8 unknown2[2];
 	public uint8 value1;
@@ -140,6 +148,8 @@ struct CallOriginationMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_call_origination_msg_init")]
+	public CallOriginationMessage();
 }
 
 
@@ -161,6 +171,8 @@ struct CallSupsMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_call_sups_msg_init")]
+	public CallSupsMessage();
 }
 
 
@@ -178,6 +190,8 @@ struct MiscTestAliveMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_test_alive_msg_init")]
+	public MiscTestAliveMessage();
 }
 
 
@@ -194,6 +208,8 @@ struct MiscGetImeiMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_get_imei_msg_init")]
+	public MiscGetImeiMessage();
 }
 
 
@@ -211,6 +227,8 @@ struct MiscGetImeiResponse
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_get_imei_resp_init")]
+	public MiscGetImeiResponse();
 }
 
 
@@ -227,6 +245,8 @@ struct MiscGetRadioFirmwareVersionMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_get_radio_firmware_version_msg_init")]
+	public MiscGetRadioFirmwareVersionMessage();
 }
 
 
@@ -247,6 +267,8 @@ struct MiscGetRadioFirmwareVersionResponse
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_get_radio_firmware_version_resp_init")]
+	public MiscGetRadioFirmwareVersionResponse();
 }
 
 
@@ -269,6 +291,8 @@ struct MiscGetChargerStatusMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_get_charger_status_msg_init")]
+	public MiscGetChargerStatusMessage();
 }
 
 
@@ -289,6 +313,8 @@ struct MiscSetChargeMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_set_charge_msg_init")]
+	public MiscSetChargeMessage();
 }
 
 
@@ -317,6 +343,8 @@ struct MiscSetDateMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_set_date_msg_init")]
+	public MiscSetDateMessage();
 }
 
 
@@ -335,6 +363,8 @@ struct MiscSetDateResponse
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_set_date_resp_init")]
+	public MiscSetDateResponse();
 }
 
 
@@ -351,6 +381,8 @@ struct MiscGetHomeNetworkNameMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_get_home_network_name_msg_init")]
+	public MiscGetHomeNetworkNameMessage();
 }
 
 
@@ -361,7 +393,7 @@ struct MiscGetHomeNetworkNameResponse
 	public uint8 unknown0[86];
 	public uint8 operator_name_len;
 	[CCode (array_length_cname = "operator_name_len")]
-	public uint8 operator_name[16];
+	public uint8 operator_name[];
 	public uint16 mcc;
 	public uint8 mnc;
 	public unowned uint8[] data
@@ -373,6 +405,8 @@ struct MiscGetHomeNetworkNameResponse
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_get_home_network_name_resp_init")]
+	public MiscGetHomeNetworkNameResponse();
 }
 
 
@@ -391,6 +425,8 @@ struct MiscChargerStatusEvent
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_charger_status_event_init")]
+	public MiscChargerStatusEvent();
 }
 
 
@@ -407,191 +443,13 @@ struct MiscRadioResetIndEvent
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_radio_reset_ind_event_init")]
+	public MiscRadioResetIndEvent();
 }
 
 
-[CCode (cname = "struct state_change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct StateChangeOperationModeMessage
-{
-	[CCode (cname="STATE_CHANGE_OPERATION_MODE_MSG_GROUP_ID")]
-	public static const uint8 GROUP_ID;
-	[CCode (cname="STATE_CHANGE_OPERATION_MODE_MSG_MESSAGE_ID")]
-	public static const uint16 MESSAGE_ID;
-
-	public uint32 ref_id;
-	public uint8 mode;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( StateChangeOperationModeMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct state_sys_sel_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct StateSysSelPrefMessage
-{
-	[CCode (cname="STATE_SYS_SEL_PREF_MSG_GROUP_ID")]
-	public static const uint8 GROUP_ID;
-	[CCode (cname="STATE_SYS_SEL_PREF_MSG_MESSAGE_ID")]
-	public static const uint16 MESSAGE_ID;
-
-	public uint32 ref_id;
-	public uint8 mode;
-	public uint8 unknown0[5];
-	public uint8 value0;
-	public uint8 unknown1[3];
-	public uint8 value1;
-	public uint8 unknown2[5];
-	public uint8 value2;
-	public uint8 unknown3;
-	public uint8 value3;
-	public uint8 value4;
-	public uint8 value5;
-	public uint8 unknown4[4];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( StateSysSelPrefMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct state_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct StateCallbackResponse
-{
-	public uint32 ref_id;
-	public uint8 unknown0[7];
-	public uint8 result;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( StateCallbackResponse );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct state_event", cheader_filename = "structures.h", destroy_function = "")]
-struct StateEvent
-{
-	public uint8 unknown0;
-	public uint8 mode;
-	public uint8 unknown1[4077];
-	public uint8 als_allowed;
-	public uint8 line;
-	public uint8 unknown2[17];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( StateEvent );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct wms_msg_group_event", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsMsgGroupEvent
-{
-	public uint8 unknown0[23];
-	public uint8 sender_len;
-	[CCode (array_length_cname = "sender_len")]
-	public uint8 sender[36];
-	public uint8 unknown1[2];
-	public uint32 pdu_len;
-	public uint8 pdu_start;
-	[CCode (array_length_cname = "pdu_len")]
-	public uint8 pdu[2016];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsMsgGroupEvent );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct wms_acknowledge_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsAcknowledgeMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0[4];
-	public uint8 value0;
-	public uint8 value1;
-	public uint8 unknown1[1891];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsAcknowledgeMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct wms_send_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsSendMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0[17];
-	public uint8 recipient_len;
-	[CCode (array_length_cname = "recipient_len")]
-	public uint8 recipient[36];
-	public uint8 unknown1[2];
-	public uint32 pdu_len;
-	[CCode (array_length_cname = "pdu_len")]
-	public uint8 pdu[255];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsSendMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct wms_read_template_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsReadTemplateMessage
-{
-	public uint32 ref_id;
-	public uint16 record;
-	public uint8 unknown0[3];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsReadTemplateMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct wms_cfg_set_gw_domain_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsCfgSetGwDomainMessage
+[CCode (cname = "struct network_report_rssi_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkReportRssiMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
@@ -600,260 +458,92 @@ struct WmsCfgSetGwDomainMessage
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsCfgSetGwDomainMessage );
+			res.length = (int)sizeof( NetworkReportRssiMessage );
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_network_report_rssi_msg_init")]
+	public NetworkReportRssiMessage();
 }
 
 
-[CCode (cname = "struct wms_cfg_set_routes_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsCfgSetRoutesMessage
+[CCode (cname = "struct network_report_health_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkReportHealthMessage
 {
 	public uint32 ref_id;
-	public uint8 unknown0[25];
+	public uint8 mode;
 	public unowned uint8[] data
 	{
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsCfgSetRoutesMessage );
+			res.length = (int)sizeof( NetworkReportHealthMessage );
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_network_report_health_msg_init")]
+	public NetworkReportHealthMessage();
 }
 
 
-[CCode (cname = "struct wms_cfg_get_message_list_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsCfgGetMessageListMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0[3];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsCfgGetMessageListMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct wms_read_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsReadMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0[5];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsReadMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct wms_delete_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsDeleteMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0[5];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsDeleteMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct wms_return_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsReturnResponse
-{
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsReturnResponse );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct wms_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsCallbackResponse
-{
-	public uint8 command_id;
-	public uint8 unknown0[9];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsCallbackResponse );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct sim_pin_status_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimPinStatusMessage
-{
-	public uint32 ref_id;
-	public uint8 pin_type;
-	public uint8 pin[8];
-	public uint8 unknown0;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimPinStatusMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct sim_get_call_forward_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimGetCallForwardInfoMessage
-{
-	public uint32 ref_id;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimGetCallForwardInfoMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct sim_return_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SimReturnResponse
+[CCode (cname = "struct network_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkCallbackResponse
 {
 	public uint32 ref_id;
 	public uint16 command;
-	public uint16 rc;
-	public uint8 unknown0[260];
+	public uint8 unknown0[2];
 	public unowned uint8[] data
 	{
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimReturnResponse );
+			res.length = (int)sizeof( NetworkCallbackResponse );
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_network_callback_resp_init")]
+	public NetworkCallbackResponse();
 }
 
 
-[CCode (cname = "struct sim_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SimCallbackResponse
+[CCode (cname = "struct network_state_info_event", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkStateInfoEvent
 {
-	public uint8 unknown0[4];
-	public uint8 result0;
-	public uint32 ref_id;
-	public uint8 resp_type;
-	public uint16 field_type;
-	public uint8 result1;
-	public uint8 unknown1;
-	public uint8 field_data_len;
-	[CCode (array_length_cname = "field_data_len")]
-	public uint8 field_data[8];
-	public uint8 unknown2[1911];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimCallbackResponse );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct sim_change_pin_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimChangePinMessage
-{
-	public uint32 ref_id;
+	public uint8 change_field[8];
+	public uint8 serv_status;
+	public uint8 servce_domain;
+	public uint8 service_capability;
+	public uint8 gprs_attached;
+	public uint16 roam;
 	public uint8 unknown0;
-	public uint8 old_pin[9];
-	public uint8 new_pin[9];
+	public uint16 mcc;
+	public uint8 mnc;
+	public uint8 unknown1[3];
+	public uint8 operator_name_len;
+	[CCode (array_length_cname = "operator_name_len")]
+	public uint8 operator_name[];
+	public uint8 unknown2[3];
+	public uint8 hplmn_or_spdi;
+	public uint8 hplmn_length;
+	public uint8 unknown3[16];
+	public uint16 rssi;
+	public uint16 ecio;
+	public uint8 unknown4[4];
+	public uint8 with_nitz_update;
+	public uint8 unknown5[543];
+	public uint8 reg_status;
+	public uint8 unknown6;
 	public unowned uint8[] data
 	{
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimChangePinMessage );
+			res.length = (int)sizeof( NetworkStateInfoEvent );
 			return res;
 		}
 	}
-}
-
-
-[CCode (cname = "struct sim_get_sim_capabilities_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimGetSimCapabilitiesMessage
-{
-	public uint32 ref_id;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimGetSimCapabilitiesMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct sim_read_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimReadMessage
-{
-	public uint32 ref_id;
-	public uint16 field_type;
-	public uint8 unknown0[35];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimReadMessage );
-			return res;
-		}
-	}
-}
-
-
-[CCode (cname = "struct sim_get_all_pin_status_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimGetAllPinStatusInfoMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimGetAllPinStatusInfoMessage );
-			return res;
-		}
-	}
+	[CCode (cname = "msmcomm_low_level_structures_network_state_info_event_init")]
+	public NetworkStateInfoEvent();
 }
 
 
@@ -872,6 +562,8 @@ struct PhonebookReadRecordMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_read_record_msg_init")]
+	public PhonebookReadRecordMessage();
 }
 
 
@@ -892,6 +584,8 @@ struct PhonebookReadRecordBulkMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_read_record_bulk_msg_init")]
+	public PhonebookReadRecordBulkMessage();
 }
 
 
@@ -914,6 +608,8 @@ struct PhonebookWriteRecordMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_write_record_msg_init")]
+	public PhonebookWriteRecordMessage();
 }
 
 
@@ -931,6 +627,8 @@ struct PhonebookExtendedFileInfoMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_extended_file_info_msg_init")]
+	public PhonebookExtendedFileInfoMessage();
 }
 
 
@@ -954,6 +652,8 @@ struct PhonebookReturnResponse
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_return_resp_init")]
+	public PhonebookReturnResponse();
 }
 
 
@@ -973,6 +673,8 @@ struct PhonebookEvent
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_event_init")]
+	public PhonebookEvent();
 }
 
 
@@ -995,92 +697,468 @@ struct PhonebookExtendedFileInfoEvent
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_extended_file_info_event_init")]
+	public PhonebookExtendedFileInfoEvent();
 }
 
 
-[CCode (cname = "struct network_report_rssi_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkReportRssiMessage
+[CCode (cname = "struct sim_pin_status_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimPinStatusMessage
 {
 	public uint32 ref_id;
-	public uint8 mode;
+	public uint8 pin_type;
+	public uint8 pin[8];
+	public uint8 unknown0;
 	public unowned uint8[] data
 	{
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( NetworkReportRssiMessage );
+			res.length = (int)sizeof( SimPinStatusMessage );
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_pin_status_msg_init")]
+	public SimPinStatusMessage();
 }
 
 
-[CCode (cname = "struct network_report_health_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkReportHealthMessage
+[CCode (cname = "struct sim_get_call_forward_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimGetCallForwardInfoMessage
 {
 	public uint32 ref_id;
-	public uint8 mode;
 	public unowned uint8[] data
 	{
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( NetworkReportHealthMessage );
+			res.length = (int)sizeof( SimGetCallForwardInfoMessage );
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_get_call_forward_info_msg_init")]
+	public SimGetCallForwardInfoMessage();
 }
 
 
-[CCode (cname = "struct network_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkCallbackResponse
+[CCode (cname = "struct sim_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SimReturnResponse
 {
 	public uint32 ref_id;
 	public uint16 command;
-	public uint8 unknown0[2];
+	public uint16 rc;
+	public uint8 unknown0[260];
 	public unowned uint8[] data
 	{
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( NetworkCallbackResponse );
+			res.length = (int)sizeof( SimReturnResponse );
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_return_resp_init")]
+	public SimReturnResponse();
 }
 
 
-[CCode (cname = "struct network_state_info_event", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkStateInfoEvent
+[CCode (cname = "struct sim_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SimCallbackResponse
 {
+	public uint8 unknown0[4];
+	public uint8 result0;
 	public uint32 ref_id;
-	public uint8 mode;
-	public uint8 unknown0[5];
-	public uint8 value0;
-	public uint8 unknown1[3];
-	public uint8 operator_name_len;
-	[CCode (array_length_cname = "operator_name_len")]
-	public uint8 operator_name[80];
-	public uint8 unknown2[3];
-	public uint8 hplmn_or_spdi;
-	public uint8 hplmn_length;
-	public uint8 unknown3[16];
-	public uint16 rssi;
-	public uint16 ecio;
-	public uint8 unknown4[4];
-	public uint8 with_nitz_update;
-	public uint8 unknown5[543];
-	public uint8 reg_status;
-	public uint8 unknown6;
+	public uint8 resp_type;
+	public uint16 field_type;
+	public uint8 result1;
+	public uint8 unknown1;
+	public uint8 field_data_len;
+	[CCode (array_length_cname = "field_data_len")]
+	public uint8 field_data[];
+	public uint8 unknown2[1911];
 	public unowned uint8[] data
 	{
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( NetworkStateInfoEvent );
+			res.length = (int)sizeof( SimCallbackResponse );
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_callback_resp_init")]
+	public SimCallbackResponse();
+}
+
+
+[CCode (cname = "struct sim_change_pin_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimChangePinMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0;
+	public uint8 old_pin[9];
+	public uint8 new_pin[9];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimChangePinMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_change_pin_msg_init")]
+	public SimChangePinMessage();
+}
+
+
+[CCode (cname = "struct sim_get_sim_capabilities_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimGetSimCapabilitiesMessage
+{
+	public uint32 ref_id;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimGetSimCapabilitiesMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_get_sim_capabilities_msg_init")]
+	public SimGetSimCapabilitiesMessage();
+}
+
+
+[CCode (cname = "struct sim_read_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimReadMessage
+{
+	public uint32 ref_id;
+	public uint16 field_type;
+	public uint8 unknown0[35];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimReadMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_read_msg_init")]
+	public SimReadMessage();
+}
+
+
+[CCode (cname = "struct sim_get_all_pin_status_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimGetAllPinStatusInfoMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimGetAllPinStatusInfoMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_get_all_pin_status_info_msg_init")]
+	public SimGetAllPinStatusInfoMessage();
+}
+
+
+[CCode (cname = "struct wms_msg_group_event", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsMsgGroupEvent
+{
+	public uint8 unknown0[23];
+	public uint8 sender_len;
+	[CCode (array_length_cname = "sender_len")]
+	public uint8 sender[];
+	public uint8 unknown1[2];
+	public uint32 pdu_len;
+	public uint8 pdu_start;
+	[CCode (array_length_cname = "pdu_len")]
+	public uint8 pdu[];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsMsgGroupEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_msg_group_event_init")]
+	public WmsMsgGroupEvent();
+}
+
+
+[CCode (cname = "struct wms_acknowledge_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsAcknowledgeMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[4];
+	public uint8 value0;
+	public uint8 value1;
+	public uint8 value2;
+	public uint8 unknown1[1899];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsAcknowledgeMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_acknowledge_msg_init")]
+	public WmsAcknowledgeMessage();
+}
+
+
+[CCode (cname = "struct wms_message_send_event", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsMessageSendEvent
+{
+	public uint8 unknown0[2083];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsMessageSendEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_message_send_event_init")]
+	public WmsMessageSendEvent();
+}
+
+
+[CCode (cname = "struct wms_send_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsSendMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[2];
+	public uint8 nr;
+	public uint8 five;
+	public uint8 unknown1;
+	public uint32 ffffffff;
+	public uint8 unknown2[6];
+	public uint8 number_type;
+	public uint8 number_plan;
+	public uint8 service_center_len;
+	[CCode (array_length_cname = "service_center_len")]
+	public uint8 service_center[];
+	public uint16 six_three;
+	public uint32 pdu_len;
+	[CCode (array_length_cname = "pdu_len")]
+	public uint8 pdu[];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsSendMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_send_msg_init")]
+	public WmsSendMessage();
+}
+
+
+[CCode (cname = "struct sms_get_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SmsGetInfoMessage
+{
+	public uint32 ref_id;
+	public uint8 value0;
+	public uint8 value1;
+	public uint8 unknown0[3];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SmsGetInfoMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sms_get_info_msg_init")]
+	public SmsGetInfoMessage();
+}
+
+
+[CCode (cname = "struct wms_read_template_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsReadTemplateMessage
+{
+	public uint32 ref_id;
+	public uint16 record;
+	public uint8 unknown0[3];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsReadTemplateMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_read_template_msg_init")]
+	public WmsReadTemplateMessage();
+}
+
+
+[CCode (cname = "struct wms_read_template_event", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsReadTemplateEvent
+{
+	public uint8 unknown0[224];
+	public uint8 digit_mode;
+	public uint8 unknown1[1858];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsReadTemplateEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_read_template_event_init")]
+	public WmsReadTemplateEvent();
+}
+
+
+[CCode (cname = "struct wms_cfg_set_gw_domain_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsCfgSetGwDomainMessage
+{
+	public uint32 ref_id;
+	public uint8 mode;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsCfgSetGwDomainMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_cfg_set_gw_domain_msg_init")]
+	public WmsCfgSetGwDomainMessage();
+}
+
+
+[CCode (cname = "struct wms_cfg_set_routes_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsCfgSetRoutesMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[25];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsCfgSetRoutesMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_cfg_set_routes_msg_init")]
+	public WmsCfgSetRoutesMessage();
+}
+
+
+[CCode (cname = "struct wms_cfg_get_message_list_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsCfgGetMessageListMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[3];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsCfgGetMessageListMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_cfg_get_message_list_msg_init")]
+	public WmsCfgGetMessageListMessage();
+}
+
+
+[CCode (cname = "struct wms_read_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsReadMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[5];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsReadMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_read_msg_init")]
+	public WmsReadMessage();
+}
+
+
+[CCode (cname = "struct wms_delete_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsDeleteMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0[5];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsDeleteMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_delete_msg_init")]
+	public WmsDeleteMessage();
+}
+
+
+[CCode (cname = "struct wms_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsReturnResponse
+{
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsReturnResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_return_resp_init")]
+	public WmsReturnResponse();
+}
+
+
+[CCode (cname = "struct wms_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsCallbackResponse
+{
+	public uint8 command_id;
+	public uint8 unknown0[3];
+	public uint32 ref_id;
+	public uint8 unknown1[2];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsCallbackResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_callback_resp_init")]
+	public WmsCallbackResponse();
 }
 
 
@@ -1098,6 +1176,8 @@ struct SoundSetDeviceMessage
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_sound_set_device_msg_init")]
+	public SoundSetDeviceMessage();
 }
 
 
@@ -1115,6 +1195,100 @@ struct SoundCallbackResponse
 			return res;
 		}
 	}
+	[CCode (cname = "msmcomm_low_level_structures_sound_callback_resp_init")]
+	public SoundCallbackResponse();
+}
+
+
+[CCode (cname = "struct state_change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct StateChangeOperationModeMessage
+{
+	public uint32 ref_id;
+	public uint8 mode;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( StateChangeOperationModeMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_state_change_operation_mode_msg_init")]
+	public StateChangeOperationModeMessage();
+}
+
+
+[CCode (cname = "struct state_sys_sel_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct StateSysSelPrefMessage
+{
+	public uint32 ref_id;
+	public uint8 mode;
+	public uint8 unknown0[5];
+	public uint8 value0;
+	public uint8 unknown1[3];
+	public uint8 value1;
+	public uint8 unknown2[5];
+	public uint8 value2;
+	public uint8 unknown3;
+	public uint8 value3;
+	public uint8 value4;
+	public uint8 value5;
+	public uint8 unknown4[4];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( StateSysSelPrefMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_state_sys_sel_pref_msg_init")]
+	public StateSysSelPrefMessage();
+}
+
+
+[CCode (cname = "struct state_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct StateCallbackResponse
+{
+	public uint32 ref_id;
+	public uint8 unknown0[7];
+	public uint8 result;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( StateCallbackResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_state_callback_resp_init")]
+	public StateCallbackResponse();
+}
+
+
+[CCode (cname = "struct state_event", cheader_filename = "structures.h", destroy_function = "")]
+struct StateEvent
+{
+	public uint8 unknown0;
+	public uint8 mode;
+	public uint8 unknown1[4077];
+	public uint8 als_allowed;
+	public uint8 line;
+	public uint8 unknown2[17];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( StateEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_state_event_init")]
+	public StateEvent();
 }
 
 } /* namespace Msmcomm.LowLevel.Structures */ 
