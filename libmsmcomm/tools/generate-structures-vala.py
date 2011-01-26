@@ -67,6 +67,8 @@ def build_object(name, len, parts):
   print "struct %s" % vala_name
   print "{"
 
+  len_params = {}
+
   for part in parts:
     type = part['type']
     member_name = part['name']

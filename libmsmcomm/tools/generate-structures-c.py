@@ -26,6 +26,11 @@ def print_indent(str):
 
 def print_object_header():
   print "\n"
+def has_len(members, name):
+  for n in members:
+    if name + "_len" == n['name']:
+      return True
+  return False
 
 def build_object(name, len, parts):
   print "struct %s" % name
