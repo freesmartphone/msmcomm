@@ -19,7 +19,6 @@
  *
  **/
 
-using Msmcomm.LowLevel;
 using FsoFramework.StringHandling;
 
 namespace Msmcomm.Daemon
@@ -31,11 +30,11 @@ namespace Msmcomm.Daemon
             base(modem);
         }
 
-        public override bool handleUnsolicitedResponse(BaseMessage message)
+        public override bool handleUnsolicitedResponse(LowLevel.BaseMessage message)
         {
             var handled = false;
             var urc_service_name = messageTypeNickName(message.message_type, "network-");
-            var network_message = message as NetworkUrcMessage;
+            var network_message = message as LowLevel.NetworkUrcMessage;
             var info = NetworkStateInfo();
 
             if (network_message != null)
@@ -79,7 +78,7 @@ namespace Msmcomm.Daemon
 
         public async void report_rssi(bool enable) throws Msmcomm.Error, GLib.Error
         {
-            var message = new NetworkReportRssiCommandMessage();
+            var message = new LowLevel.NetworkReportRssiCommandMessage();
             message.enable = enable;
 
             var response = yield channel.enqueueAsync(message);
@@ -88,7 +87,7 @@ namespace Msmcomm.Daemon
 
         public async void report_health(bool enable) throws Msmcomm.Error, GLib.Error
         {
-            var message = new NetworkReportHealthCommandMessage();
+            var message = new LowLevel.NetworkReportHealthCommandMessage();
             message.enable = enable;
 
             var response = yield channel.enqueueAsync(message);

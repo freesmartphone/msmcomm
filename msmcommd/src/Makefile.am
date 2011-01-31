@@ -23,6 +23,11 @@ AM_CFLAGS = \
 	-DG_LOG_DOMAIN=\"msmcommd\" \
 	$(NULL)
 
+if WANT_DEBUG
+VALAC_ARGS += -g -D DEBUG
+AM_CFLAGS += -ggdb -O0
+endif
+
 BUILT_SOURCES = .vala.stamp
 
 sbin_PROGRAMS = msmcommd
