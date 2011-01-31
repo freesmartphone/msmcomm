@@ -448,8 +448,8 @@ struct MiscRadioResetIndEvent
 }
 
 
-[CCode (cname = "struct network_report_rssi_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkReportRssiMessage
+[CCode (cname = "struct state_change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct StateChangeOperationModeMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
@@ -458,413 +458,85 @@ struct NetworkReportRssiMessage
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( NetworkReportRssiMessage );
+			res.length = (int)sizeof( StateChangeOperationModeMessage );
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_network_report_rssi_msg_init")]
-	public NetworkReportRssiMessage();
+	[CCode (cname = "msmcomm_low_level_structures_state_change_operation_mode_msg_init")]
+	public StateChangeOperationModeMessage();
 }
 
 
-[CCode (cname = "struct network_report_health_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkReportHealthMessage
+[CCode (cname = "struct state_sys_sel_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct StateSysSelPrefMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( NetworkReportHealthMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_network_report_health_msg_init")]
-	public NetworkReportHealthMessage();
-}
-
-
-[CCode (cname = "struct network_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkCallbackResponse
-{
-	public uint32 ref_id;
-	public uint16 command;
-	public uint8 unknown0[2];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( NetworkCallbackResponse );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_network_callback_resp_init")]
-	public NetworkCallbackResponse();
-}
-
-
-[CCode (cname = "struct network_state_info_event", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkStateInfoEvent
-{
-	public uint8 change_field[8];
-	public uint8 serv_status;
-	public uint8 servce_domain;
-	public uint8 service_capability;
-	public uint8 gprs_attached;
-	public uint16 roam;
-	public uint8 unknown0;
-	public uint16 mcc;
-	public uint8 mnc;
-	public uint8 unknown1[3];
-	public uint8 operator_name_len;
-	[CCode (array_length_cname = "operator_name_len")]
-	public uint8 operator_name[];
-	public uint8 unknown2[3];
-	public uint8 hplmn_or_spdi;
-	public uint8 hplmn_length;
-	public uint8 unknown3[16];
-	public uint16 rssi;
-	public uint16 ecio;
-	public uint8 unknown4[4];
-	public uint8 with_nitz_update;
-	public uint8 unknown5[543];
-	public uint8 reg_status;
-	public uint8 unknown6;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( NetworkStateInfoEvent );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_network_state_info_event_init")]
-	public NetworkStateInfoEvent();
-}
-
-
-[CCode (cname = "struct phonebook_read_record_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookReadRecordMessage
-{
-	public uint32 ref_id;
-	public uint8 position;
-	public uint8 book_type;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( PhonebookReadRecordMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_read_record_msg_init")]
-	public PhonebookReadRecordMessage();
-}
-
-
-[CCode (cname = "struct phonebook_read_record_bulk_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookReadRecordBulkMessage
-{
-	public uint32 ref_id;
-	public uint8 first_position;
-	public uint8 first_book_type;
-	public uint8 last_position;
-	public uint8 last_book_type;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( PhonebookReadRecordBulkMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_read_record_bulk_msg_init")]
-	public PhonebookReadRecordBulkMessage();
-}
-
-
-[CCode (cname = "struct phonebook_write_record_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookWriteRecordMessage
-{
-	public uint32 ref_id;
-	public uint8 position;
-	public uint8 book_type;
-	public uint8 number[41];
-	public uint8 unknown0;
-	public uint8 title[90];
+	public uint8 unknown0[5];
 	public uint8 value0;
+	public uint8 unknown1[3];
+	public uint8 value1;
+	public uint8 unknown2[5];
+	public uint8 value2;
+	public uint8 unknown3;
+	public uint8 value3;
+	public uint8 value4;
+	public uint8 value5;
+	public uint8 unknown4[4];
 	public unowned uint8[] data
 	{
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( PhonebookWriteRecordMessage );
+			res.length = (int)sizeof( StateSysSelPrefMessage );
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_write_record_msg_init")]
-	public PhonebookWriteRecordMessage();
+	[CCode (cname = "msmcomm_low_level_structures_state_sys_sel_pref_msg_init")]
+	public StateSysSelPrefMessage();
 }
 
 
-[CCode (cname = "struct phonebook_extended_file_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookExtendedFileInfoMessage
+[CCode (cname = "struct state_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct StateCallbackResponse
 {
 	public uint32 ref_id;
-	public uint8 book_type;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( PhonebookExtendedFileInfoMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_extended_file_info_msg_init")]
-	public PhonebookExtendedFileInfoMessage();
-}
-
-
-[CCode (cname = "struct phonebook_return_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookReturnResponse
-{
-	public uint32 ref_id;
-	public uint16 command_id;
+	public uint8 unknown0[7];
 	public uint8 result;
-	public uint8 position;
-	public uint8 book_type;
-	public uint8 number[42];
-	public uint8 title[90];
-	public uint8 encoding_type;
 	public unowned uint8[] data
 	{
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( PhonebookReturnResponse );
+			res.length = (int)sizeof( StateCallbackResponse );
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_return_resp_init")]
-	public PhonebookReturnResponse();
+	[CCode (cname = "msmcomm_low_level_structures_state_callback_resp_init")]
+	public StateCallbackResponse();
 }
 
 
-[CCode (cname = "struct phonebook_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookEvent
+[CCode (cname = "struct state_event", cheader_filename = "structures.h", destroy_function = "")]
+struct StateEvent
 {
-	public uint8 position;
 	public uint8 unknown0;
-	public uint8 book_type;
-	public uint8 unknown1[200];
+	public uint8 mode;
+	public uint8 unknown1[4077];
+	public uint8 als_allowed;
+	public uint8 line;
+	public uint8 unknown2[17];
 	public unowned uint8[] data
 	{
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( PhonebookEvent );
+			res.length = (int)sizeof( StateEvent );
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_event_init")]
-	public PhonebookEvent();
-}
-
-
-[CCode (cname = "struct phonebook_extended_file_info_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookExtendedFileInfoEvent
-{
-	public uint8 result;
-	public uint8 book_type;
-	public uint32 slots_used;
-	public uint32 slot_count;
-	public uint32 max_chars_per_title;
-	public uint32 max_chars_per_number;
-	public uint8 unknown0[185];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( PhonebookExtendedFileInfoEvent );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_extended_file_info_event_init")]
-	public PhonebookExtendedFileInfoEvent();
-}
-
-
-[CCode (cname = "struct sim_pin_status_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimPinStatusMessage
-{
-	public uint32 ref_id;
-	public uint8 pin_type;
-	public uint8 pin[8];
-	public uint8 unknown0;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimPinStatusMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_pin_status_msg_init")]
-	public SimPinStatusMessage();
-}
-
-
-[CCode (cname = "struct sim_get_call_forward_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimGetCallForwardInfoMessage
-{
-	public uint32 ref_id;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimGetCallForwardInfoMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_get_call_forward_info_msg_init")]
-	public SimGetCallForwardInfoMessage();
-}
-
-
-[CCode (cname = "struct sim_return_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SimReturnResponse
-{
-	public uint32 ref_id;
-	public uint16 command;
-	public uint16 rc;
-	public uint8 unknown0[260];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimReturnResponse );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_return_resp_init")]
-	public SimReturnResponse();
-}
-
-
-[CCode (cname = "struct sim_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SimCallbackResponse
-{
-	public uint8 unknown0[4];
-	public uint8 result0;
-	public uint32 ref_id;
-	public uint8 resp_type;
-	public uint16 field_type;
-	public uint8 result1;
-	public uint8 unknown1;
-	public uint8 field_data_len;
-	[CCode (array_length_cname = "field_data_len")]
-	public uint8 field_data[];
-	public uint8 unknown2[1911];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimCallbackResponse );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_callback_resp_init")]
-	public SimCallbackResponse();
-}
-
-
-[CCode (cname = "struct sim_change_pin_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimChangePinMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0;
-	public uint8 old_pin[9];
-	public uint8 new_pin[9];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimChangePinMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_change_pin_msg_init")]
-	public SimChangePinMessage();
-}
-
-
-[CCode (cname = "struct sim_get_sim_capabilities_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimGetSimCapabilitiesMessage
-{
-	public uint32 ref_id;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimGetSimCapabilitiesMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_get_sim_capabilities_msg_init")]
-	public SimGetSimCapabilitiesMessage();
-}
-
-
-[CCode (cname = "struct sim_read_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimReadMessage
-{
-	public uint32 ref_id;
-	public uint16 field_type;
-	public uint8 unknown0[35];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimReadMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_read_msg_init")]
-	public SimReadMessage();
-}
-
-
-[CCode (cname = "struct sim_get_all_pin_status_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimGetAllPinStatusInfoMessage
-{
-	public uint32 ref_id;
-	public uint8 unknown0;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( SimGetAllPinStatusInfoMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_get_all_pin_status_info_msg_init")]
-	public SimGetAllPinStatusInfoMessage();
+	[CCode (cname = "msmcomm_low_level_structures_state_event_init")]
+	public StateEvent();
 }
 
 
@@ -1162,6 +834,426 @@ struct WmsCallbackResponse
 }
 
 
+[CCode (cname = "struct sim_pin_status_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimPinStatusMessage
+{
+	public uint32 ref_id;
+	public uint8 pin_type;
+	public uint8 pin[8];
+	public uint8 unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimPinStatusMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_pin_status_msg_init")]
+	public SimPinStatusMessage();
+}
+
+
+[CCode (cname = "struct sim_get_call_forward_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimGetCallForwardInfoMessage
+{
+	public uint32 ref_id;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimGetCallForwardInfoMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_get_call_forward_info_msg_init")]
+	public SimGetCallForwardInfoMessage();
+}
+
+
+[CCode (cname = "struct sim_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SimReturnResponse
+{
+	public uint32 ref_id;
+	public uint16 command;
+	public uint16 rc;
+	public uint8 unknown0[260];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimReturnResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_return_resp_init")]
+	public SimReturnResponse();
+}
+
+
+[CCode (cname = "struct sim_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SimCallbackResponse
+{
+	public uint8 unknown0[4];
+	public uint8 result0;
+	public uint32 ref_id;
+	public uint8 resp_type;
+	public uint16 field_type;
+	public uint8 result1;
+	public uint8 unknown1;
+	public uint8 field_data_len;
+	[CCode (array_length_cname = "field_data_len")]
+	public uint8 field_data[];
+	public uint8 unknown2[1911];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimCallbackResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_callback_resp_init")]
+	public SimCallbackResponse();
+}
+
+
+[CCode (cname = "struct sim_change_pin_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimChangePinMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0;
+	public uint8 old_pin[9];
+	public uint8 new_pin[9];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimChangePinMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_change_pin_msg_init")]
+	public SimChangePinMessage();
+}
+
+
+[CCode (cname = "struct sim_get_sim_capabilities_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimGetSimCapabilitiesMessage
+{
+	public uint32 ref_id;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimGetSimCapabilitiesMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_get_sim_capabilities_msg_init")]
+	public SimGetSimCapabilitiesMessage();
+}
+
+
+[CCode (cname = "struct sim_read_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimReadMessage
+{
+	public uint32 ref_id;
+	public uint16 field_type;
+	public uint8 unknown0[35];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimReadMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_read_msg_init")]
+	public SimReadMessage();
+}
+
+
+[CCode (cname = "struct sim_get_all_pin_status_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SimGetAllPinStatusInfoMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimGetAllPinStatusInfoMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_get_all_pin_status_info_msg_init")]
+	public SimGetAllPinStatusInfoMessage();
+}
+
+
+[CCode (cname = "struct phonebook_read_record_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookReadRecordMessage
+{
+	public uint32 ref_id;
+	public uint8 position;
+	public uint8 book_type;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookReadRecordMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_read_record_msg_init")]
+	public PhonebookReadRecordMessage();
+}
+
+
+[CCode (cname = "struct phonebook_read_record_bulk_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookReadRecordBulkMessage
+{
+	public uint32 ref_id;
+	public uint8 first_position;
+	public uint8 first_book_type;
+	public uint8 last_position;
+	public uint8 last_book_type;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookReadRecordBulkMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_read_record_bulk_msg_init")]
+	public PhonebookReadRecordBulkMessage();
+}
+
+
+[CCode (cname = "struct phonebook_write_record_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookWriteRecordMessage
+{
+	public uint32 ref_id;
+	public uint8 position;
+	public uint8 book_type;
+	public uint8 number[41];
+	public uint8 unknown0;
+	public uint8 title[90];
+	public uint8 value0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookWriteRecordMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_write_record_msg_init")]
+	public PhonebookWriteRecordMessage();
+}
+
+
+[CCode (cname = "struct phonebook_extended_file_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookExtendedFileInfoMessage
+{
+	public uint32 ref_id;
+	public uint8 book_type;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookExtendedFileInfoMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_extended_file_info_msg_init")]
+	public PhonebookExtendedFileInfoMessage();
+}
+
+
+[CCode (cname = "struct phonebook_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookReturnResponse
+{
+	public uint32 ref_id;
+	public uint16 command_id;
+	public uint8 result;
+	public uint8 position;
+	public uint8 book_type;
+	public uint8 number[42];
+	public uint8 title[90];
+	public uint8 encoding_type;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookReturnResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_return_resp_init")]
+	public PhonebookReturnResponse();
+}
+
+
+[CCode (cname = "struct phonebook_event", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookEvent
+{
+	public uint8 position;
+	public uint8 unknown0;
+	public uint8 book_type;
+	public uint8 unknown1[200];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_event_init")]
+	public PhonebookEvent();
+}
+
+
+[CCode (cname = "struct phonebook_extended_file_info_event", cheader_filename = "structures.h", destroy_function = "")]
+struct PhonebookExtendedFileInfoEvent
+{
+	public uint8 result;
+	public uint8 book_type;
+	public uint32 slots_used;
+	public uint32 slot_count;
+	public uint32 max_chars_per_title;
+	public uint32 max_chars_per_number;
+	public uint8 unknown0[185];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PhonebookExtendedFileInfoEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_phonebook_extended_file_info_event_init")]
+	public PhonebookExtendedFileInfoEvent();
+}
+
+
+[CCode (cname = "struct network_report_rssi_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkReportRssiMessage
+{
+	public uint32 ref_id;
+	public uint8 mode;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( NetworkReportRssiMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_network_report_rssi_msg_init")]
+	public NetworkReportRssiMessage();
+}
+
+
+[CCode (cname = "struct network_report_health_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkReportHealthMessage
+{
+	public uint32 ref_id;
+	public uint8 mode;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( NetworkReportHealthMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_network_report_health_msg_init")]
+	public NetworkReportHealthMessage();
+}
+
+
+[CCode (cname = "struct network_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkCallbackResponse
+{
+	public uint32 ref_id;
+	public uint16 command;
+	public uint8 unknown0[2];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( NetworkCallbackResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_network_callback_resp_init")]
+	public NetworkCallbackResponse();
+}
+
+
+[CCode (cname = "struct network_state_info_event", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkStateInfoEvent
+{
+	public uint8 change_field[8];
+	public uint8 serv_status;
+	public uint8 servce_domain;
+	public uint8 service_capability;
+	public uint8 gprs_attached;
+	public uint16 roam;
+	public uint8 unknown0;
+	public uint16 mcc;
+	public uint8 mnc;
+	public uint8 unknown1[3];
+	public uint8 operator_name_len;
+	[CCode (array_length_cname = "operator_name_len")]
+	public uint8 operator_name[];
+	public uint8 unknown2[3];
+	public uint8 hplmn_or_spdi;
+	public uint8 hplmn_length;
+	public uint8 unknown3[16];
+	public uint16 rssi;
+	public uint16 ecio;
+	public uint8 unknown4[4];
+	public uint8 with_nitz_update;
+	public uint8 unknown5[543];
+	public uint8 reg_status;
+	public uint8 unknown6;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( NetworkStateInfoEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_network_state_info_event_init")]
+	public NetworkStateInfoEvent();
+}
+
+
 [CCode (cname = "struct sound_set_device_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct SoundSetDeviceMessage
 {
@@ -1197,98 +1289,6 @@ struct SoundCallbackResponse
 	}
 	[CCode (cname = "msmcomm_low_level_structures_sound_callback_resp_init")]
 	public SoundCallbackResponse();
-}
-
-
-[CCode (cname = "struct state_change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct StateChangeOperationModeMessage
-{
-	public uint32 ref_id;
-	public uint8 mode;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( StateChangeOperationModeMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_state_change_operation_mode_msg_init")]
-	public StateChangeOperationModeMessage();
-}
-
-
-[CCode (cname = "struct state_sys_sel_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct StateSysSelPrefMessage
-{
-	public uint32 ref_id;
-	public uint8 mode;
-	public uint8 unknown0[5];
-	public uint8 value0;
-	public uint8 unknown1[3];
-	public uint8 value1;
-	public uint8 unknown2[5];
-	public uint8 value2;
-	public uint8 unknown3;
-	public uint8 value3;
-	public uint8 value4;
-	public uint8 value5;
-	public uint8 unknown4[4];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( StateSysSelPrefMessage );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_state_sys_sel_pref_msg_init")]
-	public StateSysSelPrefMessage();
-}
-
-
-[CCode (cname = "struct state_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct StateCallbackResponse
-{
-	public uint32 ref_id;
-	public uint8 unknown0[7];
-	public uint8 result;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( StateCallbackResponse );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_state_callback_resp_init")]
-	public StateCallbackResponse();
-}
-
-
-[CCode (cname = "struct state_event", cheader_filename = "structures.h", destroy_function = "")]
-struct StateEvent
-{
-	public uint8 unknown0;
-	public uint8 mode;
-	public uint8 unknown1[4077];
-	public uint8 als_allowed;
-	public uint8 line;
-	public uint8 unknown2[17];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( StateEvent );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_state_event_init")]
-	public StateEvent();
 }
 
 } /* namespace Msmcomm.LowLevel.Structures */ 
