@@ -1237,9 +1237,19 @@ struct NetworkStateInfoEvent
 	public uint16 ecio;
 	public uint8 unknown4[4];
 	public uint8 with_nitz_update;
-	public uint8 unknown5[543];
+	public uint8 unknown5[522];
+	public uint8 year;
+	public uint8 month;
+	public uint8 day;
+	public uint8 hours;
+	public uint8 minutes;
+	public uint8 seconds;
+	public uint16 timezone;
+	public uint8 unknown6[11];
+	public uint8 gsm_icon_ind;
+	public uint8 unknown7;
 	public uint8 reg_status;
-	public uint8 unknown6;
+	public uint8 unknown8;
 	public unowned uint8[] data
 	{
 		get

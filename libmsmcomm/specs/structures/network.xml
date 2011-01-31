@@ -44,6 +44,34 @@
 			<field name="rssi" start="123" end="124" type="uint16_t"/>
 			<field name="ecio" start="125" end="126" type="uint16_t"/>
 			<field name="with_nitz_update" start="131" type="uint8_t"/>
+			<field name="year" start="654" type="uint8_t">
+				<description>
+					It's the relative offset to the epoch of 2000. So you get the complete
+					year as 2000 + year.
+				</description>
+			</field>
+			<field name="month" start="655" type="uint8_t"/>
+			<field name="day" start="656" type="uint8_t"/>
+			<field name="hours" start="657" type="uint8_t"/>
+			<field name="minutes" start="658" type="uint8_t"/>
+			<field name="seconds" start="659" type="uint8_t"/>
+			<field name="timezone" start="660" end="661" type="uint16_t">
+				<description>
+					Need to be multiplied by 15 to get the correct value.
+				</description>
+			</field>
+			<field name="gsm_icon_ind" start="673" type="uint8_t">
+				<description>
+					Possible values:
+					- 5: unknown (Data Service = 8; hsdpa)
+					- 2: unknown (Data Service = 5; gprs)
+					- 3: unknown (Data Service = 6; edge)
+					- 0: unknown (Data Service = 0; none)
+					NOTE: The possible values are converted by webOS to the Data Service
+					values mentioned above. For example if a gsm_icon_ind with the value 5
+					is received the corresponding data service value is 8 (it's hsdpa).
+				</description>
+			</field>
 			<field name="reg_status" start="675" type="uint8_t">
 				<description>
 					Possible values:

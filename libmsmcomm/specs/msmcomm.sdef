@@ -376,6 +376,14 @@ start network_state_info_event 677
 [123-124] uint16_t rssi
 [125-126] uint16_t ecio
 [131] uint8_t with_nitz_update
+[654] uint8_t year
+[655] uint8_t month
+[656] uint8_t day
+[657] uint8_t hours
+[658] uint8_t minutes
+[659] uint8_t seconds
+[660-661] uint16_t timezone
+[673] uint8_t gsm_icon_ind
 [675] uint8_t reg_status
 end
 
