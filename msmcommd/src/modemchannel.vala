@@ -28,7 +28,6 @@ namespace Msmcomm.Daemon
         private Gee.LinkedList<CommandHandler> q;
         private uint timeoutWatch;
         protected CommandHandler current;
-        private int current_event_type;
         private MessageAssembler masm;
         private MessageDisassembler mdis;
 
