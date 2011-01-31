@@ -21,7 +21,7 @@
 
 namespace Msmcomm
 {
-    [CCode (type_id = "MSMCOMM_NETWORK_STATUS_INFO", cheader_filename="msmcomm-specs.h")]
+    [CCode (type_id = "MSMCOMM_NETWORK_STATUS_INFO", cheader_filename = "msmcomm-specs.h")]
     public struct NetworkStateInfo
     {
         public uint mcc;
@@ -33,6 +33,31 @@ namespace Msmcomm
         public uint ecio;
         public bool gprs_attached;
         public bool roam;
+        public NetworkDataService data_service;
+        public bool with_time_update;
+        public NetworkTimeUpdate time;
+    }
+
+    [CCode (type_id = "MSMCOMM_NETWORK_TIME_UPDATE", cheader_filename = "msmcomm-specs.h")]
+    public struct NetworkTimeUpdate
+    {
+        public uint year;
+        public uint month;
+        public uint day;
+        public uint hours;
+        public uint minutes;
+        public uint seconds;
+        public uint timezone_offset;
+    }
+
+    [CCode (cprefix = "MSMCOMM_NETWORK_DATA_SERVICE_", cheader_filename = "msmcomm-specs.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum NetworkDataService
+    {
+        NONE,
+        GPRS,
+        EDGE,
+        HSDPA,
     }
 
     [CCode (cprefix = "MSMCOMM_NETWORK_REGISTRATION_STATUS_", cheader_filename = "msmcomm-specs.h")]
