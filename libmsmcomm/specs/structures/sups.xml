@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:sups>
+	<description></description>
+	<structure name="sups_callback_resp" length="8">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="command" start="4" type="uint8_t"/>
+		<field name="result" start="6" type="uint8_t"/>
+	</structure>
+</namespace:sups>
+

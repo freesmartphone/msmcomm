@@ -398,3 +398,12 @@ start sound_callback_resp 11
 [0-3] uint32_t ref_id
 end
 
+#-------------------------------------------------------------------
+# SUPS
+#-------------------------------------------------------------------
+start sups_callback_resp 8
+[0-3] uint32_t ref_id
+[4] uint8_t command
+[6] uint8_t result
+end
+

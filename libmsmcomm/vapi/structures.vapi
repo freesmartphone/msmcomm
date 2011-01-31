@@ -1301,5 +1301,27 @@ struct SoundCallbackResponse
 	public SoundCallbackResponse();
 }
 
+
+[CCode (cname = "struct sups_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SupsCallbackResponse
+{
+	public uint32 ref_id;
+	public uint8 command;
+	public uint8 unknown0;
+	public uint8 result;
+	public uint8 unknown1;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SupsCallbackResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sups_callback_resp_init")]
+	public SupsCallbackResponse();
+}
+
 } /* namespace Msmcomm.LowLevel.Structures */ 
 

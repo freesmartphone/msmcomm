@@ -920,5 +920,19 @@ static void msmcomm_low_level_structures_sound_callback_resp_init(struct sound_c
 {
 }
 
+
+struct sups_callback_resp
+{
+	uint32_t ref_id;
+	uint8_t command;
+	uint8_t unknown0;
+	uint8_t result;
+	uint8_t unknown1;
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_sups_callback_resp_init(struct sups_callback_resp* self)
+{
+}
+
 #endif
 
