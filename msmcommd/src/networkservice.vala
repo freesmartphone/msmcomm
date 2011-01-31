@@ -49,6 +49,21 @@ namespace Msmcomm.Daemon
                 info.service_status = convertEnum<LowLevel.NetworkServiceStatus,NetworkServiceStatus>(network_message.service_status);
                 info.mcc = (uint) network_message.mcc;
                 info.mnc = (uint) network_message.mnc;
+                info.data_service = convertEnum<LowLevel.NetworkDataService,NetworkDataService>(network_message.data_service);
+
+                info.with_time_update = network_message.time_update;
+                info.time = NetworkTimeUpdate();
+
+                if (network_message.time_update)
+                {
+                    info.time.year = network_message.year;
+                    info.time.month = network_message.month;
+                    info.time.day = network_message.day;
+                    info.time.hours = network_message.hours;
+                    info.time.minutes = network_message.minutes;
+                    info.time.seconds = network_message.seconds;
+                    info.time.timezone_offset = network_message.timezone_offset;
+                }
 
                 network_status(urc_service_name, info);
                 handled = true;
