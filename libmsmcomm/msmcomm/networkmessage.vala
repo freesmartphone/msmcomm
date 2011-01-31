@@ -134,7 +134,7 @@ namespace Msmcomm.LowLevel
         public NetworkServiceStatus service_status;
         public bool gprs_attached;
         public bool roam;
-        public bool nitz_update;
+        public bool time_update;
         public uint8 year;
         public uint8 month;
         public uint8 day;
@@ -164,7 +164,7 @@ namespace Msmcomm.LowLevel
             service_status = (NetworkServiceStatus) _message.serv_status;
             gprs_attached = _message.gprs_attached == 1 ? true : false;
             roam = _message.roam == 1 ? true : false;
-            nitz_update = _message.with_nitz_update == 1 ? true : false;
+            time_update = _message.with_nitz_update == 1 ? true : false;
             year = _message.year;
             month = _message.month;
             day = _message.day;
