@@ -159,7 +159,7 @@ namespace Msmcomm.LowLevel
             mnc = parseMnc(_message.mnc);
             rssi = _message.rssi;
             ecio = _message.ecio;
-            operator_name = convertBytesToString(_message.operator_name);
+            operator_name = _message.operator_name_len > 0 ? convertBytesToString(_message.operator_name) : "";
             reg_status = (NetworkRegistrationStatus) _message.reg_status;
             service_status = (NetworkServiceStatus) _message.serv_status;
             gprs_attached = _message.gprs_attached == 1 ? true : false;
