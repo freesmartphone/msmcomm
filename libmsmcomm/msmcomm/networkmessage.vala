@@ -39,6 +39,14 @@ namespace Msmcomm.LowLevel
         FULL = 2,
     }
 
+    public enum NetworkDataService
+    {
+        NONE = 0,
+        GPRS = 2,
+        EDGE = 3,
+        HSDPA = 5,
+    }
+
     public class NetworkReportRssiCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x6;
@@ -126,6 +134,15 @@ namespace Msmcomm.LowLevel
         public NetworkServiceStatus service_status;
         public bool gprs_attached;
         public bool roam;
+        public bool nitz_update;
+        public uint8 year;
+        public uint8 month;
+        public uint8 day;
+        public uint8 hours;
+        public uint8 minutes;
+        public uint8 seconds;
+        public uint16 timezone;
+        public NetworkDataService data_service;
 
         construct
         {
@@ -147,6 +164,15 @@ namespace Msmcomm.LowLevel
             service_status = (NetworkServiceStatus) _message.serv_status;
             gprs_attached = _message.gprs_attached == 1 ? true : false;
             roam = _message.roam == 1 ? true : false;
+            nitz_update = _message.with_nitz_update == 1 ? true : false;
+            year = _message.year;
+            month = _message.month;
+            day = _message.day;
+            hours = _message.hours;
+            minutes = _message.minutes;
+            seconds = _message.seconds;
+            timezone = _message.timezone * 0xf;
+            data_service = (NetworkDataService) _message.gsm_icon_ind;
         }
     }
 }
