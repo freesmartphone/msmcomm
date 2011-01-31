@@ -113,7 +113,7 @@ namespace Msmcomm.Daemon
             message.time_source = convertTimeSourceForModem(info.time_source);
 
             var response = (yield channel.enqueueAsync(message));
-            checkResponse(message);
+            checkResponse(response);
         }
 
         public async DateInfo get_date() throws GLib.Error, Msmcomm.Error
@@ -124,6 +124,7 @@ namespace Msmcomm.Daemon
         public async string get_imei() throws GLib.Error, Msmcomm.Error
         {
             var response = (yield channel.enqueueAsync(new MiscGetImeiCommandMessage())) as MiscGetImeiResponseMessage;
+            checkResponse(response);
             return response.imei;
         }
 
