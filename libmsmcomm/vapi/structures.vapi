@@ -1244,7 +1244,7 @@ struct NetworkStateInfoEvent
 	public uint8 hours;
 	public uint8 minutes;
 	public uint8 seconds;
-	public uint16 timezone;
+	public uint16 timezone_offset;
 	public uint8 unknown6[11];
 	public uint8 gsm_icon_ind;
 	public uint8 unknown7;

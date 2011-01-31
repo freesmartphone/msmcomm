@@ -882,7 +882,7 @@ struct network_state_info_event
 	uint8_t hours;
 	uint8_t minutes;
 	uint8_t seconds;
-	uint16_t timezone;
+	uint16_t timezone_offset;
 #define NETWORK_STATE_INFO_EVENT_UNKNOWN6_SIZE 11
 	uint8_t unknown6[11];
 	uint8_t gsm_icon_ind;

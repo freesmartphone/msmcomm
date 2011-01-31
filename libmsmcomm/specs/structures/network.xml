@@ -55,7 +55,7 @@
 			<field name="hours" start="657" type="uint8_t"/>
 			<field name="minutes" start="658" type="uint8_t"/>
 			<field name="seconds" start="659" type="uint8_t"/>
-			<field name="timezone" start="660" end="661" type="uint16_t">
+			<field name="timezone_offset" start="660" end="661" type="uint16_t">
 				<description>
 					Need to be multiplied by 15 to get the correct value.
 				</description>

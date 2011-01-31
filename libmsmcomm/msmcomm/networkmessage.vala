@@ -141,7 +141,7 @@ namespace Msmcomm.LowLevel
         public uint8 hours;
         public uint8 minutes;
         public uint8 seconds;
-        public uint16 timezone;
+        public uint16 timezone_offset;
         public NetworkDataService data_service;
 
         construct
@@ -171,7 +171,7 @@ namespace Msmcomm.LowLevel
             hours = _message.hours;
             minutes = _message.minutes;
             seconds = _message.seconds;
-            timezone = _message.timezone * 0xf;
+            timezone_offset = _message.timezone_offset * 0xf;
             data_service = (NetworkDataService) _message.gsm_icon_ind;
         }
     }
