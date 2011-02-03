@@ -13,7 +13,7 @@ start call_event 1107
 [0] uint8_t call_id
 [1] uint8_t call_type
 [3-17] uint8_t caller_id
-[57-59] uint8_t plmn
+[57-59] plmn_field plmn
 [67] uint8_t caller_id_len
 [590] uint8_t cause_value0
 [595] uint8_t cause_value1
@@ -387,8 +387,7 @@ start network_state_info_event 677
 [10] uint8_t service_capability
 [11] uint8_t gprs_attached
 [12-13] uint16_t roam
-[15-16] uint16_t mcc
-[17] uint8_t mnc
+[15-17] plmn_field plmn
 [21] uint8_t operator_name_len
 [22-101] uint8_t operator_name
 [105] uint8_t hplmn_or_spdi

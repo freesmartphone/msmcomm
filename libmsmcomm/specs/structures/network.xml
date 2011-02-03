@@ -35,8 +35,7 @@
 			<field name="service_capability" start="10" type="uint8_t"/>
 			<field name="gprs_attached" start="11" type="uint8_t"/>
 			<field name="roam" start="12" end="13" type="uint16_t"/>
-			<field name="mcc" start="15" end="16" type="uint16_t"/>
-			<field name="mnc" start="17" type="uint8_t"/>
+			<field name="plmn" start="15" end="17" type="plmn_field"/>
 			<field name="operator_name_len" start="21" type="uint8_t"/>
 			<field name="operator_name" start="22" end="101" type="uint8_t"/>
 			<field name="hplmn_or_spdi" start="105" type="uint8_t"/>

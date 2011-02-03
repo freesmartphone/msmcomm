@@ -5,7 +5,7 @@
 			<field name="call_id" start="0" type="uint8_t"/>
 			<field name="call_type" start="1" type="uint8_t"/>
 			<field name="caller_id" start="3" end="17" type="uint8_t"/>
-			<field name="plmn" start="57" end="59" type="uint8_t"/>
+			<field name="plmn" start="57" end="59" type="plmn_field"/>
 			<field name="caller_id_len" start="67" type="uint8_t"/>
 			<field name="cause_value0" start="590" type="uint8_t"/>
 			<field name="cause_value1" start="595" type="uint8_t"/>

@@ -50,7 +50,7 @@ struct CallEvent
 	[CCode (array_length_cname = "caller_id_len")]
 	public uint8 caller_id[];
 	public uint8 unknown1[39];
-	public uint8 plmn[3];
+	public PlmnField plmn;
 	public uint8 unknown2[7];
 	public uint8 caller_id_len;
 	public uint8 unknown3[522];
@@ -1275,8 +1275,7 @@ struct NetworkStateInfoEvent
 	public uint8 gprs_attached;
 	public uint16 roam;
 	public uint8 unknown0;
-	public uint16 mcc;
-	public uint8 mnc;
+	public PlmnField plmn;
 	public uint8 unknown1[3];
 	public uint8 operator_name_len;
 	[CCode (array_length_cname = "operator_name_len")]

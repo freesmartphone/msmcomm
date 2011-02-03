@@ -44,8 +44,7 @@ struct call_event
 	uint8_t caller_id[15];
 #define CALL_EVENT_UNKNOWN1_SIZE 39
 	uint8_t unknown1[39];
-#define CALL_EVENT_PLMN_SIZE 3
-	uint8_t plmn[3];
+	struct plmn_field plmn;
 #define CALL_EVENT_UNKNOWN2_SIZE 7
 	uint8_t unknown2[7];
 	uint8_t caller_id_len;
@@ -899,8 +898,7 @@ struct network_state_info_event
 	uint8_t gprs_attached;
 	uint16_t roam;
 	uint8_t unknown0;
-	uint16_t mcc;
-	uint8_t mnc;
+	struct plmn_field plmn;
 #define NETWORK_STATE_INFO_EVENT_UNKNOWN1_SIZE 3
 	uint8_t unknown1[3];
 	uint8_t operator_name_len;
