@@ -79,7 +79,7 @@ patterns = {
   'part' : r"^[(.*)] (\w*) (\w*).*$",
 }
 print "/* "
-print " * (c) 2010 by Simon Busch <morphis@gravedo.de>"
+print " * (c) 2010-2011 by Simon Busch <morphis@gravedo.de>"
 print " * All Rights Reserved"
 print " *"
 print " * This program is free software; you can redistribute it and/or modify"

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# (C) 2010 Simon Busch <morphis@gravedo.de>
+# (C) 2010-2011 Simon Busch <morphis@gravedo.de>
 # GPLv2 or later
 #
 
