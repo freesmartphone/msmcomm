@@ -24,6 +24,17 @@
 
 #include <stdint.h>
 
+struct plmn_field
+{
+	uint16_t mcc;
+	uint8_t mnc;
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_plmn_field_init(struct plmn_field* self)
+{
+}
+
+
 struct call_event
 {
 	uint8_t call_id;
@@ -372,17 +383,6 @@ struct state_callback_resp
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_state_callback_resp_init(struct state_callback_resp* self)
-{
-}
-
-
-struct plmn_field
-{
-	uint16_t mcc;
-	uint8_t mnc;
-} __attribute__ ((packed));
-
-static void msmcomm_low_level_structures_plmn_field_init(struct plmn_field* self)
 {
 }
 

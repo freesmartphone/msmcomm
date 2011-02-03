@@ -22,6 +22,25 @@
 
 namespace Msmcomm.LowLevel.Structures
 {
+[CCode (cname = "struct plmn_field", cheader_filename = "structures.h", destroy_function = "")]
+struct PlmnField
+{
+	public uint16 mcc;
+	public uint8 mnc;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PlmnField );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_plmn_field_init")]
+	public PlmnField();
+}
+
+
 [CCode (cname = "struct call_event", cheader_filename = "structures.h", destroy_function = "")]
 struct CallEvent
 {
@@ -514,25 +533,6 @@ struct StateCallbackResponse
 	}
 	[CCode (cname = "msmcomm_low_level_structures_state_callback_resp_init")]
 	public StateCallbackResponse();
-}
-
-
-[CCode (cname = "struct plmn_field", cheader_filename = "structures.h", destroy_function = "")]
-struct PlmnField
-{
-	public uint16 mcc;
-	public uint8 mnc;
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( PlmnField );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_plmn_field_init")]
-	public PlmnField();
 }
 
 

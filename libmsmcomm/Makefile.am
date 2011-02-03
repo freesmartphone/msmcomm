@@ -24,6 +24,7 @@ MAINTAINERCLEANFILES = \
 	$(NULL)
 
 STRUCTURE_SPECS = \
+	specs/structures/common.xml \
 	specs/structures/call.xml \
 	specs/structures/misc.xml \
 	specs/structures/state.xml \
