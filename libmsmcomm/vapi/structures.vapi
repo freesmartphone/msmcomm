@@ -1,5 +1,5 @@
 /* 
- * (c) 2010 by Simon Busch <morphis@gravedo.de>
+ * (c) 2010-2011 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or modify
@@ -517,15 +517,67 @@ struct StateCallbackResponse
 }
 
 
+[CCode (cname = "struct plmn_field", cheader_filename = "structures.h", destroy_function = "")]
+struct PlmnField
+{
+	public uint16 mcc;
+	public uint8 mnc;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PlmnField );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_plmn_field_init")]
+	public PlmnField();
+}
+
+
+[CCode (cname = "struct network_info_field", cheader_filename = "structures.h", destroy_function = "")]
+struct NetworkInfoField
+{
+	public PlmnField plmn;
+	public uint8 unknown0;
+	public uint8 radio_type;
+	public uint8 unknown1[7];
+	public uint8 name_len;
+	[CCode (array_length_cname = "name_len")]
+	public uint8 name[];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( NetworkInfoField );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_network_info_field_init")]
+	public NetworkInfoField();
+}
+
+
 [CCode (cname = "struct state_event", cheader_filename = "structures.h", destroy_function = "")]
 struct StateEvent
 {
 	public uint8 unknown0;
 	public uint8 mode;
-	public uint8 unknown1[4077];
+	public uint8 unknown1[5];
+	public uint8 service_mode_preference;
+	public uint8 unknown2[9];
+	public uint8 network_mode_preference;
+	public PlmnField current_plmn;
+	public uint8 unknown3[251];
+	public uint8 network_count;
+	public uint8 unknown4[3];
+	public NetworkInfoField networks[10];
+	public uint8 unknown5[2853];
 	public uint8 als_allowed;
 	public uint8 line;
-	public uint8 unknown2[17];
+	public uint8 unknown6[17];
 	public unowned uint8[] data
 	{
 		get

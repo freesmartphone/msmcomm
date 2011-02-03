@@ -153,8 +153,25 @@ start state_callback_resp 12
 [11] uint8_t result
 end
 
+start plmn_field 3
+[0-1] uint16_t mcc
+[2] uint8_t mnc
+end
+
+start network_info_field 95
+[0-3] plmn_field plmn
+[4] uint8_t radio_type
+[12] uint8_t name_len
+[13-94] uint8_t name
+end
+
 start state_event 4098
 [1] uint8_t mode
+[7] uint8_t service_mode_preference
+[17] uint8_t network_mode_preference
+[18-20] plmn_field current_plmn
+[272] uint8_t network_count
+[276-1226] network_info_field networks
 [4079] uint8_t als_allowed
 [4080] uint8_t line
 end

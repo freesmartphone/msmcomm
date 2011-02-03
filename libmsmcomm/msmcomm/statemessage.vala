@@ -129,14 +129,30 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public enum NetworkRadioType
+    {
+        GSM = 0,
+        UMTS = 1,
+    }
+
+    public class NetworkProviderInfo
+    {
+        public uint16 mcc;
+        public uint8 mnc;
+        public NetworkRadioType radio_type;
+        public string name;
+    }
+
     public class StateUnsolicitedResponseMessage : StateBaseOperationModeMessage
     {
         public static const uint8 GROUP_ID = 0x5;
 
+        private StateEvent _message;
+
         public uint8 line;
         public uint8 als_allowed;
 
-        private StateEvent _message;
+        public NetworkProviderInfo[] networks;
 
         construct
         {
@@ -155,6 +171,20 @@ namespace Msmcomm.LowLevel
             mode = (StateBaseOperationModeMessage.Mode) _message.mode;
             line = _message.line;
             als_allowed = _message.als_allowed;
+
+            NetworkProviderInfo[] tmp = { };
+
+            for (var n = 0; n < _message.network_count; n++)
+            {
+                var npi = new NetworkProviderInfo();
+                npi.mcc = parseMcc(_message.networks[n].plmn.mcc);
+                npi.mnc = parseMnc(_message.networks[n].plmn.mnc);
+                npi.radio_type = (NetworkRadioType) _message.networks[n].radio_type;
+                npi.name = _message.networks[n].name_len > 0 ? convertBytesToString(_message.networks[n].name) : "";
+                tmp += npi;
+            }
+
+            networks = tmp;
         }
     }
 }

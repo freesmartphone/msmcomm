@@ -1,5 +1,5 @@
 /* 
- * (c) 2010 by Simon Busch <morphis@gravedo.de>
+ * (c) 2010-2011 by Simon Busch <morphis@gravedo.de>
  * All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or modify
@@ -376,16 +376,59 @@ static void msmcomm_low_level_structures_state_callback_resp_init(struct state_c
 }
 
 
+struct plmn_field
+{
+	uint16_t mcc;
+	uint8_t mnc;
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_plmn_field_init(struct plmn_field* self)
+{
+}
+
+
+struct network_info_field
+{
+	struct plmn_field plmn;
+	uint8_t unknown0;
+	uint8_t radio_type;
+#define NETWORK_INFO_FIELD_UNKNOWN1_SIZE 7
+	uint8_t unknown1[7];
+	uint8_t name_len;
+#define NETWORK_INFO_FIELD_NAME_SIZE 82
+	uint8_t name[82];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_network_info_field_init(struct network_info_field* self)
+{
+	self->name_len = 82;
+}
+
+
 struct state_event
 {
 	uint8_t unknown0;
 	uint8_t mode;
-#define STATE_EVENT_UNKNOWN1_SIZE 4077
-	uint8_t unknown1[4077];
+#define STATE_EVENT_UNKNOWN1_SIZE 5
+	uint8_t unknown1[5];
+	uint8_t service_mode_preference;
+#define STATE_EVENT_UNKNOWN2_SIZE 9
+	uint8_t unknown2[9];
+	uint8_t network_mode_preference;
+	struct plmn_field current_plmn;
+#define STATE_EVENT_UNKNOWN3_SIZE 251
+	uint8_t unknown3[251];
+	uint8_t network_count;
+#define STATE_EVENT_UNKNOWN4_SIZE 3
+	uint8_t unknown4[3];
+#define STATE_EVENT_NETWORKS_SIZE 10
+	struct network_info_field networks[10];
+#define STATE_EVENT_UNKNOWN5_SIZE 2853
+	uint8_t unknown5[2853];
 	uint8_t als_allowed;
 	uint8_t line;
-#define STATE_EVENT_UNKNOWN2_SIZE 17
-	uint8_t unknown2[17];
+#define STATE_EVENT_UNKNOWN6_SIZE 17
+	uint8_t unknown6[17];
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_state_event_init(struct state_event* self)
