@@ -124,7 +124,7 @@ namespace Msmcomm.Daemon
             return "";
         }
 
-        private void checkBookType(PhonebookBookType book_type)
+        private void checkBookType(PhonebookBookType book_type) throws Msmcomm.Error
         {
             if (book_type == PhonebookBookType.UNKNOWN)
             {

@@ -53,26 +53,10 @@ namespace Msmcomm.Daemon
                 yield usage.register_resource("Modem", new GLib.ObjectPath("/org/msmcomm"));
                 logger.info(@"Successfully registered resource with org.freesmartphone.ousaged");
             }
-            catch (IOError err0)
+            catch (GLib.Error err0)
             {
                 logger.error(@"Can't register resource with org.freesmartphone.ousaged ($(err0.message)); enabling unconditionally" );
                 enable();
-            }
-            catch (DBusError err1)
-            {
-            }
-        }
-
-        private void onRegisterResourceReply(GLib.Object? source_object, GLib.AsyncResult res)
-        {
-            if (res != null)
-            {
-                logger.error(@"Error: Can't register resource with org.freesmartphone.ousaged, enabling unconditionally...");
-                enable();
-            }
-            else
-            {
-                logger.info("Ok. Registered with org.freesmartphone.ousaged");
             }
         }
 
@@ -109,7 +93,14 @@ namespace Msmcomm.Daemon
                 return;
             }
 
-            dbusconn.register_object<T>(objectpath, service);
+            try
+            {
+                dbusconn.register_object<T>(objectpath, service);
+            }
+            catch (GLib.Error err0)
+            {
+                logger.error(@"Could not register dbus service: $(typeof(T).name()): $(err0.message)");
+            }
         }
 
         //
