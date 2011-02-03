@@ -169,9 +169,10 @@ with open(sys.argv[1]) as f:
         unknown_counter += 1
         gap['type'] = 'uint8_t'
         gap['len'] = object_len - last_end_offset
-        byte_size[object_name] = object_len
         object_parts.append(gap)
-      
+
+      byte_size[object_name] = object_len
+
       if not first_object:
         print_object_header()
       first_object = False
