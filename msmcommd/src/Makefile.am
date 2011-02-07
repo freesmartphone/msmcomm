@@ -19,6 +19,8 @@ VALAC_ARGS = \
 
 AM_CFLAGS = \
 	$(DEPS_CFLAGS) \
+	$(FSO_CFLAGS) \
+	$(MSMCOMM_SPECS_CFLAGS) \
 	-include $(CONFIG_HEADER) \
 	-DG_LOG_DOMAIN=\"msmcommd\" \
 	$(NULL)
@@ -74,6 +76,8 @@ msmcommd_SOURCES = \
 
 msmcommd_LDADD = \
 	$(DEPS_LIBS) \
+	$(FSO_LIBS) \
+	$(MSMCOMM_SPECS_LIBS) \
 	$(NULL)
 
 EXTRA_DIST = \

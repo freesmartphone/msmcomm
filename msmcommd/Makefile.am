@@ -1,1 +1,1 @@
-SUBDIRS = src conf data
+SUBDIRS = src conf data tests

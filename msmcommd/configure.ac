@@ -42,15 +42,23 @@ PKG_CHECK_MODULES(DEPS,
   gio-2.0 >= $GLIB_REQUIRED
   gobject-2.0 >= $GLIB_REQUIRED
   gthread-2.0 >= $GLIB_REQUIRED
-  gee-1.0 >= $GEE_REQUIRED
+  gee-1.0 >= $GEE_REQUIRED)
+AC_SUBST(DEPS_CFLAGS)
+AC_SUBST(DEPS_LIBS)
+
+PKG_CHECK_MODULES(FSO,
   fsotransport-2.0 >= $FSOT_REQUIRED
   fsobasics-2.0 >= $FSOB_REQUIRED
   fsoframework-2.0 >= $FSOF_REQUIRED
   fso-glib-1.0 >= $FSO_GLIB_REQUIRED
-  msmcomm-2.0 >= $MSMCOMM_REQUIRED
+  msmcomm-2.0 >= $MSMCOMM_REQUIRED)
+AC_SUBST(FSO_CFLAGS)
+AC_SUBST(FSO_LIBS)
+
+PKG_CHECK_MODULES(MSMCOMM_SPECS,
   msmcomm-specs-2.0 >= $MSMCOMM_SPECS_REQUIRED)
-AC_SUBST(DEPS_CFLAGS)
-AC_SUBST(DEPS_LIBS)
+AC_SUBST(MSMCOMM_SPECS_CFLAGS)
+AC_SUBST(MSMCOMM_SPECS_LIBS)
 
 
 ##############################################################################
@@ -78,6 +86,7 @@ AC_CONFIG_FILES([
 	data/Makefile
 	data/org.msmcomm.service
 	src/Makefile
+	tests/Makefile
 ])
 
 AC_OUTPUT
