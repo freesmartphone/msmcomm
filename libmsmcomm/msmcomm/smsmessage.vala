@@ -32,7 +32,7 @@ namespace Msmcomm.LowLevel
 
             public string smsc;
             public uint8[] pdu;
-            
+
             private WmsSendMessage _message;
 
             construct
@@ -163,8 +163,6 @@ namespace Msmcomm.LowLevel
         {
             public static const uint8 GROUP_ID = 0x16;
             public static const uint16 MESSAGE_ID = 0x01;
-
-            public uint8 command_id;
 
             private WmsCallbackResponse _message;
 

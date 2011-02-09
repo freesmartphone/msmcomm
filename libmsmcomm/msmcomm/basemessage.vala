@@ -26,6 +26,7 @@ namespace Msmcomm.LowLevel
         public uint8 group_id { get; set;  }
         public uint16 message_id { get; set; }
         public uint32 ref_id { get; set; default = 0x0; }
+        public uint16 command_id { get; set; default = 0x0; }
         public MessageType message_type { get; set; }
         public MessageResultType result { get; protected set; default = MessageResultType.RESULT_OK; }
         public MessageClass message_class { get; protected set; default = MessageClass.UNKNOWN; }

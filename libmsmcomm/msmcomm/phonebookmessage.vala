@@ -227,7 +227,6 @@ namespace Msmcomm.LowLevel
         private PhonebookReturnResponse _message;
 
         public PhonebookBookType book_type;
-        public uint16 command_id;
         public uint8 position;
         public string number;
         public string title;
