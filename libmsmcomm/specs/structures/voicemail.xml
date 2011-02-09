@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:voicemail>
+	<description></description>
+	<structure name="voicemail_get_info_msg" length="4">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+	</structure>
+	<structure name="voicemail_return_resp" length="7">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+	</structure>
+	<structure name="voicemail_event" length="9">
+		<field name="line0_vm_count" start="0" type="uint8_t"/>
+		<field name="line1_vm_count" start="1" type="uint8_t"/>
+	</structure>
+</namespace:voicemail>
+

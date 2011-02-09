@@ -426,3 +426,19 @@ start sups_callback_resp 8
 [6] uint8_t result
 end
 
+#-------------------------------------------------------------------
+# VOICEMAIL
+#-------------------------------------------------------------------
+start voicemail_get_info_msg 4
+[0-3] uint32_t ref_id
+end
+
+start voicemail_return_resp 7
+[0-3] uint32_t ref_id
+end
+
+start voicemail_event 9
+[0] uint8_t line0_vm_count
+[1] uint8_t line1_vm_count
+end
+

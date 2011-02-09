@@ -1374,5 +1374,62 @@ struct SupsCallbackResponse
 	public SupsCallbackResponse();
 }
 
+
+[CCode (cname = "struct voicemail_get_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct VoicemailGetInfoMessage
+{
+	public uint32 ref_id;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( VoicemailGetInfoMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_voicemail_get_info_msg_init")]
+	public VoicemailGetInfoMessage();
+}
+
+
+[CCode (cname = "struct voicemail_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct VoicemailReturnResponse
+{
+	public uint32 ref_id;
+	public uint8 unknown0[3];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( VoicemailReturnResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_voicemail_return_resp_init")]
+	public VoicemailReturnResponse();
+}
+
+
+[CCode (cname = "struct voicemail_event", cheader_filename = "structures.h", destroy_function = "")]
+struct VoicemailEvent
+{
+	public uint8 line0_vm_count;
+	public uint8 line1_vm_count;
+	public uint8 unknown0[7];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( VoicemailEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_voicemail_event_init")]
+	public VoicemailEvent();
+}
+
 } /* namespace Msmcomm.LowLevel.Structures */ 
 

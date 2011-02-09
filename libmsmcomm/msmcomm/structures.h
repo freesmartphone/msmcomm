@@ -975,5 +975,40 @@ static void msmcomm_low_level_structures_sups_callback_resp_init(struct sups_cal
 {
 }
 
+
+struct voicemail_get_info_msg
+{
+	uint32_t ref_id;
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_voicemail_get_info_msg_init(struct voicemail_get_info_msg* self)
+{
+}
+
+
+struct voicemail_return_resp
+{
+	uint32_t ref_id;
+#define VOICEMAIL_RETURN_RESP_UNKNOWN0_SIZE 3
+	uint8_t unknown0[3];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_voicemail_return_resp_init(struct voicemail_return_resp* self)
+{
+}
+
+
+struct voicemail_event
+{
+	uint8_t line0_vm_count;
+	uint8_t line1_vm_count;
+#define VOICEMAIL_EVENT_UNKNOWN0_SIZE 7
+	uint8_t unknown0[7];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_voicemail_event_init(struct voicemail_event* self)
+{
+}
+
 #endif
 

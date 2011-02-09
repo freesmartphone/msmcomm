@@ -44,6 +44,7 @@ libmsmcomm_la_VALASOURCES = \
 	phonebookmessage.vala \
 	soundmessage.vala \
 	supsmessage.vala \
+	voicemailmessage.vala \
 	basemessagegroup.vala \
 	callmessagegroup.vala \
 	statemessagegroup.vala \
@@ -54,6 +55,7 @@ libmsmcomm_la_VALASOURCES = \
 	networkmessagegroup.vala \
 	soundmessagegroup.vala \
 	supsmessagegroup.vala \
+	voicemailmessagegroup.vala \
 	messageassembler.vala \
 	messagedisassembler.vala \
 	$(NULL)
