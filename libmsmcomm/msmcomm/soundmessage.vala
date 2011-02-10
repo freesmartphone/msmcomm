@@ -30,6 +30,9 @@ namespace Msmcomm.LowLevel
 
         private SoundSetDeviceMessage _message;
 
+        public uint8 class;
+        public uint8 sub_class;
+
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SOUND_SET_DEVICE, MessageClass.COMMAND);
@@ -41,6 +44,8 @@ namespace Msmcomm.LowLevel
         protected override void prepare_data()
         {
             _message.ref_id = ref_id;
+            _message.class = class;
+            _message.sub_class = sub_class;
         }
     }
 
