@@ -24,6 +24,6 @@ namespace Msmcomm
     [DBus (timeout = 12000, name = "org.msmcomm.Sound")]
     public interface Sound : GLib.Object
     {
-        public abstract async void set_device() throws GLib.Error, Msmcomm.Error;
+        public abstract async void set_device(uint class, uint sub_class) throws GLib.Error, Msmcomm.Error;
     }
 }
