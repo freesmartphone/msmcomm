@@ -25,157 +25,152 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-        public class WmsSendMessageMessage : BaseMessage
+    public class WmsSendMessageMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x15;
+        public static const uint16 MESSAGE_ID = 0x0a;
+        public string smsc;
+        public uint8[] pdu;
+        private WmsSendMessage _message;
+
+        construct
         {
-            public static const uint8 GROUP_ID = 0x15;
-            public static const uint16 MESSAGE_ID = 0x0a;
-
-            public string smsc;
-            public uint8[] pdu;
-
-            private WmsSendMessage _message;
-
-            construct
-            {
-                set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
-                _message = WmsSendMessage();
-                set_payload(_message.data);
-            }
-
-            protected override void prepare_data()
-            {
-                _message.ref_id = ref_id;
-                FsoFramework.Utility.copyData(ref _message.pdu, pdu, 255);
-                FsoFramework.Utility.copyData(ref _message.service_center, smsc.data, 36);
-            }
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
+            _message = WmsSendMessage();
+            set_payload(_message.data);
         }
 
-        public class WmsAcknowledgeMessageMessage : BaseMessage
+        protected override void prepare_data()
         {
-            public static const uint8 GROUP_ID = 0x15;
-            public static const uint16 MESSAGE_ID = 0x0b;
+            _message.ref_id = ref_id;
+            FsoFramework.Utility.copyData(ref _message.pdu, pdu, 255);
+            FsoFramework.Utility.copyData(ref _message.service_center, smsc.data, 36);
+        }
+    }
 
-            public uint8 value0;
-            public uint8 value1;
+    public class WmsAcknowledgeMessageMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x15;
+        public static const uint16 MESSAGE_ID = 0x0b;
 
-            private WmsAcknowledgeMessage _message;
+        public uint8 value0;
+        public uint8 value1;
 
-            construct
-            {
-                set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
-                _message = WmsAcknowledgeMessage();
-                set_payload(_message.data);
-            }
+        private WmsAcknowledgeMessage _message;
 
-            protected override void prepare_data()
-            {
-                _message.ref_id = ref_id;
-                _message.value0 = 1;
-                _message.value1 = 1;
-            }
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
+            _message = WmsAcknowledgeMessage();
+            set_payload(_message.data);
         }
 
-        public class WmsReadMessageMessage : BaseMessage
+        protected override void prepare_data()
         {
-            public static const uint8 GROUP_ID = 0x15;
-            public static const uint16 MESSAGE_ID = 0x0c;
+            _message.ref_id = ref_id;
+            _message.value0 = 1;
+            _message.value1 = 1;
+        }
+    }
 
-            private WmsReadMessage _message;
+    public class WmsReadMessageMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x15;
+        public static const uint16 MESSAGE_ID = 0x0c;
 
-            construct
-            {
-                set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
-                _message = WmsReadMessage();
-                set_payload(_message.data);
-            }
+        private WmsReadMessage _message;
 
-            protected override void prepare_data()
-            {
-                _message.ref_id = ref_id;
-            }
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
+            _message = WmsReadMessage();
+            set_payload(_message.data);
         }
 
-        /*public class WmsWriteMessageMessage : BaseMessage
+        protected override void prepare_data()
         {
-            public static const uint8 GROUP_ID = 0x15;
-            public static const uint16 MESSAGE_ID = 0x0d;
+            _message.ref_id = ref_id;
+        }
+    }
 
-            private Wms _message;
-
-            construct
-            {
-                set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
-                _message = WmsReadMessage();
-                set_payload(_message.data);
-            }
-        }*/
-
-        public class WmsDeleteMessageMessage : BaseMessage
+    /*public class WmsWriteMessageMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x15;
+        public static const uint16 MESSAGE_ID = 0x0d;
+        private Wms _message;
+        construct
         {
-            public static const uint8 GROUP_ID = 0x15;
-            public static const uint16 MESSAGE_ID = 0x0e;
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
+            _message = WmsReadMessage();
+            set_payload(_message.data);
+        }
+    }*/
 
-            private WmsDeleteMessage _message;
+    public class WmsDeleteMessageMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x15;
+        public static const uint16 MESSAGE_ID = 0x0e;
+        private WmsDeleteMessage _message;
 
-            construct
-            {
-                set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
-                _message = WmsDeleteMessage();
-                set_payload(_message.data);
-            }
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
+            _message = WmsDeleteMessage();
+            set_payload(_message.data);
+        }
+    }
+
+    public class WmsReadTemplateMessageMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x15;
+        public static const uint16 MESSAGE_ID = 0x11;
+
+        public uint8 record;
+
+        private WmsReadTemplateMessage _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
+            _message = WmsReadTemplateMessage();
+            set_payload(_message.data);
         }
 
-        public class WmsReadTemplateMessageMessage : BaseMessage
+        protected override void prepare_data()
         {
-            public static const uint8 GROUP_ID = 0x15;
-            public static const uint16 MESSAGE_ID = 0x11;
+            _message.ref_id = ref_id;
+            _message.record = record;
+        }
+    }
 
-            public uint8 record;
+    public class WmsReturnResponseMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x16;
+        public static const uint16 MESSAGE_ID = 0x00;
 
-            private WmsReadTemplateMessage _message;
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_SMS_RETURN, MessageClass.SOLICITED_RESPONSE);
+        }
+    }
 
-            construct
-            {
-                set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
-                _message = WmsReadTemplateMessage();
-                set_payload(_message.data);
-            }
+    public class WmsCallbackResponseMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x16;
+        public static const uint16 MESSAGE_ID = 0x01;
 
-            protected override void prepare_data()
-            {
-                _message.ref_id = ref_id;
-                _message.record = record;
-            }
+        private WmsCallbackResponse _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_SMS_RETURN, MessageClass.SOLICITED_RESPONSE);
+            _message = WmsCallbackResponse();
+            set_payload(_message.data);
         }
 
-        public class WmsReturnResponseMessage : BaseMessage
+        protected override void evaluate_data()
         {
-            public static const uint8 GROUP_ID = 0x16;
-            public static const uint16 MESSAGE_ID = 0x00;
-
-            construct
-            {
-                set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_SMS_RETURN, MessageClass.SOLICITED_RESPONSE);
-            }
+            command_id = _message.command_id;
         }
-
-        public class WmsCallbackResponseMessage : BaseMessage
-        {
-            public static const uint8 GROUP_ID = 0x16;
-            public static const uint16 MESSAGE_ID = 0x01;
-
-            private WmsCallbackResponse _message;
-
-            construct
-            {
-                set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_SMS_RETURN, MessageClass.SOLICITED_RESPONSE);
-                _message = WmsCallbackResponse();
-                set_payload(_message.data);
-            }
-
-            protected override void evaluate_data()
-            {
-                command_id = _message.command_id;
-            }
-        }
+    }
 }
