@@ -592,10 +592,28 @@ struct StateEvent
 }
 
 
-[CCode (cname = "struct wms_msg_group_event", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsMsgGroupEvent
+[CCode (cname = "struct wms_read_template_field", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsReadTemplateField
 {
-	public uint8 unknown0[23];
+	public uint8 unknown0[2075];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsReadTemplateField );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_read_template_field_init")]
+	public WmsReadTemplateField();
+}
+
+
+[CCode (cname = "struct wms_sms_received_field", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsSmsReceivedField
+{
+	public uint8 unknown0[15];
 	public uint8 sender_len;
 	[CCode (array_length_cname = "sender_len")]
 	public uint8 sender[];
@@ -604,6 +622,34 @@ struct WmsMsgGroupEvent
 	public uint8 pdu_start;
 	[CCode (array_length_cname = "pdu_len")]
 	public uint8 pdu[];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsSmsReceivedField );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_sms_received_field_init")]
+	public WmsSmsReceivedField();
+}
+
+
+[CCode (cname = "struct wms_msg_group_event", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsMsgGroupEvent
+{
+	public uint8 command;
+	public uint8 unknown0[3];
+	public uint32 ref_id;
+	public WmsReadTemplateField wms_read_template
+	{
+		get
+		{
+			return (WmsReadTemplateField?) command_data;
+		}
+	}
+	public uint8 command_data[2075];
 	public unowned uint8[] data
 	{
 		get
@@ -638,24 +684,6 @@ struct WmsAcknowledgeMessage
 	}
 	[CCode (cname = "msmcomm_low_level_structures_wms_acknowledge_msg_init")]
 	public WmsAcknowledgeMessage();
-}
-
-
-[CCode (cname = "struct wms_message_send_event", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsMessageSendEvent
-{
-	public uint8 unknown0[2083];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsMessageSendEvent );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_message_send_event_init")]
-	public WmsMessageSendEvent();
 }
 
 
@@ -730,26 +758,6 @@ struct WmsReadTemplateMessage
 	}
 	[CCode (cname = "msmcomm_low_level_structures_wms_read_template_msg_init")]
 	public WmsReadTemplateMessage();
-}
-
-
-[CCode (cname = "struct wms_read_template_event", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsReadTemplateEvent
-{
-	public uint8 unknown0[224];
-	public uint8 digit_mode;
-	public uint8 unknown1[1858];
-	public unowned uint8[] data
-	{
-		get
-		{
-			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsReadTemplateEvent );
-			return res;
-		}
-	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_read_template_event_init")]
-	public WmsReadTemplateEvent();
 }
 
 
@@ -868,8 +876,8 @@ struct WmsReturnResponse
 [CCode (cname = "struct wms_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct WmsCallbackResponse
 {
-	public uint8 command_id;
-	public uint8 unknown0[3];
+	public uint16 command;
+	public uint8 unknown0[2];
 	public uint32 ref_id;
 	public uint8 unknown1[2];
 	public unowned uint8[] data

@@ -435,25 +435,51 @@ static void msmcomm_low_level_structures_state_event_init(struct state_event* se
 }
 
 
-struct wms_msg_group_event
+struct wms_read_template_field
 {
-#define WMS_MSG_GROUP_EVENT_UNKNOWN0_SIZE 23
-	uint8_t unknown0[23];
+#define WMS_READ_TEMPLATE_FIELD_UNKNOWN0_SIZE 2075
+	uint8_t unknown0[2075];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_wms_read_template_field_init(struct wms_read_template_field* self)
+{
+}
+
+
+struct wms_sms_received_field
+{
+#define WMS_SMS_RECEIVED_FIELD_UNKNOWN0_SIZE 15
+	uint8_t unknown0[15];
 	uint8_t sender_len;
-#define WMS_MSG_GROUP_EVENT_SENDER_SIZE 36
+#define WMS_SMS_RECEIVED_FIELD_SENDER_SIZE 36
 	uint8_t sender[36];
-#define WMS_MSG_GROUP_EVENT_UNKNOWN1_SIZE 2
+#define WMS_SMS_RECEIVED_FIELD_UNKNOWN1_SIZE 2
 	uint8_t unknown1[2];
 	uint32_t pdu_len;
 	uint8_t pdu_start;
-#define WMS_MSG_GROUP_EVENT_PDU_SIZE 2016
+#define WMS_SMS_RECEIVED_FIELD_PDU_SIZE 2016
 	uint8_t pdu[2016];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_wms_sms_received_field_init(struct wms_sms_received_field* self)
+{
+	self->sender_len = 36;
+	self->pdu_len = 2016;
+}
+
+
+struct wms_msg_group_event
+{
+	uint8_t command;
+#define WMS_MSG_GROUP_EVENT_UNKNOWN0_SIZE 3
+	uint8_t unknown0[3];
+	uint32_t ref_id;
+#define WMS_MSG_GROUP_EVENT_COMMAND_DATA_SIZE 2075
+	uint8_t command_data[2075];
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_wms_msg_group_event_init(struct wms_msg_group_event* self)
 {
-	self->sender_len = 36;
-	self->pdu_len = 2016;
 }
 
 
@@ -470,17 +496,6 @@ struct wms_acknowledge_msg
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_wms_acknowledge_msg_init(struct wms_acknowledge_msg* self)
-{
-}
-
-
-struct wms_message_send_event
-{
-#define WMS_MESSAGE_SEND_EVENT_UNKNOWN0_SIZE 2083
-	uint8_t unknown0[2083];
-} __attribute__ ((packed));
-
-static void msmcomm_low_level_structures_wms_message_send_event_init(struct wms_message_send_event* self)
 {
 }
 
@@ -537,20 +552,6 @@ struct wms_read_template_msg
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_wms_read_template_msg_init(struct wms_read_template_msg* self)
-{
-}
-
-
-struct wms_read_template_event
-{
-#define WMS_READ_TEMPLATE_EVENT_UNKNOWN0_SIZE 224
-	uint8_t unknown0[224];
-	uint8_t digit_mode;
-#define WMS_READ_TEMPLATE_EVENT_UNKNOWN1_SIZE 1858
-	uint8_t unknown1[1858];
-} __attribute__ ((packed));
-
-static void msmcomm_low_level_structures_wms_read_template_event_init(struct wms_read_template_event* self)
 {
 }
 
@@ -625,9 +626,9 @@ static void msmcomm_low_level_structures_wms_return_resp_init(struct wms_return_
 
 struct wms_callback_resp
 {
-	uint8_t command_id;
-#define WMS_CALLBACK_RESP_UNKNOWN0_SIZE 3
-	uint8_t unknown0[3];
+	uint16_t command;
+#define WMS_CALLBACK_RESP_UNKNOWN0_SIZE 2
+	uint8_t unknown0[2];
 	uint32_t ref_id;
 #define WMS_CALLBACK_RESP_UNKNOWN1_SIZE 2
 	uint8_t unknown1[2];

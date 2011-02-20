@@ -74,6 +74,24 @@ def build_object(name, len, parts):
     member_name = part['name']
     type_len = part['len']
 
+    # Print all variants of the current part
+    for v in part['variants']:
+      variant_type_name = format_name(v)
+      variant_prop_name = v.replace("_field", "")
+
+      print_indent("public %s %s" % (variant_type_name, variant_prop_name))
+      print_indent("{")
+      indent += 1
+      print_indent("get")
+      print_indent("{")
+      indent += 1
+      print_indent("return (%s?) %s;" % (variant_type_name, member_name))
+      indent -= 1
+      print_indent("}")
+      indent -= 1
+
+      print_indent("}")
+
     to_print = "public %s %s" % (vala_types[type], member_name)
 
     if type_len == 1:
@@ -103,13 +121,6 @@ def build_object(name, len, parts):
   print_indent("}")
   print_indent("[CCode (cname = \"msmcomm_low_level_structures_%s_init\")]" % name)
   print_indent("public %s();" % vala_name)
-    #print_indent("{")
-    #indent += 1
-    #for n, l in len_params.iteritems():
-    #  print_indent("%s.length = %i;" % (n,l))
-    #indent -= 1
-    #print_indent("}")
-
   print "}"
 
 in_object = False
@@ -164,7 +175,7 @@ with open(sys.argv[1]) as f:
       start = 0
       rparts = line.split(' ')
 
-      if not len(rparts) == 3:
+      if not len(rparts) in (3, 4):
         print "fatal parsing error: '%s'" % line
         sys.exit(1)
 
@@ -187,6 +198,7 @@ with open(sys.argv[1]) as f:
       if start_offset > last_end_offset:
         gap = {}
         gap['len'] = start_offset - last_end_offset
+        gap['variants'] = []
         gap['name'] = 'unknown%i' % unknown_counter
         unknown_counter += 1
         gap['type'] = 'uint8_t'
@@ -202,6 +214,11 @@ with open(sys.argv[1]) as f:
         sys.exit(1)
       part['len'] = (end_offset - start_offset + 1) / byte_size[part['type']]
 
+      # append all variant types for the current part
+      part['variants'] = []
+      if len(rparts) == 4:
+        part['variants'] = rparts[3].rstrip("]").lstrip("[").split(",")
+
       object_parts.append(part)
       last_end_offset = start_offset + part['len'] * byte_size[part['type']]
 
@@ -209,6 +226,7 @@ with open(sys.argv[1]) as f:
       if not last_end_offset == object_len:
         gap = {}
         gap['name'] = 'unknown%i' % unknown_counter
+        gap['variants'] = []
         unknown_counter += 1
         gap['type'] = 'uint8_t'
         gap['len'] = object_len - last_end_offset

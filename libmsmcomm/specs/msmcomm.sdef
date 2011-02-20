@@ -182,12 +182,21 @@ end
 #-------------------------------------------------------------------
 # SMS
 #-------------------------------------------------------------------
+start wms_read_template_field 2075
+end
+
+start wms_sms_received_field 2075
+[15] uint8_t sender_len
+[16-51] uint8_t sender
+[54-57] uint32_t pdu_len
+[58] uint8_t pdu_start
+[59-2074] uint8_t pdu
+end
+
 start wms_msg_group_event 2083
-[23] uint8_t sender_len
-[24-59] uint8_t sender
-[62-65] uint32_t pdu_len
-[66] uint8_t pdu_start
-[67-2082] uint8_t pdu
+[0] uint8_t command
+[4-7] uint32_t ref_id
+[8-2082] uint8_t command_data [wms_read_template_field]
 end
 
 start wms_acknowledge_msg 1901
@@ -195,9 +204,6 @@ start wms_acknowledge_msg 1901
 [8] uint8_t value0
 [9] uint8_t value1
 [1] uint8_t value2
-end
-
-start wms_message_send_event 2083
 end
 
 start wms_send_msg 319
@@ -225,10 +231,6 @@ start wms_read_template_msg 9
 [4-5] uint16_t record
 end
 
-start wms_read_template_event 2083
-[224] uint8_t digit_mode
-end
-
 start wms_cfg_set_gw_domain_msg 5
 [0-3] uint32_t ref_id
 [4] uint8_t mode
@@ -254,7 +256,7 @@ start wms_return_resp 0
 end
 
 start wms_callback_resp 10
-[0] uint8_t command_id
+[0-1] uint16_t command
 [4-7] uint32_t ref_id
 end
 

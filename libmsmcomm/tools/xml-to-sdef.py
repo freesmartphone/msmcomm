@@ -58,6 +58,12 @@ class Handler(ContentHandler):
 			self.field['start'] = attrs.get('start', 0)
 			self.field['end'] = attrs.get('end', 0)
 			self.field['type'] = attrs.get('type', 'uint8_t')
+			self.field['variants'] = []
+		elif element == "variant":
+			v = {}
+			v['name'] = attrs.get('name')
+			v['type'] = attrs.get('type')
+			self.field['variants'].append(v)
 
 	def characters(self, char):
 		c =char.strip() + " "
@@ -87,7 +93,17 @@ class Handler(ContentHandler):
 				elif end > start:
 					r = "[%i-%i]" % (start, end)
 
-				f.write("%s %s %s\n" % (r, field['type'], field['name']))
+				f.write("%s %s %s" % (r, field['type'], field['name']))
+				if not len(field['variants']) == 0:
+					f.write(" [")
+					count = 0
+					for v in field['variants']:
+						f.write("%s" % (v['type']))
+						if not count == len(field['variants']) - 1:
+							f.write(",")
+						count += 1
+					f.write("]")
+				f.write("\n")
 			f.write("end\n")
 			f.write("\n")
 			

@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <namespace:sms>
 	<structures>
+		<structure name="wms_read_template_field" length="2075">
+		</structure>
+
+		<structure name="wms_sms_received_field" length="2075">
+			<field name="sender_len" start="15" type="uint8_t"/>
+			<field name="sender" start="16" end="51" type="uint8_t"/>
+			<field name="pdu_len" start="54" end="57" type="uint32_t"/>
+			<field name="pdu_start" start="58" type="uint8_t"/>
+			<field name="pdu" start="59" end="2074" type="uint8_t"/>
+		</structure>
+
 		<structure name="wms_msg_group_event" length="2083">
-			<field name="sender_len" start="23" type="uint8_t"/>
-			<field name="sender" start="24" end="59" type="uint8_t"/>
-			<field name="pdu_len" start="62" end="65" type="uint32_t"/>
-			<field name="pdu_start" start="66" type="uint8_t"/>
-			<field name="pdu" start="67" end="2082" type="uint8_t"/>
+			<field name="command" start="0" type="uint8_t"/>
+			<field name="ref_id" start="4" end="7" type="uint32_t"/>
+
+			<field name="command_data" start="8" end="2082" type="uint8_t">
+				<variant type="wms_read_template_field"/>
+			</field>
+
+			<!-- 
+				if command == 0 then
+					<field name="message_index" start="68" type="uint8_t"/>
+				endif
+			-->
 		</structure>
 
 		<structure name="wms_acknowledge_msg" length="1901">
@@ -15,9 +33,6 @@
 			<field name="value1" start="9" type="uint8_t"/>
 			<field name="value2" start="1" type="uint8_t"/>
         </structure>
-
-		<structure name="wms_message_send_event" length="2083">
-		</structure>
 
 		<structure name="wms_send_msg" length="319">
             <field name="ref_id" start="0" end="3" type="uint32_t"/>
@@ -54,11 +69,6 @@
 			<field name="record" start="4" end="5" type="uint16_t"/>
         </structure>
 
-        <structure name="wms_read_template_event" length="2083">
-            <field name="digit_mode" start="224" type="uint8_t"/>
-        </structure>
-
-
 		<structure name="wms_cfg_set_gw_domain_msg" length="5">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="mode" start="4" type="uint8_t"/>
@@ -84,7 +94,7 @@
 		</structure>
 
 		<structure name="wms_callback_resp" length="10">
-			<field name="command_id" start="0" type="uint8_t"/>
+			<field name="command" start="0" end="1" type="uint16_t"/>
 			<field name="ref_id" start="4" end="7" type="uint32_t"/>
         </structure>
 	</structures>

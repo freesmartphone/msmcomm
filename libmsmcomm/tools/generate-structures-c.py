@@ -120,7 +120,7 @@ with open(sys.argv[1]) as f:
       start = 0
       rparts = line.split(' ')
 
-      if not len(rparts) == 3:
+      if not len(rparts) in (3, 4):
         print "fatal parsing error: '%s'" % line
         sys.exit(1)
 
