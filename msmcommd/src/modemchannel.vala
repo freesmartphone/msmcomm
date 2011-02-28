@@ -151,8 +151,12 @@ namespace Msmcomm.Daemon
         protected void reset()
         {
             logger.debug("Reseting command queue ...");
-            current = null;
+
+#if 0
+            // Only reset current to nothing when we are not waiting for any response
+            current = current == null ? null : current;
             q.clear();
+#endif
         }
 
         private bool checkResponseForCommandHandler(Msmcomm.LowLevel.BaseMessage response, CommandHandler bundle)
