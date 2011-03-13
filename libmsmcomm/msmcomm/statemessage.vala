@@ -157,6 +157,7 @@ namespace Msmcomm.LowLevel
         construct
         {
             _message = StateEvent();
+            message_class = MessageClass.UNSOLICITED_RESPONSE;
             set_payload(_message.data);
         }
 
