@@ -954,20 +954,127 @@ struct SimReturnResponse
 }
 
 
+[CCode (cname = "struct sim_read_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SimReadResponse
+{
+	public uint16 file_type;
+	public uint8 result;
+	public uint8 unknown0;
+	public uint8 file_data_len;
+	[CCode (array_length_cname = "file_data_len")]
+	public uint8 file_data[];
+	public uint8 unknown1[1911];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimReadResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_read_resp_init")]
+	public SimReadResponse();
+}
+
+
+[CCode (cname = "struct sim_verify_pin_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SimVerifyPinResponse
+{
+	public uint8 unknown0;
+	public uint8 pin_retries;
+	public uint8 sw1;
+	public uint8 sw2;
+	public uint8 unknown1[1920];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimVerifyPinResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_verify_pin_resp_init")]
+	public SimVerifyPinResponse();
+}
+
+
+[CCode (cname = "struct sim_pin_status_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SimPinStatusResponse
+{
+	public uint8 pin_count;
+	public uint8 unknown0[1923];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimPinStatusResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_pin_status_resp_init")]
+	public SimPinStatusResponse();
+}
+
+
+[CCode (cname = "struct sim_get_fdn_status_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct SimGetFdnStatusResponse
+{
+	public uint8 unknown0[7];
+	public uint8 usim;
+	public uint8 unknown1[1916];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SimGetFdnStatusResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sim_get_fdn_status_resp_init")]
+	public SimGetFdnStatusResponse();
+}
+
+
 [CCode (cname = "struct sim_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct SimCallbackResponse
 {
 	public uint8 unknown0[4];
-	public uint8 result0;
+	public uint8 rc;
 	public uint32 ref_id;
-	public uint8 resp_type;
-	public uint16 field_type;
-	public uint8 result1;
-	public uint8 unknown1;
-	public uint8 field_data_len;
-	[CCode (array_length_cname = "field_data_len")]
-	public uint8 field_data[];
-	public uint8 unknown2[1911];
+	public uint8 response_type;
+	public SimReadResponse sim_read_resp
+	{
+		get
+		{
+			return (SimReadResponse?) response_data;
+		}
+	}
+	public SimVerifyPinResponse sim_verify_pin_resp
+	{
+		get
+		{
+			return (SimVerifyPinResponse?) response_data;
+		}
+	}
+	public SimPinStatusResponse sim_pin_status_resp
+	{
+		get
+		{
+			return (SimPinStatusResponse?) response_data;
+		}
+	}
+	public SimGetFdnStatusResponse sim_get_fdn_status_resp
+	{
+		get
+		{
+			return (SimGetFdnStatusResponse?) response_data;
+		}
+	}
+	public uint8 response_data[1924];
 	public unowned uint8[] data
 	{
 		get

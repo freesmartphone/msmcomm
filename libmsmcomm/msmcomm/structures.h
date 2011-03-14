@@ -677,26 +677,78 @@ static void msmcomm_low_level_structures_sim_return_resp_init(struct sim_return_
 }
 
 
+struct sim_read_resp
+{
+	uint16_t file_type;
+	uint8_t result;
+	uint8_t unknown0;
+	uint8_t file_data_len;
+#define SIM_READ_RESP_FILE_DATA_SIZE 8
+	uint8_t file_data[8];
+#define SIM_READ_RESP_UNKNOWN1_SIZE 1911
+	uint8_t unknown1[1911];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_sim_read_resp_init(struct sim_read_resp* self)
+{
+	self->file_data_len = 8;
+}
+
+
+struct sim_verify_pin_resp
+{
+	uint8_t unknown0;
+	uint8_t pin_retries;
+	uint8_t sw1;
+	uint8_t sw2;
+#define SIM_VERIFY_PIN_RESP_UNKNOWN1_SIZE 1920
+	uint8_t unknown1[1920];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_sim_verify_pin_resp_init(struct sim_verify_pin_resp* self)
+{
+}
+
+
+struct sim_pin_status_resp
+{
+	uint8_t pin_count;
+#define SIM_PIN_STATUS_RESP_UNKNOWN0_SIZE 1923
+	uint8_t unknown0[1923];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_sim_pin_status_resp_init(struct sim_pin_status_resp* self)
+{
+}
+
+
+struct sim_get_fdn_status_resp
+{
+#define SIM_GET_FDN_STATUS_RESP_UNKNOWN0_SIZE 7
+	uint8_t unknown0[7];
+	uint8_t usim;
+#define SIM_GET_FDN_STATUS_RESP_UNKNOWN1_SIZE 1916
+	uint8_t unknown1[1916];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_sim_get_fdn_status_resp_init(struct sim_get_fdn_status_resp* self)
+{
+}
+
+
 struct sim_callback_resp
 {
 #define SIM_CALLBACK_RESP_UNKNOWN0_SIZE 4
 	uint8_t unknown0[4];
-	uint8_t result0;
+	uint8_t rc;
 	uint32_t ref_id;
-	uint8_t resp_type;
-	uint16_t field_type;
-	uint8_t result1;
-	uint8_t unknown1;
-	uint8_t field_data_len;
-#define SIM_CALLBACK_RESP_FIELD_DATA_SIZE 8
-	uint8_t field_data[8];
-#define SIM_CALLBACK_RESP_UNKNOWN2_SIZE 1911
-	uint8_t unknown2[1911];
+	uint8_t response_type;
+#define SIM_CALLBACK_RESP_RESPONSE_DATA_SIZE 1924
+	uint8_t response_data[1924];
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_sim_callback_resp_init(struct sim_callback_resp* self)
 {
-	self->field_data_len = 8;
 }
 
 

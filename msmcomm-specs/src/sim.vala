@@ -50,10 +50,16 @@ namespace Msmcomm
         public string data;
     }
 
+    [DBus (name = "org.msmcomm.SIM")]
+    public errordomain SimError
+    {
+        BAD_PIN,
+    }
+
     [DBus (timeout = 120000, name = "org.msmcomm.SIM")]
     public interface Sim : GLib.Object
     {
-        public abstract async void verify_pin(SimPinType pin_type, string pin) throws GLib.Error, Msmcomm.Error;
+        public abstract async void verify_pin(SimPinType pin_type, string pin) throws GLib.Error, Msmcomm.Error, Msmcomm.SimError;
         public abstract async void change_pin(string old_pin, string new_pin) throws GLib.Error, Msmcomm.Error;
         public abstract async void enable_pin(string pin) throws GLib.Error, Msmcomm.Error;
         public abstract async void disable_pin(string pin) throws GLib.Error, Msmcomm.Error;

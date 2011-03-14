@@ -43,7 +43,7 @@ namespace Msmcomm.Daemon
             }
         }
 
-        protected void checkResponse(Msmcomm.LowLevel.BaseMessage response) throws Msmcomm.Error
+        protected virtual void checkResponse(Msmcomm.LowLevel.BaseMessage response) throws Msmcomm.Error
         {
             if (response == null)
             {

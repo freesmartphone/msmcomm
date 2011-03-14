@@ -19,6 +19,7 @@
  *
  **/
 
+using FsoFramework;
 using Msmcomm.LowLevel;
 
 namespace Msmcomm.Daemon
@@ -50,13 +51,19 @@ namespace Msmcomm.Daemon
             return "";
         }
 
-        public async void verify_pin(SimPinType pin_type, string pin) throws GLib.Error, Msmcomm.Error
+        public async void verify_pin(SimPinType pin_type, string pin) throws GLib.Error, Msmcomm.Error, Msmcomm.SimError
         {
             var message = new SimVerfiyPinCommandMessage();
             message.pin_type = convertSimPinTypeForModem(pin_type);
             message.pin = pin;
 
             var response = yield channel.enqueueAsync(message);
+
+            if ( response.result == Msmcomm.LowLevel.MessageResultType.ERROR_BAD_PIN )
+            {
+                throw new Msmcomm.SimError.BAD_PIN( "The pin send to sim card is invalid!" );
+            }
+
             checkResponse(response);
         }
 
@@ -110,14 +117,14 @@ namespace Msmcomm.Daemon
         public async SimFieldInfo read(SimFieldType field_type) throws GLib.Error, Msmcomm.Error
         {
             var message = new SimReadCommandMessage();
-            message.field_type = convertSimFieldTypeForModem(field_type);
+            message.field_type = StringHandling.convertEnum<SimFieldType,Msmcomm.LowLevel.SimFileType>(field_type);
 
             var response = (yield channel.enqueueAsync(message)) as SimCallbackResponseMessage;
             checkResponse(response);
 
             var info = SimFieldInfo();
-            info.type = convertSimFieldTypeForService(response.field_type);
-            info.data = response.field_data;
+            info.type = StringHandling.convertEnum<Msmcomm.LowLevel.SimFileType,SimFieldType>(response.simfile_type);
+            info.data = response.simfile_data;
             return info;
         }
 

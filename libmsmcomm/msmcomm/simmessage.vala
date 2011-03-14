@@ -19,14 +19,23 @@
  *
  **/
 
+using FsoFramework;
 using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-    public enum SimFieldType
+    public enum SimFileType
     {
         IMSI = 0x401,
         MSISDN = 0x419,
+    }
+
+    public enum SimPinStatus
+    {
+        PIN_REQUIRED,
+        PUK_REQUIRED,
+        PIN_VERIFIED,
+        BAD_PIN,
     }
 
     public abstract class SimPinStatusBaseMessage : BaseMessage
@@ -166,7 +175,7 @@ namespace Msmcomm.LowLevel
 
         private SimReadMessage _message;
 
-        public SimFieldType field_type;
+        public SimFileType field_type;
 
         construct
         {
@@ -237,9 +246,30 @@ namespace Msmcomm.LowLevel
 
         private SimCallbackResponse _message;
 
-        public uint8 response_type;
-        public SimFieldType field_type;
-        public string field_data;
+        public enum ResponseType
+        {
+            GET_PIN_STATUS = 0x3f,
+            GET_FDN_STATUS = 0xe,
+            VERIFY_PIN = 0x8,
+            SIM_READ = 0x1
+        }
+
+        public ResponseType response_type;
+
+        /* response_type == ResponseType.GET_PIN_STATUS */
+        public uint num_pins;
+        public uint pin_attempts_remaining;
+        public uint puk_attempts_remaining;
+
+        /* response_type == ResponseType.GET_FDN_STATUS */
+        public uint usim;
+
+        /* response_type == ResponseType.VERIFY_PIN */
+        public SimPinStatus pin_status;
+
+        /* response_type == ResponseType.SIM_READ */
+        public SimFileType simfile_type;
+        public string simfile_data;
 
         construct
         {
@@ -251,27 +281,80 @@ namespace Msmcomm.LowLevel
 
         protected override void evaluate_data()
         {
-            if (_message.result0 == 0x2 && _message.result1 == 0x9)
+            switch ( _message.rc )
             {
-                result = MessageResultType.ERROR_BAD_SIM_STATE;
+                case 0x0:
+                    result = MessageResultType.RESULT_OK;
+                    break;
+                case 0x5:
+                    result = MessageResultType.ERROR_BAD_PIN;
+                    break;
+                default:
+                    theLogger.error( @"Found unhandled sim result type: 0x%02x".printf( _message.rc ) );
+                    break;
             }
 
-            ref_id = _message.ref_id;
-            field_type = (SimFieldType) _message.field_type;
-            response_type = _message.resp_type;
-            field_data = "";
 
-            /* Build field_data string out of byte array from response message */
-            if (field_type == SimFieldType.IMSI)
+            ref_id = _message.ref_id;
+            simfile_data = "";
+
+            switch ( _message.response_type )
             {
-                var sb = new StringBuilder();
-                sb.append("%i".printf(_message.field_data[0] >> 4));
-                for (var n = 1; n < _message.field_data.length; n++)
-                {
-                    sb.append("%i".printf(_message.field_data[n] & 0xf));
-                    sb.append("%i".printf((_message.field_data[n] & 0xf0) >> 4));
-                }
-                field_data = sb.str;
+                case ResponseType.GET_PIN_STATUS:
+                    num_pins = _message.sim_pin_status_resp.pin_count;
+                    break;
+
+                case ResponseType.GET_FDN_STATUS:
+                    usim = _message.sim_get_fdn_status_resp.usim;
+                    break;
+
+                case ResponseType.VERIFY_PIN:
+                    if ( _message.sim_verify_pin_resp.sw1 == 0x90 &&
+                         _message.sim_verify_pin_resp.sw2 == 0x0 )
+                    {
+                        pin_status = SimPinStatus.PIN_VERIFIED;
+                    }
+                    else if ( _message.sim_verify_pin_resp.sw1 == 0x98 &&
+                              _message.sim_verify_pin_resp.sw2 == 0x4 )
+                    {
+                        pin_status = SimPinStatus.BAD_PIN;
+                    }
+                    break;
+
+                case ResponseType.SIM_READ:
+                    var file_type = (SimFileType) _message.sim_read_resp.file_type;
+
+                    switch ( file_type )
+                    {
+                        case SimFileType.IMSI:
+                            var sb = new StringBuilder();
+
+                            if ( _message.sim_read_resp.file_data_len == 0 )
+                            {
+                                theLogger.error( @"Detected sim file type with data = NULL; file_type = $(file_type)" );
+                                break;
+                            }
+
+                            // two IMSI bytes are packed into one byte, we make here two
+                            // bytes out of it!
+                            sb.append("%i".printf(_message.sim_read_resp.file_data[0] >> 4));
+                            for (var n = 1; n < _message.sim_read_resp.file_data.length; n++)
+                            {
+                                sb.append("%i".printf(_message.sim_read_resp.file_data[n] & 0xf));
+                                sb.append("%i".printf((_message.sim_read_resp.file_data[n] & 0xf0) >> 4));
+                            }
+
+                            simfile_data = sb.str;
+                            break;
+                        default:
+                            theLogger.error( "Found unknown sim file type: 0x%02x".printf( _message.sim_read_resp.file_type ) );
+                            break;
+                    }
+                    break;
+
+                default:
+                    theLogger.error( "Found unknown sim callback response type: 0x%02x".printf(_message.response_type ) );
+                    break;
             }
         }
     }

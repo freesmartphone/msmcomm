@@ -188,6 +188,7 @@ namespace Msmcomm.Daemon
         return result;
     }
 
+#if 0
     public LowLevel.SimFieldType convertSimFieldTypeForModem(SimFieldType field_type)
     {
         LowLevel.SimFieldType result = LowLevel.SimFieldType.IMSI;
@@ -221,7 +222,7 @@ namespace Msmcomm.Daemon
 
         return result;
     }
-
+#endif
 
     public StateSysSelPrefCommandMessage.Mode convertNetworkPreferenceModeForModem(NetworkPreferenceMode mode)
     {

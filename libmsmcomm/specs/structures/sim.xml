@@ -19,14 +19,38 @@
 		<field name="rc" start="6" end="7" type="uint16_t"/>
 	</structure>
 
+	<structure name="sim_read_resp" length="1924">
+		<field name="file_type" start="0" end="1" type="uint16_t"/>
+		<field name="result" start="2" type="uint8_t"/>
+		<field name="file_data_len" start="4" type="uint8_t"/>
+		<field name="file_data" start="5" end="12" type="uint8_t"/>
+	</structure>
+
+	<structure name="sim_verify_pin_resp" length="1924">
+		<field name="pin_retries" start="1" type="uint8_t"/>
+		<field name="sw1" start="2" type="uint8_t"/>
+		<field name="sw2" start="3" type="uint8_t"/>
+	</structure>
+
+	<structure name="sim_pin_status_resp" length="1924">
+		<field name="pin_count" start="0" type="uint8_t"/>
+	</structure>
+
+	<structure name="sim_get_fdn_status_resp" length="1924">
+		<field name="usim" start="7" type="uint8_t"/>
+	</structure>
+
 	<structure name="sim_callback_resp" length="1934">
-		<field name="result0" start="4" type="uint8_t"/>
+		<field name="rc" start="4" type="uint8_t"/>
 		<field name="ref_id" start="5" end="8" type="uint32_t"/>
-		<field name="resp_type" start="9" type="uint8_t"/>
-		<field name="field_type" start="10" end="11" type="uint16_t"/>
-		<field name="result1" start="12" type="uint8_t"/>
-		<field name="field_data_len" start="14" type="uint8_t"/>
-		<field name="field_data" start="15" end="22" type="uint8_t"/>
+		<field name="response_type" start="9" type="uint8_t"/>
+
+		<field name="response_data" start="10" end="1933" type="uint8_t">
+			<variant type="sim_read_resp"/>
+			<variant type="sim_verify_pin_resp"/>
+			<variant type="sim_pin_status_resp"/>
+			<variant type="sim_get_fdn_status_resp"/>
+		</field>
 	</structure>
 
 	<structure name="sim_change_pin_msg" length="23">
