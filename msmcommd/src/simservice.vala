@@ -65,6 +65,17 @@ namespace Msmcomm.Daemon
             }
 
             checkResponse(response);
+
+            switch ( response.message_type )
+            {
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_RETURN:
+                    logger.info( @"Got $(response.message_type) response message for $(message.message_type) command; we don't know why!" );
+                    break;
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_CALLBACK:
+                    break;
+                default:
+                    throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
+            }
         }
 
         public async void change_pin(string old_pin, string new_pin) throws GLib.Error, Msmcomm.Error
@@ -73,8 +84,19 @@ namespace Msmcomm.Daemon
             message.old_pin = old_pin;
             message.new_pin = new_pin;
 
-            var response = (yield channel.enqueueAsync(message)) as SimCallbackResponseMessage;
+            var response = (yield channel.enqueueAsync(message));
             checkResponse(response);
+
+            switch ( response.message_type )
+            {
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_RETURN:
+                    logger.info( @"Got $(response.message_type) response message for $(message.message_type) command; we don't know why!" );
+                    break;
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_CALLBACK:
+                    break;
+                default:
+                    throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
+            }
         }
 
         public async void enable_pin(string pin) throws GLib.Error, Msmcomm.Error
@@ -82,9 +104,19 @@ namespace Msmcomm.Daemon
             var message = new SimEnablePinCommandMessage();
             message.pin = pin;
 
-            var response = (yield channel.enqueueAsync(message)) as SimCallbackResponseMessage;
+            var response = (yield channel.enqueueAsync(message));
             checkResponse(response);
 
+            switch ( response.message_type )
+            {
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_RETURN:
+                    logger.info( @"Got $(response.message_type) response message for $(message.message_type) command; we don't know why!" );
+                    break;
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_CALLBACK:
+                    break;
+                default:
+                    throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
+            }
         }
 
         public async void disable_pin(string pin) throws GLib.Error, Msmcomm.Error
@@ -92,16 +124,40 @@ namespace Msmcomm.Daemon
             var message = new SimDisablePinCommandMessage();
             message.pin = pin;
 
-            var response = (yield channel.enqueueAsync(message)) as SimCallbackResponseMessage;
+            var response = (yield channel.enqueueAsync(message));
             checkResponse(response);
+
+            switch ( response.message_type )
+            {
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_RETURN:
+                    logger.info( @"Got $(response.message_type) response message for $(message.message_type) command; we don't know why!" );
+                    break;
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_CALLBACK:
+                    break;
+                default:
+                    throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
+            }
+
         }
 
         public async SimCapabilitiesInfo get_sim_capabilities() throws GLib.Error, Msmcomm.Error
         {
             var message = new SimGetSimCapabilitiesCommandMessage();
 
-            var response = (yield channel.enqueueAsync(message)) as SimCallbackResponseMessage;
+            var response = (yield channel.enqueueAsync(message));
             checkResponse(response);
+
+            switch ( response.message_type )
+            {
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_RETURN:
+                    logger.info( @"Got $(response.message_type) response message for $(message.message_type) command; we don't know why!" );
+                    break;
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_CALLBACK:
+                    break;
+                default:
+                    throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
+            }
+
 
             return SimCapabilitiesInfo();
         }
@@ -110,21 +166,45 @@ namespace Msmcomm.Daemon
         {
             var message = new SimGetAllPinStatusInfoCommandMessage();
 
-            var response = (yield channel.enqueueAsync(message)) as SimCallbackResponseMessage;
+            var response = (yield channel.enqueueAsync(message));
             checkResponse(response);
+
+            switch ( response.message_type )
+            {
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_RETURN:
+                    logger.info( @"Got $(response.message_type) response message for $(message.message_type) command; we don't know why!" );
+                    break;
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_CALLBACK:
+                    break;
+                default:
+                    throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
+            }
         }
 
         public async SimFieldInfo read(SimFieldType field_type) throws GLib.Error, Msmcomm.Error
         {
+            var info = SimFieldInfo();
+
             var message = new SimReadCommandMessage();
             message.field_type = StringHandling.convertEnum<SimFieldType,Msmcomm.LowLevel.SimFileType>(field_type);
 
-            var response = (yield channel.enqueueAsync(message)) as SimCallbackResponseMessage;
+            var response = (yield channel.enqueueAsync(message));
             checkResponse(response);
 
-            var info = SimFieldInfo();
-            info.type = StringHandling.convertEnum<Msmcomm.LowLevel.SimFileType,SimFieldType>(response.simfile_type);
-            info.data = response.simfile_data;
+            switch ( response.message_type )
+            {
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_RETURN:
+                    logger.info( @"Got $(response.message_type) response message for $(message.message_type) command; we don't know why!" );
+                    break;
+                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_CALLBACK:
+                    var cbresp = response as SimCallbackResponseMessage;
+                    info.type = StringHandling.convertEnum<Msmcomm.LowLevel.SimFileType,SimFieldType>(cbresp.simfile_type);
+                    info.data = cbresp.simfile_data;
+                    break;
+                default:
+                    throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
+            }
+
             return info;
         }
 
