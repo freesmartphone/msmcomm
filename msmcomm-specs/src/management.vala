@@ -34,6 +34,7 @@ namespace Msmcomm
     {
         NOT_IMPLEMENTED,
         INVALID_ARGUMENTS,
+        INTERNAL_ERROR,
         FAILED,
         MODEM_INACTIVE,
         TIMEOUT,
