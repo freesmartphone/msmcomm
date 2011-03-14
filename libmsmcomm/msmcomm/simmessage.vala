@@ -234,7 +234,7 @@ namespace Msmcomm.LowLevel
 
             if (_message.rc == 0x101)
             {
-                result = MessageResultType.ERROR_UNKNOWN;
+                result = MessageResultType.ERROR_BAD_SIM_STATE;
             }
         }
     }
