@@ -35,8 +35,9 @@ namespace Msmcomm
     public enum PhonebookBookType
     {
         ADN,
-        SDN,
         FDN,
+        SDN,
+        ECC,
         UNKNOWN,
     }
 

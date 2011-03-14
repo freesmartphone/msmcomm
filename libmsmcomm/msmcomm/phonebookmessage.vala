@@ -31,6 +31,7 @@ namespace Msmcomm.LowLevel
         ADN,
         FDN,
         SDN,
+        ECC,
         UNKNOWN,
     }
 
@@ -56,6 +57,9 @@ namespace Msmcomm.LowLevel
             case PhonebookBookType.SDN:
                 result = ext_info ? 0xe : 0x8;
                 break;
+            case PhonebookBookType.ECC:
+                result = ext_info ? 0x0 : 0x30; // FIXME id for ext_info is unknown
+                break;
             default:
                 assert_not_reached();
         }
@@ -80,6 +84,9 @@ namespace Msmcomm.LowLevel
                 case 0x8:
                     book_type = PhonebookBookType.SDN;
                     break;
+                case 0x30:
+                    book_type = PhonebookBookType.ECC;
+                    break;
             }
         }
         else if (message_class == MessageClass.UNSOLICITED_RESPONSE)
@@ -95,6 +102,7 @@ namespace Msmcomm.LowLevel
                 case 0xe:
                     book_type = PhonebookBookType.SDN;
                     break;
+                // FIXME value for ECC is currently unknown
             }
         }
 
