@@ -1,0 +1,88 @@
+PLEASE NOTE: The real pin and imsi has been replace with 'xxxx' or 'xxxxxxxxxxxxx'.
+
+========================================================================================================================================
+
+0D 11 38 00 00 17 00 00 00 3F 02 00 00 00 00 02 03 0A 01 03 00 0A 00 
+
+2011-03-13T22:17:36.573760Z [7633] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::HandleMilCallbackResponse resp_type=63
+2011-03-13T22:17:36.574035Z [7633] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::GetPinStatusEvent error=0 num_pins=2
+2011-03-13T22:17:36.574279Z [7633] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Gsdi Status 0
+2011-03-13T22:17:36.574554Z [7633] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::SetPinStatus pin1Status=2
+2011-03-13T22:17:36.575225Z [7633] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::SetPinStatus pin2Status=2
+2011-03-13T22:17:36.575622Z [7633] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: -ServiceSimGsm::GetPinStatusEvent 
+
+2011-03-13T22:17:36.580291Z [7633] palm-webos user.notice PmWsfDaemon: {TIL.IPC}: [RSP] pin1StatusQuery 0x86440 { "returnValue": true, "errorCode": 0, "errorString": "success", "extended": { "enabled": true, "pinAttemptsRemaining": 3, "pukAttemptsRemaining": 10 }, "subscribed": true }
+
+0d 11 38 00 00 03 00 00 00 3f 02 00 00 00 00 02 03 0a 01 02 03 0a 00
+
+
+0D 11 38 00 00 0D 00 00 00 3F 02 00 00 00 00 02 03 0A 01 02 03 0A 00
+
+2010-12-06T16:37:47.295135Z [466] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::HandleMilCallbackResponse resp_type=63
+2010-12-06T16:37:47.296417Z [466] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::GetPinStatusEvent error=0 num_pins=2
+2010-12-06T16:37:47.297698Z [466] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Gsdi Status 0
+2010-12-06T16:37:47.298858Z [466] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::SetPinStatus pin1Status=3 -> enabled
+2010-12-06T16:37:47.299987Z [466] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::SetPinStatus pin2Status=3
+
+0D 11 39 00 01 11 00 00 00 0E 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+2010-12-06T16:37:54.396759Z [473] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::HandleMilCallbackResponse resp_type=14
+2010-12-06T16:37:54.402313Z [473] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::GetFdnStatusEvent status=1
+2010-12-06T16:37:54.403747Z [473] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Gsdi Status 1
+2010-12-06T16:37:54.405181Z [473] palm-webos user.err PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Error=kTilErrBadPin(3072) 
+2010-12-06T16:37:54.406677Z [473] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetFdnStatusEvent card Mode uSim=1
+2010-12-06T16:37:54.413146Z [473] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Gsdi Status 1
+2010-12-06T16:37:54.414825Z [473] palm-webos user.err PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Error=kTilErrBadPin(3072) 
+
+0D 11 38 00 00 12 00 00 00 08 00 03 90 00 00 00 00 00 00 00 00 00 00 
+
+2010-12-06T16:38:21.433929Z [500] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::HandleMilCallbackResponse resp_type=8
+2010-12-06T16:38:21.437072Z [500] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::VerifyPinEvent status=0 pin_id=0, num_of_retries=3
+2010-12-06T16:38:21.439880Z [500] palm-webos user.notice PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::StorePin1 Pin1 xxxx
+2010-12-06T16:38:21.442749Z [500] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Gsdi Status 0
+2010-12-06T16:38:21.445770Z [500] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: -ServiceSimGsm::VerifyPinEvent 
+
+2010-12-06T16:38:21.507232Z [500] palm-webos user.notice PmWsfDaemon: {TIL.IPC}: [NFY] pin1StatusQuery 0x3a590 { "errorCode": 0, "errorString": "success", "extended": { "enabled": true, "pinAttemptsRemaining": 3, "pukAttemptsRemaining": 10 }, "returnValue": true }
+
+0D 11 41 00 00 16 00 00 00 01 01 04 00 09 08 xx xx xx xx xx xx xx xx
+
+2010-12-06T16:38:23.526733Z [502] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::HandleMilCallbackResponse resp_type=1
+2010-12-06T16:38:23.527954Z [502] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::SimReadEvent sim_filename=1025
+2010-12-06T16:38:23.529174Z [502] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::GetImsiEvent status=0
+2010-12-06T16:38:23.530364Z [502] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Gsdi Status 0
+2010-12-06T16:38:23.531463Z [502] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::DecodeSimData len=9
+2010-12-06T16:38:23.532562Z [502] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: -ServiceSimGsm::DecodeSimData 
+2010-12-06T16:38:23.534301Z [502] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetImsiEvent Sending IMSI xxxxxxxxxxxxx to RefId=51 senderAddress=49161
+2010-12-06T16:38:23.535888Z [502] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetImsiEvent Sending IMSI xxxxxxxxxxxxx to RefId=2147483651 senderAddress=49156
+2010-12-06T16:38:23.537200Z [502] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: -ServiceSimGsm::GetImsiEvent 
+
+0D 11 38 00 05 1E 00 00 00 08 00 02 98 04 00 00 00 00 00 00 00 00 00
+
+2011-03-13T22:18:57.182342Z [7713] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::HandleMilCallbackResponse resp_type=8
+2011-03-13T22:18:57.182586Z [7713] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::VerifyPinEvent status=5 pin_id=0, num_of_retries=2
+2011-03-13T22:18:57.182830Z [7713] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::SendPinStatusChangeEvent pin1Status=3 pin1AttemptsLeft=2 puk1AttemptsLeft=10 powerState=1
+2011-03-13T22:18:57.183258Z [7713] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: -ServiceSimGsm::SendPinStatusChangeEvent 
+2011-03-13T22:18:57.183532Z [7713] palm-webos user.notice PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::VerifyPinEvent Clear Cached Pin1!!
+2011-03-13T22:18:57.183868Z [7713] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Gsdi Status 5
+2011-03-13T22:18:57.184143Z [7713] palm-webos user.err PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Error=kTilErrBadPin(3072) 
+
+2011-03-13T22:18:57.188079Z [7713] palm-webos user.notice PmWsfDaemon: {TIL.IPC}: [NFY] pin1StatusQuery 0x3a4b8 { "errorCode": 0, "errorString": "success", "extended": { "enabled": true, "pinrequired": true, "pinAttemptsRemaining": 2, "pukAttemptsRemaining": 10 }, "returnValue": true }
+
+2011-03-13T22:18:57.192687Z [7713] palm-webos user.notice PmWsfDaemon: {TIL.IPC}: [RSP] pin1Verify 0x868a8 { "returnValue": false, "errorCode": 2, "errorString": "Bad PIN code parameter (format) or incorrect PIN", "extended": { "attemptsRemaining": 2 } }
+
+0D 11 39 00 00 0D 00 00 00 0E 00 00 00 00 00 00 00 01 00 00 00 00 00 
+
+2011-03-13T22:16:26.503784Z [7562] palm-webos user.debug PmWsfDaemon: {TIL.HCI}: ************************************************
+2011-03-13T22:16:26.504241Z [7562] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::HandleMilCallbackResponse resp_type=14
+2011-03-13T22:16:26.504577Z [7562] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::GetFdnStatusEvent status=0
+2011-03-13T22:16:26.504852Z [7562] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetErrorCodeFromStatus Gsdi Status 0
+2011-03-13T22:16:26.505096Z [7562] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: ServiceSimGsm::GetFdnStatusEvent card Mode uSim=1
+2011-03-13T22:16:26.505371Z [7562] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: +ServiceSimGsm::ChangeSimStatus simStatus = 5 newSimStatus = 1 powerState = 1
+2011-03-13T22:16:26.505615Z [7562] palm-webos user.debug PmWsfDaemon: {TIL.LOG}: -ServiceSimGsm::ChangeSimStatus 
+
+2011-03-13T22:16:26.513000Z [7562] palm-webos user.notice PmWsfDaemon: {TIL.IPC}: [NFY] simStatusQuery 0x3a4b8 { "errorCode": 0, "errorString": "success", "extended": { "state": "simready" }, "returnValue": true }
+
+
+
+
+
