@@ -745,7 +745,7 @@ struct SmsGetInfoMessage
 struct WmsReadTemplateMessage
 {
 	public uint32 ref_id;
-	public uint16 record;
+	public uint16 template;
 	public uint8 unknown0[3];
 	public unowned uint8[] data
 	{
@@ -879,7 +879,8 @@ struct WmsCallbackResponse
 	public uint16 command;
 	public uint8 unknown0[2];
 	public uint32 ref_id;
-	public uint8 unknown1[2];
+	public uint8 rc;
+	public uint8 unknown1;
 	public unowned uint8[] data
 	{
 		get

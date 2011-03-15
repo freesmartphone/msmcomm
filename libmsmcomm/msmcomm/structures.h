@@ -546,7 +546,7 @@ static void msmcomm_low_level_structures_sms_get_info_msg_init(struct sms_get_in
 struct wms_read_template_msg
 {
 	uint32_t ref_id;
-	uint16_t record;
+	uint16_t template;
 #define WMS_READ_TEMPLATE_MSG_UNKNOWN0_SIZE 3
 	uint8_t unknown0[3];
 } __attribute__ ((packed));
@@ -630,8 +630,8 @@ struct wms_callback_resp
 #define WMS_CALLBACK_RESP_UNKNOWN0_SIZE 2
 	uint8_t unknown0[2];
 	uint32_t ref_id;
-#define WMS_CALLBACK_RESP_UNKNOWN1_SIZE 2
-	uint8_t unknown1[2];
+	uint8_t rc;
+	uint8_t unknown1;
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_wms_callback_resp_init(struct wms_callback_resp* self)

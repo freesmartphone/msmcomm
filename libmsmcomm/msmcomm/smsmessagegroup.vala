@@ -1,9 +1,6 @@
 /* 
- * File Name: 
- * Creation Date: 
- * Last Modified: 
- *
- * Authored by Frederik 'playya' Sdun <Frederik.Sdun@googlemail.com>
+ * (c) 2011 Frederik 'playya' Sdun <Frederik.Sdun@googlemail.com>
+ *          Simon Busch <morphis@gravedo.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,20 +17,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  */
+
 using GLib;
 
 namespace Msmcomm.LowLevel
 {
-    public static const uint8 GROUP_ID = 0x15;
 
     public class WmsResponseMessageGroup : BaseMessageGroup
     {
+        public static const uint8 GROUP_ID = 0x16;
+
         public WmsResponseMessageGroup()
         {
-            base(GROUP_ID);
-            
-            message_types[WmsReturnResponseMessage.MESSAGE_ID] = typeof(WmsReturnResponseMessage);
-            message_types[WmsCallbackResponseMessage.MESSAGE_ID] = typeof(WmsCallbackResponseMessage);
+            base(WmsResponseMessageGroup.GROUP_ID);
+            message_types[Wms.Response.Return.MESSAGE_ID] = typeof(Wms.Response.Return);
+            message_types[Wms.Response.Callback.MESSAGE_ID] = typeof(Wms.Response.Callback);
         }
     }
 }

@@ -228,7 +228,7 @@ end
 
 start wms_read_template_msg 9
 [0-3] uint32_t ref_id
-[4-5] uint16_t record
+[4-5] uint16_t template
 end
 
 start wms_cfg_set_gw_domain_msg 5
@@ -258,6 +258,7 @@ end
 start wms_callback_resp 10
 [0-1] uint16_t command
 [4-7] uint32_t ref_id
+[8] uint8_t rc
 end
 
 #-------------------------------------------------------------------
