@@ -23,20 +23,20 @@ MAINTAINERCLEANFILES = \
 	mkinstalldirs src/Makefile.in              \
 	$(NULL)
 
-STRUCTURE_SPECS = \
-	specs/structures/common.xml \
-	specs/structures/call.xml \
-	specs/structures/misc.xml \
-	specs/structures/state.xml \
-	specs/structures/sms.xml \
-	specs/structures/sim.xml \
-	specs/structures/phonebook.xml \
-	specs/structures/network.xml \
-	specs/structures/sound.xml \
-	specs/structures/sups.xml \
-	specs/structures/voicemail.xml
+STRUCTURE_protocol = \
+	protocol/structures/common.xml \
+	protocol/structures/call.xml \
+	protocol/structures/misc.xml \
+	protocol/structures/state.xml \
+	protocol/structures/sms.xml \
+	protocol/structures/sim.xml \
+	protocol/structures/phonebook.xml \
+	protocol/structures/network.xml \
+	protocol/structures/sound.xml \
+	protocol/structures/sups.xml \
+	protocol/structures/voicemail.xml
 
 generate-structures:
-	$(top_srcdir)/tools/xml-to-sdef.py $(STRUCTURE_SPECS) > $(top_srcdir)/specs/msmcomm.sdef
-	$(top_srcdir)/tools/generate-structures-c.py $(top_srcdir)/specs/msmcomm.sdef > $(top_srcdir)/msmcomm/structures.h
-	$(top_srcdir)/tools/generate-structures-vala.py $(top_srcdir)/specs/msmcomm.sdef > $(top_srcdir)/vapi/structures.vapi
+	$(top_srcdir)/tools/xml-to-sdef.py $(STRUCTURE_protocol) > $(top_srcdir)/protocol/msmcomm.sdef
+	$(top_srcdir)/tools/generate-structures-c.py $(top_srcdir)/protocol/msmcomm.sdef > $(top_srcdir)/msmcomm/structures.h
+	$(top_srcdir)/tools/generate-structures-vala.py $(top_srcdir)/protocol/msmcomm.sdef > $(top_srcdir)/vapi/structures.vapi
