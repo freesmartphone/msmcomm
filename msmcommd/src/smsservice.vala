@@ -36,7 +36,7 @@ namespace Msmcomm.Daemon
             return "";
         }
 
-        public async void read_template(SmsTemplateType template_type) throws GLib.Error, Msmcomm.Error
+        public async void message_read_template(SmsTemplateType template_type) throws GLib.Error, Msmcomm.Error
         {
             var message = new Wms.Command.MessageReadTemplate();
             message.template = StringHandling.convertEnum<SmsTemplateType,LowLevel.Wms.TemplateType>( template_type );

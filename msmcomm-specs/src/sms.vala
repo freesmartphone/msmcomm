@@ -32,6 +32,6 @@ namespace Msmcomm
     [DBus (timeout = 120000, name = "org.msmcomm.Sms")]
     public interface Sms : GLib.Object
     {
-        public abstract async void read_template(SmsTemplateType templte_type) throws GLib.Error, Msmcomm.Error;
+        public abstract async void message_read_template(SmsTemplateType template_type) throws GLib.Error, Msmcomm.Error;
     }
 }
