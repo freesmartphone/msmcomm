@@ -61,6 +61,7 @@ msmcommd_VALASOURCES = \
 	networkservice.vala \
 	voicemailservice.vala \
 	soundservice.vala \
+	smsservice.vala \
 	serviceconv.vala \
 	commandhandler.vala \
 	commands.vala \
