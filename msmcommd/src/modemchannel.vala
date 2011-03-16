@@ -1,23 +1,23 @@
 /**
- * This file is part of msmcommd.
- *
- * (C) 2010 Simon Busch <morphis@gravedo.de>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
- *
- **/
+* This file is part of msmcommd.
+*
+* (C) 2010-2011 Simon Busch <morphis@gravedo.de>
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+*
+**/
 
 using Msmcomm.LowLevel;
 
@@ -25,9 +25,8 @@ namespace Msmcomm.Daemon
 {
     public class ModemChannel : AbstractObject
     {
-        private Gee.LinkedList<CommandHandler> q;
-        private uint timeoutWatch;
-        protected CommandHandler current;
+        private Gee.LinkedList<CommandHandler> queue;
+        private Gee.ArrayList<CommandHandler> pending;
         private MessageAssembler masm;
         private MessageDisassembler mdis;
 
@@ -45,7 +44,8 @@ namespace Msmcomm.Daemon
             masm = new MessageAssembler();
             mdis = new MessageDisassembler();
 
-            q = new Gee.LinkedList<CommandHandler>();
+            queue = new Gee.LinkedList<CommandHandler>();
+            pending = new Gee.ArrayList<CommandHandler>();
             current_ref_id = 0;
 
             modem.registerChannel(this);
@@ -61,7 +61,7 @@ namespace Msmcomm.Daemon
         // signals
         //
 
-        public signal void requestHandleUnsolicitedResponse(Msmcomm.LowLevel.BaseMessage message);
+        public signal void requestHandleUnsolicitedResponse(BaseMessage message);
 
         //
         // private API
@@ -69,7 +69,7 @@ namespace Msmcomm.Daemon
 
         protected bool checkRestartingQueue()
         {
-            if ( current == null && q.size > 0 )
+            if ( queue.size > 0 )
             {
                 writeNextCommand();
                 return true;
@@ -81,18 +81,34 @@ namespace Msmcomm.Daemon
         }
 
         /**
+         * Find command handler with specified reference id in pending list
+         **/
+        private CommandHandler? findPendingWithRefId(uint32 ref_id)
+        {
+            CommandHandler result = null;
+            foreach ( var handler in pending )
+            {
+                if ( handler.command.ref_id == ref_id )
+                {
+                    result = handler;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /**
          * Write next command to modem and add timeout for resending
          **/
         protected void writeNextCommand()
         {
-            current = q.poll_head();
-            writeCommand(current);
+            var command = queue.poll_head();
+            writeCommand(command);
 
-            assert( logger.debug( @"Wrote '$current'. Waiting ($(current.timeout)s) for answer..." ) );
-            if ( current.timeout > 0 )
-            {
-                timeoutWatch = GLib.Timeout.add_seconds( current.timeout, onTimeout );
-            }
+            assert( logger.debug( @"Wrote '$command'. Waiting ($(command.timeout)s) for answer..." ) );
+
+            command.startTimeout();
+            pending.add(command);
         }
 
         protected void writeCommand(CommandHandler handler)
@@ -103,48 +119,40 @@ namespace Msmcomm.Daemon
             modem.sendData(data);
         }
 
-        protected void resetTimeout()
-        {
-            if ( timeoutWatch > 0 )
-            {
-                GLib.Source.remove( timeoutWatch );
-            }
-        }
-
-        protected bool onTimeout()
+        protected bool onTimeout(CommandHandler command)
         {
             /* If command got a response while waiting for it, abort here */
-            if (current == null)
+            if (pending.size == 0)
                 return false;
 
-            assert( logger.warning( @"Timeout while waiting for an answer to '$current'" ) );
-            if ( current.retry > 0 )
+            assert( logger.warning( @"Timeout while waiting for an answer to '$command'" ) );
+            if ( command.retry > 0 )
             {
-                current.retry--;
-                assert( logger.debug( @"Retrying '$current', retry counter = $(current.retry)" ) );
-                writeCommand(current);
+                command.retry--;
+                assert( logger.debug( @"Retrying '$command', retry counter = $(command.retry)" ) );
+                writeCommand(command);
                 return true;
             }
             else
             {
-                // derived class is responsible for relaunching the command queue
-                onResponseTimeout( current );
+                onResponseTimeout( command );
             }
+
             return false;
         }
 
-        protected void onResponseTimeout( CommandHandler ch )
+        protected void onResponseTimeout( CommandHandler command )
         {
-            resetTimeout();
+            command.resetTimeout();
 
             /* Mark command as timed out and return to enqueueAsync method */
-            ch.timed_out = true;
-            ch.callback();
+            command.timed_out = true;
+            command.callback();
         }
 
         protected void enqueueCommand( CommandHandler command )
         {
-            q.offer_tail( command );
+            queue.offer_tail( command );
             Idle.add( checkRestartingQueue );
         }
 
@@ -155,11 +163,11 @@ namespace Msmcomm.Daemon
 #if 0
             // Only reset current to nothing when we are not waiting for any response
             current = current == null ? null : current;
-            q.clear();
+            queue.clear();
 #endif
         }
 
-        private bool checkResponseForCommandHandler(Msmcomm.LowLevel.BaseMessage response, CommandHandler bundle)
+        private bool checkResponseForCommandHandler(BaseMessage response, CommandHandler bundle)
         {
             // Check wether command and response have the same reference id
             return response.ref_id == bundle.command.ref_id;
@@ -179,7 +187,7 @@ namespace Msmcomm.Daemon
             return current_ref_id;
         }
 
-        protected void onSolicitedResponse( CommandHandler bundle, Msmcomm.LowLevel.BaseMessage response )
+        protected void onSolicitedResponse( CommandHandler bundle, BaseMessage response )
         {
             if ( bundle.callback != null )
             {
@@ -199,7 +207,7 @@ namespace Msmcomm.Daemon
             }
         }
 
-        public async unowned Msmcomm.LowLevel.BaseMessage enqueueAsync( owned Msmcomm.LowLevel.BaseMessage command, int retries = 0, int timeout = 0 ) throws Msmcomm.Error
+        public async unowned BaseMessage enqueueAsync( owned BaseMessage command, int retries = 0, int timeout = 0 ) throws Msmcomm.Error
         {
             string msg = "";
 
@@ -211,16 +219,13 @@ namespace Msmcomm.Daemon
             }
 
             command.ref_id = nextValidMessageRefId();
-            var handler = new CommandHandler( command, retries, timeout );
+            var handler = new CommandHandler( command, retries, timeout, onTimeout );
             handler.callback = enqueueAsync.callback;
             enqueueCommand( handler );
             yield;
 
             if (handler.timed_out)
             {
-                /* Unset current command handler, otherwise queue hangs */
-                current = null;
-
                 msg = @"Timed out while waiting for a response for command '$(command.message_type)'";
                 throw new Msmcomm.Error.TIMEOUT(msg);
             }
@@ -228,7 +233,7 @@ namespace Msmcomm.Daemon
             return handler.response;
         }
 
-        public void enqueueSync( owned Msmcomm.LowLevel.BaseMessage command, int retries = 0 )
+        public void enqueueSync( owned BaseMessage command, int retries = 0 )
         {
             command.ref_id = nextValidMessageRefId();
             var handler = new CommandHandler( command, 0 );
@@ -254,15 +259,22 @@ namespace Msmcomm.Daemon
 
             if (message.message_class == MessageClass.SOLICITED_RESPONSE)
             {
-                if (current == null)
+                if (pending.size == 0)
                 {
                     logger.error("Got response while not expecting one! Maybe out of sync!?");
                     reset();
                     return;
                 }
 
-                onSolicitedResponse((CommandHandler) current, message);
-                current = null;
+                CommandHandler cmdh = findPendingWithRefId( message.ref_id );
+                if ( cmdh == null )
+                {
+                    logger.error( "Got response but we don't have any corresponding send message (ref_id = $(message.ref_id)) !!!" );
+                    return;
+                }
+
+                onSolicitedResponse(cmdh, message);
+                pending.remove(cmdh);
                 Idle.add(checkRestartingQueue);
             }
             else if (message.message_class == MessageClass.UNSOLICITED_RESPONSE)

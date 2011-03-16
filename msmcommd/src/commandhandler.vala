@@ -17,27 +17,56 @@
  *
  */
 
+using Msmcomm.LowLevel;
+
 namespace Msmcomm.Daemon
 {
+    public delegate bool CommandHandlerTimeoutFunc(CommandHandler handler);
+
     /**
      * @class CommandHandler
      **/
     public class CommandHandler
     {
-        public unowned Msmcomm.LowLevel.BaseMessage command;
-        public unowned Msmcomm.LowLevel.BaseMessage response;
+        public unowned BaseMessage command;
+        public unowned BaseMessage response;
 
-        public uint timeout;
-        public uint retry;
+        public int timeout;
+        public int retry;
         public SourceFunc callback;
         public bool timed_out;
 
-        public CommandHandler( Msmcomm.LowLevel.BaseMessage command, int retries = 0, int timeout = 0 )
+        private CommandHandlerTimeoutFunc timeout_func;
+        private uint timeout_watch;
+
+        public CommandHandler( BaseMessage command, int retries = 0, int timeout = 0, CommandHandlerTimeoutFunc? timeout_func = null )
         {
             this.command = command;
             this.retry = retries;
             this.timeout = timeout;
             this.timed_out = false;
+            this.timeout_func = timeout_func;
+        }
+
+        private bool onTimeout()
+        {
+            return timeout_func(this);
+        }
+
+        public void startTimeout()
+        {
+            if ( timeout > 0 )
+            {
+                timeout_watch = GLib.Timeout.add_seconds( timeout, onTimeout );
+            }
+        }
+
+        public void resetTimeout()
+        {
+            if ( timeout_watch > 0 )
+            {
+                GLib.Source.remove( timeout_watch );
+            }
         }
 
         public string to_string()
