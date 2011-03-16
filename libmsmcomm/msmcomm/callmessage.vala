@@ -191,10 +191,10 @@ namespace Msmcomm.LowLevel
             switch (_message.result)
             {
                 case RESULT_BAD_CALL_ID_VALUE:
-                    result = MessageResultType.ERROR_BAD_CALL_ID;
+                    result = MessageResult.ERROR_BAD_CALL_ID;
                     break;
                 case RESULT_ERROR_VALUE:
-                    result = MessageResultType.ERROR_UNKNOWN;
+                    result = MessageResult.ERROR_UNKNOWN;
                     break;
             }
         }
@@ -220,7 +220,7 @@ namespace Msmcomm.LowLevel
         {
             ref_id = _message.ref_id;
             command_type = (CallBaseMessage.Type)_message.cmd_type;
-            result = (Msmcomm.LowLevel.MessageResultType)_message.result;
+            result = (Msmcomm.LowLevel.MessageResult) _message.result;
         }
     }
 

@@ -187,7 +187,7 @@ namespace Msmcomm.LowLevel
             switch ( _message.rc )
             {
                 case 0x4:
-                    result = MessageResultType.ERROR_BAD_SIM_STATE;
+                    result = MessageResult.ERROR_BAD_SIM_STATE;
                     break;
             }
         }

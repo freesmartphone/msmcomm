@@ -21,9 +21,9 @@
 
 namespace Msmcomm.LowLevel
 {
-    public enum MessageResultType
+    public enum MessageResult
     {
-        RESULT_OK,
+        OK,
         ERROR_BAD_CALL_ID,
         ERROR_BAD_SIM_STATE,
         ERROR_PHONEBOOK_NOT_ACTIVE,
