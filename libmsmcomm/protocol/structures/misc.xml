@@ -74,6 +74,7 @@
 
 		<structure name="misc_get_home_network_name_resp" length="110">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="rc" start="5" type="uint8_t"/>
 			<field name="operator_name_len" start="90" type="uint8_t"/>
 			<field name="operator_name" start="91" end="106" type="uint8_t"/>
 			<field name="mcc" start="107" end="108" type="uint16_t"/>

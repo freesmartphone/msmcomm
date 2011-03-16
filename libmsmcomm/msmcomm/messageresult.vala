@@ -30,6 +30,7 @@ namespace Msmcomm.LowLevel
         ERROR_PHONEBOOK_RECORD_EMPTY,
         ERROR_PHONEBOOK_FAILED_TO_WRITE_RECORD,
         ERROR_BAD_PIN,
+        ERROR_NOT_ONLINE,
         ERROR_UNKNOWN,
     }
 }

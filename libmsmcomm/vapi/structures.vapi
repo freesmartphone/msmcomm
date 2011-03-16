@@ -409,7 +409,9 @@ struct MiscGetHomeNetworkNameMessage
 struct MiscGetHomeNetworkNameResponse
 {
 	public uint32 ref_id;
-	public uint8 unknown0[86];
+	public uint8 unknown0;
+	public uint8 rc;
+	public uint8 unknown1[84];
 	public uint8 operator_name_len;
 	[CCode (array_length_cname = "operator_name_len")]
 	public uint8 operator_name[];

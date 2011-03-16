@@ -296,8 +296,10 @@ static void msmcomm_low_level_structures_misc_get_home_network_name_msg_init(str
 struct misc_get_home_network_name_resp
 {
 	uint32_t ref_id;
-#define MISC_GET_HOME_NETWORK_NAME_RESP_UNKNOWN0_SIZE 86
-	uint8_t unknown0[86];
+	uint8_t unknown0;
+	uint8_t rc;
+#define MISC_GET_HOME_NETWORK_NAME_RESP_UNKNOWN1_SIZE 84
+	uint8_t unknown1[84];
 	uint8_t operator_name_len;
 #define MISC_GET_HOME_NETWORK_NAME_RESP_OPERATOR_NAME_SIZE 16
 	uint8_t operator_name[16];

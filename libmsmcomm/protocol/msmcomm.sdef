@@ -124,6 +124,7 @@ end
 
 start misc_get_home_network_name_resp 110
 [0-3] uint32_t ref_id
+[5] uint8_t rc
 [90] uint8_t operator_name_len
 [91-106] uint8_t operator_name
 [107-108] uint16_t mcc

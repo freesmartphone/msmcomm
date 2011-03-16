@@ -19,6 +19,7 @@
  *
  **/
 
+using FsoFramework;
 using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
@@ -391,6 +392,19 @@ namespace Msmcomm.LowLevel
         protected override void evaluate_data()
         {
             ref_id = _message.ref_id;
+
+            if ( _message.rc != 0x0 )
+            {
+                switch ( _message.rc )
+                {
+                    case 0x1:
+                        result = MessageResult.ERROR_NOT_ONLINE;
+                        break;
+                    default:
+                        theLogger.error( @"Found unhandled result for $(message_type) message: 0x%02x".printf( _message.rc ) );
+                        break;
+                }
+            }
 
             operator_name = FsoFramework.Utility.dataToString(_message.operator_name);
 
