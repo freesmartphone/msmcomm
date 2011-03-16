@@ -261,13 +261,13 @@ namespace Msmcomm.LowLevel
             {
                 case 0x4:
                 case 0x12:
-                    result = MessageResultType.ERROR_PHONEBOOK_NOT_ACTIVE;
+                    result = MessageResult.ERROR_PHONEBOOK_NOT_ACTIVE;
                     break;
                 case 0xb:
-                    result = MessageResultType.ERROR_PHONEBOOK_RECORD_EMPTY;
+                    result = MessageResult.ERROR_PHONEBOOK_RECORD_EMPTY;
                     break;
                 case 0x16:
-                    result = MessageResultType.ERROR_PHONEBOOK_FAILED_TO_WRITE_RECORD;
+                    result = MessageResult.ERROR_PHONEBOOK_FAILED_TO_WRITE_RECORD;
                     break;
             }
         }
@@ -305,10 +305,10 @@ namespace Msmcomm.LowLevel
             switch (_message.result)
             {
                 case 0x4:
-                    result = MessageResultType.ERROR_PHONEBOOK_NOT_ACTIVE;
+                    result = MessageResult.ERROR_PHONEBOOK_NOT_ACTIVE;
                     break;
                 case 0x12:
-                    result = MessageResultType.ERROR_UNKNOWN;
+                    result = MessageResult.ERROR_UNKNOWN;
                     break;
             }
         }

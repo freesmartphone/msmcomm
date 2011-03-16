@@ -120,10 +120,10 @@ namespace Msmcomm.LowLevel
             switch (_message.result)
             {
                 case RESULT_OK:
-                    result = MessageResultType.RESULT_OK;
+                    result = MessageResult.OK;
                     break;
                 case RESULT_ERROR:
-                    result = MessageResultType.ERROR_UNKNOWN;
+                    result = MessageResult.ERROR_UNKNOWN;
                     break;
             }
         }

@@ -23,12 +23,22 @@ using Msmcomm.LowLevel;
 
 namespace Msmcomm.Daemon
 {
+    internal class WaitForUnsolicitedResponseData
+    {
+        public GLib.SourceFunc callback;
+        public MessageType urc_type;
+        public BaseMessage response;
+        public uint timeout;
+        public SourceFunc? timeout_func;
+    }
+
     public class ModemChannel : AbstractObject
     {
         private Gee.LinkedList<CommandHandler> queue;
         private Gee.ArrayList<CommandHandler> pending;
         private MessageAssembler masm;
         private MessageDisassembler mdis;
+        private GLib.List<WaitForUnsolicitedResponseData> urc_waiters;
 
         public ModemControl modem;
         public uint32 current_ref_id;
@@ -47,6 +57,8 @@ namespace Msmcomm.Daemon
             queue = new Gee.LinkedList<CommandHandler>();
             pending = new Gee.ArrayList<CommandHandler>();
             current_ref_id = 0;
+
+            urc_waiters = new GLib.List<WaitForUnsolicitedResponseData>();
 
             modem.registerChannel(this);
 
@@ -280,6 +292,7 @@ namespace Msmcomm.Daemon
             else if (message.message_class == MessageClass.UNSOLICITED_RESPONSE)
             {
                 handleSpecificUnsolicitedResponse(message);
+                notifyUnsolicitedResponse(message.message_type, message);
                 requestHandleUnsolicitedResponse(message);
             }
         }
@@ -301,6 +314,85 @@ namespace Msmcomm.Daemon
         {
             return "<>";
         }
+
+        /**
+         * Lets wait for a specific unsolicited response to recieve and return it's payload
+         * after it finaly recieves.
+         **/
+        public async BaseMessage waitForUnsolicitedResponse( MessageType type, int timeout = 0, SourceFunc? timeout_func = null )
+        {
+            logger.debug( @"Create an new urc waiter with type = $(type)" );
+
+            // Create waiter and yield until urc occurs
+            var data = new WaitForUnsolicitedResponseData();
+            data.urc_type = type;
+            data.callback = waitForUnsolicitedResponse.callback;
+            data.timeout_func = timeout_func;
+            urc_waiters.append( data );
+
+            // if user specified a timeout for the wait we add it here and return to the
+            // caller when the timeout occured
+            if ( timeout > 0 )
+            {
+                data.timeout = Timeout.add_seconds( timeout, () => {
+                    urc_waiters.remove( data );
+
+                    if ( data.timeout_func != null )
+                    {
+                        data.timeout_func();
+                    }
+
+                    data.callback();
+                    return false;
+                } );
+            }
+
+            yield;
+
+            // Urc occured so we can return the recieved message structure to the caller who
+            // has now not longer to wait for the urc
+            urc_waiters.remove( data );
+            return data.response;
+        }
+
+        /**
+         * Notify the occurence of a unsolicted response to the modem agent which informs all
+         * registered clients for this type of message.
+         **/
+        public async void notifyUnsolicitedResponse( MessageType type, BaseMessage response )
+        {
+            logger.debug( @"Awake all waiters for urc type $(type)" );
+            var waiters = retriveUrcWaiters( type );
+
+            // awake all waiters for the notified urc type and supply them the message payload
+            foreach (var waiter in waiters )
+            {
+                // check wether this waiter has a timeout
+                if ( waiter.timeout > 0 )
+                {
+                    Source.remove( waiter.timeout );
+                    waiter.timeout = 0;
+                }
+
+                urc_waiters.remove( waiter );
+                waiter.response = response;
+                waiter.callback();
+            }
+        }
+
+        private GLib.List<WaitForUnsolicitedResponseData> retriveUrcWaiters( MessageType type )
+        {
+            var result = new GLib.List<WaitForUnsolicitedResponseData>();
+
+            foreach ( var waiter in urc_waiters )
+            {
+                if ( waiter.urc_type == type )
+                {
+                    result.append( waiter );
+                }
+            }
+
+            return result;
+        }
     }
 }
-

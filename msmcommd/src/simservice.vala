@@ -59,7 +59,7 @@ namespace Msmcomm.Daemon
 
             var response = yield channel.enqueueAsync(message);
 
-            if ( response.result == Msmcomm.LowLevel.MessageResultType.ERROR_BAD_PIN )
+            if ( response.result == Msmcomm.LowLevel.MessageResult.ERROR_BAD_PIN )
             {
                 throw new Msmcomm.SimError.BAD_PIN( "The pin send to sim card is invalid!" );
             }

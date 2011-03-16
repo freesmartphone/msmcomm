@@ -234,7 +234,7 @@ namespace Msmcomm.LowLevel
 
             if (_message.rc == 0x101)
             {
-                result = MessageResultType.ERROR_BAD_SIM_STATE;
+                result = MessageResult.ERROR_BAD_SIM_STATE;
             }
         }
     }
@@ -281,19 +281,18 @@ namespace Msmcomm.LowLevel
 
         protected override void evaluate_data()
         {
-            switch ( _message.rc )
+            if ( _message.rc != 0x0 )
             {
-                case 0x0:
-                    result = MessageResultType.RESULT_OK;
-                    break;
-                case 0x5:
-                    result = MessageResultType.ERROR_BAD_PIN;
-                    break;
-                default:
-                    theLogger.error( @"Found unhandled sim result type: 0x%02x".printf( _message.rc ) );
-                    break;
+                switch ( _message.rc )
+                {
+                    case 0x5:
+                        result = MessageResult.ERROR_BAD_PIN;
+                        break;
+                    default:
+                        theLogger.error( @"Found unhandled sim result: 0x%02x".printf( _message.rc ) );
+                        break;
+                }
             }
-
 
             ref_id = _message.ref_id;
             simfile_data = "";
