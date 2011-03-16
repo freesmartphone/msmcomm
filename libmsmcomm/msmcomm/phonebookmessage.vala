@@ -58,7 +58,7 @@ namespace Msmcomm.LowLevel
                 result = ext_info ? 0xe : 0x8;
                 break;
             case PhonebookBookType.ECC:
-                result = ext_info ? 0x0 : 0x30; // FIXME id for ext_info is unknown
+                result = ext_info ? 0x0 : 0x30;
                 break;
             default:
                 assert_not_reached();
@@ -93,6 +93,9 @@ namespace Msmcomm.LowLevel
         {
             switch (id)
             {
+                case 0x0:
+                    book_type = PhonebookBookType.ECC;
+                    break;
                 case 0x1:
                     book_type = PhonebookBookType.ADN;
                     break;
@@ -102,7 +105,6 @@ namespace Msmcomm.LowLevel
                 case 0xe:
                     book_type = PhonebookBookType.SDN;
                     break;
-                // FIXME value for ECC is currently unknown
             }
         }
 
