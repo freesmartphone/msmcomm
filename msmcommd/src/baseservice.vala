@@ -49,7 +49,7 @@ namespace Msmcomm.Daemon
             {
                 throw new Msmcomm.Error.FAILED("Did not get the right response for the send message");
             }
-            else if (response.result != Msmcomm.LowLevel.MessageResultType.RESULT_OK)
+            else if (response.result != Msmcomm.LowLevel.MessageResult.OK)
             {
                 var msg = @"$(response.message_type) command failed with: $(response.result)";
                 throw new Msmcomm.Error.FAILED(msg);

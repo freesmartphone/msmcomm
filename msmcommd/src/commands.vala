@@ -31,7 +31,7 @@ namespace Msmcomm.Daemon
 
         protected void checkResponse(Msmcomm.LowLevel.BaseMessage response) throws Msmcomm.Error
         {
-            if (response.result != Msmcomm.LowLevel.MessageResultType.RESULT_OK)
+            if (response.result != Msmcomm.LowLevel.MessageResult.OK)
             {
                 var msg = @"$(response.message_type) command failed with: $(response.result)";
                 throw new Msmcomm.Error.FAILED(msg);
