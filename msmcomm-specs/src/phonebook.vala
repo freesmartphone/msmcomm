@@ -68,7 +68,7 @@ namespace Msmcomm
         public abstract async void write_record(PhonebookBookType book_type, uint position, string title, string number) throws GLib.Error, Msmcomm.Error;
         public abstract async void read_record_bulk(PhonebookBookType book_type, uint first, uint last) throws GLib.Error, Msmcomm.Error;
         public abstract async void get_all_record_id() throws GLib.Error, Msmcomm.Error;
-        public abstract async void extended_file_info(PhonebookBookType book_type) throws GLib.Error, Msmcomm.Error;
+        public abstract async PhonebookInfo get_extended_file_info(PhonebookBookType book_type) throws GLib.Error, Msmcomm.Error;
 
         public signal void ready(PhonebookBookType book_type);
         public signal void record_added(PhonebookBookType book_type, uint position);
@@ -82,6 +82,5 @@ namespace Msmcomm
         public signal void ph_unique_ids_validated();
         public signal void record_write_event(PhonebookBookType book_type, uint position);
         public signal void get_all_record_id_event();
-        public signal void extended_file_info_event(PhonebookInfo pb_info);
     }
 }
