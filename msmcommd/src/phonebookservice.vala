@@ -183,23 +183,24 @@ namespace Msmcomm.Daemon
 
             // we will get no response if the command succeeds. In error case we will get
             // a phonebook return response message.
-            response = yield channel.enqueueAsync(message, 0, 1);
-            checkResponse(response);
+            channel.enqueueSync(message);
 
             // if the command succeeded we will recieve a unsolicited response message
             // with the real response for the command.
-            if ( response != null && response.result == LowLevel.MessageResult.OK )
-            {
-                var urc_type = LowLevel.MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO;
-                response = yield channel.waitForUnsolicitedResponse( urc_type, 5 );
-                var pbefi_response = response as LowLevel.PhonebookExtendedFileInfoUrcMessage;
+            var urc_type = LowLevel.MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO;
+            response = yield channel.waitForUnsolicitedResponse( urc_type, 5 );
 
-                info.book_type = convertEnum<LowLevel.PhonebookBookType,PhonebookBookType>(pbefi_response.book_type);
-                info.slot_count = pbefi_response.slot_count;
-                info.slots_used = pbefi_response.slots_used;
-                info.max_chars_per_number = pbefi_response.max_chars_per_number;
-                info.max_chars_per_title = pbefi_response.max_chars_per_title;
+            if ( response == null )
+            {
+                throw new Msmcomm.Error.INTERNAL_ERROR( @"Recieved no response for $(message.message_type) command !!!" );
             }
+
+            var pbefi_response = response as LowLevel.PhonebookExtendedFileInfoUrcMessage;
+            info.book_type = convertEnum<LowLevel.PhonebookBookType,PhonebookBookType>(pbefi_response.book_type);
+            info.slot_count = pbefi_response.slot_count;
+            info.slots_used = pbefi_response.slots_used;
+            info.max_chars_per_number = pbefi_response.max_chars_per_number;
+            info.max_chars_per_title = pbefi_response.max_chars_per_title;
 
             return info;
         }

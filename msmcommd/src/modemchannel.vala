@@ -120,7 +120,12 @@ namespace Msmcomm.Daemon
             assert( logger.debug( @"Wrote '$command'. Waiting ($(command.timeout)s) for answer..." ) );
 
             command.startTimeout();
-            pending.add(command);
+
+            // in some cases it is necessary to not wait for a response message
+            if ( !command.ignore_response )
+            {
+                pending.add(command);
+            }
         }
 
         protected void writeCommand(CommandHandler handler)
@@ -245,10 +250,18 @@ namespace Msmcomm.Daemon
             return handler.response;
         }
 
-        public void enqueueSync( owned BaseMessage command, int retries = 0 )
+        public void enqueueSync( owned BaseMessage command ) throws Msmcomm.Error
         {
+            /* Check wether modem is already ready for processing commands */
+            if (!modem.active)
+            {
+                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
+            }
+
+            // create and command and send it out but do not wait for a response
             command.ref_id = nextValidMessageRefId();
             var handler = new CommandHandler( command, 0 );
+            handler.ignore_response = true;
             enqueueCommand( handler );
         }
 

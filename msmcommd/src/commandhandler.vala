@@ -35,6 +35,7 @@ namespace Msmcomm.Daemon
         public int retry;
         public SourceFunc callback;
         public bool timed_out;
+        public bool ignore_response;
 
         private CommandHandlerTimeoutFunc timeout_func;
         private uint timeout_watch;
