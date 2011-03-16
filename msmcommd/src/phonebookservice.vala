@@ -99,21 +99,6 @@ namespace Msmcomm.Daemon
                     break;
 #endif
 
-                case LowLevel.MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO:
-                    var pb_message = message as LowLevel.PhonebookExtendedFileInfoUrcMessage;
-                    var book_type = convertEnum<LowLevel.PhonebookBookType,PhonebookBookType>(pb_message.book_type);
-
-                    PhonebookInfo info = PhonebookInfo();
-                    info.book_type = book_type;
-                    info.slot_count = pb_message.slot_count;
-                    info.slots_used = pb_message.slots_used;
-                    info.max_chars_per_number = pb_message.max_chars_per_number;
-                    info.max_chars_per_title = pb_message.max_chars_per_title;
-
-                    extended_file_info_event(info);
-
-                    handled = true;
-                    break;
             }
 
             return handled;
@@ -169,7 +154,7 @@ namespace Msmcomm.Daemon
 
         public async void read_record_bulk(PhonebookBookType book_type, uint first, uint last) throws Msmcomm.Error, GLib.Error
         {
-            throw new Msmcomm.Error.NOT_IMPLEMENTED("ReadRecordBulk method currently not implemented");
+            throw new Msmcomm.Error.NOT_IMPLEMENTED("Not implemented yet!");
 #if 0
             var message = new LowLevel.PhonebookReadRecordBulkCommandMessage();
             message.first_book_type = convertEnum<PhonebookBookType,LowLevel.PhonebookBookType>(book_type);
@@ -184,17 +169,39 @@ namespace Msmcomm.Daemon
 
         public async void get_all_record_id() throws Msmcomm.Error, GLib.Error
         {
+            throw new Msmcomm.Error.NOT_IMPLEMENTED("Not implemented yet!");
         }
 
-        public async void extended_file_info(PhonebookBookType book_type) throws Msmcomm.Error, GLib.Error
+        public async PhonebookInfo get_extended_file_info(PhonebookBookType book_type) throws Msmcomm.Error, GLib.Error
         {
+            LowLevel.BaseMessage response = null;
+            PhonebookInfo info = PhonebookInfo();
             checkBookType(book_type);
 
             var message = new LowLevel.PhonebookExtendedFileInfoCommandMessage();
             message.book_type = convertEnum<PhonebookBookType,LowLevel.PhonebookBookType>(book_type);
 
-            var response = (yield channel.enqueueAsync(message, 0, 1)) as LowLevel.PhonebookReturnResponseMessage;
+            // we will get no response if the command succeeds. In error case we will get
+            // a phonebook return response message.
+            response = yield channel.enqueueAsync(message, 0, 1);
             checkResponse(response);
+
+            // if the command succeeded we will recieve a unsolicited response message
+            // with the real response for the command.
+            if ( response != null && response.result == LowLevel.MessageResult.OK )
+            {
+                var urc_type = LowLevel.MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO;
+                response = yield channel.waitForUnsolicitedResponse( urc_type, 5 );
+                var pbefi_response = response as LowLevel.PhonebookExtendedFileInfoUrcMessage;
+
+                info.book_type = convertEnum<LowLevel.PhonebookBookType,PhonebookBookType>(pbefi_response.book_type);
+                info.slot_count = pbefi_response.slot_count;
+                info.slots_used = pbefi_response.slots_used;
+                info.max_chars_per_number = pbefi_response.max_chars_per_number;
+                info.max_chars_per_title = pbefi_response.max_chars_per_title;
+            }
+
+            return info;
         }
     }
 }
