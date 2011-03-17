@@ -329,14 +329,22 @@ namespace Msmcomm.Daemon
                 }
 
                 var handler = findPendingWithRefId( message.ref_id );
-                if ( handler== null )
+                if ( handler == null )
                 {
                     logger.error( "Got response but we don't have any corresponding send message (ref_id = $(message.ref_id)) !!!" );
                     return;
                 }
 
-                onSolicitedResponse(handler, message);
-                Idle.add(checkRestartingQueue);
+                handler.handleResponseMessage( message );
+
+                // FIXME this needs to be removed after all service using the new
+                // enqueueAsyncNew method for sending messages the modem.
+                if ( handler.response_handler_func == null )
+                {
+                    onSolicitedResponse(handler, message);
+                }
+
+                // Idle.add(checkRestartingQueue);
             }
             else if (message.message_class == MessageClass.UNSOLICITED_RESPONSE)
             {

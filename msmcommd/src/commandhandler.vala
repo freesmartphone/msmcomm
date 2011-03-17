@@ -42,7 +42,9 @@ namespace Msmcomm.Daemon
         public bool report_all_urcs;
 
         private CommandHandlerTimeoutFunc? timeout_func;
-        private ResponseHandlerFunc? response_handler_func;
+        // FIXME need to be private after all services using the new enqueueAsyncNew
+        // method to send messages to the modem.
+        public ResponseHandlerFunc? response_handler_func;
         private uint timeout_watch;
 
         public CommandHandler( BaseMessage command, int retries = 0, int timeout = 0,
