@@ -25,13 +25,13 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-    public enum Wms.TemplateType
+    public enum Sms.TemplateType
     {
         SMSC_NUMBER = 0x2,
         EMAIL_ADDRESS = 0x102;
     }
 
-    public class Wms.Command.SendMessage : BaseMessage
+    public class Sms.Command.SendMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x15;
         public static const uint16 MESSAGE_ID = 0x0a;
@@ -54,7 +54,7 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class Wms.Command.AcknowledgeMessage : BaseMessage
+    public class Sms.Command.AcknowledgeMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x15;
         public static const uint16 MESSAGE_ID = 0x0b;
@@ -79,7 +79,7 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class Wms.Command.ReadMessage : BaseMessage
+    public class Sms.Command.ReadMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x15;
         public static const uint16 MESSAGE_ID = 0x0c;
@@ -99,7 +99,7 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    /*public class Wms.Command.WriteMessage : BaseMessage
+    /*public class Sms.Command.WriteMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x15;
         public static const uint16 MESSAGE_ID = 0x0d;
@@ -112,7 +112,7 @@ namespace Msmcomm.LowLevel
         }
     }*/
 
-    public class Wms.Command.DeleteMessage : BaseMessage
+    public class Sms.Command.DeleteMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x15;
         public static const uint16 MESSAGE_ID = 0x0e;
@@ -126,12 +126,12 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class Wms.Command.MessageReadTemplate : BaseMessage
+    public class Sms.Command.MessageReadTemplate : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x15;
         public static const uint16 MESSAGE_ID = 0x11;
 
-        public Wms.TemplateType template;
+        public Sms.TemplateType template;
 
         private WmsReadTemplateMessage _message;
 
@@ -149,7 +149,7 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class Wms.Response.Return : BaseMessage
+    public class Sms.Response.Return : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x16;
         public static const uint16 MESSAGE_ID = 0x00;
@@ -164,7 +164,7 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class Wms.Response.Callback : BaseMessage
+    public class Sms.Response.Callback : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x16;
         public static const uint16 MESSAGE_ID = 0x01;
@@ -193,7 +193,7 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class Wms.Urc.MsgGroup : BaseMessage
+    public class Sms.Urc.MsgGroup : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x17;
         public static const uint16 MESSAGE_ID = 0x2;
@@ -202,7 +202,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_WMS_MSG_GROUP, MessageClass.UNSOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_SMS_MSG_GROUP, MessageClass.UNSOLICITED_RESPONSE);
 
             _message = WmsMsgGroupEvent();
             set_payload(_message.data);

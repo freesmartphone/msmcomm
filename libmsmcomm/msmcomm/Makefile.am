@@ -40,11 +40,11 @@ libmsmcomm_la_VALASOURCES = \
 	miscmessage.vala \
 	simmessage.vala \
 	networkmessage.vala \
-	smsmessage.vala \
 	phonebookmessage.vala \
 	soundmessage.vala \
 	supsmessage.vala \
 	voicemailmessage.vala \
+	smsmessage.vala \
 	basemessagegroup.vala \
 	callmessagegroup.vala \
 	statemessagegroup.vala \

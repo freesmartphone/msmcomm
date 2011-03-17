@@ -23,15 +23,27 @@ using GLib;
 namespace Msmcomm.LowLevel
 {
 
-    public class WmsResponseMessageGroup : BaseMessageGroup
+    public class SmsResponseMessageGroup : BaseMessageGroup
     {
         public static const uint8 GROUP_ID = 0x16;
 
-        public WmsResponseMessageGroup()
+        public SmsResponseMessageGroup()
         {
-            base(WmsResponseMessageGroup.GROUP_ID);
-            message_types[Wms.Response.Return.MESSAGE_ID] = typeof(Wms.Response.Return);
-            message_types[Wms.Response.Callback.MESSAGE_ID] = typeof(Wms.Response.Callback);
+            base(SmsResponseMessageGroup.GROUP_ID);
+            message_types[Sms.Response.Return.MESSAGE_ID] = typeof(Sms.Response.Return);
+            message_types[Sms.Response.Callback.MESSAGE_ID] = typeof(Sms.Response.Callback);
         }
     }
+
+    public class SmsUrcMessageGroup : BaseMessageGroup
+    {
+        public static const uint8 GROUP_ID = 0x17;
+
+        public SmsUrcMessageGroup()
+        {
+            base(SmsUrcMessageGroup.GROUP_ID);
+            message_types[Sms.Urc.MsgGroup.MESSAGE_ID] = typeof(Sms.Urc.MsgGroup);
+        }
+    }
+
 }
