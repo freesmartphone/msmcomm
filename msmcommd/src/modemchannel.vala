@@ -228,6 +228,7 @@ namespace Msmcomm.Daemon
         }
 
         public async void enqueueAsyncNew( owned BaseMessage command,
+                                           bool report_all_urcs,
                                            owned ResponseHandlerFunc response_handler_func,
                                            int retries = 0, int timeout = 0 ) throws Msmcomm.Error
         {
@@ -238,6 +239,7 @@ namespace Msmcomm.Daemon
 
             command.ref_id = nextValidMessageRefId();
             var handler = new CommandHandler( command, retries, timeout, onTimeout, response_handler_func );
+            handler.report_all_urcs = report_all_urcs;
             handler.callback = enqueueAsyncNew.callback;
             enqueueCommand( handler );
             yield;
@@ -354,22 +356,27 @@ namespace Msmcomm.Daemon
                 logger.debug("Modem was reseted, we should do the same ...");
                 reset();
             }
-            // else if ( message.ref_id != REFERENCE_ID_INVALID )
             else
             {
-#if 0
-                // check if we have some message with the reference id of this urc
-                var command = findPendingWithRefId( message.ref_id );
-                if ( command != null )
+                if ( message.ref_id != REFERENCE_ID_INVALID )
                 {
-                    // we have a command with the same reference; let the command decide
-                    // what to do with this urc
-                    command.handleResponseMessage( message );
+                    // check if we have some message with the reference id of this urc
+                    var command = findPendingWithRefId( message.ref_id );
+                    if ( command != null )
+                    {
+                        // we have a command with the same reference; let the command decide
+                        // what to do with this urc
+                        command.handleResponseMessage( message );
+                    }
                 }
-#endif
+
+                // report urc to all command handlers who want knowledge about all urcs
                 foreach ( var command in pending )
                 {
-                    command.handleResponseMessage( message );
+                    if ( command.report_all_urcs )
+                    {
+                        command.handleResponseMessage( message );
+                    }
                 }
             }
         }

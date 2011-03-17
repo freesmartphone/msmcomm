@@ -183,7 +183,7 @@ namespace Msmcomm.Daemon
 
             // we will get no response if the command succeeds. In error case we will get
             // a phonebook return response message.
-            yield channel.enqueueAsyncNew( message, ( message ) => {
+            yield channel.enqueueAsyncNew( message, true, ( message ) => {
                 bool finished = false;
 #if DEBUG
                 debug( @"Processing $(message.message_type) ..." );
@@ -213,7 +213,7 @@ namespace Msmcomm.Daemon
 #endif
 
                 return finished;
-            } );
+            });
 
 #if 0
             // if the command succeeded we will recieve a unsolicited response message

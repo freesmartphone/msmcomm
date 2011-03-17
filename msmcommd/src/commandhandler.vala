@@ -39,6 +39,7 @@ namespace Msmcomm.Daemon
         public bool timed_out;
         public bool ignore_response;
         public Msmcomm.Error? error;
+        public bool report_all_urcs;
 
         private CommandHandlerTimeoutFunc? timeout_func;
         private ResponseHandlerFunc? response_handler_func;
@@ -55,6 +56,7 @@ namespace Msmcomm.Daemon
             this.timeout_func = timeout_func;
             this.response_handler_func = response_handler_func;
             this.error = null;
+            this.report_all_urcs = false;
         }
 
         private bool onTimeout()
