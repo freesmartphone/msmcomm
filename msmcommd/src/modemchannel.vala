@@ -227,12 +227,6 @@ namespace Msmcomm.Daemon
             }
         }
 
-        private void onCommandFinished( CommandHandler command )
-        {
-            pending.remove( command );
-            command.callback();
-        }
-
         public async void enqueueAsyncNew( owned BaseMessage command,
                                            owned ResponseHandlerFunc response_handler_func,
                                            int retries = 0, int timeout = 0 ) throws Msmcomm.Error
@@ -245,7 +239,6 @@ namespace Msmcomm.Daemon
             command.ref_id = nextValidMessageRefId();
             var handler = new CommandHandler( command, retries, timeout, onTimeout, response_handler_func );
             handler.callback = enqueueAsyncNew.callback;
-            handler.finished.connect( onCommandFinished );
             enqueueCommand( handler );
             yield;
 
@@ -254,9 +247,14 @@ namespace Msmcomm.Daemon
                 throw new Msmcomm.Error.TIMEOUT( @"Timed out while waiting for a response for command '$(command.message_type)'" );
             }
 
+            pending.remove(handler);
+
+#if DEBUG
+            debug( @"pending.size = $(pending.size)" );
+#endif
+
             if (handler.error != null)
             {
-                pending.remove(handler);
                 throw handler.error;
             }
         }
@@ -279,6 +277,11 @@ namespace Msmcomm.Daemon
                 throw new Msmcomm.Error.TIMEOUT( @"Timed out while waiting for a response for command '$(command.message_type)'" );
             }
 
+            pending.remove(handler);
+
+#if DEBUG
+            debug( @"pending.size = $(pending.size)" );
+#endif
             return handler.response;
         }
 
@@ -331,7 +334,6 @@ namespace Msmcomm.Daemon
                 }
 
                 onSolicitedResponse(handler, message);
-                pending.remove(handler);
                 Idle.add(checkRestartingQueue);
             }
             else if (message.message_class == MessageClass.UNSOLICITED_RESPONSE)

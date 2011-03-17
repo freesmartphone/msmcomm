@@ -82,7 +82,7 @@ namespace Msmcomm.Daemon
                 {
                     if ( response_handler_func( response ) )
                     {
-                        finished( this );
+                        this.callback();
                     }
                 }
                 catch (Msmcomm.Error err)
@@ -91,8 +91,6 @@ namespace Msmcomm.Daemon
                 }
             }
         }
-
-        public signal void finished( CommandHandler command);
 
         public void startTimeout()
         {
