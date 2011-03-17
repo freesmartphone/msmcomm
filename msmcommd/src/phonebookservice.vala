@@ -148,7 +148,7 @@ namespace Msmcomm.Daemon
             message.title = title;
             message.number = number;
 
-            var response = (yield channel.enqueueAsync(message)) as LowLevel.PhonebookReturnResponseMessage;
+            var response = (yield channel.enqueueAsync(message));
             checkResponse(response);
         }
 
@@ -162,7 +162,7 @@ namespace Msmcomm.Daemon
             message.first_position = (uint8) first;
             message.last_position = (uint8) last;
 
-            var response = (yield channel.enqueueAsync(message)) as LowLevel.PhonebookReturnResponseMessage;
+            var response = (yield channel.enqueueAsync(message));
             checkResponse(response);
 #endif
         }
@@ -174,7 +174,7 @@ namespace Msmcomm.Daemon
 
         public async PhonebookInfo get_extended_file_info(PhonebookBookType book_type) throws Msmcomm.Error, GLib.Error
         {
-            LowLevel.BaseMessage response = null;
+            // LowLevel.BaseMessage? response = null;
             PhonebookInfo info = PhonebookInfo();
             checkBookType(book_type);
 
@@ -183,8 +183,39 @@ namespace Msmcomm.Daemon
 
             // we will get no response if the command succeeds. In error case we will get
             // a phonebook return response message.
-            channel.enqueueSync(message);
+            yield channel.enqueueAsyncNew( message, ( message ) => {
+                bool finished = false;
+#if DEBUG
+                debug( @"Processing $(message.message_type) ..." );
+#endif
+                switch ( message.message_type )
+                {
+                    case LowLevel.MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO:
+                        checkResponse( message );
+                        var pb_urc = message as LowLevel.PhonebookExtendedFileInfoUrcMessage;
 
+                        info.book_type = convertEnum<LowLevel.PhonebookBookType,PhonebookBookType>(pb_urc.book_type);
+                        info.slot_count = pb_urc.slot_count;
+                        info.slots_used = pb_urc.slots_used;
+                        info.max_chars_per_number = pb_urc.max_chars_per_number;
+                        info.max_chars_per_title = pb_urc.max_chars_per_title;
+
+                        finished = true;
+                        break;
+                    case LowLevel.MessageType.RESPONSE_PHONEBOOK_RETURN:
+                        checkResponse( message );
+                        break;
+                    default:
+                        break;
+                }
+#if DEBUG
+                debug( @"finsihed = $(finished)" );
+#endif
+
+                return finished;
+            } );
+
+#if 0
             // if the command succeeded we will recieve a unsolicited response message
             // with the real response for the command.
             var urc_type = LowLevel.MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO;
@@ -201,7 +232,7 @@ namespace Msmcomm.Daemon
             info.slots_used = pbefi_response.slots_used;
             info.max_chars_per_number = pbefi_response.max_chars_per_number;
             info.max_chars_per_title = pbefi_response.max_chars_per_title;
-
+#endif
             return info;
         }
     }

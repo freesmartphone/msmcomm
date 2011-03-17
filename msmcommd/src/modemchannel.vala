@@ -43,6 +43,9 @@ namespace Msmcomm.Daemon
         public ModemControl modem;
         public uint32 current_ref_id;
 
+        private const uint32 REFERENCE_ID_INITIAL = 1;
+        private const uint32 REFERENCE_ID_INVALID = 0;
+
         //
         // public API
         //
@@ -56,7 +59,7 @@ namespace Msmcomm.Daemon
 
             queue = new Gee.LinkedList<CommandHandler>();
             pending = new Gee.ArrayList<CommandHandler>();
-            current_ref_id = 0;
+            current_ref_id = REFERENCE_ID_INITIAL;
 
             urc_waiters = new GLib.List<WaitForUnsolicitedResponseData>();
 
@@ -194,7 +197,7 @@ namespace Msmcomm.Daemon
         {
             if (current_ref_id > uint32.MAX) 
             {
-                current_ref_id = 0;
+                current_ref_id = REFERENCE_ID_INITIAL;
             }
             else 
             {
@@ -224,15 +227,45 @@ namespace Msmcomm.Daemon
             }
         }
 
-        public async unowned BaseMessage enqueueAsync( owned BaseMessage command, int retries = 0, int timeout = 0 ) throws Msmcomm.Error
+        private void onCommandFinished( CommandHandler command )
         {
-            string msg = "";
+            pending.remove( command );
+            command.callback();
+        }
 
-            /* Check wether modem is already ready for processing commands */
+        public async void enqueueAsyncNew( owned BaseMessage command,
+                                           owned ResponseHandlerFunc response_handler_func,
+                                           int retries = 0, int timeout = 0 ) throws Msmcomm.Error
+        {
             if (!modem.active)
             {
-                msg = "Modem is not ready for command processing; initialize it first!";
-                throw new Msmcomm.Error.MODEM_INACTIVE(msg);
+                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
+            }
+
+            command.ref_id = nextValidMessageRefId();
+            var handler = new CommandHandler( command, retries, timeout, onTimeout, response_handler_func );
+            handler.callback = enqueueAsyncNew.callback;
+            handler.finished.connect( onCommandFinished );
+            enqueueCommand( handler );
+            yield;
+
+            if (handler.timed_out)
+            {
+                throw new Msmcomm.Error.TIMEOUT( @"Timed out while waiting for a response for command '$(command.message_type)'" );
+            }
+
+            if (handler.error != null)
+            {
+                pending.remove(handler);
+                throw handler.error;
+            }
+        }
+
+        public async unowned BaseMessage enqueueAsync( owned BaseMessage command, int retries = 0, int timeout = 0 ) throws Msmcomm.Error
+        {
+            if (!modem.active)
+            {
+                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
             }
 
             command.ref_id = nextValidMessageRefId();
@@ -243,8 +276,7 @@ namespace Msmcomm.Daemon
 
             if (handler.timed_out)
             {
-                msg = @"Timed out while waiting for a response for command '$(command.message_type)'";
-                throw new Msmcomm.Error.TIMEOUT(msg);
+                throw new Msmcomm.Error.TIMEOUT( @"Timed out while waiting for a response for command '$(command.message_type)'" );
             }
 
             return handler.response;
@@ -291,21 +323,20 @@ namespace Msmcomm.Daemon
                     return;
                 }
 
-                CommandHandler cmdh = findPendingWithRefId( message.ref_id );
-                if ( cmdh == null )
+                var handler = findPendingWithRefId( message.ref_id );
+                if ( handler== null )
                 {
                     logger.error( "Got response but we don't have any corresponding send message (ref_id = $(message.ref_id)) !!!" );
                     return;
                 }
 
-                onSolicitedResponse(cmdh, message);
-                pending.remove(cmdh);
+                onSolicitedResponse(handler, message);
+                pending.remove(handler);
                 Idle.add(checkRestartingQueue);
             }
             else if (message.message_class == MessageClass.UNSOLICITED_RESPONSE)
             {
                 handleSpecificUnsolicitedResponse(message);
-                notifyUnsolicitedResponse(message.message_type, message);
                 requestHandleUnsolicitedResponse(message);
             }
         }
@@ -320,6 +351,24 @@ namespace Msmcomm.Daemon
             {
                 logger.debug("Modem was reseted, we should do the same ...");
                 reset();
+            }
+            // else if ( message.ref_id != REFERENCE_ID_INVALID )
+            else
+            {
+#if 0
+                // check if we have some message with the reference id of this urc
+                var command = findPendingWithRefId( message.ref_id );
+                if ( command != null )
+                {
+                    // we have a command with the same reference; let the command decide
+                    // what to do with this urc
+                    command.handleResponseMessage( message );
+                }
+#endif
+                foreach ( var command in pending )
+                {
+                    command.handleResponseMessage( message );
+                }
             }
         }
 
