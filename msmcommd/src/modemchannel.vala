@@ -378,12 +378,19 @@ namespace Msmcomm.Daemon
                     }
                 }
 
-                // report urc to all command handlers who want knowledge about all urcs
-                foreach ( var command in pending )
+                // check if we have some commands with the command id set in the urc
+                // waiting
+                foreach ( var cmdh in pending )
                 {
-                    if ( command.report_all_urcs )
+                    // check if we have some commands with the command id set in the urc
+                    // waiting
+                    if ( cmdh.command.command_id == message.command_id )
                     {
-                        command.handleResponseMessage( message );
+                        cmdh.handleResponseMessage( message );
+                    }
+                    else if ( cmdh.report_all_urcs )
+                    {
+                        cmdh.handleResponseMessage( message );
                     }
                 }
             }
