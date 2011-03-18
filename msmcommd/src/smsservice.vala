@@ -38,21 +38,34 @@ namespace Msmcomm.Daemon
 
         public async void message_read_template(SmsTemplateType template_type) throws GLib.Error, Msmcomm.Error
         {
-            var message = new Wms.Command.MessageReadTemplate();
-            message.template = StringHandling.convertEnum<SmsTemplateType,LowLevel.Wms.TemplateType>( template_type );
+            var message = new LowLevel.Sms.Command.MessageReadTemplate();
+            message.template = StringHandling.convertEnum<SmsTemplateType,LowLevel.Sms.TemplateType>( template_type );
 
-            var response = yield channel.enqueueAsync(message);
-            checkResponse(response);
+            yield channel.enqueueAsyncNew(message, true, (response) => {
+                bool finished = false;
 
-            switch ( response.message_type )
-            {
-                case Msmcomm.LowLevel.MessageType.RESPONSE_SMS_RETURN:
-                    break;
-                case Msmcomm.LowLevel.MessageType.RESPONSE_SMS_CALLBACK:
-                    break;
-                default:
-                    throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
-            }
+#if DEBUG
+                debug( @"Processing $(message.message_type) ..." );
+#endif
+
+                switch ( response.message_type )
+                {
+                    case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_MSG_GROUP:
+                        checkResponse(response);
+                        finished = true;
+                        break;
+                    case LowLevel.MessageType.RESPONSE_SMS_RETURN:
+                        checkResponse(response);
+                        break;
+                    case LowLevel.MessageType.RESPONSE_SMS_CALLBACK:
+                        checkResponse(response);
+                        break;
+                    default:
+                        throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
+                }
+
+                return finished;
+            });
         }
     }
 }
