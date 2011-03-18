@@ -2,6 +2,22 @@
 <namespace:sms>
 	<structures>
 		<structure name="wms_read_template_field" length="2075">
+			<field name="received_mask" start="172" type="uint8_t"/>
+			<field name="digit_mode" start="217" type="uint8_t"/>
+			<field name="number_mode" start="218" end="221" type="uint32_t"/>
+			<field name="number_type" start="222" type="uint8_t">
+				<description>
+					As per 23.040 Section 9.1.2.5
+				</description>
+			</field>
+			<field name="number_plan" start="223" type="uint8_t">
+				<description>
+					As per 23.040 Section 9.1.2.5
+				</description>
+			</field>
+			<field name="smsc_number_len" start="224" type="uint8_t"/>
+			<field name="smsc_number" start="225" end="245" type="uint8_t"/>
+			<field name="protocol_id" start="261" type="uint8_t"/>
 		</structure>
 
 		<structure name="wms_sms_received_field" length="2075">
@@ -15,16 +31,9 @@
 		<structure name="wms_msg_group_event" length="2083">
 			<field name="command" start="0" type="uint8_t"/>
 			<field name="ref_id" start="4" end="7" type="uint32_t"/>
-
 			<field name="command_data" start="8" end="2082" type="uint8_t">
 				<variant type="wms_read_template_field"/>
 			</field>
-
-			<!-- 
-				if command == 0 then
-					<field name="message_index" start="68" type="uint8_t"/>
-				endif
-			-->
 		</structure>
 
 		<structure name="wms_acknowledge_msg" length="1901">
@@ -35,25 +44,16 @@
         </structure>
 
 		<structure name="wms_send_msg" length="319">
-            <field name="ref_id" start="0" end="3" type="uint32_t"/>
-            <field name="nr" start="6" type="uint8_t"/>
-            <field name="five" start="7" type="uint8_t"/>
-            <field name="ffffffff" start="9" end="12" type="uint32_t"/>
-            <!-- guessing. always 1 -->
-            <field name="number_type" start="19" type="uint8_t"/>
-            <field name="number_plan" start="20" type="uint8_t"/>
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="nr" start="6" type="uint8_t"/>
+			<field name="five" start="7" type="uint8_t"/>
+			<field name="ffffffff" start="9" end="12" type="uint32_t"/>
+			<!-- guessing. always 1 -->
+			<field name="number_type" start="19" type="uint8_t"/>
+			<field name="number_plan" start="20" type="uint8_t"/>
 			<field name="service_center_len" start="21" type="uint8_t"/>
-            <field name="service_center" start="22" end="57" type="uint8_t"/>
-            <field name="six_three" start="58" end="59" type="uint16_t">
-                <format title="PDU Format">
-                 * first 2 byte: unknown
-                 * 3rd byte: recipient length of the number
-                 * 4th byte: number format: 0x91 international format
-                             0x81 national format
-                             http://www.dreamfabric.com/sms/type_of_address.htm
-                 * 4-11: number in decimal semi-octets: 0172 -> 10 27
-                </format>
-            </field>
+			<field name="service_center" start="22" end="57" type="uint8_t"/>
+			<field name="six_three" start="58" end="59" type="uint16_t"/>
 			<field name="pdu_len" start="60" end="63" type="uint32_t"/>
 			<field name="pdu" start="64" end="318" type="uint8_t"/>
 		</structure>

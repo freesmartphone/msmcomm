@@ -184,6 +184,14 @@ end
 # SMS
 #-------------------------------------------------------------------
 start wms_read_template_field 2075
+[172] uint8_t received_mask
+[217] uint8_t digit_mode
+[218-221] uint32_t number_mode
+[222] uint8_t number_type
+[223] uint8_t number_plan
+[224] uint8_t smsc_number_len
+[225-245] uint8_t smsc_number
+[261] uint8_t protocol_id
 end
 
 start wms_sms_received_field 2075

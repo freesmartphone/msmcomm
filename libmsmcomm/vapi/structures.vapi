@@ -597,7 +597,19 @@ struct StateEvent
 [CCode (cname = "struct wms_read_template_field", cheader_filename = "structures.h", destroy_function = "")]
 struct WmsReadTemplateField
 {
-	public uint8 unknown0[2075];
+	public uint8 unknown0[172];
+	public uint8 received_mask;
+	public uint8 unknown1[44];
+	public uint8 digit_mode;
+	public uint32 number_mode;
+	public uint8 number_type;
+	public uint8 number_plan;
+	public uint8 smsc_number_len;
+	[CCode (array_length_cname = "smsc_number_len")]
+	public uint8 smsc_number[];
+	public uint8 unknown2[15];
+	public uint8 protocol_id;
+	public uint8 unknown3[1813];
 	public unowned uint8[] data
 	{
 		get
