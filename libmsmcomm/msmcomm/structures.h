@@ -588,8 +588,8 @@ static void msmcomm_low_level_structures_wms_cfg_set_gw_domain_pref_msg_init(str
 struct wms_cfg_set_routes_msg
 {
 	uint32_t ref_id;
-#define WMS_CFG_SET_ROUTES_MSG_UNKNOWN0_SIZE 25
-	uint8_t unknown0[25];
+#define WMS_CFG_SET_ROUTES_MSG_UNKNOWN_BYTES_SIZE 25
+	uint8_t unknown_bytes[25];
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_wms_cfg_set_routes_msg_init(struct wms_cfg_set_routes_msg* self)

@@ -798,7 +798,7 @@ struct WmsCfgSetGwDomainPrefMessage
 struct WmsCfgSetRoutesMessage
 {
 	public uint32 ref_id;
-	public uint8 unknown0[25];
+	public uint8 unknown_bytes[25];
 	public unowned uint8[] data
 	{
 		get

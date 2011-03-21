@@ -247,6 +247,7 @@ end
 
 start wms_cfg_set_routes_msg 29
 [0-3] uint32_t ref_id
+[4-28] uint8_t unknown_bytes
 end
 
 start wms_cfg_get_message_list_msg 7

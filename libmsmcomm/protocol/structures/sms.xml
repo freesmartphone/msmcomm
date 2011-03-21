@@ -76,6 +76,7 @@
 
 		<structure name="wms_cfg_set_routes_msg" length="29">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="unknown_bytes" start="4" end="28" type="uint8_t"/>
 		</structure>
 
 		<structure name="wms_cfg_get_message_list_msg" length="7">

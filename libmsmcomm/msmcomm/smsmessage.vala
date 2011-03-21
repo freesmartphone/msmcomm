@@ -208,6 +208,37 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class Sms.Command.ConfigSetRoutes : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x15;
+        public static const uint16 MESSAGE_ID = 0x0;
+
+        private WmsCfgSetRoutesMessage _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_CONFIG_SET_ROUTES, MessageClass.COMMAND);
+
+            _message = WmsCfgSetRoutesMessage();
+            set_payload(_message.data);
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+
+            // the following byte sequence is always the same for this command. The
+            // meaning of the bytes is still unknown ...
+            var unknown_bytes = new uint8[] {
+                0x02, 0x00, 0x02, 0x00, 0x01, 0x02, 0x02, 0x00, 0x02,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+            };
+
+            Memory.copy(_message.unknown_bytes, unknown_bytes, 25);
+        }
+    }
+
     public class Sms.Response.Return : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x16;
