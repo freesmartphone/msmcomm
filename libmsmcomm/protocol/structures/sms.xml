@@ -10,7 +10,7 @@
 					As per 23.040 Section 9.1.2.5
 				</description>
 			</field>
-			<field name="number_plan" start="223" type="uint8_t">
+			<field name="numbering_plan" start="223" type="uint8_t">
 				<description>
 					As per 23.040 Section 9.1.2.5
 				</description>
@@ -29,7 +29,7 @@
 		</structure>
 
 		<structure name="wms_msg_group_event" length="2083">
-			<field name="command" start="0" type="uint8_t"/>
+			<field name="response_type" start="0" type="uint8_t"/>
 			<field name="ref_id" start="4" end="7" type="uint32_t"/>
 			<field name="command_data" start="8" end="2082" type="uint8_t">
 				<variant type="wms_read_template_field"/>

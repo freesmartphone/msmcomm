@@ -447,7 +447,7 @@ struct wms_read_template_field
 	uint8_t digit_mode;
 	uint32_t number_mode;
 	uint8_t number_type;
-	uint8_t number_plan;
+	uint8_t numbering_plan;
 	uint8_t smsc_number_len;
 #define WMS_READ_TEMPLATE_FIELD_SMSC_NUMBER_SIZE 21
 	uint8_t smsc_number[21];
@@ -488,7 +488,7 @@ static void msmcomm_low_level_structures_wms_sms_received_field_init(struct wms_
 
 struct wms_msg_group_event
 {
-	uint8_t command;
+	uint8_t response_type;
 #define WMS_MSG_GROUP_EVENT_UNKNOWN0_SIZE 3
 	uint8_t unknown0[3];
 	uint32_t ref_id;

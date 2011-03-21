@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using FsoFramework;
 using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
@@ -29,6 +30,34 @@ namespace Msmcomm.LowLevel
     {
         SMSC_NUMBER = 0x2,
         EMAIL_ADDRESS = 0x102;
+    }
+
+    /* As per 23.040 Section 9.1.2.5 */
+    public enum Sms.NumberType
+    {
+        UNKNOWN = 0,
+        INTERNATIONAL = 1,
+        NATIONAL = 2,
+        NETWORK_SPECIFIC = 3,
+        SUBSCRIBER = 4,
+        ALPHANUMERIC = 5,
+        ABBREVIATED = 6,
+        RESERVED = 7
+    }
+
+    /* As per 23.040 Section 9.1.2.5 */
+    public enum Sms.NumberingPlan
+    {
+        UNKNOWN = 0,
+        ISDN = 1,
+        DATA = 3,
+        TELEX = 4,
+        SC1 = 5,
+        SC2 = 6,
+        NATIONAL = 8,
+        PRIVATE = 9,
+        ERMES = 10,
+        RESERVED = 15
     }
 
     public class Sms.Command.SendMessage : BaseMessage
@@ -200,12 +229,68 @@ namespace Msmcomm.LowLevel
 
         private WmsMsgGroupEvent _message;
 
+        public enum ResponseType
+        {
+            MESSAGE_SEND = 0x0,
+            MESSAGE_READ = 0x2,
+            MESSAGE_DELETE = 0x4,
+            MESSAGE_READ_TEMPLATE = 0x7,
+            SMS_POINT_TO_POINT = 0xf,
+            MESSAGE_SUBMIT_REPORT = 0x10,
+            UNKNOWN,
+        }
+
+        public ResponseType response_type;
+
+        /* response_type == ResponseType.MESSAGE_READ_TEMPLATE */
+        public uint8 digit_mode;
+        public uint32 number_mode;
+        public NumberType number_type;
+        public NumberingPlan numbering_plan;
+        public string smsc_number;
+        public uint8 protocol_id; /* See 23.040 Section 9.2.3.9 for valid values */
+
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_SMS_MSG_GROUP, MessageClass.UNSOLICITED_RESPONSE);
 
             _message = WmsMsgGroupEvent();
             set_payload(_message.data);
+        }
+
+        protected override void evaluate_data()
+        {
+            ref_id = _message.ref_id;
+            response_type = (ResponseType) _message.response_type;
+
+            switch ( _message.response_type )
+            {
+                case ResponseType.MESSAGE_SEND:
+                    break;
+                case ResponseType.MESSAGE_READ:
+                    break;
+                case ResponseType.MESSAGE_DELETE:
+                    break;
+                case ResponseType.MESSAGE_READ_TEMPLATE:
+                    /* FIXME we need to check received_mask for different values */
+                    number_mode = _message.wms_read_template.number_mode;
+                    number_type = (NumberType) _message.wms_read_template.number_type;
+                    numbering_plan = (NumberingPlan) _message.wms_read_template.numbering_plan;
+
+                    smsc_number = Utility.dataToString(_message.wms_read_template.smsc_number,
+                                                       _message.wms_read_template.smsc_number_len);
+
+                    protocol_id = _message.wms_read_template.protocol_id;
+                    break;
+                case ResponseType.SMS_POINT_TO_POINT:
+                    break;
+                case ResponseType.MESSAGE_SUBMIT_REPORT:
+                    break;
+                default:
+                    response_type = ResponseType.UNKNOWN;
+                    theLogger.error( "Found unknown $(message_type) response type: 0x%02x".printf(_message.response_type ) );
+                    break;
+            }
         }
     }
 }

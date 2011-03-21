@@ -71,6 +71,5 @@ namespace Msmcomm.LowLevel
             this.message_type = message_type;
             this.message_class = message_class;
         }
-
     }
 }

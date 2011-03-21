@@ -188,7 +188,7 @@ start wms_read_template_field 2075
 [217] uint8_t digit_mode
 [218-221] uint32_t number_mode
 [222] uint8_t number_type
-[223] uint8_t number_plan
+[223] uint8_t numbering_plan
 [224] uint8_t smsc_number_len
 [225-245] uint8_t smsc_number
 [261] uint8_t protocol_id
@@ -203,7 +203,7 @@ start wms_sms_received_field 2075
 end
 
 start wms_msg_group_event 2083
-[0] uint8_t command
+[0] uint8_t response_type
 [4-7] uint32_t ref_id
 [8-2082] uint8_t command_data [wms_read_template_field]
 end

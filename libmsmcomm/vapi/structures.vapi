@@ -603,7 +603,7 @@ struct WmsReadTemplateField
 	public uint8 digit_mode;
 	public uint32 number_mode;
 	public uint8 number_type;
-	public uint8 number_plan;
+	public uint8 numbering_plan;
 	public uint8 smsc_number_len;
 	[CCode (array_length_cname = "smsc_number_len")]
 	public uint8 smsc_number[];
@@ -653,7 +653,7 @@ struct WmsSmsReceivedField
 [CCode (cname = "struct wms_msg_group_event", cheader_filename = "structures.h", destroy_function = "")]
 struct WmsMsgGroupEvent
 {
-	public uint8 command;
+	public uint8 response_type;
 	public uint8 unknown0[3];
 	public uint32 ref_id;
 	public WmsReadTemplateField wms_read_template
