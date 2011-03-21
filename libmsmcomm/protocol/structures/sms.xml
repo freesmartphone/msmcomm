@@ -81,6 +81,7 @@
 
 		<structure name="wms_cfg_get_message_list_msg" length="7">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="value0" start="4" type="uint8_t"/>
 		</structure>
 
 		<structure name="wms_read_msg" length="9">

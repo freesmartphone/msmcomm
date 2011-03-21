@@ -252,6 +252,7 @@ end
 
 start wms_cfg_get_message_list_msg 7
 [0-3] uint32_t ref_id
+[4] uint8_t value0
 end
 
 start wms_read_msg 9

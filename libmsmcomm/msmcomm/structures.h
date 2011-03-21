@@ -600,8 +600,9 @@ static void msmcomm_low_level_structures_wms_cfg_set_routes_msg_init(struct wms_
 struct wms_cfg_get_message_list_msg
 {
 	uint32_t ref_id;
-#define WMS_CFG_GET_MESSAGE_LIST_MSG_UNKNOWN0_SIZE 3
-	uint8_t unknown0[3];
+	uint8_t value0;
+#define WMS_CFG_GET_MESSAGE_LIST_MSG_UNKNOWN0_SIZE 2
+	uint8_t unknown0[2];
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_wms_cfg_get_message_list_msg_init(struct wms_cfg_get_message_list_msg* self)

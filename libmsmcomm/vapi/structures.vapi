@@ -817,7 +817,8 @@ struct WmsCfgSetRoutesMessage
 struct WmsCfgGetMessageListMessage
 {
 	public uint32 ref_id;
-	public uint8 unknown0[3];
+	public uint8 value0;
+	public uint8 unknown0[2];
 	public unowned uint8[] data
 	{
 		get

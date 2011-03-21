@@ -239,6 +239,28 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class Sms.Command.ConfigGetMessageList : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x15;
+        public static const uint16 MESSAGE_ID = 0x3;
+
+        private WmsCfgGetMessageListMessage _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_CONFIG_GET_MESSAGE_LIST, MessageClass.COMMAND);
+
+            _message = WmsCfgGetMessageListMessage();
+            set_payload(_message.data);
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+            _message.value0 = 0x2;
+        }
+    }
+
     public class Sms.Response.Return : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x16;
