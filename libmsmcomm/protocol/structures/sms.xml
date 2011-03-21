@@ -69,7 +69,7 @@
 			<field name="template" start="4" end="5" type="uint16_t"/>
         </structure>
 
-		<structure name="wms_cfg_set_gw_domain_msg" length="5">
+		<structure name="wms_cfg_set_gw_domain_pref_msg" length="5">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="mode" start="4" type="uint8_t"/>
 		</structure>

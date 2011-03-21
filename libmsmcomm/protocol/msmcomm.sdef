@@ -240,7 +240,7 @@ start wms_read_template_msg 9
 [4-5] uint16_t template
 end
 
-start wms_cfg_set_gw_domain_msg 5
+start wms_cfg_set_gw_domain_pref_msg 5
 [0-3] uint32_t ref_id
 [4] uint8_t mode
 end

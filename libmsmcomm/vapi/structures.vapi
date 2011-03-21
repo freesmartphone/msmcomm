@@ -775,8 +775,8 @@ struct WmsReadTemplateMessage
 }
 
 
-[CCode (cname = "struct wms_cfg_set_gw_domain_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsCfgSetGwDomainMessage
+[CCode (cname = "struct wms_cfg_set_gw_domain_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsCfgSetGwDomainPrefMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
@@ -785,12 +785,12 @@ struct WmsCfgSetGwDomainMessage
 		get
 		{
 			unowned uint8[] res = (uint8[])(&this);
-			res.length = (int)sizeof( WmsCfgSetGwDomainMessage );
+			res.length = (int)sizeof( WmsCfgSetGwDomainPrefMessage );
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_cfg_set_gw_domain_msg_init")]
-	public WmsCfgSetGwDomainMessage();
+	[CCode (cname = "msmcomm_low_level_structures_wms_cfg_set_gw_domain_pref_msg_init")]
+	public WmsCfgSetGwDomainPrefMessage();
 }
 
 

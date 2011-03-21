@@ -574,13 +574,13 @@ static void msmcomm_low_level_structures_wms_read_template_msg_init(struct wms_r
 }
 
 
-struct wms_cfg_set_gw_domain_msg
+struct wms_cfg_set_gw_domain_pref_msg
 {
 	uint32_t ref_id;
 	uint8_t mode;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_cfg_set_gw_domain_msg_init(struct wms_cfg_set_gw_domain_msg* self)
+static void msmcomm_low_level_structures_wms_cfg_set_gw_domain_pref_msg_init(struct wms_cfg_set_gw_domain_pref_msg* self)
 {
 }
 

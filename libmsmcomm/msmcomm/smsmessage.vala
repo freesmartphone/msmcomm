@@ -60,6 +60,11 @@ namespace Msmcomm.LowLevel
         RESERVED = 15
     }
 
+    public enum Sms.GatewayDomainType
+    {
+        GSM,
+    }
+
     public class Sms.Command.SendMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x15;
@@ -175,6 +180,31 @@ namespace Msmcomm.LowLevel
         {
             _message.ref_id = ref_id;
             _message.template = (uint16) template;
+        }
+    }
+
+    public class Sms.Command.ConfigSetGwDomainPref : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x15;
+        public static const uint16 MESSAGE_ID = 0x4;
+
+        private WmsCfgSetGwDomainPrefMessage _message;
+
+        public Sms.GatewayDomainType gateway_domain;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_CONFIG_SET_GW_DOMAIN_PREF, MessageClass.COMMAND);
+
+            _message = WmsCfgSetGwDomainPrefMessage();
+            set_payload(_message.data);
+
+            gateway_domain = Sms.GatewayDomainType.GSM;
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
         }
     }
 
