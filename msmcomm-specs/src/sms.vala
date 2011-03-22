@@ -33,5 +33,8 @@ namespace Msmcomm
     public interface Sms : GLib.Object
     {
         public abstract async void message_read_template(SmsTemplateType template_type) throws GLib.Error, Msmcomm.Error;
+        public abstract async void set_gateway_domain() throws GLib.Error, Msmcomm.Error;
+        public abstract async void set_routes() throws GLib.Error, Msmcomm.Error;
+        public abstract async void get_message_list() throws GLib.Error, Msmcomm.Error;
     }
 }
