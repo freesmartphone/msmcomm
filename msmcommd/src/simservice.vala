@@ -181,7 +181,7 @@ namespace Msmcomm.Daemon
             }
         }
 
-        public async SimFieldInfo read(SimFieldType field_type) throws GLib.Error, Msmcomm.Error
+        public async SimFieldInfo read_field(SimFieldType field_type) throws GLib.Error, Msmcomm.Error
         {
             var info = SimFieldInfo();
 
