@@ -52,6 +52,7 @@ namespace Msmcomm.Daemon
                 {
                     case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_MSG_GROUP:
                         checkResponse(response);
+
                         finished = true;
                         break;
                     case LowLevel.MessageType.RESPONSE_SMS_RETURN:
@@ -66,6 +67,18 @@ namespace Msmcomm.Daemon
 
                 return finished;
             });
+        }
+
+        public async void set_gateway_domain() throws GLib.Error, Msmcomm.Error
+        {
+        }
+
+        public async void set_routes() throws GLib.Error, Msmcomm.Error
+        {
+        }
+
+        public async void get_message_list() throws GLib.Error, Msmcomm.Error
+        {
         }
     }
 }
