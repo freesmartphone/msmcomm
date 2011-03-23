@@ -46,6 +46,8 @@ namespace Msmcomm.LowLevel
             PIN2 = 1,
         }
 
+        private const uint PIN_MAX_LENGTH = 8;
+
         public PinType pin_type;
         public string pin;
 
@@ -62,8 +64,7 @@ namespace Msmcomm.LowLevel
             _message.ref_id = ref_id;
             _message.pin_type = (uint8) pin_type;
 
-            /* FIXME we currently support only pin's of length 4 */
-            Memory.copy(_message.pin, pin.data, 4);
+            Memory.copy(_message.pin, pin.data, PIN_MAX_LENGTH);
         }
     }
 
