@@ -20,6 +20,7 @@
  **/
 
 using FsoFramework;
+using FsoFramework.StringHandling;
 using Msmcomm.LowLevel;
 
 namespace Msmcomm.Daemon
@@ -36,23 +37,62 @@ namespace Msmcomm.Daemon
             return "";
         }
 
-        public async void message_read_template(SmsTemplateType template_type) throws GLib.Error, Msmcomm.Error
+        public async SmsTemplateInfo message_read_template(SmsTemplateType template_type) throws GLib.Error, Msmcomm.Error
         {
+            var info = SmsTemplateInfo();
             var message = new LowLevel.Sms.Command.MessageReadTemplate();
-            message.template = StringHandling.convertEnum<SmsTemplateType,LowLevel.Sms.TemplateType>( template_type );
 
+            message.template = StringHandling.convertEnum<SmsTemplateType,LowLevel.Sms.TemplateType>( template_type );
             yield channel.enqueueAsyncNew(message, true, (response) => {
                 bool finished = false;
 
-#if DEBUG
-                debug( @"Processing $(message.message_type) ..." );
-#endif
+                // check for correct response type; if we have the correct response, we
+                // report finished = true so the async call returns
+                switch ( response.message_type )
+                {
+                    case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_MSG_GROUP:
+                        checkResponse(response);
+                        var rm = response as LowLevel.Sms.Urc.MsgGroup;
+
+                        if ( rm.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_READ_TEMPLATE )
+                        {
+                            info.digit_mode = rm.digit_mode;
+                            info.number_mode = rm.number_mode;
+                            info.number_type = convertEnum<LowLevel.Sms.NumberType,SmsNumberType>(rm.number_type);
+                            info.numbering_plan = convertEnum<LowLevel.Sms.NumberingPlan,SmsNumberingPlan>(rm.numbering_plan);
+                            info.smsc_number = rm.smsc_number;
+                            info.protocol_id = rm.protocol_id;
+                            finished = true;
+                        }
+
+                        break;
+                    case LowLevel.MessageType.RESPONSE_SMS_RETURN:
+                        checkResponse(response);
+                        break;
+                    case LowLevel.MessageType.RESPONSE_SMS_CALLBACK:
+                        checkResponse(response);
+                        break;
+                    default:
+                        throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
+                }
+
+                return finished;
+            });
+
+            return info;
+        }
+
+        public async void set_gateway_domain() throws GLib.Error, Msmcomm.Error
+        {
+            var message = new LowLevel.Sms.Command.ConfigSetGwDomainPref();
+
+            yield channel.enqueueAsyncNew(message, true, (response) => {
+                bool finished = false;
 
                 switch ( response.message_type )
                 {
                     case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_MSG_GROUP:
                         checkResponse(response);
-
                         finished = true;
                         break;
                     case LowLevel.MessageType.RESPONSE_SMS_RETURN:
@@ -67,10 +107,7 @@ namespace Msmcomm.Daemon
 
                 return finished;
             });
-        }
 
-        public async void set_gateway_domain() throws GLib.Error, Msmcomm.Error
-        {
         }
 
         public async void set_routes() throws GLib.Error, Msmcomm.Error
