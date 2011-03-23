@@ -29,10 +29,51 @@ namespace Msmcomm
         EMAIL_ADDRESS
     }
 
+    [CCode (cprefix = "MSMCOMM_SMS_NUMBER_TYPE_", cheader_filename = "msmcomm-specs.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum SmsNumberType
+    {
+        UNKNOWN,
+        INTERNATIONAL,
+        NATIONAL,
+        NETWORK_SPECIFIC,
+        SUBSCRIBER,
+        ALPHANUMERIC,
+        ABBREVIATED,
+        RESERVED
+    }
+
+    [CCode (cprefix = "MSMCOMM_SMS_NUMBERING_PLAN_", cheader_filename = "msmcomm-specs.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum SmsNumberingPlan
+    {
+        UNKNOWN,
+        ISDN,
+        DATA,
+        TELEX,
+        SC1,
+        SC2,
+        NATIONAL,
+        PRIVATE,
+        ERMES,
+        RESERVED
+    }
+
+    [CCode (type_id = "MSMCOMM_SIM_FIELD_INFO", cheader_filename = "msmcomm-specs.h")]
+    public struct SmsTemplateInfo
+    {
+        public uint8 digit_mode;
+        public uint32 number_mode;
+        public SmsNumberType number_type;
+        public SmsNumberingPlan numbering_plan;
+        public string smsc_number;
+        public uint8 protocol_id;
+    }
+
     [DBus (timeout = 120000, name = "org.msmcomm.Sms")]
     public interface Sms : GLib.Object
     {
-        public abstract async void message_read_template(SmsTemplateType template_type) throws GLib.Error, Msmcomm.Error;
+        public abstract async SmsTemplateInfo message_read_template(SmsTemplateType template_type) throws GLib.Error, Msmcomm.Error;
         public abstract async void set_gateway_domain() throws GLib.Error, Msmcomm.Error;
         public abstract async void set_routes() throws GLib.Error, Msmcomm.Error;
         public abstract async void get_message_list() throws GLib.Error, Msmcomm.Error;
