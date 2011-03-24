@@ -215,24 +215,6 @@ namespace Msmcomm.Daemon
                 return finished;
             });
 
-#if 0
-            // if the command succeeded we will recieve a unsolicited response message
-            // with the real response for the command.
-            var urc_type = LowLevel.MessageType.UNSOLICITED_RESPONSE_PHONEBOOK_EXTENDED_FILE_INFO;
-            response = yield channel.waitForUnsolicitedResponse( urc_type, 5 );
-
-            if ( response == null )
-            {
-                throw new Msmcomm.Error.INTERNAL_ERROR( @"Recieved no response for $(message.message_type) command !!!" );
-            }
-
-            var pbefi_response = response as LowLevel.PhonebookExtendedFileInfoUrcMessage;
-            info.book_type = convertEnum<LowLevel.PhonebookBookType,PhonebookBookType>(pbefi_response.book_type);
-            info.slot_count = pbefi_response.slot_count;
-            info.slots_used = pbefi_response.slots_used;
-            info.max_chars_per_number = pbefi_response.max_chars_per_number;
-            info.max_chars_per_title = pbefi_response.max_chars_per_title;
-#endif
             return info;
         }
     }
