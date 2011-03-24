@@ -13,6 +13,11 @@ VALACFLAGS = \
 	--library msmcomm-specs-2.0 \
 	--gir msmcomm-specs-2.0.gir
 
+if WANT_DEBUG
+VALACFLAGS += -g -D DEBUG
+AM_CFLAGS += -ggdb -O0
+endif
+
 BUILT_SOURCES = libmsmcomm_specs_la.vala.stamp
 
 lib_LTLIBRARIES = libmsmcomm_specs.la

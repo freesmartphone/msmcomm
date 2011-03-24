@@ -14,6 +14,15 @@ AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 m4_ifdef([AM_PROG_VALAC], [AM_PROG_VALAC([$VALA_REQUIRED])])
 
+################################################################################
+# check for debugging
+AC_ARG_ENABLE(debug,
+  [  --enable-debug            Enable debug build (default=disabled)],
+  [debug=$enableval], 
+  [debug="no"])
+AM_CONDITIONAL( [WANT_DEBUG], [test x"$debug" = x"yes"])
+
+
 AC_ARG_ENABLE(typelib,
 	[AS_HELP_STRING([--enable-typelib],
 		[enable typelib generation (default is no)])],
