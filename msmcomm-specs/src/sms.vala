@@ -59,7 +59,7 @@ namespace Msmcomm
         RESERVED
     }
 
-    [CCode (type_id = "MSMCOMM_SIM_FIELD_INFO", cheader_filename = "msmcomm-specs.h")]
+    [CCode (type_id = "MSMCOMM_SMS_TEMPLATE_INFO", cheader_filename = "msmcomm-specs.h")]
     public struct SmsTemplateInfo
     {
         public uint8 digit_mode;
