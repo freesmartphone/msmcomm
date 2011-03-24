@@ -184,6 +184,7 @@ namespace Msmcomm.Daemon
         public async SimFieldInfo read_field(SimFieldType field_type) throws GLib.Error, Msmcomm.Error
         {
             var info = SimFieldInfo();
+            info.type = field_type;
 
             var message = new SimReadCommandMessage();
             message.field_type = StringHandling.convertEnum<SimFieldType,Msmcomm.LowLevel.SimFileType>(field_type);
