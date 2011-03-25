@@ -360,8 +360,11 @@ namespace Msmcomm.LowLevel
                     number_type = (NumberType) _message.wms_read_template.number_type;
                     numbering_plan = (NumberingPlan) _message.wms_read_template.numbering_plan;
 
-                    smsc_number = Utility.dataToString(_message.wms_read_template.smsc_number,
-                                                       _message.wms_read_template.smsc_number_len);
+                    smsc_number = "";
+                    for ( var n = 0; n < _message.wms_read_template.smsc_number_len; n++ )
+                    {
+                        smsc_number += "%i".printf(_message.wms_read_template.smsc_number[n]);
+                    }
 
                     protocol_id = _message.wms_read_template.protocol_id;
                     break;
