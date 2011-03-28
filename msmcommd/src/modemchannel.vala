@@ -367,17 +367,20 @@ namespace Msmcomm.Daemon
 
                 // check if we have some commands with the command id set in the urc
                 // waiting
-                foreach ( var cmdh in pending )
+                if ( pending.size > 0 )
                 {
-                    // check if we have some commands with the command id set in the urc
-                    // waiting
-                    if ( cmdh.command.command_id == message.command_id )
+                    foreach ( var cmdh in pending )
                     {
-                        cmdh.handleResponseMessage( message );
-                    }
-                    else if ( cmdh.report_all_urcs )
-                    {
-                        cmdh.handleResponseMessage( message );
+                        // check if we have some commands with the command id set in the urc
+                        // waiting
+                        if ( cmdh.command.command_id == message.command_id )
+                        {
+                            cmdh.handleResponseMessage( message );
+                        }
+                        else if ( cmdh.report_all_urcs )
+                        {
+                            cmdh.handleResponseMessage( message );
+                        }
                     }
                 }
             }
