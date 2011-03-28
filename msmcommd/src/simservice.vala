@@ -189,22 +189,23 @@ namespace Msmcomm.Daemon
             var message = new SimReadCommandMessage();
             message.field_type = StringHandling.convertEnum<SimFieldType,Msmcomm.LowLevel.SimFileType>(field_type);
 
-            var response = (yield channel.enqueueAsync(message));
-            checkResponse(response);
+            yield channel.enqueueAsyncNew(message, false, (response) => {
+                switch ( response.message_type )
+                {
+                    case LowLevel.MessageType.RESPONSE_SIM_CALLBACK:
+                        var cbresp = response as SimCallbackResponseMessage;
+                        info.type = StringHandling.convertEnum<Msmcomm.LowLevel.SimFileType,SimFieldType>(cbresp.simfile_type);
+                        info.data = cbresp.simfile_data;
+                        break;
+                    case LowLevel.MessageType.RESPONSE_SIM_RETURN:
+                        logger.info( @"Got $(response.message_type) response message for $(message.message_type) command; we don't know why!" );
+                        break;
+                    default:
+                        throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
+                }
 
-            switch ( response.message_type )
-            {
-                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_RETURN:
-                    logger.info( @"Got $(response.message_type) response message for $(message.message_type) command; we don't know why!" );
-                    break;
-                case Msmcomm.LowLevel.MessageType.RESPONSE_SIM_CALLBACK:
-                    var cbresp = response as SimCallbackResponseMessage;
-                    info.type = StringHandling.convertEnum<Msmcomm.LowLevel.SimFileType,SimFieldType>(cbresp.simfile_type);
-                    info.data = cbresp.simfile_data;
-                    break;
-                default:
-                    throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
-            }
+                return true;
+            });
 
             return info;
         }
