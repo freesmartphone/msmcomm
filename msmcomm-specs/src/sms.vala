@@ -77,5 +77,6 @@ namespace Msmcomm
         public abstract async void set_gateway_domain() throws GLib.Error, Msmcomm.Error;
         public abstract async void set_routes() throws GLib.Error, Msmcomm.Error;
         public abstract async void get_message_list() throws GLib.Error, Msmcomm.Error;
+        public abstract async uint get_memory_status() throws GLib.Error, Msmcomm.Error; 
     }
 }
