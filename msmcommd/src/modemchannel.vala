@@ -324,7 +324,7 @@ namespace Msmcomm.Daemon
 
                 handler.handleResponseMessage( message );
 
-                // FIXME this needs to be removed after all service using the new
+                // FIXME this needs to be removed after all services uses the new
                 // enqueueAsyncNew method for sending messages the modem.
                 if ( handler.response_handler_func == null )
                 {

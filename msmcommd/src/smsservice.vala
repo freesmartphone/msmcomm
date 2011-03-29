@@ -72,8 +72,6 @@ namespace Msmcomm.Daemon
                     case LowLevel.MessageType.RESPONSE_SMS_CALLBACK:
                         checkResponse(response);
                         break;
-                    default:
-                        throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
                 }
 
                 return finished;
@@ -101,8 +99,6 @@ namespace Msmcomm.Daemon
                     case LowLevel.MessageType.RESPONSE_SMS_CALLBACK:
                         checkResponse(response);
                         break;
-                    default:
-                        throw new Msmcomm.Error.INTERNAL_ERROR( @"Got unexpected response for $(message.message_type): $(response.message_type)" );
                 }
 
                 return finished;
@@ -116,6 +112,36 @@ namespace Msmcomm.Daemon
 
         public async void get_message_list() throws GLib.Error, Msmcomm.Error
         {
+        }
+
+        public async uint get_memory_status() throws GLib.Error, Msmcomm.Error
+        {
+            uint memory_message_count = 0;
+            var message = new LowLevel.Sms.Command.GetMemoryStatus();
+
+            yield channel.enqueueAsyncNew(message, true, (response) => {
+                bool finished = false;
+
+                switch ( response.message_type )
+                {
+                    case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_CFG_GROUP:
+                        /* FIXME currently we don't know which bytes contains the number
+                         * of stored messages on the sim */
+                        finished = true;
+                        break;
+                    case LowLevel.MessageType.RESPONSE_SMS_RETURN:
+                        /* FIXME if we get this type of message something went wrong.
+                         * Verify this and try to find out what went wrong */
+                        finished = true;
+                        break;
+                    case LowLevel.MessageType.RESPONSE_SMS_CALLBACK:
+                        break;
+                }
+
+                return finished;
+            });
+
+            return memory_message_count;
         }
     }
 }
