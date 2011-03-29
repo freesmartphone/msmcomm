@@ -208,11 +208,12 @@ start wms_msg_group_event 2083
 [8-2082] uint8_t command_data [wms_read_template_field]
 end
 
+start wms_cfg_group_event 1543
+[0] uint8_t response_type
+end
+
 start wms_acknowledge_msg 1901
 [0-3] uint32_t ref_id
-[8] uint8_t value0
-[9] uint8_t value1
-[1] uint8_t value2
 end
 
 start wms_send_msg 319
@@ -231,8 +232,6 @@ end
 
 start sms_get_info_msg 9
 [0-3] uint32_t ref_id
-[4] uint8_t value0
-[5] uint8_t value1
 end
 
 start wms_read_template_msg 9
@@ -261,6 +260,11 @@ end
 
 start wms_delete_msg 9
 [0-3] uint32_t ref_id
+end
+
+start wms_get_memory_status_msg 7
+[0-3] uint32_t ref_id
+[4] uint8_t value0
 end
 
 start wms_return_resp 0

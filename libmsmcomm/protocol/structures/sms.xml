@@ -36,11 +36,12 @@
 			</field>
 		</structure>
 
+		<structure name="wms_cfg_group_event" length="1543">
+			<field name="response_type" start="0" type="uint8_t"/>
+		</structure>
+
 		<structure name="wms_acknowledge_msg" length="1901">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="value0" start="8" type="uint8_t"/>
-			<field name="value1" start="9" type="uint8_t"/>
-			<field name="value2" start="1" type="uint8_t"/>
         </structure>
 
 		<structure name="wms_send_msg" length="319">
@@ -60,8 +61,6 @@
 
 		<structure name="sms_get_info_msg" length="9">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="value0" start="4" type="uint8_t"/>
-			<field name="value1" start="5" type="uint8_t"/>
 		</structure>
 
 		<structure name="wms_read_template_msg" length="9">
@@ -90,6 +89,11 @@
 
 		<structure name="wms_delete_msg" length="9">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		</structure>
+
+		<structure name="wms_get_memory_status_msg" length="7">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="value0" start="4" type="uint8_t"/>
 		</structure>
 
 		<structure name="wms_return_resp" length="0">

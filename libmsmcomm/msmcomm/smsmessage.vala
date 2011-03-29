@@ -108,8 +108,6 @@ namespace Msmcomm.LowLevel
         protected override void prepare_data()
         {
             _message.ref_id = ref_id;
-            _message.value0 = 1;
-            _message.value1 = 1;
         }
     }
 
@@ -261,6 +259,29 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class Sms.Command.GetMemoryStatus : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x15;
+        public static const uint16 MESSAGE_ID = 0x2;
+
+        private WmsGetMemoryStatusMessage _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_GET_MEMORY_STATUS, MessageClass.COMMAND);
+
+            _message = WmsGetMemoryStatusMessage();
+            set_payload(_message.data);
+        }
+
+        protected override void prepare_data()
+        {
+            _message.ref_id = ref_id;
+            _message.value0 = 0x2; /* some constant value */
+        }
+    }
+
+
     public class Sms.Response.Return : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x16;
@@ -302,6 +323,39 @@ namespace Msmcomm.LowLevel
                     result = MessageResult.ERROR_BAD_SIM_STATE;
                     break;
             }
+        }
+    }
+
+    public class Sms.Urc.CfgGroup : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x17;
+        public static const uint16 MESSAGE_ID = 0x1;
+
+        private WmsCfgGroupEvent _message;
+
+        public enum ResponseType
+        {
+            GATEWAY_READY = 0x0,
+            MEMORY_STATUS = 0x3,
+            GET_MESSAGE_LIST = 0x4,
+            SMS = 0x8,
+            MEMORY_STATUS_SET = 0x9,
+        }
+
+        public ResponseType response_type;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_SMS_CFG_GROUP, MessageClass.UNSOLICITED_RESPONSE);
+
+            _message = WmsCfgGroupEvent();
+            set_payload(_message.data);
+        }
+
+        protected override void evaluate_data()
+        {
+            // ref_id = _message.ref_id;
+            response_type = (ResponseType) _message.response_type;
         }
     }
 

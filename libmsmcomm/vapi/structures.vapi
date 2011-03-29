@@ -678,15 +678,30 @@ struct WmsMsgGroupEvent
 }
 
 
+[CCode (cname = "struct wms_cfg_group_event", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsCfgGroupEvent
+{
+	public uint8 response_type;
+	public uint8 unknown0[1542];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsCfgGroupEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_cfg_group_event_init")]
+	public WmsCfgGroupEvent();
+}
+
+
 [CCode (cname = "struct wms_acknowledge_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct WmsAcknowledgeMessage
 {
 	public uint32 ref_id;
-	public uint8 unknown0[4];
-	public uint8 value0;
-	public uint8 value1;
-	public uint8 value2;
-	public uint8 unknown1[1899];
+	public uint8 unknown0[1897];
 	public unowned uint8[] data
 	{
 		get
@@ -738,9 +753,7 @@ struct WmsSendMessage
 struct SmsGetInfoMessage
 {
 	public uint32 ref_id;
-	public uint8 value0;
-	public uint8 value1;
-	public uint8 unknown0[3];
+	public uint8 unknown0[5];
 	public unowned uint8[] data
 	{
 		get
@@ -868,6 +881,26 @@ struct WmsDeleteMessage
 	}
 	[CCode (cname = "msmcomm_low_level_structures_wms_delete_msg_init")]
 	public WmsDeleteMessage();
+}
+
+
+[CCode (cname = "struct wms_get_memory_status_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct WmsGetMemoryStatusMessage
+{
+	public uint32 ref_id;
+	public uint8 value0;
+	public uint8 unknown0[2];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( WmsGetMemoryStatusMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_wms_get_memory_status_msg_init")]
+	public WmsGetMemoryStatusMessage();
 }
 
 

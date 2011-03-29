@@ -501,16 +501,23 @@ static void msmcomm_low_level_structures_wms_msg_group_event_init(struct wms_msg
 }
 
 
+struct wms_cfg_group_event
+{
+	uint8_t response_type;
+#define WMS_CFG_GROUP_EVENT_UNKNOWN0_SIZE 1542
+	uint8_t unknown0[1542];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_wms_cfg_group_event_init(struct wms_cfg_group_event* self)
+{
+}
+
+
 struct wms_acknowledge_msg
 {
 	uint32_t ref_id;
-#define WMS_ACKNOWLEDGE_MSG_UNKNOWN0_SIZE 4
-	uint8_t unknown0[4];
-	uint8_t value0;
-	uint8_t value1;
-	uint8_t value2;
-#define WMS_ACKNOWLEDGE_MSG_UNKNOWN1_SIZE 1899
-	uint8_t unknown1[1899];
+#define WMS_ACKNOWLEDGE_MSG_UNKNOWN0_SIZE 1897
+	uint8_t unknown0[1897];
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_wms_acknowledge_msg_init(struct wms_acknowledge_msg* self)
@@ -550,10 +557,8 @@ static void msmcomm_low_level_structures_wms_send_msg_init(struct wms_send_msg* 
 struct sms_get_info_msg
 {
 	uint32_t ref_id;
-	uint8_t value0;
-	uint8_t value1;
-#define SMS_GET_INFO_MSG_UNKNOWN0_SIZE 3
-	uint8_t unknown0[3];
+#define SMS_GET_INFO_MSG_UNKNOWN0_SIZE 5
+	uint8_t unknown0[5];
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_sms_get_info_msg_init(struct sms_get_info_msg* self)
@@ -630,6 +635,19 @@ struct wms_delete_msg
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_wms_delete_msg_init(struct wms_delete_msg* self)
+{
+}
+
+
+struct wms_get_memory_status_msg
+{
+	uint32_t ref_id;
+	uint8_t value0;
+#define WMS_GET_MEMORY_STATUS_MSG_UNKNOWN0_SIZE 2
+	uint8_t unknown0[2];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_wms_get_memory_status_msg_init(struct wms_get_memory_status_msg* self)
 {
 }
 
