@@ -198,14 +198,13 @@ start wms_sms_received_field 2075
 [15] uint8_t sender_len
 [16-51] uint8_t sender
 [54-57] uint32_t pdu_len
-[58] uint8_t pdu_start
-[59-2074] uint8_t pdu
+[58-2074] uint8_t pdu
 end
 
 start wms_msg_group_event 2083
 [0] uint8_t response_type
 [4-7] uint32_t ref_id
-[8-2082] uint8_t command_data [wms_read_template_field]
+[8-2082] uint8_t command_data [wms_read_template_field,wms_sms_received_field]
 end
 
 start wms_cfg_group_event 1543

@@ -474,15 +474,14 @@ struct wms_sms_received_field
 #define WMS_SMS_RECEIVED_FIELD_UNKNOWN1_SIZE 2
 	uint8_t unknown1[2];
 	uint32_t pdu_len;
-	uint8_t pdu_start;
-#define WMS_SMS_RECEIVED_FIELD_PDU_SIZE 2016
-	uint8_t pdu[2016];
+#define WMS_SMS_RECEIVED_FIELD_PDU_SIZE 2017
+	uint8_t pdu[2017];
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_wms_sms_received_field_init(struct wms_sms_received_field* self)
 {
 	self->sender_len = 36;
-	self->pdu_len = 2016;
+	self->pdu_len = 2017;
 }
 
 

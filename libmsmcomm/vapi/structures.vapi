@@ -633,7 +633,6 @@ struct WmsSmsReceivedField
 	public uint8 sender[];
 	public uint8 unknown1[2];
 	public uint32 pdu_len;
-	public uint8 pdu_start;
 	[CCode (array_length_cname = "pdu_len")]
 	public uint8 pdu[];
 	public unowned uint8[] data
@@ -661,6 +660,13 @@ struct WmsMsgGroupEvent
 		get
 		{
 			return (WmsReadTemplateField?) command_data;
+		}
+	}
+	public WmsSmsReceivedField wms_sms_received
+	{
+		get
+		{
+			return (WmsSmsReceivedField?) command_data;
 		}
 	}
 	public uint8 command_data[2075];

@@ -372,7 +372,7 @@ namespace Msmcomm.LowLevel
             MESSAGE_READ = 0x2,
             MESSAGE_DELETE = 0x4,
             MESSAGE_READ_TEMPLATE = 0x7,
-            SMS_POINT_TO_POINT = 0xf,
+            MESSAGE_RECEIVED = 0xf,
             MESSAGE_SUBMIT_REPORT = 0x10,
             UNKNOWN,
         }
@@ -386,6 +386,10 @@ namespace Msmcomm.LowLevel
         public NumberingPlan numbering_plan;
         public string smsc_number;
         public uint8 protocol_id; /* See 23.040 Section 9.2.3.9 for valid values */
+
+        /* response_type == ResponseType.MESSAGE_RECEIVED */
+        public string sender;
+        public string pdu;
 
         construct
         {
@@ -422,7 +426,9 @@ namespace Msmcomm.LowLevel
 
                     protocol_id = _message.wms_read_template.protocol_id;
                     break;
-                case ResponseType.SMS_POINT_TO_POINT:
+                case ResponseType.MESSAGE_RECEIVED:
+                    sender = convertBytesToString(_message.wms_sms_received.sender);
+                    pdu = convertBytesToString(_message.wms_sms_received.pdu);
                     break;
                 case ResponseType.MESSAGE_SUBMIT_REPORT:
                     break;
