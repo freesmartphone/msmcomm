@@ -1054,6 +1054,20 @@ static void msmcomm_low_level_structures_sound_callback_resp_init(struct sound_c
 }
 
 
+struct sups_interrogate_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint8_t feature_code;
+#define SUPS_INTERROGATE_MSG_UNKNOWN1_SIZE 4
+	uint8_t unknown1[4];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_sups_interrogate_msg_init(struct sups_interrogate_msg* self)
+{
+}
+
+
 struct sups_register_msg
 {
 	uint32_t ref_id;

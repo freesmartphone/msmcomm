@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <namespace:sups>
 
+	<structure name="sups_interrogate_msg" length="10">
+		<field name="ref_id" start="0" end="3" type="uint32_t"/>
+		<field name="feature_code" start="5" type="uint8_t"/>
+	</structure>
+
 	<structure name="sups_register_msg" length="78">
 		<field name="ref_id" start="0" end="3" type="uint32_t"/>
 		<field name="feature_code" start="4" type="uint8_t"/>

@@ -457,6 +457,11 @@ end
 #-------------------------------------------------------------------
 # SUPS
 #-------------------------------------------------------------------
+start sups_interrogate_msg 10
+[0-3] uint32_t ref_id
+[5] uint8_t feature_code
+end
+
 start sups_register_msg 78
 [0-3] uint32_t ref_id
 [4] uint8_t feature_code
