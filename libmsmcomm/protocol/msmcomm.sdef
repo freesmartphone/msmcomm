@@ -457,10 +457,37 @@ end
 #-------------------------------------------------------------------
 # SUPS
 #-------------------------------------------------------------------
+start sups_register_msg 78
+[0-3] uint32_t ref_id
+[4] uint8_t feature_code
+[9] uint8_t value0
+[10] uint8_t number_len
+[11] uint8_t bearer
+[12-32] uint8_t number
+end
+
+start sups_erase_msg 10
+[0-3] uint32_t ref_id
+[5] uint8_t feature_code
+end
+
+start sups_status_msg 15
+[0-3] uint32_t ref_id
+[5] uint8_t feature_code
+end
+
 start sups_callback_resp 8
 [0-3] uint32_t ref_id
 [4] uint8_t command
 [6] uint8_t result
+end
+
+start sups_event 4144
+[3] uint8_t feature_code
+[8] uint8_t value0
+[9] uint8_t number_len
+[10] uint8_t bearer
+[11-31] uint8_t number
 end
 
 #-------------------------------------------------------------------

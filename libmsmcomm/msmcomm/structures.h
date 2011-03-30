@@ -1054,6 +1054,55 @@ static void msmcomm_low_level_structures_sound_callback_resp_init(struct sound_c
 }
 
 
+struct sups_register_msg
+{
+	uint32_t ref_id;
+	uint8_t feature_code;
+#define SUPS_REGISTER_MSG_UNKNOWN0_SIZE 4
+	uint8_t unknown0[4];
+	uint8_t value0;
+	uint8_t number_len;
+	uint8_t bearer;
+#define SUPS_REGISTER_MSG_NUMBER_SIZE 21
+	uint8_t number[21];
+#define SUPS_REGISTER_MSG_UNKNOWN1_SIZE 45
+	uint8_t unknown1[45];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_sups_register_msg_init(struct sups_register_msg* self)
+{
+	self->number_len = 21;
+}
+
+
+struct sups_erase_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint8_t feature_code;
+#define SUPS_ERASE_MSG_UNKNOWN1_SIZE 4
+	uint8_t unknown1[4];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_sups_erase_msg_init(struct sups_erase_msg* self)
+{
+}
+
+
+struct sups_status_msg
+{
+	uint32_t ref_id;
+	uint8_t unknown0;
+	uint8_t feature_code;
+#define SUPS_STATUS_MSG_UNKNOWN1_SIZE 9
+	uint8_t unknown1[9];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_sups_status_msg_init(struct sups_status_msg* self)
+{
+}
+
+
 struct sups_callback_resp
 {
 	uint32_t ref_id;
@@ -1065,6 +1114,28 @@ struct sups_callback_resp
 
 static void msmcomm_low_level_structures_sups_callback_resp_init(struct sups_callback_resp* self)
 {
+}
+
+
+struct sups_event
+{
+#define SUPS_EVENT_UNKNOWN0_SIZE 3
+	uint8_t unknown0[3];
+	uint8_t feature_code;
+#define SUPS_EVENT_UNKNOWN1_SIZE 4
+	uint8_t unknown1[4];
+	uint8_t value0;
+	uint8_t number_len;
+	uint8_t bearer;
+#define SUPS_EVENT_NUMBER_SIZE 21
+	uint8_t number[21];
+#define SUPS_EVENT_UNKNOWN2_SIZE 4112
+	uint8_t unknown2[4112];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_sups_event_init(struct sups_event* self)
+{
+	self->number_len = 21;
 }
 
 

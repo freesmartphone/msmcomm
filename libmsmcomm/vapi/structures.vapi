@@ -1526,6 +1526,74 @@ struct SoundCallbackResponse
 }
 
 
+[CCode (cname = "struct sups_register_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SupsRegisterMessage
+{
+	public uint32 ref_id;
+	public uint8 feature_code;
+	public uint8 unknown0[4];
+	public uint8 value0;
+	public uint8 number_len;
+	public uint8 bearer;
+	[CCode (array_length_cname = "number_len")]
+	public uint8 number[];
+	public uint8 unknown1[45];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SupsRegisterMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sups_register_msg_init")]
+	public SupsRegisterMessage();
+}
+
+
+[CCode (cname = "struct sups_erase_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SupsEraseMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0;
+	public uint8 feature_code;
+	public uint8 unknown1[4];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SupsEraseMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sups_erase_msg_init")]
+	public SupsEraseMessage();
+}
+
+
+[CCode (cname = "struct sups_status_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct SupsStatusMessage
+{
+	public uint32 ref_id;
+	public uint8 unknown0;
+	public uint8 feature_code;
+	public uint8 unknown1[9];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SupsStatusMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sups_status_msg_init")]
+	public SupsStatusMessage();
+}
+
+
 [CCode (cname = "struct sups_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct SupsCallbackResponse
 {
@@ -1545,6 +1613,32 @@ struct SupsCallbackResponse
 	}
 	[CCode (cname = "msmcomm_low_level_structures_sups_callback_resp_init")]
 	public SupsCallbackResponse();
+}
+
+
+[CCode (cname = "struct sups_event", cheader_filename = "structures.h", destroy_function = "")]
+struct SupsEvent
+{
+	public uint8 unknown0[3];
+	public uint8 feature_code;
+	public uint8 unknown1[4];
+	public uint8 value0;
+	public uint8 number_len;
+	public uint8 bearer;
+	[CCode (array_length_cname = "number_len")]
+	public uint8 number[];
+	public uint8 unknown2[4112];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( SupsEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_sups_event_init")]
+	public SupsEvent();
 }
 
 
