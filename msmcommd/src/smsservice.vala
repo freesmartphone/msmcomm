@@ -37,6 +37,33 @@ namespace Msmcomm.Daemon
             return "";
         }
 
+        public override bool handleUnsolicitedResponse( LowLevel.BaseMessage message )
+        {
+            bool handled = false;
+
+            switch ( message.message_type )
+            {
+                case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_MSG_GROUP:
+                    var smsmsg = message as LowLevel.Sms.Urc.MsgGroup;
+                    assert( smsmsg == null );
+
+                    if ( smsmsg.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_RECEIVED )
+                    {
+                        var msg = SmsMessage();
+                        msg.sender = smsmsg.sender;
+                        msg.pdu = smsmsg.pdu;
+
+                        incomming_message( msg ); // DBUS SIGNAL
+
+                        handled = true;
+                    }
+
+                    break;
+            }
+
+            return handled;
+        }
+
         public async SmsTemplateInfo message_read_template(SmsTemplateType template_type) throws GLib.Error, Msmcomm.Error
         {
             var info = SmsTemplateInfo();
