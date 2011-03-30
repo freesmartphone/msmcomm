@@ -1531,7 +1531,7 @@ struct SupsInterrogateMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
-	public uint8 feature_code;
+	public uint8 feature;
 	public uint8 unknown1[4];
 	public unowned uint8[] data
 	{
@@ -1551,7 +1551,7 @@ struct SupsInterrogateMessage
 struct SupsRegisterMessage
 {
 	public uint32 ref_id;
-	public uint8 feature_code;
+	public uint8 feature;
 	public uint8 unknown0[4];
 	public uint8 value0;
 	public uint8 number_len;
@@ -1578,7 +1578,7 @@ struct SupsEraseMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
-	public uint8 feature_code;
+	public uint8 feature;
 	public uint8 unknown1[4];
 	public unowned uint8[] data
 	{
@@ -1599,7 +1599,7 @@ struct SupsStatusMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
-	public uint8 feature_code;
+	public uint8 feature;
 	public uint8 unknown1[9];
 	public unowned uint8[] data
 	{
@@ -1641,7 +1641,7 @@ struct SupsCallbackResponse
 struct SupsEvent
 {
 	public uint8 unknown0[3];
-	public uint8 feature_code;
+	public uint8 feature;
 	public uint8 unknown1[4];
 	public uint8 value0;
 	public uint8 number_len;

@@ -459,12 +459,12 @@ end
 #-------------------------------------------------------------------
 start sups_interrogate_msg 10
 [0-3] uint32_t ref_id
-[5] uint8_t feature_code
+[5] uint8_t feature
 end
 
 start sups_register_msg 78
 [0-3] uint32_t ref_id
-[4] uint8_t feature_code
+[4] uint8_t feature
 [9] uint8_t value0
 [10] uint8_t number_len
 [11] uint8_t bearer
@@ -473,12 +473,12 @@ end
 
 start sups_erase_msg 10
 [0-3] uint32_t ref_id
-[5] uint8_t feature_code
+[5] uint8_t feature
 end
 
 start sups_status_msg 15
 [0-3] uint32_t ref_id
-[5] uint8_t feature_code
+[5] uint8_t feature
 end
 
 start sups_callback_resp 8
@@ -488,7 +488,7 @@ start sups_callback_resp 8
 end
 
 start sups_event 4144
-[3] uint8_t feature_code
+[3] uint8_t feature
 [8] uint8_t value0
 [9] uint8_t number_len
 [10] uint8_t bearer

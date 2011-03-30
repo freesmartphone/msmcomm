@@ -1058,7 +1058,7 @@ struct sups_interrogate_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
-	uint8_t feature_code;
+	uint8_t feature;
 #define SUPS_INTERROGATE_MSG_UNKNOWN1_SIZE 4
 	uint8_t unknown1[4];
 } __attribute__ ((packed));
@@ -1071,7 +1071,7 @@ static void msmcomm_low_level_structures_sups_interrogate_msg_init(struct sups_i
 struct sups_register_msg
 {
 	uint32_t ref_id;
-	uint8_t feature_code;
+	uint8_t feature;
 #define SUPS_REGISTER_MSG_UNKNOWN0_SIZE 4
 	uint8_t unknown0[4];
 	uint8_t value0;
@@ -1093,7 +1093,7 @@ struct sups_erase_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
-	uint8_t feature_code;
+	uint8_t feature;
 #define SUPS_ERASE_MSG_UNKNOWN1_SIZE 4
 	uint8_t unknown1[4];
 } __attribute__ ((packed));
@@ -1107,7 +1107,7 @@ struct sups_status_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
-	uint8_t feature_code;
+	uint8_t feature;
 #define SUPS_STATUS_MSG_UNKNOWN1_SIZE 9
 	uint8_t unknown1[9];
 } __attribute__ ((packed));
@@ -1135,7 +1135,7 @@ struct sups_event
 {
 #define SUPS_EVENT_UNKNOWN0_SIZE 3
 	uint8_t unknown0[3];
-	uint8_t feature_code;
+	uint8_t feature;
 #define SUPS_EVENT_UNKNOWN1_SIZE 4
 	uint8_t unknown1[4];
 	uint8_t value0;
