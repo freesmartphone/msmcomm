@@ -49,53 +49,72 @@ namespace Msmcomm.LowLevel
         return b1 * 10 + b0;
     }
 
-    public uint8[] encodeBinary(string number)
+    public uint8[] encodeBinary( string str )
     {
-        var result = new uint8[number.length];
+        var result = new uint8[str.length];
         int i = 0;
 
-        foreach(var u in number.data)
-            result[i++] = u - '0';
+        foreach(var c in str.data)
+        {
+            result[i++] = c - '0';
+        }
 
         return result;
     }
 
-    public string decodeBinary(uint8[] data)
+    public string decodeBinary( uint8[] data )
     {
         var s = new StringBuilder();
-        foreach(var c in data)
-                s.append_c((char)c + '0');
+
+        foreach( var byte in data )
+        {
+            s.append_c( (char) byte + '0' );
+        }
+
         return s.str;
     }
 
-    public uint8[] encodeBCD(string number)
+    public uint8[] encode_bcd( string number )
     {
         var result = new uint8[(number.length + 1) / 2];
-        int i = 0;
+        int i = 0, n = 0;
 
-        foreach(var c in number.data)
+        foreach(var byte in number.data)
         {
-            if((i % 2) == 0)
-                 result[i/2] = c - '0';
+            n = i / 2;
+
+            if( ( i % 2 ) == 0 )
+            {
+                 result[n] = byte - '0';
+            }
             else
-                 result[i/2] |= (c - '0') << 4;
-            i ++;
+            {
+                 result[n] |= ( byte - '0' ) << 4;
+            }
+
+            i++;
         }
 
-        if((i % 2) == 0)
-             result[i/2] |= 0xf << 4;
+        if( ( i % 2 ) != 0 )
+        {
+            result[i/2] |= 0xf << 4;
+        }
 
         return result;
     }
 
-    public string decodeBCD(uint8[] data)
+    public string decode_bcd( uint8[] data )
     {
         var s = new StringBuilder();
-        foreach(var c in data)
+
+        foreach( uint8 byte in data )
         {
-            s.append_c(((char)(c & 0xF) + '0'));
-            if(((c & 0xF) >> 4) <= 9)
-                 s.append_c(((char)((c & 0xF0) >> 4) + '0'));
+            s.append_c( ( (char) ( byte & 0xF ) + '0') );
+
+            if( ( ( byte & 0xF0 ) >> 4) <= 9 )
+            {
+                s.append_c( ( (char) ( ( byte & 0xF0 ) >> 4 ) + '0' ) );
+            }
         }
 
         return s.str;
