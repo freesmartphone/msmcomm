@@ -70,6 +70,13 @@ namespace Msmcomm
         public uint8 protocol_id;
     }
 
+    [CCode (type_id = "MSMCOMM_SMS_MESSAGE", cheader_filename = "msmcomm-specs.h")]
+    public struct SmsMessage
+    {
+        public string sender;
+        public string pdu;
+    }
+
     [DBus (timeout = 120000, name = "org.msmcomm.Sms")]
     public interface Sms : GLib.Object
     {
@@ -78,5 +85,7 @@ namespace Msmcomm
         public abstract async void set_routes() throws GLib.Error, Msmcomm.Error;
         public abstract async void get_message_list() throws GLib.Error, Msmcomm.Error;
         public abstract async uint get_memory_status() throws GLib.Error, Msmcomm.Error; 
+
+        public signal void incomming_message(SmsMessage message);
     }
 }
