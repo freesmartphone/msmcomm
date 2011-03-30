@@ -47,8 +47,7 @@ struct CallEvent
 	public uint8 call_id;
 	public uint8 call_type;
 	public uint8 unknown0;
-	[CCode (array_length_cname = "caller_id_len")]
-	public uint8 caller_id[];
+	public uint8 caller_id[15];
 	public uint8 unknown1[39];
 	public PlmnField plmn;
 	public uint8 unknown2[7];
@@ -150,8 +149,7 @@ struct CallOriginationMessage
 	public uint8 unknown0;
 	public uint8 value0;
 	public uint8 unknown1[99];
-	[CCode (array_length_cname = "caller_id_len")]
-	public uint8 caller_id[];
+	public uint8 caller_id[64];
 	public uint8 caller_id_len;
 	public uint8 unknown2[2];
 	public uint8 value1;
@@ -413,8 +411,7 @@ struct MiscGetHomeNetworkNameResponse
 	public uint8 rc;
 	public uint8 unknown1[84];
 	public uint8 operator_name_len;
-	[CCode (array_length_cname = "operator_name_len")]
-	public uint8 operator_name[];
+	public uint8 operator_name[16];
 	public uint16 mcc;
 	public uint8 mnc;
 	public unowned uint8[] data
@@ -546,8 +543,7 @@ struct NetworkInfoField
 	public uint8 radio_type;
 	public uint8 unknown1[7];
 	public uint8 name_len;
-	[CCode (array_length_cname = "name_len")]
-	public uint8 name[];
+	public uint8 name[82];
 	public unowned uint8[] data
 	{
 		get
@@ -605,8 +601,7 @@ struct WmsReadTemplateField
 	public uint8 number_type;
 	public uint8 numbering_plan;
 	public uint8 smsc_number_len;
-	[CCode (array_length_cname = "smsc_number_len")]
-	public uint8 smsc_number[];
+	public uint8 smsc_number[21];
 	public uint8 unknown2[15];
 	public uint8 protocol_id;
 	public uint8 unknown3[1813];
@@ -629,12 +624,10 @@ struct WmsSmsReceivedField
 {
 	public uint8 unknown0[15];
 	public uint8 sender_len;
-	[CCode (array_length_cname = "sender_len")]
-	public uint8 sender[];
+	public uint8 sender[36];
 	public uint8 unknown1[2];
 	public uint32 pdu_len;
-	[CCode (array_length_cname = "pdu_len")]
-	public uint8 pdu[];
+	public uint8 pdu[2017];
 	public unowned uint8[] data
 	{
 		get
@@ -735,12 +728,10 @@ struct WmsSendMessage
 	public uint8 number_type;
 	public uint8 number_plan;
 	public uint8 service_center_len;
-	[CCode (array_length_cname = "service_center_len")]
-	public uint8 service_center[];
+	public uint8 service_center[36];
 	public uint16 six_three;
 	public uint32 pdu_len;
-	[CCode (array_length_cname = "pdu_len")]
-	public uint8 pdu[];
+	public uint8 pdu[255];
 	public unowned uint8[] data
 	{
 		get
@@ -1016,8 +1007,7 @@ struct SimReadResponse
 	public uint8 result;
 	public uint8 unknown0;
 	public uint8 file_data_len;
-	[CCode (array_length_cname = "file_data_len")]
-	public uint8 file_data[];
+	public uint8 file_data[8];
 	public uint8 unknown1[1911];
 	public unowned uint8[] data
 	{
@@ -1448,8 +1438,7 @@ struct NetworkStateInfoEvent
 	public PlmnField plmn;
 	public uint8 unknown1[3];
 	public uint8 operator_name_len;
-	[CCode (array_length_cname = "operator_name_len")]
-	public uint8 operator_name[];
+	public uint8 operator_name[80];
 	public uint8 unknown2[3];
 	public uint8 hplmn_or_spdi;
 	public uint8 hplmn_length;
@@ -1556,8 +1545,7 @@ struct SupsRegisterMessage
 	public uint8 value0;
 	public uint8 number_len;
 	public uint8 bearer;
-	[CCode (array_length_cname = "number_len")]
-	public uint8 number[];
+	public uint8 number[21];
 	public uint8 unknown1[45];
 	public unowned uint8[] data
 	{
@@ -1646,8 +1634,7 @@ struct SupsEvent
 	public uint8 value0;
 	public uint8 number_len;
 	public uint8 bearer;
-	[CCode (array_length_cname = "number_len")]
-	public uint8 number[];
+	public uint8 number[21];
 	public uint8 unknown2[4112];
 	public unowned uint8[] data
 	{

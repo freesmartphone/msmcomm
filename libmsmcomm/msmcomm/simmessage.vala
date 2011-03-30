@@ -338,7 +338,7 @@ namespace Msmcomm.LowLevel
                             // two IMSI bytes are packed into one byte, we make here two
                             // bytes out of it!
                             sb.append("%i".printf(_message.sim_read_resp.file_data[0] >> 4));
-                            for (var n = 1; n < _message.sim_read_resp.file_data.length; n++)
+                            for (var n = 1; n < _message.sim_read_resp.file_data_len; n++)
                             {
                                 sb.append("%i".printf(_message.sim_read_resp.file_data[n] & 0xf));
                                 sb.append("%i".printf((_message.sim_read_resp.file_data[n] & 0xf0) >> 4));
