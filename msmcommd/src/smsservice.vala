@@ -45,7 +45,6 @@ namespace Msmcomm.Daemon
             {
                 case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_MSG_GROUP:
                     var smsmsg = message as LowLevel.Sms.Urc.MsgGroup;
-                    assert( smsmsg == null );
 
                     if ( smsmsg.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_RECEIVED )
                     {
