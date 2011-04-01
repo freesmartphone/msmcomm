@@ -25,6 +25,7 @@ lib_LTLIBRARIES = libmsmcomm_specs.la
 libmsmcomm_specs_la_VALASOURCES = \
 	management.vala \
 	error.vala \
+	sups.vala \
 	misc.vala \
 	state.vala \
 	sim.vala \
