@@ -9,9 +9,9 @@
 	<structure name="sups_register_msg" length="78">
 		<field name="ref_id" start="0" end="3" type="uint32_t"/>
 		<field name="feature" start="4" type="uint8_t"/>
-		<field name="value0" start="9" type="uint8_t"/>
+		<field name="bearer" start="9" type="uint8_t"/>
 		<field name="number_len" start="10" type="uint8_t"/>
-		<field name="bearer" start="11" type="uint8_t"/>
+		<field name="value0" start="11" type="uint8_t"/>
 		<field name="number" start="12" end="32" type="uint8_t"/>
 	</structure>
 
@@ -33,9 +33,9 @@
 
 	<structure name="sups_event" length="4144">
 		<field name="feature" start="3" type="uint8_t"/>
-		<field name="value0" start="8" type="uint8_t"/>
+		<field name="bearer" start="8" type="uint8_t"/>
 		<field name="number_len" start="9" type="uint8_t"/>
-		<field name="bearer" start="10" type="uint8_t"/>
+		<field name="value0" start="10" type="uint8_t"/>
 		<field name="number" start="11" end="31" type="uint8_t"/>
 	</structure>
 

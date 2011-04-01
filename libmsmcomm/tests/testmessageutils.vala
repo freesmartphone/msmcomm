@@ -38,7 +38,7 @@ void test_messageutils_encode_bcd_correct_run()
 void test_messageutils_decode_bcd_correct_run()
 {
     uint8[] data = new uint8[] { 0x10, 0x32, 0x54, 0xF1 };
-    string result = decode_bcd( data );
+    string result = decode_bcd( data, data.length );
 
     assert( result.ascii_casecmp( "0123451" ) == 0 );
 }

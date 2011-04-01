@@ -30,17 +30,56 @@ namespace Msmcomm.LowLevel
         {
             base(SupsResponseMessageGroup.GROUP_ID);
 
-            message_types[SupsCallbackResponseMessage.MESSAGE_ID] = typeof(SupsCallbackResponseMessage);
+            message_types[Sups.Response.Callback.MESSAGE_ID] = typeof(Sups.Response.Callback);;
         }
     }
 
-    public class SupsUrcMessageGroup : BaseMessageGroup
+    public class SupsUnsolicitedResponseMessageGroup : UniformMessageGroup<Sups.Urc>
     {
         public static const uint8 GROUP_ID = 0xb;
 
-        public SupsUrcMessageGroup()
+        public SupsUnsolicitedResponseMessageGroup()
         {
-            base(SupsUrcMessageGroup.GROUP_ID);
+            base(SupsUnsolicitedResponseMessageGroup.GROUP_ID);
+        }
+
+        protected override void set_message_type(uint16 id, BaseMessage message)
+        {
+            switch (id)
+            {
+                case 0x0:
+                    message.message_type = MessageType.UNSOLICITED_RESPONSE_SUPS_REGISTER;
+                    break;
+                case 0x1:
+                    message.message_type = MessageType.UNSOLICITED_RESPONSE_SUPS_REGISTER_CONF;
+                    break;
+                case 0x2:
+                    message.message_type = MessageType.UNSOLICITED_RESPONSE_SUPS_ERASE;
+                    break;
+                case 0x3:
+                    message.message_type = MessageType.UNSOLICITED_RESPONSE_SUPS_ERASE_CONF;
+                    break;
+                case 0x4:
+                    message.message_type = MessageType.UNSOLICITED_RESPONSE_SUPS_ACTIVATE;
+                    break;
+                case 0x5:
+                    message.message_type = MessageType.UNSOLICITED_RESPONSE_SUPS_ACTIVATE_CONF;
+                    break;
+                case 0x6:
+                    message.message_type = MessageType.UNSOLICITED_RESPONSE_SUPS_DEACTIVATE;
+                    break;
+                case 0x7:
+                    message.message_type = MessageType.UNSOLICITED_RESPONSE_SUPS_DEACTIVATE_CONF;
+                    break;
+                case 0x8:
+                    message.message_type = MessageType.UNSOLICITED_RESPONSE_SUPS_INTERROGATE;
+                    break;
+                case 0x9:
+                    message.message_type = MessageType.UNSOLICITED_RESPONSE_SUPS_INTERROGATE_CONF;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

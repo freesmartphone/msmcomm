@@ -103,18 +103,26 @@ namespace Msmcomm.LowLevel
         return result;
     }
 
-    public string decode_bcd( uint8[] data )
+    public string decode_bcd( uint8[] data, int length )
     {
         var s = new StringBuilder();
+        int n = 0;
 
         foreach( uint8 byte in data )
         {
+            if ( n == length )
+            {
+                break;
+            }
+
             s.append_c( ( (char) ( byte & 0xF ) + '0') );
 
             if( ( ( byte & 0xF0 ) >> 4) <= 9 )
             {
                 s.append_c( ( (char) ( ( byte & 0xF0 ) >> 4 ) + '0' ) );
             }
+
+            n++;
         }
 
         return s.str;

@@ -1542,9 +1542,9 @@ struct SupsRegisterMessage
 	public uint32 ref_id;
 	public uint8 feature;
 	public uint8 unknown0[4];
-	public uint8 value0;
-	public uint8 number_len;
 	public uint8 bearer;
+	public uint8 number_len;
+	public uint8 value0;
 	public uint8 number[21];
 	public uint8 unknown1[45];
 	public unowned uint8[] data
@@ -1631,9 +1631,9 @@ struct SupsEvent
 	public uint8 unknown0[3];
 	public uint8 feature;
 	public uint8 unknown1[4];
-	public uint8 value0;
-	public uint8 number_len;
 	public uint8 bearer;
+	public uint8 number_len;
+	public uint8 value0;
 	public uint8 number[21];
 	public uint8 unknown2[4112];
 	public unowned uint8[] data

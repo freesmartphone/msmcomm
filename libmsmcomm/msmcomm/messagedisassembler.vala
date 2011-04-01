@@ -44,7 +44,7 @@ namespace Msmcomm.LowLevel
             groups[NetworkResponseMessageGroup.GROUP_ID] = new NetworkResponseMessageGroup();
             groups[NetworkUrcMessageGroup.GROUP_ID] = new NetworkUrcMessageGroup();
             groups[SupsResponseMessageGroup.GROUP_ID] = new SupsResponseMessageGroup();
-            groups[SupsUrcMessageGroup.GROUP_ID] = new SupsUrcMessageGroup();
+            groups[SupsUnsolicitedResponseMessageGroup.GROUP_ID] = new SupsUnsolicitedResponseMessageGroup();
             groups[VoicemailResponseMessageGroup.GROUP_ID] = new VoicemailResponseMessageGroup();
             groups[VoicemailUrcMessageGroup.GROUP_ID] = new VoicemailUrcMessageGroup();
             groups[SmsResponseMessageGroup.GROUP_ID] = new SmsResponseMessageGroup();

@@ -1074,9 +1074,9 @@ struct sups_register_msg
 	uint8_t feature;
 #define SUPS_REGISTER_MSG_UNKNOWN0_SIZE 4
 	uint8_t unknown0[4];
-	uint8_t value0;
-	uint8_t number_len;
 	uint8_t bearer;
+	uint8_t number_len;
+	uint8_t value0;
 #define SUPS_REGISTER_MSG_NUMBER_SIZE 21
 	uint8_t number[21];
 #define SUPS_REGISTER_MSG_UNKNOWN1_SIZE 45
@@ -1138,9 +1138,9 @@ struct sups_event
 	uint8_t feature;
 #define SUPS_EVENT_UNKNOWN1_SIZE 4
 	uint8_t unknown1[4];
-	uint8_t value0;
-	uint8_t number_len;
 	uint8_t bearer;
+	uint8_t number_len;
+	uint8_t value0;
 #define SUPS_EVENT_NUMBER_SIZE 21
 	uint8_t number[21];
 #define SUPS_EVENT_UNKNOWN2_SIZE 4112
