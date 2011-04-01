@@ -25,6 +25,7 @@ namespace Msmcomm
     [DBus (use_string_marshalling = true)]
     public enum SupsFeature
     {
+        INVALID,
         CALL_FORWARD_UNCONDITIONAL,
         CALL_FORWARD_MOBILE_BUSY,
         CALL_FORWARD_NO_REPLY,
@@ -39,6 +40,7 @@ namespace Msmcomm
     [DBus (use_string_marshalling = true)]
     public enum SupsBearer
     {
+        INVALID,
         VOICE,
         DATA,
         FAX,

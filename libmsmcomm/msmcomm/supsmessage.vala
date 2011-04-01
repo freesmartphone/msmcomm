@@ -26,6 +26,7 @@ namespace Msmcomm.LowLevel
     /* See TS 02.30 Annex B */
     public enum Sups.Feature
     {
+        INVALID = 0x0,
         CALL_FORWARD_UNCONDITIONAL = 0x21,
         CALL_FORWARD_MOBILE_BUSY = 0x67,
         CALL_FORWARD_NO_REPLY = 0x61,
@@ -39,6 +40,7 @@ namespace Msmcomm.LowLevel
     /* See TS 02.30 Annex C */
     public enum Sups.Bearer
     {
+        INVALID = 0,
         VOICE = 1,
         DATA = 2,
         FAX = 4,
