@@ -61,6 +61,6 @@ namespace Msmcomm
         public abstract async void erase(SupsFeature feature) throws GLib.Error, Msmcomm.Error;
         public abstract async void activate(SupsFeature feature) throws GLib.Error, Msmcomm.Error;
         public abstract async void deactivate(SupsFeature feature) throws GLib.Error, Msmcomm.Error;
-        public abstract SupsInfo interrogate(SupsFeature feature) throws GLib.Error, Msmcomm.Error;
+        public abstract async SupsInfo interrogate(SupsFeature feature) throws GLib.Error, Msmcomm.Error;
     }
 }
