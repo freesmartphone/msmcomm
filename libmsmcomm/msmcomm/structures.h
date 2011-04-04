@@ -1059,8 +1059,10 @@ struct sups_interrogate_msg
 	uint32_t ref_id;
 	uint8_t unknown0;
 	uint8_t feature;
-#define SUPS_INTERROGATE_MSG_UNKNOWN1_SIZE 4
-	uint8_t unknown1[4];
+	uint8_t condition0;
+	uint8_t condition1;
+	uint8_t bearer;
+	uint8_t unknown1;
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_sups_interrogate_msg_init(struct sups_interrogate_msg* self)

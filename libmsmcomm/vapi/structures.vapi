@@ -1521,7 +1521,10 @@ struct SupsInterrogateMessage
 	public uint32 ref_id;
 	public uint8 unknown0;
 	public uint8 feature;
-	public uint8 unknown1[4];
+	public uint8 condition0;
+	public uint8 condition1;
+	public uint8 bearer;
+	public uint8 unknown1;
 	public unowned uint8[] data
 	{
 		get

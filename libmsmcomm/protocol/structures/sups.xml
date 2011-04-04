@@ -4,6 +4,9 @@
 	<structure name="sups_interrogate_msg" length="10">
 		<field name="ref_id" start="0" end="3" type="uint32_t"/>
 		<field name="feature" start="5" type="uint8_t"/>
+		<field name="condition0" start="6" type="uint8_t"/>
+		<field name="condition1" start="7" type="uint8_t"/>
+		<field name="bearer" start="8" type="uint8_t"/>
 	</structure>
 
 	<structure name="sups_register_msg" length="78">

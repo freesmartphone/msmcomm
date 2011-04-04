@@ -23,29 +23,26 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-    /* See TS 02.30 Annex B */
     public enum Sups.Feature
     {
         INVALID = 0x0,
         CALL_FORWARD_UNCONDITIONAL = 0x21,
-        CALL_FORWARD_MOBILE_BUSY = 0x67,
-        CALL_FORWARD_NO_REPLY = 0x61,
-        CALL_FORWARD_NOT_REACHABLE = 0x62,
-        CALL_FORWARD_ALL = 0x2,
-        CALL_FORWARD_ALL_CONDITIONAL = 0x4,
+        CALL_FORWARD_MOBILE_BUSY = 0x29,
+        CALL_FORWARD_NO_REPLY = 0x2a,
+        CALL_FORWARD_NOT_REACHABLE = 0x2b,
+        CALL_FORWARD_ALL = 0x20,
+        CALL_FORWARD_ALL_CONDITIONAL = 0x28,
         CALL_WAITING = 0x43,
-        CALLING_LINE_IDENTIFICATION_RESTRICTION = 0x31,
+        CALLING_LINE_IDENTIFICATION_RESTRICTION = 0x12,
+        CALLING_NAME_PRESENTATION = 0x19,
+        CALLING_LINE_IDENTIFICATION_PRESENTATION = 0x11,
     }
 
-    /* See TS 02.30 Annex C */
     public enum Sups.Bearer
     {
-        INVALID = 0,
-        VOICE = 1,
-        DATA = 2,
-        FAX = 4,
-        DEFAULT = 7,
-        SMS = 8,
+        DEFAULT = 0x0,
+        VOICE = 0x10,
+        DATA = 0x70,
     }
 
     public class Sups.Command.Register : BaseMessage
@@ -164,6 +161,7 @@ namespace Msmcomm.LowLevel
         private SupsInterrogateMessage _message;
 
         public Sups.Feature feature;
+        public Sups.Bearer bearer;
 
         construct
         {
@@ -177,6 +175,16 @@ namespace Msmcomm.LowLevel
         {
             _message.ref_id = ref_id;
             _message.feature = feature;
+
+            // if bearer is not default we have to set the two condition fields with the
+            // 0x1 value
+            if ( bearer != Sups.Bearer.DEFAULT )
+            {
+                _message.condition0 = 0x1;
+                _message.condition1 = 0x1;
+            }
+
+            _message.bearer = bearer;
         }
     }
 

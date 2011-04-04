@@ -460,6 +460,9 @@ end
 start sups_interrogate_msg 10
 [0-3] uint32_t ref_id
 [5] uint8_t feature
+[6] uint8_t condition0
+[7] uint8_t condition1
+[8] uint8_t bearer
 end
 
 start sups_register_msg 78
