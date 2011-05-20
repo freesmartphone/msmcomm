@@ -40,22 +40,35 @@ frame_type_names = (
   'Data',
 )
 
-packet_types = {}
-
+group_ids = { }
+msg_ids = { }
 def load_packet_types(filename):
   with open(filename) as f:
     for line in f.readlines():
       if line.startswith('#'):
         continue
-      parts = line.split(' ')
-      if len(parts) != 3 and len(parts) != 2:
+      parts = line.split(',')
+      if not len(parts) == 4:
         continue
-      if parts[0] not in packet_types.keys():
-        packet_types[parts[0]] = []
-      if len(parts) == 3:
-        packet_types[parts[0]].append({'id': parts[1], 'name': parts[2]})
-      else:
-        packet_types[parts[0]] = parts[1]
+      gid = int(parts[2].strip(), 16)
+      mid = int(parts[3].strip(), 16)
+      group_ids[gid]=parts[0].strip()
+      if not gid in msg_ids:
+        msg_ids[gid]={}
+      msg_ids[gid][mid]=parts[1].strip()
+
+def get_group_id(gid):
+  try:
+    return group_ids[gid]
+  except KeyError:
+    return "UNKNOWN"
+
+def get_msg_id(gid,mid):
+  print "IDS: gid:", gid, "mid:", mid
+  try:
+    return msg_ids[gid][mid]
+  except KeyError:
+    return "UNKNOWN"
 
 p = patterns['stefan']
 
@@ -195,7 +208,7 @@ class PID(object):
     if int(result) < 0:
       debug( "READ: ERROR" )
       return
-    mo = re.match(r"([0-9]+), \"(.*?)(?<!\\)\", ([0-9]+)", params)
+    mo = re.match(r"([0-9]+), \"(.*?)(?<!\\)\"[\.]*, ([0-9]+)", params)
     debug( mo.groups() )
     fh, data, length = mo.groups()
     fh = int(fh)
@@ -271,8 +284,8 @@ class FHLogger(FHBase):
 
       if type == 6:
           packet = packet[3:]
-          print "groupId = 0x%x msgId = 0x%x len = %i" % (ord(packet[0]), ord(packet[1]), len(packet[3:]))
-          self.identify(ord(packet[0]), ord(packet[1]))
+          print "groupId = %s[0x%x] msgId = %s[0x%x] len = %i" % (get_group_id(int(ord(packet[0]))), ord(packet[0]), get_msg_id(int(ord(packet[0])),int(ord(packet[1]))), ord(packet[1]), len(packet[3:]))
+          #self.identify(ord(packet[0]), ord(packet[1]))
           hexdump(packet[3:])
 
   def identify(self, groupId, msgId):
