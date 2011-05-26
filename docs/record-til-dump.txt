@@ -4,7 +4,7 @@
     # mount -o remount,rw /
 3. Stop TelephonyInterfaceLayer
     # initctl stop TelephonyInterfaceLayer
-4. Set loglevel for TelephonyInterfaceLayer to 'err'
+4. Set loglevel for TelephonyInterfaceLayer to 'debug'
     # PmLogCtl set TIL.CCP debug
     # PmLogCtl set TIL.LOG debug
 5. Start TelephonyInterfaceLayer again but now with strace attached!
@@ -33,7 +33,7 @@
     # mount -o remount,rw /
 3. Stop TelephonyInterfaceLayer
     # initctl stop TelephonyInterfaceLayer
-4. Set loglevel for TelephonyInterfaceLayer to 'err'
+4. Set loglevel for TelephonyInterfaceLayer to 'debug'
     # PmLogCtl set TIL.* debug
 5. Start TelephonyInterfaceLayer
     # initctl start TelephonyInterfaceLayer
