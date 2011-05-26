@@ -151,6 +151,7 @@ namespace Msmcomm.Daemon
                         var msg = response as LowLevel.Sups.Urc;
                         info.number = msg.number;
                         info.bearer = StringHandling.convertEnum<LowLevel.Sups.Bearer,SupsBearer>(msg.bearer);
+                        debug( @"bearer = $(info.bearer) ; $(msg.bearer)" );
                         finished = true;
                         break;
                     case LowLevel.MessageType.RESPONSE_SUPS_CALLBACK:

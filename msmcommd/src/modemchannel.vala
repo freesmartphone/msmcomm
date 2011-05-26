@@ -33,9 +33,6 @@ namespace Msmcomm.Daemon
         public ModemControl modem;
         public uint32 current_ref_id;
 
-        private const uint32 REFERENCE_ID_INITIAL = 1;
-        private const uint32 REFERENCE_ID_INVALID = 0;
-
         //
         // public API
         //
@@ -373,7 +370,8 @@ namespace Msmcomm.Daemon
                     {
                         // check if we have some commands with the command id set in the urc
                         // waiting
-                        if ( cmdh.command.command_id == message.command_id )
+                        if ( message.command_id != COMMAND_ID_INVALID && 
+                             cmdh.command.command_id == message.command_id )
                         {
                             cmdh.handleResponseMessage( message );
                         }

@@ -21,12 +21,16 @@
 
 namespace Msmcomm.LowLevel
 {
+    public static const uint16 COMMAND_ID_INVALID = 0xffff;
+    public static const uint32 REFERENCE_ID_INITIAL = 1;
+    public static const uint32 REFERENCE_ID_INVALID = 0;
+
     public abstract class BaseMessage : GLib.Object
     {
         public uint8 group_id { get; set;  }
         public uint16 message_id { get; set; }
-        public uint32 ref_id { get; set; default = 0x0; }
-        public uint16 command_id { get; set; default = 0x0; }
+        public uint32 ref_id { get; set; default = REFERENCE_ID_INVALID; }
+        public uint16 command_id { get; set; default = COMMAND_ID_INVALID; }
         public MessageType message_type { get; set; }
         public MessageResult result { get; protected set; default = MessageResult.OK; }
         public MessageClass message_class { get; protected set; default = MessageClass.UNKNOWN; }

@@ -185,6 +185,7 @@ namespace Msmcomm.Daemon
         {
             var info = SimFieldInfo();
             info.type = field_type;
+            info.data = "";
 
             var message = new SimReadCommandMessage();
             message.field_type = StringHandling.convertEnum<SimFieldType,Msmcomm.LowLevel.SimFileType>(field_type);
