@@ -743,10 +743,10 @@ struct WmsAcknowledgeMessage
 struct WmsSendMessage
 {
 	public uint32 ref_id;
-	public uint8 unknown0[2];
+	public uint8 unknown0;
 	public uint8 nr;
 	public uint8 five;
-	public uint8 unknown1;
+	public uint8 unknown1[2];
 	public uint32 ffffffff;
 	public uint8 unknown2[6];
 	public uint8 number_type;

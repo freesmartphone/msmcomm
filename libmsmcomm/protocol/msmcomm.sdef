@@ -226,8 +226,8 @@ end
 
 start wms_send_msg 319
 [0-3] uint32_t ref_id
-[6] uint8_t nr
-[7] uint8_t five
+[5] uint8_t nr
+[6] uint8_t five
 [9-12] uint32_t ffffffff
 [19] uint8_t number_type
 [20] uint8_t number_plan

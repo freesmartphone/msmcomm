@@ -85,6 +85,7 @@ namespace Msmcomm
         public abstract async void set_routes() throws GLib.Error, Msmcomm.Error;
         public abstract async void get_message_list() throws GLib.Error, Msmcomm.Error;
         public abstract async uint get_memory_status() throws GLib.Error, Msmcomm.Error; 
+        public abstract async void send_message(string smsc, uint8[] pdu) throws GLib.Error, Msmcomm.Error;
 
         public signal void incomming_message(SmsMessage message);
     }

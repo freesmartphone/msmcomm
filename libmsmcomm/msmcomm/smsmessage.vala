@@ -75,7 +75,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_READ_MESSAGE, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_SMS_SEND_MESSAGE, MessageClass.COMMAND);
             _message = WmsSendMessage();
             set_payload(_message.data);
         }
@@ -83,8 +83,23 @@ namespace Msmcomm.LowLevel
         protected override void prepare_data()
         {
             _message.ref_id = ref_id;
-            FsoFramework.Utility.copyData(ref _message.pdu, pdu, 255);
-            FsoFramework.Utility.copyData(ref _message.service_center, smsc.data, 36);
+
+            _message.nr = (uint8)0x01;
+            _message.five = (uint8)0x05;
+            _message.ffffffff = (uint32)0xffffffff;
+            _message.number_type = (uint8)0x01;
+            _message.number_plan = (uint8)0x01;
+            _message.six_three = (uint16)0x0306;
+
+            _message.service_center_len = (uint8)smsc.length;
+            uint8[] smsc_bytes = new uint8[smsc.length];
+            for (int i = 0; i<smsc.length; ++i)
+                smsc_bytes[i] = (uint8)int.parse(smsc[i:i+1]);
+            Memory.copy(_message.service_center, smsc_bytes, smsc_bytes.length);
+
+
+            _message.pdu_len = (uint32)pdu.length;
+            Memory.copy(_message.pdu, pdu, pdu.length);
         }
     }
 
@@ -430,6 +445,7 @@ namespace Msmcomm.LowLevel
             switch ( _message.response_type )
             {
                 case ResponseType.MESSAGE_SEND:
+                    stdout.printf("ResponseType.MESSAGE_SEND\n");
                     break;
                 case ResponseType.MESSAGE_READ:
                     break;

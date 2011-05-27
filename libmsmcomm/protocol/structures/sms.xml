@@ -46,10 +46,10 @@
 
 		<structure name="wms_send_msg" length="319">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="nr" start="6" type="uint8_t"/>
-			<field name="five" start="7" type="uint8_t"/>
+			<field name="nr" start="5" type="uint8_t"/>
+			<field name="five" start="6" type="uint8_t"/>
 			<field name="ffffffff" start="9" end="12" type="uint32_t"/>
-			<!-- guessing. always 1 -->
+			<!-- guessing: number_type is always 1 -->
 			<field name="number_type" start="19" type="uint8_t"/>
 			<field name="number_plan" start="20" type="uint8_t"/>
 			<field name="service_center_len" start="21" type="uint8_t"/>
