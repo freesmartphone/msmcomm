@@ -389,7 +389,7 @@ namespace Msmcomm.LowLevel
 
         /* response_type == ResponseType.MESSAGE_RECEIVED */
         public string sender;
-        public string pdu;
+        public uint8[] pdu;
 
         construct
         {
@@ -421,20 +421,26 @@ namespace Msmcomm.LowLevel
                     smsc_number = "";
                     for ( var n = 0; n < _message.wms_read_template.smsc_number_len; n++ )
                     {
-                        smsc_number += "%i".printf(_message.wms_read_template.smsc_number[n]);
+                        smsc_number += "%i".printf( _message.wms_read_template.smsc_number[n] );
                     }
 
                     protocol_id = _message.wms_read_template.protocol_id;
                     break;
                 case ResponseType.MESSAGE_RECEIVED:
-                    sender = convertBytesToString(_message.wms_sms_received.sender);
-                    pdu = convertBytesToString(_message.wms_sms_received.pdu);
+                    sender = "";
+                    for ( var n = 0; n < _message.wms_sms_received.sender_len; n++ )
+                    {
+                        sender += "%i".printf( _message.wms_sms_received.sender[n] );
+                    }
+
+                    pdu = new uint8[_message.wms_sms_received.pdu_len];
+                    Memory.copy( (uint8*) pdu, (uint8*) _message.wms_sms_received.pdu, _message.wms_sms_received.pdu_len );
                     break;
                 case ResponseType.MESSAGE_SUBMIT_REPORT:
                     break;
                 default:
                     response_type = ResponseType.UNKNOWN;
-                    theLogger.error( "Found unknown $(message_type) response type: 0x%02x".printf(_message.response_type ) );
+                    theLogger.error( @"Found unknown $(message_type) response type: 0x%02x".printf(_message.response_type ) );
                     break;
             }
         }

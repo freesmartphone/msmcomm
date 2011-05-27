@@ -25,7 +25,7 @@ namespace Msmcomm.LowLevel
 {
     private string convertBytesToString(uint8[] bytes)
     {
-        string *tmp = GLib.malloc0(bytes.length); 
+        string *tmp = GLib.malloc0(bytes.length);
         char *dest = (char*) tmp;
         Memory.copy(dest, (uint8*) bytes, bytes.length);
         return (owned) tmp;

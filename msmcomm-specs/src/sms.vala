@@ -74,7 +74,7 @@ namespace Msmcomm
     public struct SmsMessage
     {
         public string sender;
-        public string pdu;
+        public uint8[] pdu;
     }
 
     [DBus (timeout = 120000, name = "org.msmcomm.Sms")]
