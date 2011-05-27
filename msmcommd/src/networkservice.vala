@@ -40,6 +40,7 @@ namespace Msmcomm.Daemon
             if (network_message != null)
             {
                 info.operator_name = network_message.operator_name;
+                info.hplmn = network_message.hplmn;
                 info.rssi = (uint) network_message.rssi;
                 info.ecio = (uint) network_message.ecio;
                 info.roam = network_message.roam;

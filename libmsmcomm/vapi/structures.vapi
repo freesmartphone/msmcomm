@@ -1441,13 +1441,13 @@ struct NetworkStateInfoEvent
 	public uint8 operator_name[80];
 	public uint8 unknown2[3];
 	public uint8 hplmn_or_spdi;
-	public uint8 hplmn_length;
-	public uint8 unknown3[16];
+	public uint8 hplmn_len;
+	public uint8 hplmn[16];
 	public uint16 rssi;
 	public uint16 ecio;
-	public uint8 unknown4[4];
+	public uint8 unknown3[4];
 	public uint8 with_nitz_update;
-	public uint8 unknown5[522];
+	public uint8 unknown4[522];
 	public uint8 year;
 	public uint8 month;
 	public uint8 day;
@@ -1455,11 +1455,11 @@ struct NetworkStateInfoEvent
 	public uint8 minutes;
 	public uint8 seconds;
 	public uint16 timezone_offset;
-	public uint8 unknown6[11];
+	public uint8 unknown5[11];
 	public uint8 gsm_icon_ind;
-	public uint8 unknown7;
+	public uint8 unknown6;
 	public uint8 reg_status;
-	public uint8 unknown8;
+	public uint8 unknown7;
 	public unowned uint8[] data
 	{
 		get

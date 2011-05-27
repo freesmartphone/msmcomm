@@ -28,7 +28,7 @@
 			<field name="command" start="4" end="5" type="uint16_t"/>
 		</structure>
 
-		<structure name="network_state_info_event" length="677">677
+		<structure name="network_state_info_event" length="677">
 			<field name="change_field" start="0" end="7" type="uint8_t"/>
 			<field name="serv_status" start="8" type="uint8_t"/>
 			<field name="servce_domain" start="9" type="uint8_t"/>
@@ -39,7 +39,8 @@
 			<field name="operator_name_len" start="21" type="uint8_t"/>
 			<field name="operator_name" start="22" end="101" type="uint8_t"/>
 			<field name="hplmn_or_spdi" start="105" type="uint8_t"/>
-			<field name="hplmn_length" start="106" type="uint8_t"/>
+			<field name="hplmn_len" start="106" type="uint8_t"/>
+			<field name="hplmn" start="107" end="122" type="uint8_t"/>
 			<field name="rssi" start="123" end="124" type="uint16_t"/>
 			<field name="ecio" start="125" end="126" type="uint16_t"/>
 			<field name="with_nitz_update" start="131" type="uint8_t"/>

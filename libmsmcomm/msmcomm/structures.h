@@ -996,16 +996,16 @@ struct network_state_info_event
 #define NETWORK_STATE_INFO_EVENT_UNKNOWN2_SIZE 3
 	uint8_t unknown2[3];
 	uint8_t hplmn_or_spdi;
-	uint8_t hplmn_length;
-#define NETWORK_STATE_INFO_EVENT_UNKNOWN3_SIZE 16
-	uint8_t unknown3[16];
+	uint8_t hplmn_len;
+#define NETWORK_STATE_INFO_EVENT_HPLMN_SIZE 16
+	uint8_t hplmn[16];
 	uint16_t rssi;
 	uint16_t ecio;
-#define NETWORK_STATE_INFO_EVENT_UNKNOWN4_SIZE 4
-	uint8_t unknown4[4];
+#define NETWORK_STATE_INFO_EVENT_UNKNOWN3_SIZE 4
+	uint8_t unknown3[4];
 	uint8_t with_nitz_update;
-#define NETWORK_STATE_INFO_EVENT_UNKNOWN5_SIZE 522
-	uint8_t unknown5[522];
+#define NETWORK_STATE_INFO_EVENT_UNKNOWN4_SIZE 522
+	uint8_t unknown4[522];
 	uint8_t year;
 	uint8_t month;
 	uint8_t day;
@@ -1013,16 +1013,17 @@ struct network_state_info_event
 	uint8_t minutes;
 	uint8_t seconds;
 	uint16_t timezone_offset;
-#define NETWORK_STATE_INFO_EVENT_UNKNOWN6_SIZE 11
-	uint8_t unknown6[11];
+#define NETWORK_STATE_INFO_EVENT_UNKNOWN5_SIZE 11
+	uint8_t unknown5[11];
 	uint8_t gsm_icon_ind;
-	uint8_t unknown7;
+	uint8_t unknown6;
 	uint8_t reg_status;
-	uint8_t unknown8;
+	uint8_t unknown7;
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_network_state_info_event_init(struct network_state_info_event* self)
 {
+	self->hplmn_len = 16;
 	self->operator_name_len = 80;
 }
 

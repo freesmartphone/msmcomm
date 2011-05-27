@@ -29,6 +29,7 @@ namespace Msmcomm
         public NetworkRegistrationStatus reg_status;
         public NetworkServiceStatus service_status;
         public string operator_name;
+        public string hplmn;
         public uint rssi;
         public uint ecio;
         public bool gprs_attached;

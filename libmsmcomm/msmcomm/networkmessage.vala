@@ -130,6 +130,7 @@ namespace Msmcomm.LowLevel
         public uint16 rssi;
         public uint16 ecio;
         public string operator_name;
+        public string hplmn;
         public NetworkRegistrationStatus reg_status;
         public NetworkServiceStatus service_status;
         public bool gprs_attached;
@@ -160,6 +161,7 @@ namespace Msmcomm.LowLevel
             rssi = _message.rssi;
             ecio = _message.ecio;
             operator_name = _message.operator_name_len > 0 ? convertBytesToString(_message.operator_name) : "";
+            hplmn = _message.hplmn_len > 0 ? convertBytesToString(_message.hplmn) : "";
             reg_status = (NetworkRegistrationStatus) _message.reg_status;
             service_status = (NetworkServiceStatus) _message.serv_status;
             gprs_attached = _message.gprs_attached == 1 ? true : false;

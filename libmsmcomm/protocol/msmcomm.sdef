@@ -426,7 +426,8 @@ start network_state_info_event 677
 [21] uint8_t operator_name_len
 [22-101] uint8_t operator_name
 [105] uint8_t hplmn_or_spdi
-[106] uint8_t hplmn_length
+[106] uint8_t hplmn_len
+[107-122] uint8_t hplmn
 [123-124] uint16_t rssi
 [125-126] uint16_t ecio
 [131] uint8_t with_nitz_update
