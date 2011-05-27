@@ -338,6 +338,24 @@ static void msmcomm_low_level_structures_misc_radio_reset_ind_event_init(struct 
 }
 
 
+struct misc_get_cell_id_resp
+{
+	uint32_t ref_id;
+	uint8_t status;
+	uint8_t active_rat;
+	uint8_t num_cells;
+	uint32_t cell_id;
+#define MISC_GET_CELL_ID_RESP_MCC_SIZE 3
+	uint8_t mcc[3];
+#define MISC_GET_CELL_ID_RESP_UNKNOWN0_SIZE 77
+	uint8_t unknown0[77];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_misc_get_cell_id_resp_init(struct misc_get_cell_id_resp* self)
+{
+}
+
+
 struct state_change_operation_mode_msg
 {
 	uint32_t ref_id;

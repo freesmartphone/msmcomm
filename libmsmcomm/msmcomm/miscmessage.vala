@@ -413,6 +413,36 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public class MiscGetCellIdResponseMessage : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x1c;
+        public static const uint16 MESSAGE_ID = 0x13;
+
+        public uint32 cell_id;
+        public uint8 num_cells;
+        public uint8 active_rat;
+        public uint8 status;
+
+        private MiscGetCellIdResponse _message;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_CELL_ID, MessageClass.SOLICITED_RESPONSE);
+
+            _message = MiscGetCellIdResponse();
+            set_payload(_message.data);
+        }
+
+        public override void evaluate_data()
+        {
+            ref_id = _message.ref_id;
+            cell_id = _message.cell_id;
+            num_cells = _message.num_cells;
+            active_rat = _message.active_rat;
+            status = _message.status;
+        }
+    }
+
     public class MiscRadioResetIndUnsolicitedRespMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x1d;

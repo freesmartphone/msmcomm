@@ -88,6 +88,15 @@
 		<structure name="misc_radio_reset_ind_event" length="76">
 		</structure>
 
+		<structure name="misc_get_cell_id_resp" length="91">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="status" start="4" type="uint8_t"/>
+			<field name="active_rat" start="5" type="uint8_t"/>
+			<field name="num_cells" start="6" type="uint8_t"/>
+			<field name="cell_id" start="7" end="10" type="uint32_t"/>
+			<field name="mcc" start="11" end="13" type="uint8_t"/>
+		</structure>
+
 	</structures>
 </namespace:misc>
 

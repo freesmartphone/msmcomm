@@ -466,6 +466,30 @@ struct MiscRadioResetIndEvent
 }
 
 
+[CCode (cname = "struct misc_get_cell_id_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct MiscGetCellIdResponse
+{
+	public uint32 ref_id;
+	public uint8 status;
+	public uint8 active_rat;
+	public uint8 num_cells;
+	public uint32 cell_id;
+	public uint8 mcc[3];
+	public uint8 unknown0[77];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( MiscGetCellIdResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_misc_get_cell_id_resp_init")]
+	public MiscGetCellIdResponse();
+}
+
+
 [CCode (cname = "struct state_change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
 struct StateChangeOperationModeMessage
 {
