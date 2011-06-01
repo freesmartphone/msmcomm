@@ -335,9 +335,11 @@ namespace Msmcomm.LowLevel
 
         public enum ResponseType
         {
+            UNKNOWN = -1,
             GATEWAY_READY = 0x0,
             MEMORY_STATUS = 0x3,
             GET_MESSAGE_LIST = 0x4,
+            GET_DOMAIN_PREF = 0x6,
             SMS = 0x8,
             MEMORY_STATUS_SET = 0x9,
         }
@@ -356,6 +358,27 @@ namespace Msmcomm.LowLevel
         {
             // ref_id = _message.ref_id;
             response_type = (ResponseType) _message.response_type;
+
+            switch ( _message.response_type )
+            {
+                case ResponseType.GATEWAY_READY:
+                    break;
+                case ResponseType.MEMORY_STATUS:
+                    break;
+                case ResponseType.GET_MESSAGE_LIST:
+                    break;
+                case ResponseType.GET_DOMAIN_PREF:
+                    break;
+                case ResponseType.SMS:
+                    break;
+                case ResponseType.MEMORY_STATUS_SET:
+                    break;
+                default:
+                    response_type = ResponseType.UNKNOWN;
+                    theLogger.error( @"Found unknown $(message_type) response type: 0x%02x".printf(_message.response_type ) );
+                    break;
+
+            }
         }
     }
 
@@ -374,7 +397,7 @@ namespace Msmcomm.LowLevel
             MESSAGE_READ_TEMPLATE = 0x7,
             MESSAGE_RECEIVED = 0xf,
             MESSAGE_SUBMIT_REPORT = 0x10,
-            UNKNOWN,
+            UNKNOWN = -1,
         }
 
         public ResponseType response_type;
