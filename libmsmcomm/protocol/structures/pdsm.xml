@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace:pdsm>
+	<structures>
+		<structures name="pdsm_pd_event" length="868">
+			<field name="latitude_low" start="703" end="706" type="uint32_t"/>
+			<field name="latitude_high" start="707" end="710" type="int32_t"/>
+		</structure>
+	</structures>
+</namespace:pdsm>
+
