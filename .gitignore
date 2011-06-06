@@ -32,3 +32,8 @@ frame_test
 test_message
 .deps
 core
+*.stamp
+*.o
+*.gir
+*.deps
+*~
