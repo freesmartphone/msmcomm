@@ -1208,5 +1208,161 @@ static void msmcomm_low_level_structures_voicemail_event_init(struct voicemail_e
 {
 }
 
+
+struct pdsm_pd_get_pos_msg
+{
+	uint32_t ref_id;
+	uint8_t value0;
+	uint8_t value1;
+	uint8_t value2;
+#define PDSM_PD_GET_POS_MSG_UNKNOWN0_SIZE 3
+	uint8_t unknown0[3];
+	uint32_t mode;
+#define PDSM_PD_GET_POS_MSG_UNKNOWN1_SIZE 6
+	uint8_t unknown1[6];
+	uint32_t value3;
+#define PDSM_PD_GET_POS_MSG_UNKNOWN2_SIZE 20
+	uint8_t unknown2[20];
+	uint8_t accuracy;
+#define PDSM_PD_GET_POS_MSG_UNKNOWN3_SIZE 3
+	uint8_t unknown3[3];
+	uint8_t value4;
+#define PDSM_PD_GET_POS_MSG_UNKNOWN4_SIZE 4
+	uint8_t unknown4[4];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_pdsm_pd_get_pos_msg_init(struct pdsm_pd_get_pos_msg* self)
+{
+	self->value4 = 0x1e;
+	self->value3 = 0xffff;
+	self->value2 = 6;
+	self->value1 = 0;
+	self->value0 = 7;
+}
+
+
+struct pdsm_pa_set_parm_msg
+{
+	uint32_t ref_id;
+	uint8_t value0;
+#define PDSM_PA_SET_PARM_MSG_UNKNOWN0_SIZE 262
+	uint8_t unknown0[262];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_pdsm_pa_set_parm_msg_init(struct pdsm_pa_set_parm_msg* self)
+{
+	self->value0 = 3;
+}
+
+
+struct pdsm_xtra_set_data_msg
+{
+	uint32_t ref_id;
+	uint32_t packet_size;
+#define PDSM_XTRA_SET_DATA_MSG_DATA_SIZE 5000
+	uint8_t data[5000];
+	uint8_t packet_count;
+	uint8_t packet_total;
+	uint8_t unknown0;
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_pdsm_xtra_set_data_msg_init(struct pdsm_xtra_set_data_msg* self)
+{
+}
+
+
+struct pdsm_pd_end_session_msg
+{
+#define PDSM_PD_END_SESSION_MSG_UNKNOWN0_SIZE 12
+	uint8_t unknown0[12];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_pdsm_pd_end_session_msg_init(struct pdsm_pd_end_session_msg* self)
+{
+}
+
+
+struct pdsm_xtra_set_data_resp
+{
+#define PDSM_XTRA_SET_DATA_RESP_UNKNOWN0_SIZE 13
+	uint8_t unknown0[13];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_pdsm_xtra_set_data_resp_init(struct pdsm_xtra_set_data_resp* self)
+{
+}
+
+
+struct pdsm_pa_set_parm_resp
+{
+#define PDSM_PA_SET_PARM_RESP_UNKNOWN0_SIZE 9
+	uint8_t unknown0[9];
+	uint32_t result;
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_pdsm_pa_set_parm_resp_init(struct pdsm_pa_set_parm_resp* self)
+{
+}
+
+
+struct pdsm_pd_get_pos_resp
+{
+#define PDSM_PD_GET_POS_RESP_UNKNOWN0_SIZE 13
+	uint8_t unknown0[13];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_pdsm_pd_get_pos_resp_init(struct pdsm_pd_get_pos_resp* self)
+{
+}
+
+
+struct pdsm_pd_end_session_resp
+{
+#define PDSM_PD_END_SESSION_RESP_UNKNOWN0_SIZE 13
+	uint8_t unknown0[13];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_pdsm_pd_end_session_resp_init(struct pdsm_pd_end_session_resp* self)
+{
+}
+
+
+struct pdsm_xtra_event
+{
+	uint8_t response_type;
+#define PDSM_XTRA_EVENT_UNKNOWN0_SIZE 16
+	uint8_t unknown0[16];
+#define PDSM_XTRA_EVENT_XTRA_DATA_SIZE 134
+	uint8_t xtra_data[134];
+#define PDSM_XTRA_EVENT_UNKNOWN1_SIZE 717
+	uint8_t unknown1[717];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_pdsm_xtra_event_init(struct pdsm_xtra_event* self)
+{
+}
+
+
+struct pdsm_pd_event
+{
+	uint8_t response_type;
+#define PDSM_PD_EVENT_UNKNOWN0_SIZE 19
+	uint8_t unknown0[19];
+	uint32_t timestamp;
+#define PDSM_PD_EVENT_UNKNOWN1_SIZE 679
+	uint8_t unknown1[679];
+	uint32_t latitude_low;
+	int32_t latitude_high;
+	uint32_t longitude_low;
+	int32_t longitude_hight;
+	uint16_t velocity;
+#define PDSM_PD_EVENT_UNKNOWN2_SIZE 147
+	uint8_t unknown2[147];
+} __attribute__ ((packed));
+
+static void msmcomm_low_level_structures_pdsm_pd_event_init(struct pdsm_pd_event* self)
+{
+}
+
 #endif
 

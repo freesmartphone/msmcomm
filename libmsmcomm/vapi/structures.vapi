@@ -1733,5 +1733,217 @@ struct VoicemailEvent
 	public VoicemailEvent();
 }
 
+
+[CCode (cname = "struct pdsm_pd_get_pos_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PdsmPdGetPosMessage
+{
+	public uint32 ref_id;
+	public uint8 value0;
+	public uint8 value1;
+	public uint8 value2;
+	public uint8 unknown0[3];
+	public uint32 mode;
+	public uint8 unknown1[6];
+	public uint32 value3;
+	public uint8 unknown2[20];
+	public uint8 accuracy;
+	public uint8 unknown3[3];
+	public uint8 value4;
+	public uint8 unknown4[4];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PdsmPdGetPosMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_pdsm_pd_get_pos_msg_init")]
+	public PdsmPdGetPosMessage();
+}
+
+
+[CCode (cname = "struct pdsm_pa_set_parm_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PdsmPaSetParmMessage
+{
+	public uint32 ref_id;
+	public uint8 value0;
+	public uint8 unknown0[262];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PdsmPaSetParmMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_pdsm_pa_set_parm_msg_init")]
+	public PdsmPaSetParmMessage();
+}
+
+
+[CCode (cname = "struct pdsm_xtra_set_data_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PdsmXtraSetDataMessage
+{
+	public uint32 ref_id;
+	public uint32 packet_size;
+	public uint8 data[5000];
+	public uint8 packet_count;
+	public uint8 packet_total;
+	public uint8 unknown0;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PdsmXtraSetDataMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_pdsm_xtra_set_data_msg_init")]
+	public PdsmXtraSetDataMessage();
+}
+
+
+[CCode (cname = "struct pdsm_pd_end_session_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct PdsmPdEndSessionMessage
+{
+	public uint8 unknown0[12];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PdsmPdEndSessionMessage );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_pdsm_pd_end_session_msg_init")]
+	public PdsmPdEndSessionMessage();
+}
+
+
+[CCode (cname = "struct pdsm_xtra_set_data_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct PdsmXtraSetDataResponse
+{
+	public uint8 unknown0[13];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PdsmXtraSetDataResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_pdsm_xtra_set_data_resp_init")]
+	public PdsmXtraSetDataResponse();
+}
+
+
+[CCode (cname = "struct pdsm_pa_set_parm_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct PdsmPaSetParmResponse
+{
+	public uint8 unknown0[9];
+	public uint32 result;
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PdsmPaSetParmResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_pdsm_pa_set_parm_resp_init")]
+	public PdsmPaSetParmResponse();
+}
+
+
+[CCode (cname = "struct pdsm_pd_get_pos_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct PdsmPdGetPosResponse
+{
+	public uint8 unknown0[13];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PdsmPdGetPosResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_pdsm_pd_get_pos_resp_init")]
+	public PdsmPdGetPosResponse();
+}
+
+
+[CCode (cname = "struct pdsm_pd_end_session_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct PdsmPdEndSessionResponse
+{
+	public uint8 unknown0[13];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PdsmPdEndSessionResponse );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_pdsm_pd_end_session_resp_init")]
+	public PdsmPdEndSessionResponse();
+}
+
+
+[CCode (cname = "struct pdsm_xtra_event", cheader_filename = "structures.h", destroy_function = "")]
+struct PdsmXtraEvent
+{
+	public uint8 response_type;
+	public uint8 unknown0[16];
+	public uint8 xtra_data[134];
+	public uint8 unknown1[717];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PdsmXtraEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_pdsm_xtra_event_init")]
+	public PdsmXtraEvent();
+}
+
+
+[CCode (cname = "struct pdsm_pd_event", cheader_filename = "structures.h", destroy_function = "")]
+struct PdsmPdEvent
+{
+	public uint8 response_type;
+	public uint8 unknown0[19];
+	public uint32 timestamp;
+	public uint8 unknown1[679];
+	public uint32 latitude_low;
+	public int32 latitude_high;
+	public uint32 longitude_low;
+	public int32 longitude_hight;
+	public uint16 velocity;
+	public uint8 unknown2[147];
+	public unowned uint8[] data
+	{
+		get
+		{
+			unowned uint8[] res = (uint8[])(&this);
+			res.length = (int)sizeof( PdsmPdEvent );
+			return res;
+		}
+	}
+	[CCode (cname = "msmcomm_low_level_structures_pdsm_pd_event_init")]
+	public PdsmPdEvent();
+}
+
 } /* namespace Msmcomm.LowLevel.Structures */ 
 

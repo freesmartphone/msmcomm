@@ -34,7 +34,8 @@ STRUCTURE_protocol = \
 	protocol/structures/network.xml \
 	protocol/structures/sound.xml \
 	protocol/structures/sups.xml \
-	protocol/structures/voicemail.xml
+	protocol/structures/voicemail.xml \
+	protocol/structures/pdsm.xml
 
 generate-structures:
 	$(top_srcdir)/tools/xml-to-sdef.py $(STRUCTURE_protocol) > $(top_srcdir)/protocol/msmcomm.sdef

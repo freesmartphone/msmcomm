@@ -524,3 +524,61 @@ start voicemail_event 9
 [1] uint8_t line1_vm_count
 end
 
+#-------------------------------------------------------------------
+# PDSM
+#-------------------------------------------------------------------
+start pdsm_pd_get_pos_msg 53
+[0-3] uint32_t ref_id
+[4] uint8_t value0 = 7
+[5] uint8_t value1 = 0
+[6] uint8_t value2 = 6
+[10-13] uint32_t mode
+[20-23] uint32_t value3 = 0xffff
+[44] uint8_t accuracy
+[48] uint8_t value4 = 0x1e
+end
+
+start pdsm_pa_set_parm_msg 267
+[0-3] uint32_t ref_id
+[4] uint8_t value0 = 3
+end
+
+start pdsm_xtra_set_data_msg 5011
+[0-3] uint32_t ref_id
+[4-7] uint32_t packet_size
+[8-5007] uint8_t data
+[5008] uint8_t packet_count
+[5009] uint8_t packet_total
+end
+
+start pdsm_pd_end_session_msg 12
+end
+
+start pdsm_xtra_set_data_resp 13
+end
+
+start pdsm_pa_set_parm_resp 13
+[9-12] uint32_t result
+end
+
+start pdsm_pd_get_pos_resp 13
+end
+
+start pdsm_pd_end_session_resp 13
+end
+
+start pdsm_xtra_event 868
+[0] uint8_t response_type
+[17-150] uint8_t xtra_data
+end
+
+start pdsm_pd_event 868
+[0] uint8_t response_type
+[20-23] uint32_t timestamp
+[703-706] uint32_t latitude_low
+[707-710] int32_t latitude_high
+[711-714] uint32_t longitude_low
+[715-718] int32_t longitude_hight
+[719-720] uint16_t velocity
+end
+

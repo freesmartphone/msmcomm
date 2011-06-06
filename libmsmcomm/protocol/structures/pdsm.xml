@@ -1,10 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <namespace:pdsm>
 	<structures>
-		<structures name="pdsm_pd_event" length="868">
+
+		<structure name="pdsm_pd_get_pos_msg" length="53">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field start="4" type="uint8_t" value="7"/>
+			<field start="5" type="uint8_t" value="0"/>
+			<field start="6" type="uint8_t" value="6"/>
+			<field name="mode" start="10" end="13" type="uint32_t">
+				<description>
+					Possible values are:
+					- 0: unknown
+					- 1: standalone
+					- 2: msbased
+					- 3: msassisted
+					- 4: optimalspeed
+					- 5: optimalaccuracy
+					- 6: optimaldata
+				</description>
+			</field>
+			<field start="20" end="23" type="uint32_t" value="0xffff"/>
+			<field name="accuracy" start="44" type="uint8_t"/>
+			<field start="48" type="uint8_t" value="0x1e"/>
+		</structure>
+
+		<structure name="pdsm_pa_set_parm_msg" length="267">
+			<description>
+				Is used by webOS to set the location privacy (whatever this means).
+			</description>
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field start="4" type="uint8_t" value="3"/>
+		</structure>
+
+		<structure name="pdsm_xtra_set_data_msg" length="5011">
+			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<field name="packet_size" start="4" end="7" type="uint32_t"/>
+			<field name="data" start="8" end="5007" type="uint8_t"/>
+			<field name="packet_count" start="5008" type="uint8_t">
+				<description>
+					Packet counting starts with one and not zero!
+				</description>
+			</field>
+			<field name="packet_total" start="5009" type="uint8_t"/>
+		</structure>
+
+		<structure name="pdsm_pd_end_session_msg" length="12">
+		</structure>
+
+		<structure name="pdsm_xtra_set_data_resp" length="13">
+		</structure>
+
+		<structure name="pdsm_pa_set_parm_resp" length="13">
+			<field name="result" start="9" end="12" type="uint32_t"/>
+		</structure>
+
+		<structure name="pdsm_pd_get_pos_resp" length="13">
+		</structure>
+
+		<structure name="pdsm_pd_end_session_resp" length="13">
+		</structure>
+
+		<structure name="pdsm_xtra_event" length="868">
+			<field name="response_type" start="0" type="uint8_t">
+				<description>
+					Possible values are:
+					- 1: XtraDownLoadReq
+					- 2: XtraStatus
+					- 4: Xtra
+				</description>
+			</field>
+			<field name="xtra_data" start="17" end="150" type="uint8_t">
+				<description>
+					This includes three differnt urls for downloading the xtra data. webOS
+					simply copies everything until the first null byte occurs. In most
+					cases this is the url http://xtra3.gpsonextra.net/xtra.bin
+					All other bytes should be ignored.
+				</description>
+			</field>
+		</structure>
+
+		<structure name="pdsm_pd_event" length="868">
+			<field name="response_type" start="0" type="uint8_t">
+				<description>
+					Possible values are:
+					- 7: GpsFixData
+					- 8: GpsSessionDone
+				</description>
+			</field>
+			<field name="timestamp" start="20" end="23" type="uint32_t">
+				<description>
+					To use this timestamp we need to convert it first from gps time to
+					epoch time (1/1/1970 -> 1/1/1980) by adding a offset of 315964800.
+				</description>
+			</field>
 			<field name="latitude_low" start="703" end="706" type="uint32_t"/>
 			<field name="latitude_high" start="707" end="710" type="int32_t"/>
+			<field name="longitude_low" start="711" end="714" type="uint32_t"/>
+			<field name="longitude_hight" start="715" end="718" type="int32_t"/>
+			<field name="velocity" start="719" end="720" type="uint16_t">
+				<description>
+					The value has to be devided by 10 then it's in kp/s. Divide by 3.6 to
+					m/s.
+				</description>
+			</field>
 		</structure>
+
 	</structures>
 </namespace:pdsm>
 
