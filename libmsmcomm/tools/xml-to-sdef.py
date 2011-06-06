@@ -34,6 +34,7 @@ class Handler(ContentHandler):
 		self.structure = {}
 		self.field = {}
 		self.text = ""
+		self.anonymous_count = 0
 
 	def startDocument(self):
 		pass
@@ -47,6 +48,7 @@ class Handler(ContentHandler):
 		elif element == "structures":
 			self.structures = []
 		elif element == "structure":
+			self.anonymous_count = 0
 			self.structure = {}
 			self.structure['name'] = attrs.get('name')
 			self.structure['length'] = attrs.get('length')
@@ -54,7 +56,11 @@ class Handler(ContentHandler):
                         type_size[self.structure['name']] = self.structure['length']
 		elif element == "field":
 			self.field = {}
-			self.field['name'] = attrs.get('name')
+			self.field['name'] = attrs.get('name', None)
+			# If no name set we have a anonymous field
+			if self.field['name'] == None:
+				self.field['name'] = "value%i" % self.anonymous_count
+				self.anonymous_count += 1
 			self.field['start'] = attrs.get('start', 0)
 			self.field['end'] = attrs.get('end', 0)
 			self.field['type'] = attrs.get('type', 'uint8_t')
