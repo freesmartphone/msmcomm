@@ -58,6 +58,7 @@ class Handler(ContentHandler):
 			self.field['start'] = attrs.get('start', 0)
 			self.field['end'] = attrs.get('end', 0)
 			self.field['type'] = attrs.get('type', 'uint8_t')
+			self.field['value'] = attrs.get('value', None)
 			self.field['variants'] = []
 		elif element == "variant":
 			v = {}
@@ -103,6 +104,8 @@ class Handler(ContentHandler):
 							f.write(",")
 						count += 1
 					f.write("]")
+				if not field['value'] == None:
+					f.write(" = %s" % field['value'])
 				f.write("\n")
 			f.write("end\n")
 			f.write("\n")

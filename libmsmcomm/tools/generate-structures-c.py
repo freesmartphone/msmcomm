@@ -37,6 +37,7 @@ def build_object(name, len, parts):
   print "{"
 
   lengths = {}
+  default_values = {}
 
   for part in parts:
     type = part['type']
@@ -46,6 +47,9 @@ def build_object(name, len, parts):
     if not type in base_types:
         type = "struct " + type
     to_print = "%s %s" % (type, member_name)
+
+    if part.has_key('value') and not part['value'] == None:
+        default_values[member_name] = part['value']
 
     if member_len == 1:
       to_print = "%s;" % to_print
@@ -65,6 +69,8 @@ def build_object(name, len, parts):
   print "{"
   for n,l in lengths.iteritems():
     print_indent("self->%s = %i;" % (n, l))
+  for name, value in default_values.iteritems():
+    print_indent("self->%s = %s;" % (name, value))
   print "}"
 
 in_object = False
@@ -120,7 +126,7 @@ with open(sys.argv[1]) as f:
       start = 0
       rparts = line.split(' ')
 
-      if not len(rparts) in (3, 4):
+      if not len(rparts) in (3, 4, 5):
         print "fatal parsing error: '%s'" % line
         sys.exit(1)
 
@@ -138,7 +144,7 @@ with open(sys.argv[1]) as f:
       else:
         start_offset = int(offsets[0])
         end_offset = int(offsets[1])
-      
+
       # do we have to fill a gap between the last part and this one?
       if start_offset > last_end_offset:
         gap = {}
@@ -152,12 +158,16 @@ with open(sys.argv[1]) as f:
       # create current part
       part = {}
       part['name'] = rparts[2]
+      part['value'] = None
 
       part['type'] = rparts[1]
       if not part['type'] in byte_size:
         print "fatal error: no valid type '%s'" % line
         sys.exit(1)
       part['len'] = (end_offset - start_offset + 1) / byte_size[part['type']]
+
+      if len(rparts) == 5:
+        part['value'] = rparts[4]
 
       object_parts.append(part)
       last_end_offset = start_offset + part['len'] * byte_size[part['type']]
@@ -189,5 +199,4 @@ with open(sys.argv[1]) as f:
 print ""
 print "#endif"
 print ""
-      
 

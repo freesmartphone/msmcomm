@@ -163,7 +163,7 @@ with open(sys.argv[1]) as f:
       start = 0
       rparts = line.split(' ')
 
-      if not len(rparts) in (3, 4):
+      if not len(rparts) in (3, 4, 5):
         print "fatal parsing error: '%s'" % line
         sys.exit(1)
 
@@ -206,6 +206,9 @@ with open(sys.argv[1]) as f:
       part['variants'] = []
       if len(rparts) == 4:
         part['variants'] = rparts[3].rstrip("]").lstrip("[").split(",")
+
+      if len(rparts) == 5:
+        part['value'] = rparts[4]
 
       object_parts.append(part)
       last_end_offset = start_offset + part['len'] * byte_size[part['type']]
