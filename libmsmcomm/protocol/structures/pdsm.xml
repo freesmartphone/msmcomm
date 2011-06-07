@@ -35,7 +35,7 @@
 		<structure name="pdsm_xtra_set_data_msg" length="5011">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="packet_size" start="4" end="7" type="uint32_t"/>
-			<field name="data" start="8" end="5007" type="uint8_t"/>
+			<field name="packet_data" start="8" end="5007" type="uint8_t"/>
 			<field name="packet_count" start="5008" type="uint8_t">
 				<description>
 					Packet counting starts with one and not zero!

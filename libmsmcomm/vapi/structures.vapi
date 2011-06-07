@@ -1789,7 +1789,7 @@ struct PdsmXtraSetDataMessage
 {
 	public uint32 ref_id;
 	public uint32 packet_size;
-	public uint8 data[5000];
+	public uint8 packet_data[5000];
 	public uint8 packet_count;
 	public uint8 packet_total;
 	public uint8 unknown0;

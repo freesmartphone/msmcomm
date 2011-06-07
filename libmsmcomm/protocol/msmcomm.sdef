@@ -546,7 +546,7 @@ end
 start pdsm_xtra_set_data_msg 5011
 [0-3] uint32_t ref_id
 [4-7] uint32_t packet_size
-[8-5007] uint8_t data
+[8-5007] uint8_t packet_data
 [5008] uint8_t packet_count
 [5009] uint8_t packet_total
 end

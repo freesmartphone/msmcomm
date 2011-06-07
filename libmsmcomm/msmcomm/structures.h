@@ -1259,8 +1259,8 @@ struct pdsm_xtra_set_data_msg
 {
 	uint32_t ref_id;
 	uint32_t packet_size;
-#define PDSM_XTRA_SET_DATA_MSG_DATA_SIZE 5000
-	uint8_t data[5000];
+#define PDSM_XTRA_SET_DATA_MSG_PACKET_DATA_SIZE 5000
+	uint8_t packet_data[5000];
 	uint8_t packet_count;
 	uint8_t packet_total;
 	uint8_t unknown0;
