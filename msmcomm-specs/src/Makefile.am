@@ -35,6 +35,7 @@ libmsmcomm_specs_la_VALASOURCES = \
 	sound.vala \
 	voicemail.vala \
 	sms.vala \
+	gps.vala \
 	$(NULL)
 
 libmsmcomm_specsdir = $(includedir)/msmcomm-specs-2.0
