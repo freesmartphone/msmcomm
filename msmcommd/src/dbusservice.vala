@@ -131,6 +131,7 @@ namespace Msmcomm.Daemon
             services[typeof(Msmcomm.Sound)] = new SoundService(modem);
             services[typeof(Msmcomm.Sms)] = new SmsService(modem);
             services[typeof(Msmcomm.Sups)] = new SupsService(modem);
+            services[typeof(Msmcomm.GPS)] = new GpsService(modem);
         }
 
         public bool register()
@@ -164,6 +165,7 @@ namespace Msmcomm.Daemon
                 registerService<Msmcomm.Sound>();
                 registerService<Msmcomm.Sms>();
                 registerService<Msmcomm.Sups>();
+                registerService<Msmcomm.GPS>();
             }
             catch (GLib.Error err)
             {
