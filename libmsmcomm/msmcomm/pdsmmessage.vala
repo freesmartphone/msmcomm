@@ -24,7 +24,7 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
-    public class Pdsm.PaSetParamMessage : BaseMessage
+    public class Pdsm.Command.PaSetParam : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x21;
         public static const uint16 MESSAGE_ID = 0x2;
@@ -46,7 +46,7 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class Pdsm.PaSetParamResponse : BaseMessage
+    public class Pdsm.Response.PaSetParam : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x22;
         public static const uint16 MESSAGE_ID = 0x2;

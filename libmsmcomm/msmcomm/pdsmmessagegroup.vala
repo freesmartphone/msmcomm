@@ -30,7 +30,7 @@ namespace Msmcomm.LowLevel
         {
             base(PdsmResponseMessageGroup.GROUP_ID);
 
-            message_types[Pdsm.PaSetParamResponse.MESSAGE_ID] = typeof(Pdsm.PaSetParamResponse);
+            message_types[Pdsm.Response.PaSetParam.MESSAGE_ID] = typeof(Pdsm.Response.PaSetParam);
         }
     }
 
