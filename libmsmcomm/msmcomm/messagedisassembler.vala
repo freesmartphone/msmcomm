@@ -49,6 +49,8 @@ namespace Msmcomm.LowLevel
             groups[VoicemailUrcMessageGroup.GROUP_ID] = new VoicemailUrcMessageGroup();
             groups[SmsResponseMessageGroup.GROUP_ID] = new SmsResponseMessageGroup();
             groups[SmsUrcMessageGroup.GROUP_ID] = new SmsUrcMessageGroup();
+            groups[PdsmResponseMessageGroup.GROUP_ID] = new PdsmResponseMessageGroup();
+            groups[PdsmUrcMessageGroup.GROUP_ID] = new PdsmUrcMessageGroup();
         }
 
         public uint8 unpack_group_id(uint8[] data)

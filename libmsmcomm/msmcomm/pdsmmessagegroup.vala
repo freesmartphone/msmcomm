@@ -34,13 +34,13 @@ namespace Msmcomm.LowLevel
         }
     }
 
-    public class PdsmUnsolicitedResponseMessageGroup : BaseMessageGroup
+    public class PdsmUrcMessageGroup : BaseMessageGroup
     {
         public static const uint8 GROUP_ID = 0x23;
 
-        public PdsmUnsolicitedResponseMessageGroup()
+        public PdsmUrcMessageGroup()
         {
-            base(PdsmUnsolicitedResponseMessageGroup.GROUP_ID);
+            base(PdsmUrcMessageGroup.GROUP_ID);
         }
     }
 }
