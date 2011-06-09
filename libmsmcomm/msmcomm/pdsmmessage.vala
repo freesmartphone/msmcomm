@@ -65,4 +65,58 @@ namespace Msmcomm.LowLevel
         {
         }
     }
+
+    public class Pdsm.Urc.Pd : BaseMessage
+    {
+        public static const uint8 GROUP_ID = 0x23;
+        public static const uint16 MESSAGE_ID = 0x1;
+
+        public static uint32 TIMESTAMP_OFFSET = 315964800;
+
+        private PdsmPdEvent _message;
+
+        public enum ResponseType
+        {
+           FIX_DATA = 7,
+           SESSION_DONE = 8,
+           UNKNOWN = -1,
+        }
+
+        public ResponseType response_type;
+
+        /* response_type = ResponseType.FIX_DATA */
+        public uint32 timestamp;
+        public double longitude;
+        public double latitude;
+        public float velocity;
+
+        construct
+        {
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_PDSM_PD, MessageClass.UNSOLICITED_RESPONSE);
+
+            _message = PdsmPdEvent();
+            set_payload(_message.data);
+        }
+
+        protected override void evaluate_data()
+        {
+            response_type = (ResponseType) _message.response_type;
+
+            switch (response_type)
+            {
+                case ResponseType.FIX_DATA:
+                    timestamp = _message.timestamp + TIMESTAMP_OFFSET;
+                    latitude = parseDouble(_message.latitude_low, _message.latitude_high);
+                    longitude = parseDouble(_message.longitude_low, _message.longitude_high);
+                    velocity = ((float)(_message.velocity / 10)) / 3.6f; // it's now in m/s
+                    break;
+                case ResponseType.SESSION_DONE:
+                    break;
+                default:
+                    response_type = ResponseType.UNKNOWN;
+                    theLogger.error(@"Found unknown $(message_type) response type: 0x%02x".printf(_message.response_type));
+                    break;
+            }
+        }
+    }
 }

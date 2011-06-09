@@ -49,6 +49,13 @@ namespace Msmcomm.LowLevel
         return b1 * 10 + b0;
     }
 
+    private inline double parseDouble(uint32 low, int32 high)
+    {
+        int64 tmp = ((((int64) high) << 32) | low);
+        double result = (((double) tmp) / 1.0E8);
+        return result;
+    }
+
     public uint8[] encodeBinary( string str )
     {
         var result = new uint8[str.length];
