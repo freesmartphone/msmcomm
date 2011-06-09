@@ -1,0 +1,7 @@
+=========================================================================================
+MSM RPC
+=========================================================================================
+
+This is a modified copy of the librpc provided by the Android Open Source Project. It is
+modified in some parts so it can be better integrated in other software environments than
+android. libmsmrpc provides a binding for the vala programming language too.
