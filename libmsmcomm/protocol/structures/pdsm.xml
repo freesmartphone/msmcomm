@@ -96,7 +96,7 @@
 			<field name="latitude_low" start="703" end="706" type="uint32_t"/>
 			<field name="latitude_high" start="707" end="710" type="int32_t"/>
 			<field name="longitude_low" start="711" end="714" type="uint32_t"/>
-			<field name="longitude_hight" start="715" end="718" type="int32_t"/>
+			<field name="longitude_high" start="715" end="718" type="int32_t"/>
 			<field name="velocity" start="719" end="720" type="uint16_t">
 				<description>
 					The value has to be devided by 10 then it's in kp/s. Divide by 3.6 to

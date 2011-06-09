@@ -1929,7 +1929,7 @@ struct PdsmPdEvent
 	public uint32 latitude_low;
 	public int32 latitude_high;
 	public uint32 longitude_low;
-	public int32 longitude_hight;
+	public int32 longitude_high;
 	public uint16 velocity;
 	public uint8 unknown2[147];
 	public unowned uint8[] data

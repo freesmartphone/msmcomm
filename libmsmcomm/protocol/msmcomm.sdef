@@ -578,7 +578,7 @@ start pdsm_pd_event 868
 [703-706] uint32_t latitude_low
 [707-710] int32_t latitude_high
 [711-714] uint32_t longitude_low
-[715-718] int32_t longitude_hight
+[715-718] int32_t longitude_high
 [719-720] uint16_t velocity
 end
 

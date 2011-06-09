@@ -1354,7 +1354,7 @@ struct pdsm_pd_event
 	uint32_t latitude_low;
 	int32_t latitude_high;
 	uint32_t longitude_low;
-	int32_t longitude_hight;
+	int32_t longitude_high;
 	uint16_t velocity;
 #define PDSM_PD_EVENT_UNKNOWN2_SIZE 147
 	uint8_t unknown2[147];
