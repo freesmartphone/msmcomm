@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+
+Name: libmsmrpc
+Description: A implemenation of th onc rpc protocol based on the Android librpc library.
+Version: @VERSION@
+Libs: -L${libdir} -lmsmrpc
+Cflags: -I${includedir}/msmrpc-1.0
