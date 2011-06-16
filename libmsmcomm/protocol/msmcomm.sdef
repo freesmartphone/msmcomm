@@ -562,6 +562,7 @@ start pdsm_pa_set_parm_resp 13
 end
 
 start pdsm_pd_get_pos_resp 13
+[4-7] uint32_t ref_id
 end
 
 start pdsm_pd_end_session_resp 13

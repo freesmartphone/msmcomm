@@ -31,6 +31,7 @@ namespace Msmcomm.LowLevel
             base(PdsmResponseMessageGroup.GROUP_ID);
 
             message_types[Pdsm.Response.PaSetParam.MESSAGE_ID] = typeof(Pdsm.Response.PaSetParam);
+            message_types[Pdsm.Response.PdGetPosition.MESSAGE_ID] = typeof(Pdsm.Response.PdGetPosition);
         }
     }
 
@@ -41,6 +42,9 @@ namespace Msmcomm.LowLevel
         public PdsmUrcMessageGroup()
         {
             base(PdsmUrcMessageGroup.GROUP_ID);
+
+            message_types[Pdsm.Urc.Pd.MESSAGE_ID] = typeof(Pdsm.Urc.Pd);
+            message_types[Pdsm.Urc.Xtra.MESSAGE_ID] = typeof(Pdsm.Urc.Xtra);
         }
     }
 }

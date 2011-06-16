@@ -1865,7 +1865,9 @@ struct PdsmPaSetParmResponse
 [CCode (cname = "struct pdsm_pd_get_pos_resp", cheader_filename = "structures.h", destroy_function = "")]
 struct PdsmPdGetPosResponse
 {
-	public uint8 unknown0[13];
+	public uint8 unknown0[4];
+	public uint32 ref_id;
+	public uint8 unknown1[5];
 	public unowned uint8[] data
 	{
 		get

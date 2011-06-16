@@ -21,10 +21,40 @@
 
 namespace Msmcomm
 {
+    [CCode (cprefix = "MSMCOMM_GPS_MODE_", cheader_filename = "msmcomm-specs.h")]
+    [DBus (use_string_marshalling = true)]
+    public enum GpsMode
+    {
+        UNKNOWN,
+        STANDALONE,
+        MSBASED,
+        MSASSISTED,
+        OPTIMALSPEED,
+        OPTIMALACCURACY,
+        OPTIMALDATA
+    }
+
+    [CCode (type_id = "MSMCOMM_GPS_FIX_INFO", cheader_filename = "msmcomm-specs.h")]
+    public struct GpsFixInfo
+    {
+        public uint32 timestamp;
+        public double longitude;
+        public double latitude;
+        public double velocity;
+    }  
+
     [DBus (timeout = 12000, name = "org.msmcomm.GPS")]
     public interface GPS : GLib.Object
     {
         public abstract async void pa_set_param() throws Msmcomm.Error, GLib.Error;
+        public abstract async void pd_get_position(GpsMode mode, uint8 accuracy) throws Msmcomm.Error, GLib.Error;
+
+        public signal void pd_fix_data(GpsFixInfo info);
+        public signal void pd_session_done();
+
+        public signal void xtra_info(string data);
+        public signal void xtra_status();
+        public signal void xtra_download_request();
     }
 }
 

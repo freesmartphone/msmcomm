@@ -315,7 +315,7 @@ namespace Msmcomm.Daemon
                 var handler = findPendingWithRefId( message.ref_id );
                 if ( handler == null )
                 {
-                    logger.error( "Got response but we don't have any corresponding send message (ref_id = $(message.ref_id)) !!!" );
+                    logger.error( @"Got response but we don't have any corresponding send message (ref_id = $(message.ref_id)) !!!" );
                     return;
                 }
 

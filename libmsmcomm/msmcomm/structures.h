@@ -1307,8 +1307,11 @@ static void msmcomm_low_level_structures_pdsm_pa_set_parm_resp_init(struct pdsm_
 
 struct pdsm_pd_get_pos_resp
 {
-#define PDSM_PD_GET_POS_RESP_UNKNOWN0_SIZE 13
-	uint8_t unknown0[13];
+#define PDSM_PD_GET_POS_RESP_UNKNOWN0_SIZE 4
+	uint8_t unknown0[4];
+	uint32_t ref_id;
+#define PDSM_PD_GET_POS_RESP_UNKNOWN1_SIZE 5
+	uint8_t unknown1[5];
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_pdsm_pd_get_pos_resp_init(struct pdsm_pd_get_pos_resp* self)
