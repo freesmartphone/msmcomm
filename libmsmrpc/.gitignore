@@ -1,0 +1,5 @@
+*.c
+*.stamp
+msmrpc-1.0.vapi
+msmrpc.h
+testrpcclient
