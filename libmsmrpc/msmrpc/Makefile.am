@@ -28,6 +28,7 @@ lib_LTLIBRARIES = \
 	$(NULL)
 
 libmsmrpc_la_VALASOURCES = \
+	common.vala \
 	client.vala \
 	$(NULL)
 
