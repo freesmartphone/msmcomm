@@ -33,9 +33,8 @@ namespace Msmrpc
 
         protected GLib.ByteArray buffer;
         protected uint32 buffer_next;
-        protected uint32 buffer_length;
 
-        public uint32 length { get { return buffer_length; } }
+        public uint32 length { get { return buffer.len; } }
         public uint8[] data { get { return buffer.data; } }
 
         /**
@@ -44,7 +43,7 @@ namespace Msmrpc
          **/
         protected bool is_aligned_size(uint32 size)
         {
-            return (size & 0x3) > 0;
+            return (size & 0x3) == 0;
         }
 
         /**
@@ -64,7 +63,6 @@ namespace Msmrpc
         {
             buffer = new GLib.ByteArray.sized(BUFFER_MAX_SIZE);
             buffer_next = 0;
-            buffer_length = 0;
         }
 
         //
@@ -80,7 +78,6 @@ namespace Msmrpc
         {
             reset();
             buffer.append(data);
-            buffer_length = buffer.len;
         }
     }
 
@@ -111,12 +108,12 @@ namespace Msmrpc
         {
             bool result = false;
             uint32 value_size = (uint32) sizeof(uint32);
-            uint32 tmp = 0x0;
+            uint32 temp = 0x0;
 
             if (buffer_next + value_size <= buffer.len)
             {
-                Memory.copy(&tmp, ((uint8*) buffer.data) + buffer_next, value_size);
-                value = Posix.ntohl(tmp);
+                Memory.copy(&temp, ((uint8*) buffer.data) + buffer_next, value_size);
+                value = Posix.ntohl(temp);
                 update_counters(value_size);
                 result = true;
             }
@@ -129,11 +126,11 @@ namespace Msmrpc
          **/
         public bool read_int32(out int32 value)
         {
-            uint32 tmp;
+            uint32 temp;
             bool result = false;
 
-            result = read_uint32(out tmp);
-            value = (int32) tmp;
+            result = read_uint32(out temp);
+            value = (int32) temp;
 
             return result;
         }
@@ -143,11 +140,11 @@ namespace Msmrpc
          **/
         public bool read_uint16(out uint16 value)
         {
-            uint32 tmp;
+            uint32 temp;
             bool result = false;
 
-            result = read_uint32(out tmp);
-            value = (uint16) tmp;
+            result = read_uint32(out temp);
+            value = (uint16) temp;
 
             return result;
         }
@@ -157,11 +154,11 @@ namespace Msmrpc
          **/
         public bool read_int16(out int16 value)
         {
-            uint32 tmp;
+            uint32 temp;
             bool result = false;
 
-            result = read_uint32(out tmp);
-            value = (int16) tmp;
+            result = read_uint32(out temp);
+            value = (int16) temp;
 
             return result;
         }
@@ -171,11 +168,11 @@ namespace Msmrpc
          **/
         public bool read_uint8(out uint8 value)
         {
-            uint32 tmp;
+            uint32 temp;
             bool result = false;
 
-            result = read_uint32(out tmp);
-            value = (uint8) tmp;
+            result = read_uint32(out temp);
+            value = (uint8) temp;
 
             return result;
         }
@@ -185,11 +182,46 @@ namespace Msmrpc
          **/
         public bool read_int8(out int8 value)
         {
-            uint32 tmp;
+            uint32 temp;
             bool result = false;
 
-            result = read_uint32(out tmp);
-            value = (int8) tmp;
+            result = read_uint32(out temp);
+            value = (int8) temp;
+
+            return result;
+        }
+
+        /**
+         * Read a set of bytes from the buffer. The number of the bytes to read is stored
+         * within the buffer so no size or length has to be supplied.
+         **/
+        public bool read_bytes(out uint8[] data, out uint32 len)
+        {
+            uint32 size = 0, size_aligned = 0;
+            bool result = false;
+
+            if (read_uint32(out size))
+            {
+                size_aligned = size;
+
+                if (!is_aligned_size(size))
+                    size_aligned += get_align_size_offset(size);
+
+                if (buffer_next + size_aligned <= buffer.len)
+                {
+                    data = new uint8[size];
+                    Memory.copy(data, ((uint8*) buffer.data) + buffer_next, size);
+                    len = size;
+                    update_counters(size_aligned);
+                    result = true;
+                }
+            }
+
+            if (!result)
+            {
+                data = null;
+                len = 0;
+            }
 
             return result;
         }
@@ -209,7 +241,6 @@ namespace Msmrpc
         private void update_counters(uint32 size)
         {
             buffer_next += size;
-            buffer_length += size;
         }
 
         //
@@ -235,8 +266,8 @@ namespace Msmrpc
                 // copy before the uint32 in it. Otherwise g_byte_array_append don't get
                 // the correct number of bytes supplied.
                 uint8[] bytes = new uint8[value_size];
-                uint32 tmp = Posix.htonl(value);
-                Memory.copy(bytes, &tmp, value_size);
+                uint32 temp = Posix.htonl(value);
+                Memory.copy(bytes, &temp, value_size);
                 buffer.append(bytes);
                 update_counters(value_size);
                 result = true;
@@ -295,9 +326,7 @@ namespace Msmrpc
 
             // be sure we have a aligned size (multiply of four)
             if (!is_aligned_size(size))
-            {
                 size += get_align_size_offset(size);
-            }
 
             // respect four bytes for the size of the bytes
             size += (uint32) sizeof(uint32);
@@ -306,20 +335,21 @@ namespace Msmrpc
             {
                 // append the length of the bytes first
                 uint8[] temp = new uint8[4];
-                Memory.copy(temp, &bytes.length, 4);
+                uint32 nsize = Posix.htonl(bytes.length);
+                Memory.copy(temp, &nsize, 4);
                 buffer.append(temp);
 
                 // now append the bytes and add zeros to match the aligned size
-                temp = new uint8[size-1];
+                temp = new uint8[size - sizeof(uint32)];
                 Memory.copy(temp, bytes, bytes.length);
-                if(!is_aligned_size(bytes.length))
+                if (!is_aligned_size(bytes.length))
                 {
-                    Posix.memset(((uint8*) temp) + bytes.length, 0, get_align_size_offset(bytes.length));
+                    Posix.memset(((uint8*) temp) + bytes.length, 0,
+                                 get_align_size_offset(bytes.length));
                 }
 
                 buffer.append(temp);
                 update_counters(size);
-
                 result = true;
             }
 

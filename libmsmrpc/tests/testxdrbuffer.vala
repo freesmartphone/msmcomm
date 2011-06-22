@@ -26,6 +26,7 @@ public void test_xdrbuffer_test_write_and_read()
     uint32 ui32 = 0x12345678; int32 i32 = -0x12345678;
     uint16 ui16 = 0x1234; int16 i16 = 0x1234;
     uint8 ui8 = 0x12; int8 i8 = 0x12;
+    uint8[] bytes = new uint8[] { 0xa, 0xb, 0xc, 0xd, 0xf };
 
     assert(xdrbuf_out.write_uint32(ui32));
     assert(xdrbuf_out.write_int32(i32));
@@ -33,12 +34,13 @@ public void test_xdrbuffer_test_write_and_read()
     assert(xdrbuf_out.write_int16(i16));
     assert(xdrbuf_out.write_uint8(ui8));
     assert(xdrbuf_out.write_int8(i8));
+    assert(xdrbuf_out.write_bytes(bytes));
 
     uint8[] data  = xdrbuf_out.data;
 
     assert(data != null);
     assert(data.length == xdrbuf_out.length);
-    assert(xdrbuf_out.length == 24);
+    assert(xdrbuf_out.length == 36);
 
     var xdrbuf_in = new Msmrpc.InputXdrBuffer();
     xdrbuf_in.fill(data);
@@ -66,6 +68,15 @@ public void test_xdrbuffer_test_write_and_read()
     int8 i8o;
     assert(xdrbuf_in.read_int8(out i8o));
     assert(i8o == i8);
+
+    uint8[] byteso; uint32 len;
+    assert(xdrbuf_in.read_bytes(out byteso, out len));
+    assert(len == bytes.length);
+    assert(byteso.length == bytes.length);
+    for (int n = 0; n < 5; n++)
+    {
+        assert(byteso[n] == bytes[n]);
+    }
 }
 
 public static void main(string[] args)
