@@ -1,6 +1,7 @@
 SUBDIRS = \
 	msmrpc \
-	vapi
+	vapi \
+	tests
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = msmrpc-1.0.pc

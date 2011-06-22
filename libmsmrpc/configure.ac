@@ -17,6 +17,25 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 ################################################################################
+# vala 
+
+VALA_REQUIRED=0.12.1
+AC_PATH_PROG(VALAC, valac, valac)
+AC_SUBST(VALAC)
+m4_ifdef([AM_PROG_VALAC], [AM_PROG_VALAC([$VALA_REQUIRED])])
+
+################################################################################
+# glib and friends
+
+GLIB_REQUIRED=2.26
+
+PKG_CHECK_MODULES(GLIB,
+  glib-2.0 >= $GLIB_REQUIRED
+  gobject-2.0 >= $GLIB_REQUIRED)
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+
+################################################################################
 # check for debugging
 AC_ARG_ENABLE(debug,
   [  --enable-debug            Enable debug build (default=disabled)],
@@ -30,6 +49,7 @@ AC_CONFIG_FILES([
 	msmrpc-1.0.pc
 	msmrpc/Makefile
 	vapi/Makefile
+	tests/Makefile
 ])
 
 AC_OUTPUT
