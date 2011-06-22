@@ -23,5 +23,8 @@ namespace Msmrpc
 {
     public class Client : GLib.Object
     {
+        public Client(string router_path)
+        {
+        }
     }
 }

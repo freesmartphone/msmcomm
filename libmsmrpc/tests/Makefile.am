@@ -22,7 +22,10 @@ progs_ldadd = \
 	../msmrpc/libmsmrpc.la
 	$(NULL)
 
-TEST_PROGS += testrpcclient
+TEST_PROGS += \
+	testrpcclient \
+	testxdrbuffer \
+	$(NULL)
 
 #
 # rpc client test
@@ -34,6 +37,17 @@ $(testrpcclient_SOURCES): $(testrpcclient_VALASOURCES)
 	touch $@
 testrpcclient_LDADD = $(progs_ldadd)
 EXTRA_DIST += $(testrpcclient_VALASOURCES)
+
+#
+# xdr buffer test
+#
+testxdrbuffer_VALASOURCES = testxdrbuffer.vala
+testxdrbuffer_SOURCES = testxdrbuffer.c
+$(testxdrbuffer_SOURCES): $(testxdrbuffer_VALASOURCES)
+	$(VALAC) $(VALAC_ARGS) $^
+	touch $@
+testxdrbuffer_LDADD = $(progs_ldadd)
+EXTRA_DIST += $(testxdrbuffer_VALASOURCES)
 
 CLEANFILES = \
     $(TEST_PROGS) \

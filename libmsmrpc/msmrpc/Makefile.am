@@ -10,6 +10,7 @@ AM_CFLAGS = \
 VALAC_ARGS = \
 	--basedir $(top_srcdir) \
 	--vapidir $(top_srcdir)/vapi \
+	--pkg posix \
 	--pkg glib-2.0 \
 	--header msmrpc.h \
 	--library msmrpc-1.0 \
@@ -30,6 +31,7 @@ lib_LTLIBRARIES = \
 libmsmrpc_la_VALASOURCES = \
 	common.vala \
 	client.vala \
+	xdrbuffer.vala \
 	$(NULL)
 
 libmsmrpc_la_SOURCES = \
