@@ -104,6 +104,9 @@ namespace Msmrpc
         // public API
         //
 
+        /**
+         * Read a uint32 value from the buffer
+         **/
         public bool read_uint32(out uint32 value)
         {
             bool result = false;
@@ -121,6 +124,9 @@ namespace Msmrpc
             return result;
         }
 
+        /**
+         * Read a int32 value from the buffer
+         **/
         public bool read_int32(out int32 value)
         {
             uint32 tmp;
@@ -132,6 +138,9 @@ namespace Msmrpc
             return result;
         }
 
+        /**
+         * Read a uint16 value from the buffer
+         **/
         public bool read_uint16(out uint16 value)
         {
             uint32 tmp;
@@ -143,6 +152,9 @@ namespace Msmrpc
             return result;
         }
 
+        /**
+         * Read a int16 value from the buffer
+         **/
         public bool read_int16(out int16 value)
         {
             uint32 tmp;
@@ -154,6 +166,9 @@ namespace Msmrpc
             return result;
         }
 
+        /**
+         * Read a uint8 value from the buffer
+         **/
         public bool read_uint8(out uint8 value)
         {
             uint32 tmp;
@@ -165,6 +180,9 @@ namespace Msmrpc
             return result;
         }
 
+        /**
+         * Read a int8 value from the buffer
+         **/
         public bool read_int8(out int8 value)
         {
             uint32 tmp;
