@@ -11,6 +11,7 @@ VALAC_ARGS = \
 	-C \
 	--basedir $(top_srcdir) \
 	--vapidir $(top_srcdir)/msmrpc \
+	--pkg posix \
 	--pkg glib-2.0 \
 	--pkg msmrpc-1.0 \
 	$(NULL)

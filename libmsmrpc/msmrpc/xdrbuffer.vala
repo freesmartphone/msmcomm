@@ -21,6 +21,9 @@
 
 namespace Msmrpc
 {
+    public delegate bool XdrBufferWriteCb(OutputXdrBuffer buffer, void *data);
+    public delegate bool XdrBufferReadCb(InputXdrBuffer buffer, void *data);
+
     /**
      * XdrBuffer
      *
@@ -225,6 +228,23 @@ namespace Msmrpc
 
             return result;
         }
+
+        /**
+         * This reads a pointer and the data behind it recursivly from the buffer.
+         * NOTE: The obj needs to be initialized before calling read_pointer!
+         */
+        public bool read_pointer(void *obj, uint32 obj_size, XdrBufferReadCb read_cb)
+        {
+            uint32 ptr_valid = 0;
+
+            if (obj == null || read_cb == null)
+                return false;
+
+            if (!read_uint32(out ptr_valid) || ptr_valid != 1)
+                return false;
+
+            return read_cb(this, obj);
+        }
     }
 
     /**
@@ -354,6 +374,28 @@ namespace Msmrpc
             }
 
             return result;
+        }
+
+        /**
+         * Write a pointer and the structure of it recursivly to the buffer. This will
+         * only write the pointer itself and then calls write_cb to handle the content
+         * the pointer points to.
+         **/
+        public bool write_pointer(void *obj, uint32 obj_size, XdrBufferWriteCb write_cb)
+        {
+            bool result = false;
+            uint32 ptr_valid = 0;
+
+            if (obj == null || write_cb == null)
+                return false;
+
+            ptr_valid = (obj != null) ? 1 : 0;
+            result = write_uint32(ptr_valid);
+
+            if (!result || ptr_valid != 1)
+                return false;
+
+            return write_cb(this, obj);
         }
     }
 }
