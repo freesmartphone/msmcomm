@@ -66,12 +66,15 @@ EXTRA_DIST += \
 CLEANFILES = \
 	$(BUILT_SOURCES) \
 	$(libmsmrpc_la_VALASOURCES:.vala=.c) \
+	*.vapi \
+	*.h \
 	$(NULL)
 
 
 MAINTAINERCLEANFILES = \
 	$(BUILT_SOURCES) \
 	$(libmsmrpc_la_VALASOURCES:.vala=.c) \
+	*.h \
 	Makefile.in \
 	$(NULL)
 

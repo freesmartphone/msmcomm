@@ -55,7 +55,7 @@ namespace Msmrpc
         CHARGER = 0x3000001A,
         UIM = 0x3000001B,
         PDSM_ATL = 0x3000001D,
-        FS_XMOUNT = 0x3000001E, //
+        FS_XMOUNT = 0x3000001E,
         SECUTIL = 0x3000001F,
         MCCMEID = 0x30000020,
         PM_STROBE_FLASH = 0x30000021,
