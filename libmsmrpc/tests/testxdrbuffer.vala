@@ -66,6 +66,18 @@ public bool write_test_struct0(Msmrpc.OutputXdrBuffer buffer, void *obj)
     return true;
 }
 
+public bool write_test_array(Msmrpc.OutputXdrBuffer buffer, void *obj)
+{
+    assert(buffer != null);
+    assert(buffer.get_type() == typeof(Msmrpc.OutputXdrBuffer));
+    assert(obj != null);
+
+    uint32* t0 = (uint32*) obj;
+    assert(buffer.write_uint32(*t0));
+
+    return true;
+}
+
 public bool read_test_struct1(Msmrpc.InputXdrBuffer buffer, void *obj)
 {
     assert(buffer != null);
@@ -112,6 +124,8 @@ public void test_xdrbuffer_test_write_and_read()
     test0.test1.d = 0x11223344; test0.test1.e = 0xaaee;
     test0.test1.f = 0xae;
 
+    uint32[] testarray = new uint32[] { 0x1234, 0x1234, 0x1234, 0x1234 };
+
     assert(xdrbuf_out.write_uint32(ui32));
     assert(xdrbuf_out.write_int32(i32));
     assert(xdrbuf_out.write_uint16(ui16));
@@ -120,12 +134,14 @@ public void test_xdrbuffer_test_write_and_read()
     assert(xdrbuf_out.write_int8(i8));
     assert(xdrbuf_out.write_bytes(bytes));
     assert(xdrbuf_out.write_pointer(&test0, (uint32) sizeof(TestStruct0), write_test_struct0));
+    assert(xdrbuf_out.write_array_raw(&testarray, testarray.length, (uint32) sizeof(uint32), write_test_array));
+    assert(xdrbuf_out.write_array<uint32>(testarray, write_test_array));
 
     uint8[] data  = xdrbuf_out.data;
 
     assert(data != null);
     assert(data.length == xdrbuf_out.length);
-    assert(xdrbuf_out.length == 68);
+    assert(xdrbuf_out.length == 108);
 
     var xdrbuf_in = new Msmrpc.InputXdrBuffer();
     xdrbuf_in.fill(data);

@@ -245,6 +245,34 @@ namespace Msmrpc
 
             return read_cb(this, obj);
         }
+
+#if 0
+        public bool read_array(out void *obj, out uint32 obj_size, uint32 elem_size, XdrBufferReadCb read_cb)
+        {
+            bool result = false;
+            void *ptr = null;
+
+            result = read_uint32(out obj_size);
+            if (obj_size <= 0)
+                return false;
+
+            obj = (void*) new uint8[obj_size * elem_size];
+
+            ptr = obj;
+            for (int n = 0; n < obj_size; n++)
+            {
+                result = read_cb(this, ptr);
+                if (!result)
+                {
+                    obj = null;
+                    return false;
+                }
+                ptr += elem_size;
+            }
+
+            return true;
+        }
+#endif
     }
 
     /**
@@ -396,6 +424,45 @@ namespace Msmrpc
                 return false;
 
             return write_cb(this, obj);
+        }
+
+        /**
+         * Writes a array and it's content recursivly to the buffer. This will only write
+         * the size of the array to the buffer and then call write_cb to write each
+         * element of the array.
+         **/
+        public bool write_array_raw(void *obj, uint32 obj_size, uint32 elem_size, XdrBufferWriteCb write_cb)
+        {
+            bool result = false;
+            uint *tmpaddr = obj;
+
+            if (obj == null || write_cb == null)
+                return false;
+
+            result = write_uint32(obj_size);
+            if (!result)
+                return false;
+
+            for (int n = 0; n < obj_size; n++)
+            {
+                result = write_cb(this, tmpaddr);
+                if (!result)
+                    return false;
+
+                tmpaddr += elem_size;
+            }
+
+            return true;
+        }
+
+        /**
+         * Writes an array with items of type T and it's content recursivly to the buffer.
+         * This will only write the size of the array to the buffer and then call write_cb
+         * to write each element of the array.
+         **/
+        public bool write_array<T>(T[] items, XdrBufferWriteCb write_cb)
+        {
+            return write_array_raw((void*) items, items.length, (uint32) sizeof(T), write_cb);
         }
     }
 }
