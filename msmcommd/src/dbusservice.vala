@@ -198,12 +198,10 @@ namespace Msmcomm.Daemon
 
         public async void resume() throws FreeSmartphone.ResourceError
         {
-            // FIXME
         }
 
         public async void suspend() throws FreeSmartphone.ResourceError
         {
-            // FIXME
         }
 
         public async GLib.HashTable<string,GLib.Value?> get_dependencies () throws FreeSmartphone.ResourceError
@@ -218,7 +216,13 @@ namespace Msmcomm.Daemon
 
         public async void initialize() throws GLib.Error, Msmcomm.Error
         {
-            logger.info("Starting modem ...");
+            if (modem.active)
+            {
+                logger.warning("Don't initializing the modem again as it is already initialized!");
+                return;
+            }
+
+            logger.info("Powering up the modem on user request ...");
             if (!modem.start())
             {
                 var msg = @"Could not startup connected modem";
@@ -228,6 +232,12 @@ namespace Msmcomm.Daemon
 
         public async void shutdown() throws GLib.Error, Msmcomm.Error
         {
+            if (!modem.active)
+            {
+                logger.warning("Don't shutting down the modem as it is already in shutdown state!");
+                return;
+            }
+
             modem.stop();
         }
 
