@@ -1,0 +1,7 @@
+===============================================================================
+Msmcomm Daemon
+===============================================================================
+
+This is the central daemon to manage all aspects of the msmcomm protocol and
+it's variant. It can be used from other software by using the provided dbus
+api.
