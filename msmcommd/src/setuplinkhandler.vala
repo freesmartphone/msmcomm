@@ -60,7 +60,7 @@ namespace Msmcomm.Daemon
             sync_timer.interval = 1000;
             sync_timer.requestHandleEvent.connect(syncTimerCallback);
         }
-        
+
         public override void stop()
         {
             sync_timer.stop();
@@ -70,12 +70,12 @@ namespace Msmcomm.Daemon
         {
             sync_timer.start();
         }
-        
+
         public override bool handleFrame(Frame frame)
         {
             bool frameHandled = true;
 
-            logger.debug(@"received $(frameTypeToString(frame.fr_type)) frame");
+            assert(logger.debug(@"received $(frameTypeToString(frame.fr_type)) frame"));
 
             switch (context.state)
             {
@@ -106,13 +106,13 @@ namespace Msmcomm.Daemon
                     }
                     else
                     {
-                        logger.debug(@"recieve $(frameTypeToString(frame.fr_type)) frame in $(linkStateTypeToString(context.state)) state ... discard frame!");
+                        assert(logger.debug(@"recieve $(frameTypeToString(frame.fr_type)) frame in $(linkStateTypeToString(context.state)) state ... discard frame!"));
                     }
                     break;
                 case LinkStateType.ACTIVE:
                     if (frame.fr_type == FrameType.SYNC)
                     {
-                        logger.debug("got SYNC FRAME in ACTIVE state -> restart link!");
+                        assert(logger.debug("got SYNC FRAME in ACTIVE state -> restart link!"));
                         // The spec tolds us to restart the whole stack if we receive
                         // a sync message in ACTIVE state
                         requestLinkReset();
@@ -126,7 +126,7 @@ namespace Msmcomm.Daemon
                     }
                     else
                     {
-                        logger.debug(@"SetupLinkHandler: recieve $(frameTypeToString(frame.fr_type)) frame in ACTIVE state ... discarding frame!");
+                        assert(logger.debug(@"SetupLinkHandler: recieve $(frameTypeToString(frame.fr_type)) frame in ACTIVE state ... discarding frame!"));
                         frameHandled = false;
                     }
                     break;

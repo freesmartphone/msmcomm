@@ -147,6 +147,11 @@ namespace Msmcomm.Daemon
             transmission_handler.enequeFrame(frame);
         }
 
+        public void sendAllFramesNow()
+        {
+            transmission_handler.waitForAllFramesAreSend();
+        }
+
         //
         // private API
         //

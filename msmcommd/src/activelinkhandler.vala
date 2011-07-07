@@ -31,7 +31,7 @@ namespace Msmcomm.Daemon
         {
             base(context, control);
         }
-        
+
         public override bool handleFrame(Frame frame)
         {
             bool frameHandled = false;
@@ -43,14 +43,14 @@ namespace Msmcomm.Daemon
                     {
                         // in debug mode we should log the frame for bug
                         // hunting ...
-                        logger.debug("receive DATA frame with data from modem (seq=0x%x, ack=0x%x)".printf(frame.seq, frame.ack));
-                        
-                        logger.debug("frame.payload size = %i".printf(frame.payload.data.length));
+                        assert( logger.debug("receive DATA frame with data from modem (seq=0x%x, ack=0x%x)".printf(frame.seq, frame.ack)) );
+                        assert( logger.debug("frame.payload size = %i".printf(frame.payload.data.length)) );
+#if DEBUG
                         hexdump2(true, frame.payload.data, logger);
-                        
+#endif
+
                         // we have new data for our registered data handlers
                         control.requestHandleFrameContent(frame.payload.data);
-                        
                         frameHandled = true;
                     }
                     break;
@@ -58,7 +58,7 @@ namespace Msmcomm.Daemon
                     logger.error("ActiveLinkHandler: recieve frame in wrong state ... discard frame!");
                     break;
             }
-            
+
             return frameHandled;
         }
     }

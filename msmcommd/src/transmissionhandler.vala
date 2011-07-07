@@ -28,6 +28,7 @@ namespace Msmcomm.Daemon
         private FsoFramework.Logger logger;
         private Timer timer;
         private ITransmissionControl control;
+        private SourceFunc? transmissionFinishedHandler = null;
 
         // 
         // public API
@@ -42,6 +43,12 @@ namespace Msmcomm.Daemon
             timer.interval = 50;
             timer.requestHandleEvent.connect(handleFrameTransmissionRequest);
             queue = new Gee.LinkedList<Frame>();
+        }
+
+        public async void waitForAllFramesAreSend()
+        {
+            transmissionFinishedHandler = waitForAllFramesAreSend.callback;
+            yield;
         }
 
         public void enequeFrame(Frame frame)
@@ -62,9 +69,7 @@ namespace Msmcomm.Daemon
         {
             foreach (Frame frame in queue)
             {
-                // FIXME implement different exception for better error handling while
-                // frame packing
-                logger.debug(@"Send a $(frameTypeToString(frame.fr_type)) frame to modem");
+                assert( logger.debug(@"Send a $(frameTypeToString(frame.fr_type)) frame to modem") );
 
                 if (frame.fr_type == FrameType.DATA)
                 {
@@ -86,6 +91,12 @@ namespace Msmcomm.Daemon
             }
 
             queue.clear();
+
+            if (transmissionFinishedHandler != null)
+            {
+                transmissionFinishedHandler();
+                transmissionFinishedHandler = null;
+            }
 
             return false;
         }

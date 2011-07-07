@@ -56,6 +56,14 @@ namespace Msmcomm.Daemon
             return true;
         }
 
+        public async void handlePowerState(ModemPowerState state)
+        {
+            if (state == ModemPowerState.SUSPEND)
+            {
+                while (checkRestartingQueue());
+            }
+        }
+
         //
         // signals
         //
@@ -119,7 +127,9 @@ namespace Msmcomm.Daemon
         {
             uint8[] data;
             data = masm.pack_message(handler.command);
+#if DEBUG
             hexdump2(true, data, logger);
+#endif
             modem.sendData(data);
         }
 
@@ -129,7 +139,7 @@ namespace Msmcomm.Daemon
             if (pending.size == 0)
                 return false;
 
-            assert( logger.warning( @"Timeout while waiting for an answer to '$command'" ) );
+            logger.warning( @"Timeout while waiting for an answer to '$command'" );
             if ( command.retry > 0 )
             {
                 command.retry--;
@@ -162,7 +172,7 @@ namespace Msmcomm.Daemon
 
         protected void reset()
         {
-            logger.debug("Reseting command queue ...");
+            assert( logger.debug("Reseting command queue ...") );
 
 #if 0
             // Only reset current to nothing when we are not waiting for any response
@@ -207,7 +217,7 @@ namespace Msmcomm.Daemon
             }
             else
             {
-                logger.debug("Last issued command does not have a callback so this command was issued as a sync one; ignoring response");
+                assert( logger.debug("Last issued command does not have a callback so this command was issued as a sync one; ignoring response") );
             }
         }
 

@@ -198,10 +198,12 @@ namespace Msmcomm.Daemon
 
         public async void resume() throws FreeSmartphone.ResourceError
         {
+            modem.handlePowerState(ModemPowerState.RESUME);
         }
 
         public async void suspend() throws FreeSmartphone.ResourceError
         {
+            modem.handlePowerState(ModemPowerState.SUSPEND);
         }
 
         public async GLib.HashTable<string,GLib.Value?> get_dependencies () throws FreeSmartphone.ResourceError

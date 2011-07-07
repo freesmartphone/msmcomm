@@ -21,6 +21,12 @@
 
 namespace Msmcomm.Daemon
 {
+    public enum ModemPowerState
+    {
+        SUSPEND,
+        RESUME
+    }
+
     public class ModemControl : AbstractObject
     {
         private FsoFramework.Transport transport;
@@ -295,6 +301,32 @@ namespace Msmcomm.Daemon
         {
             stop();
             return start();
+        }
+
+        /**
+         * Handle different power states of the modem. For example when the system wants
+         * to go into suspend state we need to prepare the modem communication layer for
+         * this. It's same when we are comming out of a suspend and start working again.
+         **/
+        public void handlePowerState(ModemPowerState state)
+        {
+            // First forward power state to all connected channels
+            channel.handlePowerState(state);
+
+            if (state == ModemPowerState.SUSPEND)
+            {
+                // Ok, as now all pending messages are send to the modem, we can go into
+                // suspend state.
+                llc.sendAllFramesNow();
+                llc.stop();
+                transport.flush();
+                transport.freeze();
+            }
+            else if (state == ModemPowerState.RESUME)
+            {
+                transport.thaw();
+                llc.start();
+            }
         }
 
         public void registerChannel(ModemChannel channel)
