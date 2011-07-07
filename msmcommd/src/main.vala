@@ -23,7 +23,6 @@ using GLib;
 
 public MainLoop loop;
 public Msmcomm.Daemon.ModemControl modem;
-public Msmcomm.Daemon.ModemChannel channel;
 
 public static void SIGINT_handler( int signum )
 {
@@ -55,22 +54,22 @@ public int main( string[] args )
     Posix.signal(Posix.SIGSEGV, SIGINT_handler);
 
     modem = new Msmcomm.Daemon.ModemControl();
-    channel = new Msmcomm.Daemon.ModemChannel(modem);
+    new Msmcomm.Daemon.ModemChannel(modem);
+
     Idle.add(() => {
         if (!modem.setup())
         {
             FsoFramework.theLogger.error("Could not setup the modem process!");
             loop.quit();
         }
+        var channel = modem.retrieveChannel();
         channel.open();
         return false;
     });
 
     var service = new Msmcomm.Daemon.DBusService(modem);
     if (!service.register())
-    {
         return -1;
-    }
 
     loop.run();
 
