@@ -13,6 +13,7 @@ VALAC_ARGS = \
 	--pkg msmcomm-2.0 \
 	--pkg msmcomm-specs-2.0 \
 	--pkg fso-glib-1.0 \
+	--pkg msmhll-1.0 \
 	--thread \
 	--save-temps \
 	--basedir $(top_srcdir)
@@ -37,18 +38,8 @@ sbin_PROGRAMS = msmcommd
 msmcommd_VALASOURCES = \
 	contract.vala \
 	main.vala \
-	crc.vala \
-	frame.vala \
-	timer.vala \
 	util.vala \
 	abstractobject.vala \
-	linkcontext.vala \
-	abstractlinkhandler.vala \
-	activelinkhandler.vala \
-	flowcontrolhandler.vala \
-	setuplinkhandler.vala \
-	transmissionhandler.vala \
-	linklayercontrol.vala \
 	modemcontrol.vala \
 	lowlevelcontrol.vala \
 	dbusservice.vala \

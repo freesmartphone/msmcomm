@@ -19,6 +19,8 @@
  *
  **/
 
+using Msmcomm.HciLinkLayer;
+
 namespace Msmcomm.Daemon
 {
     public enum ModemPowerState
@@ -317,7 +319,11 @@ namespace Msmcomm.Daemon
             {
                 // Ok, as now all pending messages are send to the modem, we can go into
                 // suspend state.
+#if 0
+                // FIXME: We don't have curently support for this. We need to add it again later
+                // when we're merging back into the master branch.
                 llc.sendAllFramesNow();
+#endif
                 llc.stop();
                 transport.flush();
                 transport.freeze();
