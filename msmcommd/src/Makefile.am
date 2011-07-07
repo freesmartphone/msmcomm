@@ -56,10 +56,8 @@ msmcommd_VALASOURCES = \
 	supsservice.vala \
 	gpsservice.vala \
 	serviceconv.vala \
-	commandhandler.vala \
-	commands.vala \
 	modemchannel.vala \
-	commandworker.vala \
+	commandhandler.vala \
 	$(NULL)
 
 msmcommd_SOURCES = \
