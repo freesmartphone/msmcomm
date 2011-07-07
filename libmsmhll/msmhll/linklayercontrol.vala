@@ -54,7 +54,7 @@ namespace Msmcomm.HciLinkLayer
 
         public void start()
         {
-            debug("starting ...");
+            debug("starting up the link layer");
 
             context.reset();
             foreach (AbstractLinkHandler handler in handlers)
@@ -65,7 +65,7 @@ namespace Msmcomm.HciLinkLayer
 
         public void stop()
         {
-            debug("stopping ...");
+            debug("shutting down the link layer");
 
             foreach (AbstractLinkHandler handler in handlers)
             {
