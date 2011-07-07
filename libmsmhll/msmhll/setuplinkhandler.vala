@@ -60,7 +60,7 @@ namespace Msmcomm.HciLinkLayer
             sync_timer.interval = 1000;
             sync_timer.requestHandleEvent.connect(syncTimerCallback);
         }
-        
+
         public override void stop()
         {
             sync_timer.stop();
@@ -70,7 +70,7 @@ namespace Msmcomm.HciLinkLayer
         {
             sync_timer.start();
         }
-        
+
         public override bool handleFrame(Frame frame)
         {
             bool frameHandled = true;

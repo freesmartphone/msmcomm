@@ -32,6 +32,7 @@ namespace Msmcomm.HciLinkLayer
         public abstract void start();
         public abstract void stop();
         public abstract void reset();
+        public abstract void sendAllFramesNow();
 
         public signal void requestModemReset();
         public signal void requestHandleFrameContent(uint8[] data);

@@ -27,6 +27,7 @@ namespace Msmcomm.HciLinkLayer
         private Gee.LinkedList<Frame> queue;
         private Timer timer;
         private ITransmissionControl control;
+        private SourceFunc? transmissionFinishedHandler = null;
 
         // 
         // public API
@@ -40,6 +41,12 @@ namespace Msmcomm.HciLinkLayer
             timer.interval = 50;
             timer.requestHandleEvent.connect(handleFrameTransmissionRequest);
             queue = new Gee.LinkedList<Frame>();
+        }
+
+        public async void waitForAllFramesAreSend()
+        {
+            transmissionFinishedHandler = waitForAllFramesAreSend.callback;
+            yield;
         }
 
         public void enequeFrame(Frame frame)
@@ -84,6 +91,12 @@ namespace Msmcomm.HciLinkLayer
             }
 
             queue.clear();
+
+            if (transmissionFinishedHandler != null)
+            {
+                transmissionFinishedHandler();
+                transmissionFinishedHandler = null;
+            }
 
             return false; // don't call me again
         }

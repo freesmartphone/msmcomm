@@ -137,6 +137,11 @@ namespace Msmcomm.HciLinkLayer
             transmission_handler.enequeFrame(frame);
         }
 
+        public void sendAllFramesNow()
+        {
+            transmission_handler.waitForAllFramesAreSend();
+        }
+
         public void sendFrame(Frame frame)
         {
             transmission_handler.enequeFrame(frame);
