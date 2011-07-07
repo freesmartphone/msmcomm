@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+
+Name: libmsmhll
+Description: A implemenation HCI Link Layer protocol used with various MSM modems
+Version: @VERSION@
+Libs: -L${libdir} -lmsmhll
+Cflags: -I${includedir}/msmhll-1.0
