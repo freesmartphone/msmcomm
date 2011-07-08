@@ -26,7 +26,7 @@ namespace Msmcomm.Daemon
     public abstract class BaseService : AbstractObject
     {
         protected ModemControl modem;
-        protected ModemChannel channel;
+        protected HciModemChannel channel;
 
         protected BaseService(ModemControl modem)
         {

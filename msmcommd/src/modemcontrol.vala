@@ -37,7 +37,7 @@ namespace Msmcomm.Daemon
         private LowLevelControl lowlevel;
         private bool use_lowlevel;
         private GLib.ByteArray in_buffer;
-        private ModemChannel channel;
+        private HciModemChannel channel;
         private bool in_link_setup;
 
         public bool active { get; private set; default = false; }
@@ -331,13 +331,13 @@ namespace Msmcomm.Daemon
             }
         }
 
-        public void registerChannel(ModemChannel channel)
+        public void registerChannel(HciModemChannel channel)
         {
             this.channel = channel;
             channel.requestHandleUnsolicitedResponse.connect((message) => { requestHandleUnsolicitedResponse(message); });
         }
 
-        public ModemChannel retrieveChannel()
+        public HciModemChannel retrieveChannel()
         {
             return channel;
         }

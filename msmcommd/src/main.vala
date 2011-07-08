@@ -54,7 +54,7 @@ public int main( string[] args )
     Posix.signal(Posix.SIGSEGV, SIGINT_handler);
 
     modem = new Msmcomm.Daemon.ModemControl();
-    new Msmcomm.Daemon.ModemChannel(modem);
+    new Msmcomm.Daemon.HciModemChannel(modem);
 
     Idle.add(() => {
         if (!modem.setup())

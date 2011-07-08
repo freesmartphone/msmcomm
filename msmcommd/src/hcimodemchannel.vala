@@ -23,7 +23,7 @@ using Msmcomm.LowLevel;
 
 namespace Msmcomm.Daemon
 {
-    public class ModemChannel : AbstractModemChannel
+    public class HciModemChannel : AbstractModemChannel
     {
         private Gee.LinkedList<CommandHandler> queue;
         private Gee.ArrayList<CommandHandler> pending;
@@ -36,7 +36,7 @@ namespace Msmcomm.Daemon
         // public API
         //
 
-        public ModemChannel(ModemControl modem)
+        public HciModemChannel(ModemControl modem)
         {
             base(modem);
 
