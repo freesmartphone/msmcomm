@@ -40,6 +40,7 @@ msmcommd_VALASOURCES = \
 	main.vala \
 	util.vala \
 	abstractobject.vala \
+	abstractmodemchannel.vala \
 	modemcontrol.vala \
 	lowlevelcontrol.vala \
 	dbusservice.vala \

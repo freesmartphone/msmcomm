@@ -23,14 +23,13 @@ using Msmcomm.LowLevel;
 
 namespace Msmcomm.Daemon
 {
-    public class ModemChannel : AbstractObject
+    public class ModemChannel : AbstractModemChannel
     {
         private Gee.LinkedList<CommandHandler> queue;
         private Gee.ArrayList<CommandHandler> pending;
         private MessageAssembler masm;
         private MessageDisassembler mdis;
 
-        public ModemControl modem;
         public uint32 current_ref_id;
 
         //
@@ -39,7 +38,7 @@ namespace Msmcomm.Daemon
 
         public ModemChannel(ModemControl modem)
         {
-            this.modem = modem;
+            base(modem);
 
             masm = new MessageAssembler();
             mdis = new MessageDisassembler();
@@ -51,12 +50,12 @@ namespace Msmcomm.Daemon
             modem.registerChannel(this);
         }
 
-        public async bool open()
+        public override async bool open()
         {
             return true;
         }
 
-        public async void handlePowerState(ModemPowerState state)
+        public override async void handlePowerState(ModemPowerState state)
         {
             if (state == ModemPowerState.SUSPEND)
             {
@@ -64,10 +63,144 @@ namespace Msmcomm.Daemon
             }
         }
 
+        public async void enqueueAsyncNew( owned BaseMessage command,
+                                           bool report_all_urcs,
+                                           owned ResponseHandlerFunc response_handler_func,
+                                           int retries = 0, int timeout = 0 ) throws Msmcomm.Error
+        {
+            if (!modem.active)
+            {
+                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
+            }
+
+            command.ref_id = nextValidMessageRefId();
+            var handler = new CommandHandler( command, retries, timeout, onTimeout, response_handler_func );
+            handler.report_all_urcs = report_all_urcs;
+            handler.callback = enqueueAsyncNew.callback;
+            enqueueCommand( handler );
+            yield;
+
+            if (handler.timed_out)
+            {
+                throw new Msmcomm.Error.TIMEOUT( @"Timed out while waiting for a response for command '$(command.message_type)'" );
+            }
+
+            pending.remove(handler);
+
+#if DEBUG
+            debug( @"pending.size = $(pending.size)" );
+#endif
+
+            if (handler.error != null)
+            {
+                throw handler.error;
+            }
+        }
+
+        public async unowned BaseMessage enqueueAsync( owned BaseMessage command, int retries = 0, int timeout = 0 ) throws Msmcomm.Error
+        {
+            if (!modem.active)
+            {
+                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
+            }
+
+            command.ref_id = nextValidMessageRefId();
+            var handler = new CommandHandler( command, retries, timeout, onTimeout );
+            handler.callback = enqueueAsync.callback;
+            enqueueCommand( handler );
+            yield;
+
+            if (handler.timed_out)
+            {
+                throw new Msmcomm.Error.TIMEOUT( @"Timed out while waiting for a response for command '$(command.message_type)'" );
+            }
+
+            pending.remove(handler);
+
+#if DEBUG
+            debug( @"pending.size = $(pending.size)" );
+#endif
+            return handler.response;
+        }
+
+        public void enqueueSync( owned BaseMessage command ) throws Msmcomm.Error
+        {
+            /* Check wether modem is already ready for processing commands */
+            if (!modem.active)
+            {
+                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
+            }
+
+            // create and command and send it out but do not wait for a response
+            command.ref_id = nextValidMessageRefId();
+            var handler = new CommandHandler( command, 0 );
+            handler.ignore_response = true;
+            enqueueCommand( handler );
+        }
+
+        /**
+         * Process incomming data stream for new messages and forward them to the
+         * connected client handlers
+         **/
+        public override void handleIncommingData(uint8[] data)
+        {
+            BaseMessage? message = mdis.unpack_message(data);
+
+            if (message == null)
+            {
+                logger.error("Could not unpack incomming message: groupId = %02x, messageId = %02x".printf(
+                        mdis.unpack_group_id(data), mdis.unpack_message_id(data)));
+                return;
+            }
+
+            logger.debug( message.message_type.to_string() );
+
+            if (message.message_class == MessageClass.SOLICITED_RESPONSE)
+            {
+                if (pending.size == 0)
+                {
+                    logger.error("Got response while not expecting one! Maybe out of sync!?");
+                    reset();
+                    return;
+                }
+
+                var handler = findPendingWithRefId( message.ref_id );
+                if ( handler == null )
+                {
+                    logger.error( @"Got response but we don't have any corresponding send message (ref_id = $(message.ref_id)) !!!" );
+                    return;
+                }
+
+                handler.handleResponseMessage( message );
+
+                // FIXME this needs to be removed after all services uses the new
+                // enqueueAsyncNew method for sending messages the modem.
+                if ( handler.response_handler_func == null )
+                {
+                    onSolicitedResponse(handler, message);
+                }
+
+                // Idle.add(checkRestartingQueue);
+            }
+            else if (message.message_class == MessageClass.UNSOLICITED_RESPONSE)
+            {
+                handleSpecificUnsolicitedResponse(message);
+                requestHandleUnsolicitedResponse(message);
+            }
+        }
+
+        public override string repr()
+        {
+            return "<>";
+        }
+
         //
         // signals
         //
 
+        // FIXME: we need to wrap this in some kind of structure as it is used by the
+        // modem control to tell connected services about an incomming unsolicited
+        // response
         public signal void requestHandleUnsolicitedResponse(BaseMessage message);
 
         //
@@ -221,132 +354,6 @@ namespace Msmcomm.Daemon
             }
         }
 
-        public async void enqueueAsyncNew( owned BaseMessage command,
-                                           bool report_all_urcs,
-                                           owned ResponseHandlerFunc response_handler_func,
-                                           int retries = 0, int timeout = 0 ) throws Msmcomm.Error
-        {
-            if (!modem.active)
-            {
-                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
-            }
-
-            command.ref_id = nextValidMessageRefId();
-            var handler = new CommandHandler( command, retries, timeout, onTimeout, response_handler_func );
-            handler.report_all_urcs = report_all_urcs;
-            handler.callback = enqueueAsyncNew.callback;
-            enqueueCommand( handler );
-            yield;
-
-            if (handler.timed_out)
-            {
-                throw new Msmcomm.Error.TIMEOUT( @"Timed out while waiting for a response for command '$(command.message_type)'" );
-            }
-
-            pending.remove(handler);
-
-#if DEBUG
-            debug( @"pending.size = $(pending.size)" );
-#endif
-
-            if (handler.error != null)
-            {
-                throw handler.error;
-            }
-        }
-
-        public async unowned BaseMessage enqueueAsync( owned BaseMessage command, int retries = 0, int timeout = 0 ) throws Msmcomm.Error
-        {
-            if (!modem.active)
-            {
-                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
-            }
-
-            command.ref_id = nextValidMessageRefId();
-            var handler = new CommandHandler( command, retries, timeout, onTimeout );
-            handler.callback = enqueueAsync.callback;
-            enqueueCommand( handler );
-            yield;
-
-            if (handler.timed_out)
-            {
-                throw new Msmcomm.Error.TIMEOUT( @"Timed out while waiting for a response for command '$(command.message_type)'" );
-            }
-
-            pending.remove(handler);
-
-#if DEBUG
-            debug( @"pending.size = $(pending.size)" );
-#endif
-            return handler.response;
-        }
-
-        public void enqueueSync( owned BaseMessage command ) throws Msmcomm.Error
-        {
-            /* Check wether modem is already ready for processing commands */
-            if (!modem.active)
-            {
-                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
-            }
-
-            // create and command and send it out but do not wait for a response
-            command.ref_id = nextValidMessageRefId();
-            var handler = new CommandHandler( command, 0 );
-            handler.ignore_response = true;
-            enqueueCommand( handler );
-        }
-
-        /**
-         * Process incomming data stream for new messages and forward them to the
-         * connected client handlers
-         **/
-        public void handleIncommingData(uint8[] data)
-        {
-            BaseMessage? message = mdis.unpack_message(data);
-
-            if (message == null)
-            {
-                logger.error("Could not unpack incomming message: groupId = %02x, messageId = %02x".printf(
-                        mdis.unpack_group_id(data), mdis.unpack_message_id(data)));
-                return;
-            }
-
-            logger.debug( message.message_type.to_string() );
-
-            if (message.message_class == MessageClass.SOLICITED_RESPONSE)
-            {
-                if (pending.size == 0)
-                {
-                    logger.error("Got response while not expecting one! Maybe out of sync!?");
-                    reset();
-                    return;
-                }
-
-                var handler = findPendingWithRefId( message.ref_id );
-                if ( handler == null )
-                {
-                    logger.error( @"Got response but we don't have any corresponding send message (ref_id = $(message.ref_id)) !!!" );
-                    return;
-                }
-
-                handler.handleResponseMessage( message );
-
-                // FIXME this needs to be removed after all services uses the new
-                // enqueueAsyncNew method for sending messages the modem.
-                if ( handler.response_handler_func == null )
-                {
-                    onSolicitedResponse(handler, message);
-                }
-
-                // Idle.add(checkRestartingQueue);
-            }
-            else if (message.message_class == MessageClass.UNSOLICITED_RESPONSE)
-            {
-                handleSpecificUnsolicitedResponse(message);
-                requestHandleUnsolicitedResponse(message);
-            }
-        }
-
         /**
          * Some unsolicited response needed to be handled here first before passing them
          * to the connect client handlers
@@ -392,11 +399,6 @@ namespace Msmcomm.Daemon
                     }
                 }
             }
-        }
-
-        public override string repr()
-        {
-            return "<>";
         }
     }
 }
