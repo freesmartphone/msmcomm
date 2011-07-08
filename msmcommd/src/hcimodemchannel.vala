@@ -70,7 +70,7 @@ namespace Msmcomm.Daemon
         {
             if (!modem.active)
             {
-                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
+                throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready yet for command processing; initialize it first!" );
             }
 
             command.ref_id = nextValidMessageRefId();
@@ -86,10 +86,6 @@ namespace Msmcomm.Daemon
             }
 
             pending.remove(handler);
-
-#if DEBUG
-            debug( @"pending.size = $(pending.size)" );
-#endif
 
             if (handler.error != null)
             {
@@ -117,9 +113,6 @@ namespace Msmcomm.Daemon
 
             pending.remove(handler);
 
-#if DEBUG
-            debug( @"pending.size = $(pending.size)" );
-#endif
             return handler.response;
         }
 
