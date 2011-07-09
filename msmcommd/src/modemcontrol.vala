@@ -330,7 +330,7 @@ namespace Msmcomm.Daemon
                 hsuartTransport = transport as FsoFramework.HsuartTransport;
                 if (hsuartTransport != null)
                 {
-                    logger.debug("Suspending hsuart transporrt ...");
+                    logger.debug("Suspending hsuart transport ...");
                     if (!hsuartTransport.suspend())
                     {
                         logger.error("Failed to suspend the hsuart transport!");
@@ -344,6 +344,7 @@ namespace Msmcomm.Daemon
                 hsuartTransport = transport as FsoFramework.HsuartTransport;
                 if (hsuartTransport != null)
                 {
+                    logger.debug("Resuming the hsuart transport ...");
                     hsuartTransport.resume();
                 }
 
