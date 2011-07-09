@@ -203,7 +203,11 @@ namespace Msmcomm.Daemon
 
         public async void suspend() throws FreeSmartphone.ResourceError
         {
-            modem.handlePowerState(ModemPowerState.SUSPEND);
+            if (!modem.handlePowerState(ModemPowerState.SUSPEND))
+            {
+                // FIXME we need some correct named error first
+                // throw new FreeSmartphone.ResourceError ...
+            }
         }
 
         public async GLib.HashTable<string,GLib.Value?> get_dependencies () throws FreeSmartphone.ResourceError

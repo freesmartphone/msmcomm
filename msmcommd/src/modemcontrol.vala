@@ -310,8 +310,10 @@ namespace Msmcomm.Daemon
          * to go into suspend state we need to prepare the modem communication layer for
          * this. It's same when we are comming out of a suspend and start working again.
          **/
-        public void handlePowerState(ModemPowerState state)
+        public bool handlePowerState(ModemPowerState state)
         {
+            FsoFramework.HsuartTransport hsuartTransport = null;
+
             // First forward power state to all connected channels
             channel.handlePowerState(state);
 
@@ -323,12 +325,33 @@ namespace Msmcomm.Daemon
                 llc.stop();
                 transport.flush();
                 transport.freeze();
+
+                // When we have a high speed uart as transport we need to suspend it
+                hsuartTransport = transport as FsoFramework.HsuartTransport;
+                if (hsuartTransport != null)
+                {
+                    logger.debug("Suspending hsuart transporrt ...");
+                    if (!hsuartTransport.suspend())
+                    {
+                        logger.error("Failed to suspend the hsuart transport!");
+                        return false;
+                    }
+                }
             }
             else if (state == ModemPowerState.RESUME)
             {
+                // If we have a hsuart transport we need to resume it first
+                hsuartTransport = transport as FsoFramework.HsuartTransport;
+                if (hsuartTransport != null)
+                {
+                    hsuartTransport.resume();
+                }
+
                 transport.thaw();
                 llc.start();
             }
+
+            return true;
         }
 
         public void registerChannel(HciModemChannel channel)
