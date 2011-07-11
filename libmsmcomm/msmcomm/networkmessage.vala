@@ -82,7 +82,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_NETWORK_REPORT_RSSI, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_NETWORK_REPORT_NETWORK_HEALTH, MessageClass.COMMAND);
 
             _message = NetworkReportHealthMessage();
             set_payload(_message.data);
