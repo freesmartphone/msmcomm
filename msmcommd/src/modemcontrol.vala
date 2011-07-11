@@ -92,7 +92,7 @@ namespace Msmcomm.Daemon
         {
             if (modem_config["connection_type"] == "network")
             {
-                transport = new FsoFramework.SocketTransport("tcp", modem_config["ip"], modem_config["port"].to_int());
+                transport = new FsoFramework.SocketTransport("tcp", modem_config["ip"], int.parse(modem_config["port"]));
             }
             else if (modem_config["connection_type"] == "serial")
             {
@@ -222,7 +222,12 @@ namespace Msmcomm.Daemon
             /* setup our link layer control and connect our handlers for different
              * signals provided by the llc */
             logger.debug("Initialize link layer control ...");
-            llc = new LinkLayerControl();
+
+            var settings = LinkLayerSettings();
+            settings.window_size = (uint8) config.intValue("hll", "window_size", 8);
+            settings.max_send_attempts = config.intValue("hll", "max_send_attempts", 10);
+
+            llc = new LinkLayerControl(settings);
             llc.requestHandleSendData.connect(handleModemRequestSendData);
             llc.requestHandleFrameContent.connect(handleModemRequestFrameContent);
             llc.requestModemReset.connect(handleRequestModemReset);
