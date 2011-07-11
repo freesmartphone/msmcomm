@@ -36,12 +36,38 @@ namespace Msmcomm.Daemon
         private GLib.DBusConnection dbusconn;
         private string servicename;
         private string objectpath;
+        private FsoFramework.DBusServiceNotifier dbusnotifier;
+        private bool resourceRegistered = false;
+        private bool resourceRegistrationPending = false;
 
         private Gee.HashMap<GLib.Type, BaseService> services;
 
         //
         // private API
         //
+
+        private void onUsageServiceAppearing(string busname)
+        {
+            if (busname != FsoFramework.Usage.ServiceDBusName)
+                return;
+
+            if ( !resourceRegistered && !resourceRegistrationPending )
+            {
+                logger.debug(@"Busname $busname appeared. Registering with resource ...");
+
+                resourceRegistrationPending = true;
+                Idle.add( () => { registerWithResource(); return false; } );
+            }
+        }
+
+        private void onUsageServiceDisappearing(string busname)
+        {
+            if (busname != FsoFramework.Usage.ServiceDBusName)
+                return;
+
+            logger.error( @"Lost resource registration as $busname disappeared!" );
+            resourceRegistered = false;
+        }
 
         private async void registerWithResource()
         {
@@ -50,14 +76,25 @@ namespace Msmcomm.Daemon
                 usage = yield dbusconn.get_proxy<FreeSmartphone.Usage>(FsoFramework.Usage.ServiceDBusName,
                                                                       FsoFramework.Usage.ServicePathPrefix,
                                                                       GLib.DBusProxyFlags.NONE);
+            }
+            catch (GLib.Error error0)
+            {
+                logger.error(@"Can not retrieve proxy for org.freesmartphone.ousage service: $(error0.message)!");
+            }
+
+            try
+            {
                 yield usage.register_resource("Modem", new GLib.ObjectPath("/org/msmcomm"));
                 logger.info(@"Successfully registered resource with org.freesmartphone.ousaged");
+
+                resourceRegistered = true;
+                resourceRegistrationPending = false;
             }
-            catch (GLib.Error err0)
+            catch (GLib.Error error1)
             {
-                logger.error(@"Can't register resource with org.freesmartphone.ousaged ($(err0.message)); enabling unconditionally" );
-                enable();
+                logger.error(@"Can't register resource with org.freesmartphone.ousaged: $(error1.message)!");
             }
+
         }
 
         protected override string repr()
@@ -111,6 +148,10 @@ namespace Msmcomm.Daemon
         {
             base(modem);
 
+            dbusnotifier = new FsoFramework.DBusServiceNotifier();
+            dbusnotifier.notifyDisappearing(FsoFramework.Usage.ServiceDBusName, onUsageServiceDisappearing);
+            dbusnotifier.notifyAppearing(FsoFramework.Usage.ServiceDBusName, onUsageServiceAppearing);
+
             /* Forward modem status to connect clients */
             this.modem.statusUpdate.connect((status) => modem_status(status));
             /* Handle all incomming unsolicited response */
@@ -140,6 +181,8 @@ namespace Msmcomm.Daemon
             {
                 dbusconn = GLib.Bus.get_sync(GLib.BusType.SYSTEM);
 
+                resourceRegistered = false;
+                resourceRegistrationPending = true;
                 Idle.add(() => { registerWithResource(); return false; });
 
                 GLib.Bus.own_name_on_connection( dbusconn, servicename, 0, 
