@@ -327,10 +327,12 @@ namespace Msmcomm.Daemon
 
                 // Ok, as now all pending messages are send to the modem, we can go into
                 // suspend state.
+                active = false;
                 llc.sendAllFramesNow();
                 llc.stop();
                 transport.flush();
                 transport.freeze();
+                statusUpdate(Msmcomm.ModemStatus.INACTIVE);
 
                 // When we have a high speed uart as transport we need to suspend it
                 hsuartTransport = transport as FsoFramework.HsuartTransport;
@@ -354,6 +356,7 @@ namespace Msmcomm.Daemon
                     hsuartTransport.resume();
                 }
 
+                in_link_setup = true;
                 transport.thaw();
                 llc.start();
             }
