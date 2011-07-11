@@ -202,7 +202,7 @@ namespace Msmcomm.Daemon
         }
 
         /*
-         * Setup every other component we need to work probably
+         * Setup every other component we need to start working.
          */
         public bool setup()
         {
@@ -319,6 +319,12 @@ namespace Msmcomm.Daemon
 
             if (state == ModemPowerState.SUSPEND)
             {
+                if (!active)
+                {
+                    assert(logger.debug(@"We're not active so we don't need to handle power state $(state)."));
+                    return false;
+                }
+
                 // Ok, as now all pending messages are send to the modem, we can go into
                 // suspend state.
                 llc.sendAllFramesNow();
@@ -330,7 +336,7 @@ namespace Msmcomm.Daemon
                 hsuartTransport = transport as FsoFramework.HsuartTransport;
                 if (hsuartTransport != null)
                 {
-                    logger.debug("Suspending hsuart transport ...");
+                    assert(logger.debug("Suspending hsuart transport ..."));
                     if (!hsuartTransport.suspend())
                     {
                         logger.error("Failed to suspend the hsuart transport!");
@@ -344,7 +350,7 @@ namespace Msmcomm.Daemon
                 hsuartTransport = transport as FsoFramework.HsuartTransport;
                 if (hsuartTransport != null)
                 {
-                    logger.debug("Resuming the hsuart transport ...");
+                    assert(logger.debug("Resuming the hsuart transport ..."));
                     hsuartTransport.resume();
                 }
 

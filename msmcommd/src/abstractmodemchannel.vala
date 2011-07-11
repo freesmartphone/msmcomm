@@ -35,3 +35,5 @@ namespace Msmcomm.Daemon
         public abstract void handleIncommingData(uint8[] data);
     }
 }
+
+// vim:ts=4:sw=4:expandtab
