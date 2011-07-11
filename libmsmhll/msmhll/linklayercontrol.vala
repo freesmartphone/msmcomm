@@ -171,7 +171,7 @@ namespace Msmcomm.HciLinkLayer
 
         private void handleIncommingFrame(Frame frame)
         {
-            debug(@"Got a $(frameTypeToString(frame.fr_type)) frame from modem");
+            debug(@"Got a $(frame.fr_type) frame from modem");
 
             foreach (AbstractLinkHandler handler in handlers)
             {

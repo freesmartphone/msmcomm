@@ -25,93 +25,12 @@ namespace Msmcomm.HciLinkLayer
 {
     public enum FrameType
     {
-        SYNC,
-        SYNC_RESP,
-        CONFIG,
-        CONFIG_RESP,
-        ACK,
-        DATA,
-    }
-
-    public string frameTypeToString(FrameType type)
-    {
-        string result = "<unknown>";
-        switch (type)
-        {
-            case FrameType.SYNC:
-                result = "SYNC";
-                break;
-            case FrameType.SYNC_RESP:
-                result = "SYNC_RESPONSE";
-                break;
-            case FrameType.CONFIG:
-                result = "CONFIG";
-                break;
-            case FrameType.CONFIG_RESP:
-                result = "CONFIG_RESP";
-                break;
-            case FrameType.ACK:
-                result = "ACK";
-                break;
-            case FrameType.DATA:
-                result = "DATA";
-                break;
-        }
-        return result;
-    }
-
-    private uint8 frameTypeToByte(FrameType type)
-    {
-        uint8 result = 0x0;
-        switch (type)
-        {
-            case FrameType.SYNC:
-                result = 0x1;
-                break;
-            case FrameType.SYNC_RESP:
-                result = 0x2;
-                break;
-            case FrameType.CONFIG:
-                result = 0x3;
-                break;
-            case FrameType.CONFIG_RESP:
-                result = 0x4;
-                break;
-            case FrameType.ACK:
-                result = 0x5;
-                break;
-            case FrameType.DATA:
-                result = 0x6;
-                break;
-        }
-        return result;
-    }
-
-    private FrameType frameTypeFromByte(uint8 byte)
-    {
-        FrameType result = FrameType.SYNC;
-        switch (byte)
-        {
-            case 0x1:
-                result = FrameType.SYNC;
-                break;
-            case 0x2:
-                result = FrameType.SYNC_RESP;
-                break;
-            case 0x3:
-                result = FrameType.CONFIG;
-                break;
-            case 0x4:
-                result = FrameType.CONFIG_RESP;
-                break;
-            case 0x5:
-                result = FrameType.ACK;
-                break;
-            case 0x6:
-                result = FrameType.DATA;
-                break;
-        }
-        return result;
+        SYNC = 0x1,
+        SYNC_RESP = 0x2,
+        CONFIG = 0x3,
+        CONFIG_RESP = 0x4,
+        ACK = 0x5,
+        DATA = 0x6,
     }
 
     /**
@@ -223,7 +142,7 @@ namespace Msmcomm.HciLinkLayer
             // create header for this frame
             var header = new uint8[3];
             header[0] = addr;
-            header[1] = (frameTypeToByte(fr_type) << 4) | flags;
+            header[1] = (((uint8) fr_type) << 4) | flags;
             header[2] = (seq << 4) | ack;
             buffer.append(header);
 
@@ -277,7 +196,7 @@ namespace Msmcomm.HciLinkLayer
 
             // fill header properties from data
             addr = data[0];
-            fr_type = frameTypeFromByte(((buffer.data[1] & 0xf0) >> 4));
+            fr_type = (FrameType) ((buffer.data[1] & 0xf0) >> 4);
             flags = buffer.data[1] & 0x0f;
             seq = (buffer.data[2] & 0xf0) >> 4;
             ack = buffer.data[2] & 0x0f;
@@ -290,7 +209,7 @@ namespace Msmcomm.HciLinkLayer
             }
 
 #if DEBUG
-            debug(@"Frame.unpack: type = $(frameTypeToString(fr_type)) seq = $(seq) ack = $(ack) payload.len = $(payload.len)");
+            debug(@"Frame.unpack: type = $(fr_type) seq = $(seq) ack = $(ack) payload.len = $(payload.len)");
 #endif
 
             return true;

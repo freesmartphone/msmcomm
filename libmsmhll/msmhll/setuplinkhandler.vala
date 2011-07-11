@@ -75,7 +75,7 @@ namespace Msmcomm.HciLinkLayer
         {
             bool frameHandled = true;
 
-            debug(@"received $(frameTypeToString(frame.fr_type)) frame");
+            debug(@"received $(frame.fr_type) frame");
 
             switch (context.state)
             {
@@ -106,7 +106,7 @@ namespace Msmcomm.HciLinkLayer
                     }
                     else
                     {
-                        debug(@"recieve $(frameTypeToString(frame.fr_type)) frame in $(linkStateTypeToString(context.state)) state ... discard frame!");
+                        debug(@"recieve $(frame.fr_type) frame in $(context.state) state ... discard frame!");
                     }
                     break;
                 case LinkStateType.ACTIVE:
@@ -126,7 +126,7 @@ namespace Msmcomm.HciLinkLayer
                     }
                     else
                     {
-                        debug(@"SetupLinkHandler: recieve $(frameTypeToString(frame.fr_type)) frame in ACTIVE state ... discarding frame!");
+                        debug(@"SetupLinkHandler: recieve $(frame.fr_type) frame in ACTIVE state ... discarding frame!");
                         frameHandled = false;
                     }
                     break;

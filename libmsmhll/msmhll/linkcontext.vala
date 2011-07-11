@@ -27,32 +27,13 @@ namespace Msmcomm.HciLinkLayer
         INIT,
         ACTIVE
     }
-    
-    public string linkStateTypeToString(LinkStateType type)
-    {
-        string result = "<unknown>";
-        switch (type)
-        {
-            case LinkStateType.NULL:
-                result = "NULL";
-                break;
-            case LinkStateType.INIT:
-                result = "INIT";
-                break;
-            case LinkStateType.ACTIVE:
-                result = "ACTIVE";
-                break;
-        }
-        return result;
-    }
-
 
     public class LinkContext
     { 
         public uint8 window_size { get; set; default = 8; }
         public uint8 max_sequence_number { get; private set; default = 0xf; }
         public uint max_send_attempts { get; set; default = 10; }
-        
+
         public LinkStateType state { get; set; default = LinkStateType.NULL; }
 
         public uint8 next_seq { get; set; default = 0; }
@@ -61,17 +42,16 @@ namespace Msmcomm.HciLinkLayer
         public uint8 last_ack { get; set; default = 0; }
 
         public Gee.LinkedList<Frame> ack_queue { get; set; }
-        
+
         public Timer ack_timer { get; set; }
-        
+
         //
         // public API
         //
-        
+
         public LinkContext()
         {
             ack_queue = new Gee.LinkedList<Frame>();
-            
             ack_timer = new Timer();
             ack_timer.interval = 1000;
         }

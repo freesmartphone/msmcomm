@@ -51,7 +51,7 @@ namespace Msmcomm.HciLinkLayer
 
         public void enequeFrame(Frame frame)
         {
-            debug(@"eneque $(frameTypeToString(frame.fr_type)) frame for sending");
+            debug(@"eneque $(frame.fr_type) frame for sending");
 
             frame.attempts = 0;
             queue.add(frame);
@@ -69,7 +69,7 @@ namespace Msmcomm.HciLinkLayer
             {
                 // FIXME implement different exception for better error handling while
                 // frame packing
-                debug(@"Send a $(frameTypeToString(frame.fr_type)) frame to modem");
+                debug(@"Send a $(frame.fr_type) frame to modem");
 
                 if (frame.fr_type == FrameType.DATA)
                 {
