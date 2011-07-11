@@ -21,6 +21,21 @@
 
 namespace Msmcomm.HciLinkLayer
 {
+    public const uint8 DEFAULT_WINDOW_SIZE = 8;
+    public const uint DEFAULT_MAX_SEND_ATTEMPTS = 10;
+
+    public struct LinkLayerSettings
+    {
+        public uint8 window_size;
+        public uint max_send_attempts;
+
+        public LinkLayerSettings(uint8 window_size = DEFAULT_WINDOW_SIZE,
+                                 uint max_send_attempts = DEFAULT_MAX_SEND_ATTEMPTS)
+        {
+            this.window_size = window_size;
+            this.max_send_attempts = max_send_attempts;
+        }
+    }
 
     public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
     {
@@ -33,7 +48,7 @@ namespace Msmcomm.HciLinkLayer
         // public API
         //
 
-        public LinkLayerControl()
+        public LinkLayerControl(LinkLayerSettings settings)
         {
             context = new LinkContext();
             context.stateChanged.connect(onStateChanged);
@@ -49,7 +64,7 @@ namespace Msmcomm.HciLinkLayer
 
             in_buffer = new ByteArray();
 
-            configure();
+            configure(settings);
         }
 
         public void start()
@@ -159,14 +174,10 @@ namespace Msmcomm.HciLinkLayer
             }
         }
 
-        private void configure()
+        private void configure(LinkLayerSettings settings)
         {
-#if 0
-            context.window_size = (uint8) config.intValue("flowcontrol", "window_size", 8);
-            context.max_send_attempts = (uint8) config.intValue("flowcontrol", "max_send_attempts", 10);
-#endif
-            context.window_size = 8;
-            context.max_send_attempts = 10;
+            context.window_size = settings.window_size;
+            context.max_send_attempts = settings.max_send_attempts;
         }
 
         private void handleIncommingFrame(Frame frame)
