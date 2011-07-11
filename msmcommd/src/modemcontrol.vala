@@ -39,6 +39,7 @@ namespace Msmcomm.Daemon
         private GLib.ByteArray in_buffer;
         private HciModemChannel channel;
         private bool in_link_setup;
+        private int lockCount;
 
         public bool active { get; private set; default = false; }
 
@@ -198,6 +199,8 @@ namespace Msmcomm.Daemon
             lowlevel = new LowLevelControl();
             in_buffer = new GLib.ByteArray();
             in_link_setup = false;
+            lockCount = 0;
+
             statusUpdate.connect(handleStatusUpdate);
         }
 
@@ -310,7 +313,7 @@ namespace Msmcomm.Daemon
          * to go into suspend state we need to prepare the modem communication layer for
          * this. It's same when we are comming out of a suspend and start working again.
          **/
-        public bool handlePowerState(ModemPowerState state)
+        public async bool handlePowerState(ModemPowerState state)
         {
             FsoFramework.HsuartTransport hsuartTransport = null;
 
@@ -324,6 +327,8 @@ namespace Msmcomm.Daemon
                     assert(logger.debug(@"We're not active so we don't need to handle power state $(state)."));
                     return false;
                 }
+
+                yield waitUntilUnlocked();
 
                 // Ok, as now all pending messages are send to the modem, we can go into
                 // suspend state.
@@ -373,6 +378,56 @@ namespace Msmcomm.Daemon
         public HciModemChannel retrieveChannel()
         {
             return channel;
+        }
+
+        /**
+         * Lock the modem. The lock will only avoid suspending the modem when we're told
+         * to do so but there are still operations pending.
+         **/
+        public void lock()
+        {
+            lockCount++;
+        }
+
+        /**
+         * Unlock the modem as a operation has finished.
+         **/
+        public void unlock()
+        {
+            if (lockCount == 0)
+            {
+                logger.error("Lock count is already zero! Can't unlock ...");
+                return;
+            }
+
+            lockCount--;
+        }
+
+        /**
+         * Wait until the modem gets unlocked.
+         **/
+        public async void waitUntilUnlocked()
+        {
+            if (isLocked())
+            {
+                Timeout.add(200, () => {
+                    // When we're unlocked now we can return to the caller
+                    if (!isLocked())
+                        return false;
+
+                    // We're still locked so try again
+                    return true;
+                });
+                yield;
+            }
+        }
+
+        /**
+         * Check if modem is locked or not.
+         **/
+        public bool isLocked()
+        {
+            return lockCount > 0;
         }
 
         public override string repr()

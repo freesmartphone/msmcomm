@@ -73,6 +73,8 @@ namespace Msmcomm.Daemon
                 throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready yet for command processing; initialize it first!" );
             }
 
+            modem.lock();
+
             command.ref_id = nextValidMessageRefId();
             var handler = new CommandHandler( command, retries, timeout, onTimeout, response_handler_func );
             handler.report_all_urcs = report_all_urcs;
@@ -80,12 +82,14 @@ namespace Msmcomm.Daemon
             enqueueCommand( handler );
             yield;
 
+            pending.remove(handler);
+
+            modem.unlock();
+
             if (handler.timed_out)
             {
                 throw new Msmcomm.Error.TIMEOUT( @"Timed out while waiting for a response for command '$(command.message_type)'" );
             }
-
-            pending.remove(handler);
 
             if (handler.error != null)
             {
@@ -100,18 +104,26 @@ namespace Msmcomm.Daemon
                 throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
             }
 
+            modem.lock();
+
             command.ref_id = nextValidMessageRefId();
             var handler = new CommandHandler( command, retries, timeout, onTimeout );
             handler.callback = enqueueAsync.callback;
             enqueueCommand( handler );
             yield;
 
+            pending.remove(handler);
+            modem.unlock();
+
             if (handler.timed_out)
             {
                 throw new Msmcomm.Error.TIMEOUT( @"Timed out while waiting for a response for command '$(command.message_type)'" );
             }
 
-            pending.remove(handler);
+            if (handler.error != null)
+            {
+                throw handler.error;
+            }
 
             return handler.response;
         }
@@ -124,11 +136,15 @@ namespace Msmcomm.Daemon
                 throw new Msmcomm.Error.MODEM_INACTIVE( "Modem is not ready for command processing; initialize it first!" );
             }
 
+            modem.lock();
+
             // create and command and send it out but do not wait for a response
             command.ref_id = nextValidMessageRefId();
             var handler = new CommandHandler( command, 0 );
             handler.ignore_response = true;
             enqueueCommand( handler );
+
+            modem.unlock();
         }
 
         /**

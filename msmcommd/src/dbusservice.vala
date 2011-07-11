@@ -203,7 +203,8 @@ namespace Msmcomm.Daemon
 
         public async void suspend() throws FreeSmartphone.ResourceError
         {
-            if (!modem.handlePowerState(ModemPowerState.SUSPEND))
+            var result = yield modem.handlePowerState(ModemPowerState.SUSPEND);
+            if (!result)
             {
                 // FIXME we need some correct named error first
                 // throw new FreeSmartphone.ResourceError ...
