@@ -62,7 +62,7 @@ struct CallEvent
 	public uint8 reject_value;
 	public uint8 unknown6[306];
 	public uint8 is_tty;
-	public uint8 unknown7[177];
+	public uint8 unknown7[174];
 	public unowned uint8[] data
 	{
 		get

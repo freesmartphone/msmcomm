@@ -62,8 +62,8 @@ struct call_event
 #define CALL_EVENT_UNKNOWN6_SIZE 306
 	uint8_t unknown6[306];
 	uint8_t is_tty;
-#define CALL_EVENT_UNKNOWN7_SIZE 177
-	uint8_t unknown7[177];
+#define CALL_EVENT_UNKNOWN7_SIZE 174
+	uint8_t unknown7[174];
 } __attribute__ ((packed));
 
 static void msmcomm_low_level_structures_call_event_init(struct call_event* self)
