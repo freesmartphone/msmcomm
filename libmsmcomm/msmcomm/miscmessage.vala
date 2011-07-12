@@ -427,7 +427,7 @@ namespace Msmcomm.LowLevel
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_CELL_ID, MessageClass.SOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_CELL_ID, MessageClass.UNSOLICITED_RESPONSE);
 
             _message = MiscGetCellIdResponse();
             set_payload(_message.data);

@@ -96,5 +96,6 @@ namespace Msmcomm
 
         public signal void radio_reset_ind();
         public signal void charger_status(ChargerStatusInfo info);
+        public signal void cell_status(uint cell_id, uint num_cells, uint active_rat, uint status);
     }
 }

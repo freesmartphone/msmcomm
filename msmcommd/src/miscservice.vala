@@ -50,6 +50,11 @@ namespace Msmcomm.Daemon
 
                     handled = true;
                     break;
+                case MessageType.RESPONSE_MISC_GET_CELL_ID:
+                    var gci_msg = message as MiscGetCellIdResponseMessage;
+                    cell_status((uint) gci_msg.cell_id, (uint) gci_msg.num_cells, (uint) gci_msg.active_rat, (uint) gci_msg.status);
+                    handled = true;
+                    break;
             }
 
             return handled;
