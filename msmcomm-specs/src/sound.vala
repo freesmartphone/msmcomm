@@ -21,6 +21,8 @@
 
 namespace Msmcomm
 {
+    [CCode (cprefix = "MSMCOMM_SOUND_DEVICE_CLASS_", cheader_filename = "msmcomm-specs.h")]
+    [DBus (use_string_marshalling = true)]
     public enum SoundDeviceClass
     {
         HANDSET,
@@ -37,6 +39,8 @@ namespace Msmcomm
         TTYHC0,
     }
 
+    [CCode (cprefix = "MSMCOMM_SOUND_DEVICE_SUB_CLASS_", cheader_filename = "msmcomm-specs.h")]
+    [DBus (use_string_marshalling = true)]
     public enum SoundDeviceSubClass
     {
         DEFAULT,
