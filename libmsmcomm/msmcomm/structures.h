@@ -1049,9 +1049,9 @@ static void msmcomm_low_level_structures_network_state_info_event_init(struct ne
 struct sound_set_device_msg
 {
 	uint32_t ref_id;
-	uint8_t class;
+	uint8_t device_class;
 	uint8_t unknown0;
-	uint8_t sub_class;
+	uint8_t device_sub_class;
 #define SOUND_SET_DEVICE_MSG_UNKNOWN1_SIZE 3
 	uint8_t unknown1[3];
 } __attribute__ ((packed));

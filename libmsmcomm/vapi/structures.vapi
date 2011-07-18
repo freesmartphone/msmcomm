@@ -1502,9 +1502,9 @@ struct NetworkStateInfoEvent
 struct SoundSetDeviceMessage
 {
 	public uint32 ref_id;
-	public uint8 class;
+	public uint8 device_class;
 	public uint8 unknown0;
-	public uint8 sub_class;
+	public uint8 device_sub_class;
 	public uint8 unknown1[3];
 	public unowned uint8[] data
 	{

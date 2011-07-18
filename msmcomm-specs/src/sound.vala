@@ -21,9 +21,41 @@
 
 namespace Msmcomm
 {
-    [DBus (timeout = 12000, name = "org.msmcomm.Sound")]
+    public enum SoundDeviceClass
+    {
+        HANDSET,
+        HEADSET,
+        BTHEADSET,
+        SPEAKER,
+        HEADSETWITHOUTMIC,
+        WIREDSPEAKER,
+        BTCARKIT,
+        BTSPEAKER,
+        WIREDSTEREO,
+        TTYFULL,
+        TTYVC0,
+        TTYHC0,
+    }
+
+    public enum SoundDeviceSubClass
+    {
+        DEFAULT,
+        HANDSET_SLIDER_CLOSED,
+        HANDSET_SLIDER_OPEN,
+        HEADSET_MUSE,
+        BTHEADSET_ECHOCANCEL_INHANDSET,
+        BTHEADSET_ECHOCANCEL_INHEADSET,
+        SPEAKER_SLIDER_CLOSED,
+        SPEKAER_SLIDER_OPEN,
+        SPEAKER_VOL_MIN,
+        SPEAKER_VOL_1,
+        SPEAKER_VOL_2,
+        SPEAKER_VOL_MAX,
+    }
+
+    [DBus (timeout = 120000, name = "org.msmcomm.Sound")]
     public interface Sound : GLib.Object
     {
-        public abstract async void set_device(uint class, uint sub_class) throws GLib.Error, Msmcomm.Error;
+        public abstract async void set_device(SoundDeviceClass class, SoundDeviceSubClass sub_class) throws GLib.Error, Msmcomm.Error;
     }
 }

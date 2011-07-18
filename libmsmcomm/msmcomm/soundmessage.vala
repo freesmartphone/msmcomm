@@ -23,6 +23,38 @@ using Msmcomm.LowLevel.Structures;
 
 namespace Msmcomm.LowLevel
 {
+    public enum SoundDeviceClass
+    {
+        HANDSET = 0,
+        HEADSET = 1,
+        BTHEADSET = 2,
+        SPEAKER = 3,
+        HEADSETWITHOUTMIC = 4,
+        WIREDSPEAKER = 5,
+        BTCARKIT = 6,
+        BTSPEAKER = 7,
+        WIREDSTEREO = 8,
+        TTYFULL = 10,
+        TTYVC0 = 11,
+        TTYHC0 = 12,
+    }
+
+    public enum SoundDeviceSubClass
+    {
+        DEFAULT = 0,
+        HANDSET_SLIDER_CLOSED = 0,
+        HANDSET_SLIDER_OPEN = 1,
+        HEADSET_MUSE = 7,
+        BTHEADSET_ECHOCANCEL_INHANDSET = 0,
+        BTHEADSET_ECHOCANCEL_INHEADSET = 1,
+        SPEAKER_SLIDER_CLOSED = 0,
+        SPEKAER_SLIDER_OPEN = 1,
+        SPEAKER_VOL_MIN = 6,
+        SPEAKER_VOL_1 = 4,
+        SPEAKER_VOL_2 = 2,
+        SPEAKER_VOL_MAX = 0,
+    }
+
     public class SoundSetDeviceCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x1e;
@@ -30,8 +62,8 @@ namespace Msmcomm.LowLevel
 
         private SoundSetDeviceMessage _message;
 
-        public uint8 class;
-        public uint8 sub_class;
+        public SoundDeviceClass device_class;
+        public SoundDeviceSubClass device_sub_class;
 
         construct
         {
@@ -44,8 +76,8 @@ namespace Msmcomm.LowLevel
         protected override void prepare_data()
         {
             _message.ref_id = ref_id;
-            _message.class = class;
-            _message.sub_class = sub_class;
+            _message.device_class = (uint8) device_class;
+            _message.device_sub_class = (uint8) device_sub_class;
         }
     }
 

@@ -19,6 +19,7 @@
  *
  **/
 
+using FsoFramework;
 using Msmcomm.LowLevel;
 
 namespace Msmcomm.Daemon
@@ -42,11 +43,13 @@ namespace Msmcomm.Daemon
             return false;
         }
 
-        public async void set_device(uint _class, uint sub_class) throws Msmcomm.Error, GLib.Error
+        public async void set_device(SoundDeviceClass device_class, SoundDeviceSubClass device_sub_class) throws Msmcomm.Error, GLib.Error
         {
             var message = new SoundSetDeviceCommandMessage();
-            message.class = (uint8) _class;
-            message.sub_class = (uint8) sub_class;
+            message.device_class =
+                StringHandling.convertEnum<SoundDeviceClass,Msmcomm.LowLevel.SoundDeviceClass>(device_class);
+            message.device_sub_class =
+                StringHandling.convertEnum<SoundDeviceSubClass,Msmcomm.LowLevel.SoundDeviceSubClass>(device_sub_class);
 
             var response = yield channel.enqueueAsync(message);
             checkResponse(response);

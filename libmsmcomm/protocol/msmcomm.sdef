@@ -456,8 +456,8 @@ end
 #-------------------------------------------------------------------
 start sound_set_device_msg 10
 [0-3] uint32_t ref_id
-[4] uint8_t class
-[6] uint8_t sub_class
+[4] uint8_t device_class
+[6] uint8_t device_sub_class
 end
 
 start sound_callback_resp 11
