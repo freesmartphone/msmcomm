@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<namespace:voicemail>
+<namespace:voicemail device="palmpre">
 	<description></description>
 	<structure name="voicemail_get_info_msg" length="4">
 		<field name="ref_id" start="0" end="3" type="uint32_t"/>

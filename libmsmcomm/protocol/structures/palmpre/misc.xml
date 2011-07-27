@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<namespace:misc>
+<namespace:misc device="palmpre">
 	<description></description>
 	<structures>
 		<structure name="misc_test_alive_msg" length="5">

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<namespace:network>
+<namespace:network device="palmpre">
 	<structures>
 		<structure name="network_report_rssi_msg" length="5">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>

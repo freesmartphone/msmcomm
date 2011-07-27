@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<namespace:sms>
+<namespace:sms device="palmpre">
 	<structures>
 		<structure name="wms_read_template_field" length="2075">
 			<field name="received_mask" start="172" type="uint8_t"/>

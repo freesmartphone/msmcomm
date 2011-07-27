@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<namespace:phonebook>
+<namespace:phonebook device="palmpre">
 	<structures>
 		<structure name="phonebook_read_record_msg" length="6">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<namespace:state>
+<namespace:state device="palmpre">
 	<description></description>
 	<structures>
 		<structure name="state_change_operation_mode_msg" length="5">

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<namespace:common>
+<namespace:common device="palmpre">
 	<description></description>
 	<structures>
-
 		<structure name="plmn_field" length="3">
 			<field name="mcc" start="0" end="1" type="uint16_t"/>
 			<field name="mnc" start="2" type="uint8_t"/>
 		</structure>
-
 	</structures>
 </namespace:common>

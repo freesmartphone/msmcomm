@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<namespace:sound>
+<namespace:sound device="palmpre">
 	<structures>
 
 		<structure name="sound_set_device_msg" length="10">

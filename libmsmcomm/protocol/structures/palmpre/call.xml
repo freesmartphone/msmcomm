@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<namespace:call>
+<namespace:call device="palmpre">
 	<structures>
 		<structure name="call_event" length="1108">
 			<field name="call_id" start="0" type="uint8_t"/>
