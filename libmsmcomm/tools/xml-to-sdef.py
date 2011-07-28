@@ -30,10 +30,13 @@ class Handler(ContentHandler):
     def __init__(self):
         ContentHandler.__init__(self)
         self.namespace = ""
+        self.devices = {}
         self.structures = []
         self.structure = {}
+        self.device_structures = {}
         self.field = {}
         self.text = ""
+        self.device = ""
         self.anonymous_count = 0
 
     def startDocument(self):
@@ -45,6 +48,7 @@ class Handler(ContentHandler):
     def startElement(self, element, attrs):
         if element.startswith("namespace"):
             self.namespace = element.split(':')[1]
+            self.device = attrs.get('device', 'none')
         elif element == "structures":
             self.structures = []
         elif element == "structure":
@@ -53,7 +57,7 @@ class Handler(ContentHandler):
             self.structure['name'] = attrs.get('name')
             self.structure['length'] = attrs.get('length')
             self.structure['fields'] = []
-                        type_size[self.structure['name']] = self.structure['length']
+            type_size[self.structure['name']] = self.structure['length']
         elif element == "field":
             self.field = {}
             self.field['name'] = attrs.get('name', None)
@@ -83,40 +87,41 @@ class Handler(ContentHandler):
             self.structure = None
         elif element == "field":
             self.structure['fields'].append(self.field)
+        elif element.startswith("namespace"):
+            if not self.device_structures.has_key(self.device) or self.device_structures[self.device] == None:
+                self.device_structures[self.device] = self.structures
+            else:
+                for item in self.structures:
+                    self.device_structures[self.device].append(item)
 
     def dump(self, f):
-        f.write("#-------------------------------------------------------------------\n")
-        f.write("# %s\n" % self.namespace.upper())
-        f.write("#-------------------------------------------------------------------\n")
-        f.write("")
-        for s in self.structures:
-            f.write("start %s %s\n" % (s['name'], s['length']))
-            for field in s['fields']:
-                r = ""
-                start = int(field['start'])
-                end = int(field['end'])
-                if end <= start:
-                    r = "[%i]" % start
-                elif end > start:
-                    r = "[%i-%i]" % (start, end)
+        for d in self.device_structures:
+            for s in self.device_structures[d]:
+                f.write("start %s %s device=%s\n" % (s['name'], s['length'], d))
+                for field in s['fields']:
+                    r = ""
+                    start = int(field['start'])
+                    end = int(field['end'])
+                    if end <= start:
+                        r = "[%i]" % start
+                    elif end > start:
+                        r = "[%i-%i]" % (start, end)
 
-                f.write("%s %s %s" % (r, field['type'], field['name']))
-                if not len(field['variants']) == 0:
-                    f.write(" [")
-                    count = 0
-                    for v in field['variants']:
-                        f.write("%s" % (v['type']))
-                        if not count == len(field['variants']) - 1:
-                            f.write(",")
-                        count += 1
-                    f.write("]")
-                if not field['value'] == None:
-                    f.write(" = %s" % field['value'])
+                    f.write("%s %s %s" % (r, field['type'], field['name']))
+                    if not len(field['variants']) == 0:
+                        f.write(" [")
+                        count = 0
+                        for v in field['variants']:
+                            f.write("%s" % (v['type']))
+                            if not count == len(field['variants']) - 1:
+                                f.write(",")
+                            count += 1
+                        f.write("]")
+                    if not field['value'] == None:
+                        f.write(" = %s" % field['value'])
+                    f.write("\n")
+                f.write("end\n")
                 f.write("\n")
-            f.write("end\n")
-            f.write("\n")
-            
-        
 
 if __name__ == "__main__":
     f = sys.stdout
@@ -124,5 +129,4 @@ if __name__ == "__main__":
         handler = Handler()
         xml.sax.parse(filename, handler)
         handler.dump(f)
-        
 
