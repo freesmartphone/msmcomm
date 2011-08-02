@@ -32,6 +32,7 @@ libmsmrpc_la_VALASOURCES = \
 	common.vala \
 	client.vala \
 	xdrbuffer.vala \
+	rpc.vala \
 	$(NULL)
 
 libmsmrpc_la_SOURCES = \
