@@ -4,6 +4,7 @@ NULL =
 
 AM_CFLAGS = \
 	$(GLIB_CFLAGS) \
+	$(FSO_CFLAGS) \
 	-I$(top_srcdir)/msmrpc \
 	$(NULL)
 
@@ -14,12 +15,15 @@ VALAC_ARGS = \
 	--pkg posix \
 	--pkg glib-2.0 \
 	--pkg msmrpc-1.0 \
+	--pkg fsobasics-2.0 \
+	--pkg fsotransport-2.0 \
 	$(NULL)
 
 noinst_PROGRAMS = $(TEST_PROGS)
 
 progs_ldadd = \
 	$(GLIB_LIBS) \
+	$(FSO_LIBS) \
 	../msmrpc/libmsmrpc.la
 	$(NULL)
 

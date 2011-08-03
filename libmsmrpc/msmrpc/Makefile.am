@@ -5,6 +5,7 @@ NULL =
 AM_CFLAGS = \
 	-DG_LOG_DOMAIN=\"libmsmrpc\" \
 	$(GLIB_CFLAGS) \
+	$(FSO_CFLAGS) \
 	$(NULL)
 
 VALAC_ARGS = \
@@ -12,6 +13,8 @@ VALAC_ARGS = \
 	--vapidir $(top_srcdir)/vapi \
 	--pkg posix \
 	--pkg glib-2.0 \
+	--pkg fsobasics-2.0 \
+	--pkg fsotransport-2.0 \
 	--header msmrpc.h \
 	--library msmrpc-1.0 \
 	$(NULL)
@@ -49,6 +52,8 @@ msmrpc-1.0.vapi msmrpc.vala.stamp: $(libmsmrpc_la_VALASOURCES)
 
 libmsmrpc_la_LIBADD = \
 	-lpthread \
+	$(GLIB_LIBS) \
+	$(FSO_LIBS) \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
