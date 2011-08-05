@@ -170,4 +170,11 @@ namespace Msmrpc
         SMD_BRIDGE_APPS = 0x300000A0,
         SMD_BRIDGE_MODEM = 0x300000A1,
     }
+
+    public const uint32 OEM_RAPI_VERSION_1_0 = 0x00010000;
+    public const uint32 OEM_RAPI_VERSION_1_1 = 0x00010001;
+
+    public const uint32 OEM_RAPI_PROC_NULL = 0;
+    public const uint32 OEM_RAPI_PROC_RPC_GLUE_CODE_INFO_REMOTE = 1;
+    public const uint32 OEM_RAPI_PROC_STREAMING_FUNCTION = 2;
 }

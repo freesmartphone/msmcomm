@@ -105,6 +105,41 @@ namespace Msmrpc
         //
 
         /**
+         * Retrieve all bytes from current read position to the end of the buffer.
+         **/
+        public bool retrive_remaining_data(out uint8[] data)
+        {
+            uint32 size = buffer.len - buffer_next;
+            bool result = false;
+
+            if (size > 0 )
+            {
+                data = new uint8[size];
+                Memory.copy(&data, ((uint8*) buffer.data) + buffer_next, size);
+                result = true;
+            }
+
+            return result;
+        }
+
+        /**
+         * Skip a specified number of bytes in buffer.
+         **/
+        public void skip(uint num)
+        {
+            if (buffer_next + num <= buffer.len)
+                update_counters(num);
+        }
+
+        /**
+         * Reset internal read position to the beginning.
+         **/
+        public void rewind()
+        {
+            buffer_next = 0;
+        }
+
+        /**
          * Read a uint32 value from the buffer
          **/
         public bool read_uint32(out uint32 value)
@@ -298,6 +333,24 @@ namespace Msmrpc
         construct
         {
             reset();
+        }
+
+        /**
+         * This will append a raw byte sequence to the internal buffer. It is required
+         * that the data is already in xdr format.
+         **/
+        public bool append(uint8[] data)
+        {
+            bool result = false;
+
+            if (buffer_next + data.length <= BUFFER_MAX_SIZE)
+            {
+                buffer.append(data);
+                update_counters(data.length);
+                result = true;
+            }
+
+            return result;
         }
 
         /**

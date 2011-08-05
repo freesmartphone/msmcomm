@@ -36,6 +36,7 @@ libmsmrpc_la_VALASOURCES = \
 	client.vala \
 	xdrbuffer.vala \
 	rpc.vala \
+	oemrapiclient.vala \
 	$(NULL)
 
 libmsmrpc_la_SOURCES = \

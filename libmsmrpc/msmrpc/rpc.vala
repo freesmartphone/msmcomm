@@ -21,6 +21,13 @@
 
 namespace Msmrpc
 {
+    public enum MessageType
+    {
+        CALL = 0,
+        REPLY = 1,
+        UNDEF = 2,
+    }
+
     public struct RequestHeader
     {
         public uint32 xid;
@@ -37,7 +44,7 @@ namespace Msmrpc
         public RequestHeader()
         {
             xid = 0;
-            type = 0;
+            type = (uint32) MessageType.CALL;
             rpc_version = 0;
             prog = 0;
             vers = 0;
@@ -48,7 +55,16 @@ namespace Msmrpc
             verf_length = 0;
         }
 
-        public RequestHeader.from_buffer(InputXdrBuffer buffer)
+        public void setup(uint32 xid, uint32 prog, uint32 vers, uint32 proc)
+        {
+            this.xid = xid;
+            this.rpc_version = 2;
+            this.prog = prog;
+            this.vers = vers;
+            this.procedure = proc;
+        }
+
+        public void from_buffer(InputXdrBuffer buffer)
         {
             buffer.read_uint32(out xid);
             buffer.read_uint32(out type);
@@ -75,6 +91,14 @@ namespace Msmrpc
             buffer.write_uint32(verf_flavor);
             buffer.write_uint32(verf_length);
         }
+
+        public void dump(FsoFramework.Logger logger)
+        {
+            assert( logger.debug(@"RequestHeader: xid = $(xid), type = $((MessageType) type), rpc_version = $(rpc_version)") );
+            assert( logger.debug(@"RequestHeader: prog = $(prog), vers = $(vers), procedure = $(procedure)") );
+            assert( logger.debug(@"RequestHeader: cred_flavor = $(cred_flavor), cred_length = $(cred_length)") );
+            assert( logger.debug(@"RequestHeader: verf_flavor = $(verf_flavor), verf_length = $(verf_length)") );
+        }
     }
 
     public struct ReplyProgMismatchData
@@ -98,27 +122,33 @@ namespace Msmrpc
     {
         public uint32 verf_flavor;
         public uint32 verf_length;
-        public uint32 accept_status;
+        public uint32 status;
 
         public AcceptedReplyHeader()
         {
             verf_flavor = 0;
             verf_length = 0;
-            accept_status = 0;
+            status = 0;
         }
 
-        public AcceptedReplyHeader.from_buffer(InputXdrBuffer buffer)
+        public void from_buffer(InputXdrBuffer buffer)
         {
             buffer.read_uint32(out verf_flavor);
             buffer.read_uint32(out verf_length);
-            buffer.read_uint32(out accept_status);
+            buffer.read_uint32(out status);
         }
 
         public void to_buffer(OutputXdrBuffer buffer)
         {
             buffer.write_uint32(verf_flavor);
             buffer.write_uint32(verf_length);
-            buffer.write_uint32(accept_status);
+            buffer.write_uint32(status);
+        }
+
+        public void dump(FsoFramework.Logger logger)
+        {
+            assert( logger.debug(@"AcceptedReplyHeader: verf_flavor = $(verf_flavor), verf_length = $(verf_length)") );
+            assert( logger.debug(@"status = $((AcceptStatus) status)") );
         }
     }
 
@@ -135,20 +165,20 @@ namespace Msmrpc
         public uint32 reply_status;
         public AcceptedReplyHeader accepted_reply;
 
-        public ReplyHeader()
+        public ReplyHeader(MessageType type)
         {
-            xid = 0;
-            type = 0;
-            reply_status = 0;
-            accepted_reply = AcceptedReplyHeader();
+            this.xid = 0;
+            this.type = (uint32) type;
+            this.reply_status = 0;
+            this.accepted_reply = AcceptedReplyHeader();
         }
 
-        public ReplyHeader.from_buffer(InputXdrBuffer buffer)
+        public void from_buffer(InputXdrBuffer buffer)
         {
             buffer.read_uint32(out xid);
             buffer.read_uint32(out type);
             buffer.read_uint32(out reply_status);
-            accepted_reply = AcceptedReplyHeader.from_buffer(buffer);
+            accepted_reply.from_buffer(buffer);
         }
 
         public void to_buffer(OutputXdrBuffer buffer)
@@ -157,6 +187,12 @@ namespace Msmrpc
             buffer.write_uint32(type);
             buffer.write_uint32(reply_status);
             accepted_reply.to_buffer(buffer);
+        }
+
+        public void dump(FsoFramework.Logger logger)
+        {
+            assert( logger.debug(@"ReplyHeader: xid = $(xid), type = $(type), reply_status = $((ReplyStatus) reply_status)") );
+            accepted_reply.dump(logger);
         }
     }
 }
