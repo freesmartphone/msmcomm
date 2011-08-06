@@ -35,7 +35,7 @@ namespace Msmrpc
         public OemRapiCallMessage()
         {
             event = 0;
-            cb_id = 0;
+            cb_id = OemRapiConstants.CLIENT_NULL_CB_ID;
             handle = 0;
             input_length = 0;
             input_data = null;
@@ -74,14 +74,14 @@ namespace Msmrpc
                 buffer.read_uint32(out output_size);
         }
 
-        public void dump(FsoFramework.Logger logger)
+        public void dump(FsoFramework.Logger logger, bool in = false)
         {
             assert( logger.debug(@"OemRapiCallMessage: event = 0x%04x, cb_id = 0x%04x".printf(event, cb_id)) );
             assert( logger.debug(@"OemRapiCallMessage: handle = 0x%04x, input_length = $(input_length)".printf(handle)) );
             if (input_data != null)
             {
                 assert( logger.debug(@"OemRapiCallMessage: input_data =") );
-                assert( logger.debug(FsoFramework.StringHandling.hexdump(input_data, input_data.length)) );
+                assert( logger.data(input_data, in) );
             }
         }
     }
@@ -116,13 +116,13 @@ namespace Msmrpc
                 buffer.read_bytes(out output_data, out tmp);
         }
 
-        public void dump(FsoFramework.Logger logger)
+        public void dump(FsoFramework.Logger logger, bool in = false)
         {
             assert( logger.debug(@"OemRapiResultMessage: output_valid = $(output_valid), output_length = $(output_length)") );
             if (output_data != null)
             {
                 assert( logger.debug(@"OemRapiResultMessage: output_data =") );
-                assert( logger.debug(FsoFramework.StringHandling.hexdump(output_data, output_data.length)) );
+                assert( logger.data(output_data, in) );
             }
         }
     }
@@ -136,7 +136,7 @@ namespace Msmrpc
         /**
          *
          **/
-        private bool handle_remote_call(InputXdrBuffer buffer)
+        public bool handle_remote_call(InputXdrBuffer buffer)
         {
             OemRapiCallMessage callmessage = OemRapiCallMessage();
 
@@ -162,12 +162,12 @@ namespace Msmrpc
          * Additionally a callback handler can registered to handle callback responses
          * too.
          **/
-        public async bool streaming_function(uint8[] input_data, CallbackHandlerFunc? callback, uint32 event = 0, uint32 handle = 0)
+        public async bool streaming_function(uint8[] input_data, CallbackHandlerFunc? callback = null, uint32 event = 0, uint32 handle = 0)
         {
             OemRapiCallMessage callmessage = OemRapiCallMessage();
-            OemRapiResultMessage resultmessage = OemRapiResultMessage();
+            // OemRapiResultMessage resultmessage = OemRapiResultMessage();
             OutputXdrBuffer out_buffer = new OutputXdrBuffer();
-            InputXdrBuffer in_buffer = new InputXdrBuffer();
+            // InputXdrBuffer in_buffer = new InputXdrBuffer();
             uint8[] result_data = null;
             bool result = false;
 
@@ -176,14 +176,11 @@ namespace Msmrpc
             // FIXME we need to find out whats the purpose of the handle and events flags is
             callmessage.handle = handle;
             callmessage.event = event;
-
-            callmessage.cb_id = 0;
             callmessage.input_data = input_data;
             callmessage.input_length = input_data.length;
-            callmessage.output_length_valid = 0;
-            callmessage.output_valid = 0;
 
-            if (callback != null)
+            // If we have a callback we need to register it to the registry and set its id.
+            if (callback != null) 
                 callmessage.cb_id = cbregistry.register(callback);
 
             assert( logger.debug(@"Sending call message to remote side:") );
@@ -197,14 +194,8 @@ namespace Msmrpc
                 logger.error(@"Could not complete call to OEM rapi streaming function successfully!");
                 return false;
             }
-            else if (result_data == null)
-            {
-                logger.error(@"We didn't receive a response message to our call of the OEM Rapi streaming function");
-                return false;
-            }
 
-            in_buffer.fill(result_data);
-            resultmessage.from_buffer(in_buffer);
+            // FIXME check result_data now!
 
             return true;
         }

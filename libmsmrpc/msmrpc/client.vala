@@ -48,7 +48,7 @@ namespace Msmrpc
         {
             if (id_counter == uint32.MAX - 1)
                 id_counter = 0;
-            return id_counter++;
+            return ++id_counter;
         }
 
         //
@@ -138,12 +138,14 @@ namespace Msmrpc
             }
 
             current_in_buffer = new InputXdrBuffer();
-            current_in_buffer.fill(data);
+            current_in_buffer.fill(data[0:bread]);
 
             // we need to read the type of messages we received
             current_in_buffer.read_uint32(out xid);
             current_in_buffer.read_uint32(out type);
             current_in_buffer.rewind();
+
+            assert( logger.debug(@"Got message type $((MessageType) type)") );
 
             // handle different types of messages and forward handling to other parts
             if (type == MessageType.REPLY)
@@ -152,7 +154,10 @@ namespace Msmrpc
                 {
                     handler = request_queue.pop_head();
                     if (handler.callback != null)
+                    {
+                        assert( logger.debug(@"Calling handler for received reply message ...") );
                         handler.callback();
+                    }
                 }
                 else
                 {
@@ -169,33 +174,18 @@ namespace Msmrpc
             }
         }
 
-        private async void handle_remote_call(InputXdrBuffer buffer)
+        private void handle_remote_call(InputXdrBuffer buffer)
         {
             RequestHeader reqhdr = RequestHeader();
-            OutputXdrBuffer out_buffer = new OutputXdrBuffer();
-            ReplyHeader replyhdr = new ReplyHeader(MessageType.REPLY);
-            AcceptStatus access_status = AcceptStatus.SYSTEM_ERROR;
-            bool result = false;
 
             assert( logger.debug(@"Incoming message (length = $(buffer.length))") );
-            assert( logger.debug(FsoFramework.StringHandling.hexdump(buffer.data)) );
+            assert( logger.data(buffer.data, true) );
 
             reqhdr.from_buffer(buffer);
+            // FIXME do some checks ...
 
-            // depending of the result of the remote_call_handler we have to set the accept
-            // status accordingly
-            if (remote_call_handler != null)
-            {
-                result = remote_call_handler(buffer);
-                access_status = (result ? AcceptStatus.SUCCESS : AcceptStatus.SYSTEM_ERROR);
-            }
-
-            // create and send reply message to remote side
-            replyhdr.xid = next_xid();
-            replyhdr.reply_status = ReplyStatus.ACCEPTED;
-            replyhdr.accepted_reply.status = access_status;
-            replyhdr.to_buffer(out_buffer);
-            transport.write(out_buffer.data, (int) out_buffer.length);
+            // if (remote_call_handler != null)
+            //     remote_call_handler(reqhdr, buffer);
         }
 
         private void handle_transport_hangup(FsoFramework.Transport t)
@@ -213,13 +203,15 @@ namespace Msmrpc
         /**
          * Wait for a reply to receive and pack it into a xdr buffer for processing.
          **/
-        private async InputXdrBuffer receiveReplyData(int timeout)
+        private async InputXdrBuffer wait_for_reply(int timeout)
         {
             MessageReplyHandler handler = MessageReplyHandler();
 
-            handler.callback = receiveReplyData.callback;
+            handler.callback = wait_for_reply.callback;
             request_queue.push_head(handler);
             yield;
+
+            assert( logger.debug(@"Received reply message for call with $(current_in_buffer.length) bytes") );
 
             return current_in_buffer;
         }
@@ -250,6 +242,27 @@ namespace Msmrpc
             transport.close();
         }
 
+        public async bool reply(uint32 xid, uint8[] argument_data, AcceptStatus accept_status = AcceptStatus.SUCCESS, 
+            ReplyStatus status = ReplyStatus.ACCEPTED)
+        {
+            OutputXdrBuffer buffer = new OutputXdrBuffer();
+            ReplyHeader replyhdr = new ReplyHeader(MessageType.REPLY);
+
+            replyhdr.xid = xid;
+            replyhdr.reply_status = status;
+            replyhdr.accepted_reply.status = accept_status;
+            replyhdr.to_buffer(buffer);
+
+            // append argument data which should be already in xdr format
+            buffer.append(argument_data);
+
+            assert( logger.debug(@"Sending reply message to remote site ...") );
+            replyhdr.dump(logger);
+            transport.write(buffer.data, (int) buffer.length);
+
+            return true;
+        }
+
         public async bool request(uint32 procedure, uint8[] argument_data, out uint8[] result_data, int timeout = 0)
         {
             RequestHeader reqhdr = RequestHeader();
@@ -268,16 +281,17 @@ namespace Msmrpc
             if (argument_data != null)
             {
                 assert( logger.debug(@"ArgumentData: size = $(argument_data.length)") );
-                assert( logger.debug(FsoFramework.StringHandling.hexdump(argument_data, argument_data.length)) );
+                assert( logger.data(argument_data, false) );
                 buffer.append(argument_data);
             }
 
             // receive and process incoming reply
             assert( logger.debug("Writing data to transport:") );
-            assert( logger.debug(FsoFramework.StringHandling.hexdump(buffer.data, (int) buffer.length)) );
+            assert( logger.data(buffer.data, false) );
             transport.write(buffer.data, (int) buffer.length);
-            var in_buffer = yield receiveReplyData(timeout);
+            var in_buffer = yield wait_for_reply(timeout);
             replyhdr.from_buffer(in_buffer);
+            replyhdr.dump(logger);
 
             // check reply status and if reply was successfull or not
             if ((ReplyStatus) replyhdr.reply_status != ReplyStatus.ACCEPTED)

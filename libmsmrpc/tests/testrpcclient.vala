@@ -31,19 +31,21 @@ void test_rpc_client_initialize()
     var client = new Msmrpc.OemRapiClient(transport);
 
     Idle.add(() => {
-        /*
-        uint8[] hci_misc_version_cmd = new uint8[] {
-            0x00, 0x00, 0x00, 0x00, // sequence number
-            0x00, 0x00, 0x00, 0x00, // reference id
-            0x0c, 0x00, 0x00, 0x00, // hci subsys id
-            0x00, 0x00, 0x00, 0x00, // hci command id
-            0x00, 0x00, 0x00, 0x00, // client id or unknown
-            0x00, 0x00, 0x00, 0x00 // client id or unknown
-        };
-        client.streaming_function(hci_misc_version_cmd, handle_hci_misc_version_event);
-        */
-
         client.streaming_function(new uint8[] { }, null, (uint32) 0x2, (uint32) 0x2de98);
+
+        Timeout.add_seconds(2, () => {
+            uint8[] hci_misc_version_cmd = new uint8[] {
+                0x00, 0x00, 0x00, 0x00, // sequence number
+                0x00, 0x00, 0x00, 0x00, // reference id
+                0x0c, 0x00, 0x00, 0x00, // hci subsys id
+                0x00, 0x00, 0x00, 0x00, // hci command id
+                0x00, 0x00, 0x00, 0x00, // client id or unknown
+                0x00, 0x00, 0x00, 0x00  // client id or unknown
+            };
+
+            client.streaming_function(hci_misc_version_cmd, null, 0x3);
+            return false;
+        });
 
         return false;
     });

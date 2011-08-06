@@ -94,8 +94,8 @@ namespace Msmrpc
 
         public void dump(FsoFramework.Logger logger)
         {
-            assert( logger.debug(@"RequestHeader: xid = $(xid), type = $((MessageType) type), rpc_version = $(rpc_version)") );
-            assert( logger.debug(@"RequestHeader: prog = $(prog), vers = $(vers), procedure = $(procedure)") );
+            assert( logger.debug(@"RequestHeader: xid = 0x%02x, type = $((MessageType) type), rpc_version = $(rpc_version)".printf(xid)) );
+            assert( logger.debug(@"RequestHeader: prog = 0x%02x, vers = 0x%02x, procedure = 0x%02x".printf(prog, vers, procedure)) );
             assert( logger.debug(@"RequestHeader: cred_flavor = $(cred_flavor), cred_length = $(cred_length)") );
             assert( logger.debug(@"RequestHeader: verf_flavor = $(verf_flavor), verf_length = $(verf_length)") );
         }
@@ -148,7 +148,7 @@ namespace Msmrpc
         public void dump(FsoFramework.Logger logger)
         {
             assert( logger.debug(@"AcceptedReplyHeader: verf_flavor = $(verf_flavor), verf_length = $(verf_length)") );
-            assert( logger.debug(@"status = $((AcceptStatus) status)") );
+            assert( logger.debug(@"AcceptedReplyHeader: status = $((AcceptStatus) status)") );
         }
     }
 

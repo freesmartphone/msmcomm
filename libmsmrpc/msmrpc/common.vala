@@ -177,4 +177,9 @@ namespace Msmrpc
     public const uint32 OEM_RAPI_PROC_NULL = 0;
     public const uint32 OEM_RAPI_PROC_RPC_GLUE_CODE_INFO_REMOTE = 1;
     public const uint32 OEM_RAPI_PROC_STREAMING_FUNCTION = 2;
+
+    enum OemRapiConstants
+    {
+        CLIENT_NULL_CB_ID = uint32.MAX,
+    }
 }
