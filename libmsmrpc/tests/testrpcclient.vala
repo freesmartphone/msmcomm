@@ -19,34 +19,39 @@
  *
  **/
 
+Msmrpc.OemRapiClient client;
+
 bool handle_hci_misc_version_event(Msmrpc.InputXdrBuffer buffer)
 {
     return true;
+}
+
+async void test_rpc_client_initialize_async()
+{
+    yield client.send(new uint8[] { }, handle_hci_misc_version_event,
+        Msmrpc.OEM_RAPI_EVENT_HCI_EVENT, (uint32) 0x2de98);
+
+    uint8[] hci_misc_version_cmd = new uint8[] {
+        0x00, 0x00, 0x00, 0x00, // sequence number
+        0x00, 0x00, 0x00, 0x00, // reference id
+        0x0c, 0x00, 0x00, 0x00, // hci subsys id
+        0x00, 0x00, 0x00, 0x00, // hci command id
+        0x00, 0x00, 0x00, 0x00, // client id or unknown
+        0x00, 0x00, 0x00, 0x00  // client id or unknown
+    };
+
+    yield client.send(hci_misc_version_cmd, null,
+        Msmrpc.OEM_RAPI_EVENT_HCI_CALLBACK);
 }
 
 void test_rpc_client_initialize()
 {
     var mainloop = new GLib.MainLoop(null, false);
     var transport = new FsoFramework.SocketTransport("tcp", "192.168.0.202", 3001);
-    var client = new Msmrpc.OemRapiClient(transport);
+    client = new Msmrpc.OemRapiClient(transport);
 
     Idle.add(() => {
-        client.streaming_function(new uint8[] { }, null, (uint32) 0x2, (uint32) 0x2de98);
-
-        Timeout.add_seconds(2, () => {
-            uint8[] hci_misc_version_cmd = new uint8[] {
-                0x00, 0x00, 0x00, 0x00, // sequence number
-                0x00, 0x00, 0x00, 0x00, // reference id
-                0x0c, 0x00, 0x00, 0x00, // hci subsys id
-                0x00, 0x00, 0x00, 0x00, // hci command id
-                0x00, 0x00, 0x00, 0x00, // client id or unknown
-                0x00, 0x00, 0x00, 0x00  // client id or unknown
-            };
-
-            client.streaming_function(hci_misc_version_cmd, null, 0x3);
-            return false;
-        });
-
+        test_rpc_client_initialize_async();
         return false;
     });
 

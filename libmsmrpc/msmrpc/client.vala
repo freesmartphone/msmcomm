@@ -30,78 +30,6 @@ namespace Msmrpc
         public SourceFunc callback;
     }
 
-    protected class CallbackRegistry : FsoFramework.AbstractObject
-    {
-        private uint32 id_counter;
-        private GLib.HashTable<uint32,CallbackHandlerFuncStorage?> cbtable;
-
-        private struct CallbackHandlerFuncStorage
-        {
-            public CallbackHandlerFunc callback;
-        }
-
-        //
-        // private
-        //
-
-        private uint32 next_id()
-        {
-            if (id_counter == uint32.MAX - 1)
-                id_counter = 0;
-            return ++id_counter;
-        }
-
-        //
-        // public API
-        //
-
-        public CallbackRegistry()
-        {
-            id_counter = 0;
-            cbtable = new GLib.HashTable<uint32,CallbackHandlerFuncStorage?>(null, null);
-        }
-
-        /**
-         * Retrieve a callback function from the registry by its id.
-         **/
-        public CallbackHandlerFunc? retrieve_callback(uint32 id)
-        {
-            CallbackHandlerFuncStorage? storage = cbtable.lookup(id);
-            if (storage == null)
-                return null;
-            return storage.callback;
-        }
-
-        /**
-         * Register a callback function in registry. The callback function can later be
-         * access by its id.
-         **/
-        public uint32 register(CallbackHandlerFunc callback)
-        {
-            uint32 id = next_id();
-            cbtable.insert(id, CallbackHandlerFuncStorage() { callback = callback });
-            return id;
-        }
-
-        /**
-         * Unregister a callback function by its id. It will be not available anymore
-         * after unregistration.
-         **/
-        public bool unregister(uint32 id)
-        {
-            if (cbtable.lookup(id) == null)
-                return false;
-
-            cbtable.remove(id);
-            return true;
-        }
-
-        public override string repr()
-        {
-            return @"<>";
-        }
-    }
-
     /**
      * Basic RPC client
      **/
@@ -113,7 +41,6 @@ namespace Msmrpc
         private uint32 xid_counter;
         private GLib.Queue<MessageReplyHandler?> request_queue;
         private InputXdrBuffer current_in_buffer;
-        private CallbackHandlerFunc remote_call_handler;
 
         protected CallbackRegistry cbregistry;
 
@@ -121,12 +48,13 @@ namespace Msmrpc
         // private
         //
 
-        private void handle_transport_ready_to_read(FsoFramework.Transport t)
+        private async void handle_transport_ready_to_read(FsoFramework.Transport t)
         {
             int bread = 0;
             uint8[] data = new uint8[BUFFER_MAX_SIZE];
             uint32 xid, type;
             MessageReplyHandler handler;
+            RequestHeader reqhdr;
 
             bread = transport.read(data, data.length);
             assert( logger.debug(@"Received $bread bytes from modem") );
@@ -166,7 +94,13 @@ namespace Msmrpc
             }
             else if (type == MessageType.CALL)
             {
-                handle_remote_call(current_in_buffer);
+                reqhdr = RequestHeader();
+                reqhdr.from_buffer(current_in_buffer);
+
+                assert( logger.debug(@"Got call from remote side") );
+                reqhdr.dump(logger);
+
+                handle_remote_call(reqhdr, current_in_buffer);
             }
             else
             {
@@ -174,18 +108,9 @@ namespace Msmrpc
             }
         }
 
-        private void handle_remote_call(InputXdrBuffer buffer)
+        protected virtual async void handle_remote_call(RequestHeader reqhdr, InputXdrBuffer buffer)
         {
-            RequestHeader reqhdr = RequestHeader();
-
-            assert( logger.debug(@"Incoming message (length = $(buffer.length))") );
-            assert( logger.data(buffer.data, true) );
-
-            reqhdr.from_buffer(buffer);
-            // FIXME do some checks ...
-
-            // if (remote_call_handler != null)
-            //     remote_call_handler(reqhdr, buffer);
+            this.reply(reqhdr.xid, new uint8[] { });
         }
 
         private void handle_transport_hangup(FsoFramework.Transport t)
@@ -220,21 +145,21 @@ namespace Msmrpc
         // public API
         //
 
-        public Client(FsoFramework.BaseTransport transport, ProgramType program, uint32 version, CallbackHandlerFunc remote_call_handler)
+        public Client(FsoFramework.BaseTransport transport, ProgramType program, uint32 version)
         {
             this.transport = transport;
             this.program = program;
             this.version = version;
             this.xid_counter = 0;
             this.request_queue = new GLib.Queue<MessageReplyHandler?>();
-            this.remote_call_handler = remote_call_handler;
             this.cbregistry = new CallbackRegistry();
         }
 
         public void initialize()
         {
+            // transport.setBuffered(false);
             transport.open();
-            transport.setDelegates(handle_transport_ready_to_read, handle_transport_hangup);
+            transport.setDelegates((t) => { handle_transport_ready_to_read(t); }, handle_transport_hangup);
         }
 
         public void shutdown()
@@ -242,7 +167,7 @@ namespace Msmrpc
             transport.close();
         }
 
-        public async bool reply(uint32 xid, uint8[] argument_data, AcceptStatus accept_status = AcceptStatus.SUCCESS, 
+        public async bool reply(uint32 xid, uint8[] argument_data, AcceptStatus accept_status = AcceptStatus.SUCCESS,
             ReplyStatus status = ReplyStatus.ACCEPTED)
         {
             OutputXdrBuffer buffer = new OutputXdrBuffer();
@@ -279,16 +204,13 @@ namespace Msmrpc
 
             // also append client argument data which is already in xdr format
             if (argument_data != null)
-            {
-                assert( logger.debug(@"ArgumentData: size = $(argument_data.length)") );
-                assert( logger.data(argument_data, false) );
                 buffer.append(argument_data);
-            }
 
             // receive and process incoming reply
             assert( logger.debug("Writing data to transport:") );
             assert( logger.data(buffer.data, false) );
             transport.write(buffer.data, (int) buffer.length);
+
             var in_buffer = yield wait_for_reply(timeout);
             replyhdr.from_buffer(in_buffer);
             replyhdr.dump(logger);
@@ -305,6 +227,8 @@ namespace Msmrpc
                 return false;
             }
 
+            // when the reply includes output data of the stream we should forward it to
+            // the caller
             if (result_data != null && !in_buffer.retrive_remaining_data(out result_data))
                 result_data = null;
 

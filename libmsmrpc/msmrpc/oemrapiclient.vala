@@ -76,8 +76,8 @@ namespace Msmrpc
 
         public void dump(FsoFramework.Logger logger, bool in = false)
         {
-            assert( logger.debug(@"OemRapiCallMessage: event = 0x%04x, cb_id = 0x%04x".printf(event, cb_id)) );
-            assert( logger.debug(@"OemRapiCallMessage: handle = 0x%04x, input_length = $(input_length)".printf(handle)) );
+            assert( logger.debug(@"OemRapiCallMessage: event = 0x%08x, cb_id = 0x%08x".printf(event, cb_id)) );
+            assert( logger.debug(@"OemRapiCallMessage: handle = 0x%08x, input_length = $(input_length)".printf(handle)) );
             if (input_data != null)
             {
                 assert( logger.debug(@"OemRapiCallMessage: input_data =") );
@@ -134,18 +134,24 @@ namespace Msmrpc
         //
 
         /**
-         *
+         * Handle a call from the remote side.
          **/
-        public bool handle_remote_call(InputXdrBuffer buffer)
+        protected override async void handle_remote_call(RequestHeader reqhdr, InputXdrBuffer buffer)
         {
+            OutputXdrBuffer out_buffer = new OutputXdrBuffer();
+            OemRapiResultMessage resultmessage = OemRapiResultMessage();
             OemRapiCallMessage callmessage = OemRapiCallMessage();
+            uint8[] data;
 
             callmessage.from_buffer(buffer);
-
-            assert( logger.debug(@"Retrieved call message from remote side:") );
+            assert( logger.debug(@"Retrieved remote call:") );
             callmessage.dump(logger);
 
-            return true;
+            buffer.retrive_remaining_data(out data);
+            handle_incoming_data(data);
+
+            resultmessage.to_buffer(out_buffer);
+            yield base.reply(reqhdr.xid, out_buffer.data);
         }
 
         //
@@ -154,24 +160,22 @@ namespace Msmrpc
 
         public OemRapiClient(FsoFramework.BaseTransport transport)
         {
-            base(transport, ProgramType.OEM_RAPI, OEM_RAPI_VERSION_1_1, handle_remote_call);
+            base(transport, ProgramType.OEM_RAPI, OEM_RAPI_VERSION_1_1);
         }
+
+        public signal void handle_incoming_data(uint8[] data);
 
         /**
          * Send a set of bytes to remote side and receive a set of bytes at the same time.
          * Additionally a callback handler can registered to handle callback responses
          * too.
          **/
-        public async bool streaming_function(uint8[] input_data, CallbackHandlerFunc? callback = null, uint32 event = 0, uint32 handle = 0)
+        public async bool send(uint8[] input_data, CallbackHandlerFunc? callback = null, uint32 event = 0, uint32 handle = 0)
         {
             OemRapiCallMessage callmessage = OemRapiCallMessage();
-            // OemRapiResultMessage resultmessage = OemRapiResultMessage();
             OutputXdrBuffer out_buffer = new OutputXdrBuffer();
-            // InputXdrBuffer in_buffer = new InputXdrBuffer();
             uint8[] result_data = null;
             bool result = false;
-
-            logger.debug(@"event = 0x%04x, handle = 0x%04x".printf(event, handle));
 
             // FIXME we need to find out whats the purpose of the handle and events flags is
             callmessage.handle = handle;
@@ -179,7 +183,7 @@ namespace Msmrpc
             callmessage.input_data = input_data;
             callmessage.input_length = input_data.length;
 
-            // If we have a callback we need to register it to the registry and set its id.
+            // If we have a callback we need to register it to the registry and set its id
             if (callback != null) 
                 callmessage.cb_id = cbregistry.register(callback);
 
@@ -195,7 +199,11 @@ namespace Msmrpc
                 return false;
             }
 
-            // FIXME check result_data now!
+            if (result_data != null && result_data.length > 0)
+            {
+                logger.info(@"We got data out of the stream and don't know what to do with it:");
+                logger.data(result_data, true, GLib.LogLevelFlags.LEVEL_INFO);
+            }
 
             return true;
         }
