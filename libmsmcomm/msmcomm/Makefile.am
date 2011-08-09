@@ -15,6 +15,8 @@ VALAC_ARGS = \
 	--pkg gee-1.0 \
 	--pkg fsobasics-2.0 \
 	--pkg fsotransport-2.0 \
+	--pkg msmhll-1.0 \
+	--pkg msmrpc-1.0 \
 	--header msmcomm.h \
 	--library msmcomm-2.0
 
