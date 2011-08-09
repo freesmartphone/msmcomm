@@ -19,7 +19,7 @@
  *
  **/
 
-using Msmcomm.LowLevel.Structures;
+using Msmcomm.LowLevel.Structures.Palmpre;
 
 namespace Msmcomm.LowLevel
 {

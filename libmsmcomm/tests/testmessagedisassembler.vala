@@ -20,7 +20,7 @@
  **/
 
 using Msmcomm.LowLevel;
-using Msmcomm.LowLevel.Structures;
+using Msmcomm.LowLevel.Structures.Palmpre;
 
 void test_messagedisassembler_too_small_message()
 {
