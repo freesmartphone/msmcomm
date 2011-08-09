@@ -23,7 +23,7 @@ namespace Msmcomm
 {
     public abstract class BaseClient : Common.AbstractObject
     {
-        private BaseRadioAccess radio_access;
+        protected BaseRadioAccess radio_access;
 
         //
         // private

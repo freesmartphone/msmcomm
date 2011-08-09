@@ -19,33 +19,13 @@
  *
  **/
 
-namespace Msmcomm
+namespace Msmcomm.PalmPre
 {
-    public abstract class BaseModemAccessor : Common.AbstractObject
+    public enum MessageClass
     {
-        private BaseRadioAccess radio_access;
-
-        //
-        // private
-        //
-
-        //
-        // public API
-        //
-
-        protected BaseModemAccessor(BaseRadioAccess radio_access)
-        {
-            this.radio_access = radio_access;
-        }
-
-        public BaseClient? create_client<T>()
-        {
-            return null;
-        }
-
-        public override string repr()
-        {
-            return @"<>";
-        }
+        UNKNOWN,
+        COMMAND,
+        SOLICITED_RESPONSE,
+        UNSOLICITED_RESPONSE,
     }
 }

@@ -19,9 +19,9 @@
  *
  **/
 
-namespace Msmcomm
+namespace Msmcomm.PalmPre
 {
-    public abstract class PalmPre.CallClient : BaseClient
+    public abstract class CallClient : Client
     {
         //
         // public API

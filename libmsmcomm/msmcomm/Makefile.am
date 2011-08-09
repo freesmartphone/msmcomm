@@ -38,9 +38,16 @@ libmsmcomm_la_VALASOURCES = \
 	basemodemaccessor.vala \
 	baseradioaccess.vala \
 	\
+	palmprebasemessage.vala \
+	palmprebasemessagegroup.vala \
+	palmpremessageclass.vala \
+	palmpremessageresult.vala \
+	palmpremessagetype.vala \
 	palmpremodemaccessor.vala \
 	palmpreradioaccess.vala \
+	palmpreclient.vala \
 	palmprecallclient.vala \
+	palmprecommandhandler.vala \
 	$(NULL)
 
 libmsmcomm_la_SOURCES = \

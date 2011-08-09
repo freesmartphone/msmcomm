@@ -19,10 +19,64 @@
  *
  **/
 
+using Msmcomm.HciLinkLayer;
+
 namespace Msmcomm
 {
+    public const uint READ_BUFFER_SIZE = 4096;
+
     public class PalmPre.RadioAccess : BaseRadioAccess
     {
+        private LinkLayerControl llctrl;
+        private bool active;
+        private bool in_link_setup;
+        private GLib.ByteArray inbuffer;
+
+        //
+        // private
+        //
+
+        private void handle_transport_read(FsoFramework.Transport t)
+        {
+            int bread = 0;
+            uint8[] data = new uint8[READ_BUFFER_SIZE];
+
+            bread = t.read(data, data.length);
+            llctrl.processIncomingData(data[0:bread]);
+        }
+
+        private void handle_transport_hangup(FsoFramework.Transport t)
+        {
+            logger.error("[HUP] modem transport closed from remote side");
+        }
+
+        private void handle_frame_content(uint8[] data)
+        {
+            if (!in_link_setup && active)
+                this.incoming_data(data);
+        }
+
+        private void handle_send_data(uint8[] data)
+        {
+            if (in_link_setup || active)
+            {
+                transport.write(data, data.length);
+            }
+            else
+            {
+                logger.debug("Could not send data to remote side as we are not in active mode!");
+                return;
+            }
+        }
+
+        private void handle_modem_reset_request()
+        {
+            llctrl.stop();
+            transport.close();
+            transport.open();
+            llctrl.start();
+        }
+
         //
         // public API
         //
@@ -30,6 +84,81 @@ namespace Msmcomm
         public RadioAccess(FsoFramework.BaseTransport transport)
         {
             base(transport);
+            in_link_setup = false;
+            inbuffer = new GLib.ByteArray();
+
+        }
+
+        public override bool open()
+        {
+            assert( logger.debug(@"Initializing palmpre radio access ...") );
+
+            transport.setDelegates(handle_transport_read, handle_transport_hangup);
+            if (!transport.isOpen())
+                transport.open();
+
+            var settings = LinkLayerSettings();
+            settings.window_size = (uint8) config.intValue("hll", "window_size", 8);
+            settings.max_send_attempts = config.intValue("hll", "max_send_attempts", 10);
+
+            llctrl = new LinkLayerControl(settings);
+            llctrl.requestHandleSendData.connect(handle_send_data);
+            llctrl.requestHandleFrameContent.connect(handle_frame_content);
+            llctrl.requestModemReset.connect(handle_modem_reset_request);
+            llctrl.requestHandleLinkSetupComplete.connect(() => {
+                in_link_setup = false;
+                active = true;
+            });
+
+            return true;
+        }
+
+        public override void close()
+        {
+            if (transport.isOpen())
+                transport.close();
+        }
+
+        public override bool is_active()
+        {
+            return active;
+        }
+
+        public override void send(uint8[] data)
+        {
+            if (!in_link_setup && active)
+                llctrl.sendDataFrame(data);
+        }
+
+        public override bool suspend()
+        {
+            if (!active)
+            {
+                assert( logger.debug(@"We're not active so we don't need to suspend") );
+                return false;
+            }
+
+            if (base.is_locked())
+                return false;
+
+            // Ok, as now all pending messages are send to the modem, we can go into
+            // suspend state.
+            active = false;
+            llctrl.sendAllFramesNow();
+            llctrl.stop();
+            transport.flush();
+            transport.freeze();
+            transport.suspend();
+
+            return true;
+        }
+
+        public override void resume()
+        {
+            transport.resume();
+            in_link_setup = true;
+            transport.thaw();
+            llctrl.start();
         }
     }
 }
