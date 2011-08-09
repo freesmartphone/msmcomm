@@ -1,5 +1,5 @@
 /**
- * This file is part of libmsmcomm.
+ * This file is part of msmcommd.
  *
  * (C) 2011 Simon Busch <morphis@gravedo.de>
  *
@@ -19,32 +19,26 @@
  *
  **/
 
-using Msmcomm.LowLevel;
-using Msmcomm.LowLevel.Structures.Palmpre;
+using Msmcomm;
 
-void test_messageassembler_correct_packing_message()
+void test_palmpre_accessor_initialize()
 {
-    var message = new CallOriginationCommandMessage();
+    var mainloop = new GLib.MainLoop(null, false);
+    var transport = new FsoFramework.SocketTransport("tcp", "192.168.0.202", 3001);
 
-    message.ref_id = 53;
-    message.number = "0123456789";
-    message.suppress_own_number = true;
+    var accessor = new PalmPre.ModemAccessor(transport);
 
-    MessageAssembler masm = new MessageAssembler();
-    uint8[] buffer = masm.pack_message(message);
+    Idle.add(() => {
+        return false;
+    });
 
-    assert(buffer.length == (sizeof(CallOriginationMessage) + 3));
-    assert(buffer[0] == CallOriginationCommandMessage.GROUP_ID);
-    assert(buffer[1] == CallOriginationCommandMessage.MESSAGE_ID);
-
-    assert(buffer[3 + 0] == message.ref_id);
-    assert(buffer[3 + 204] == 0xc);
+    mainloop.run();
 }
 
-void main(string[] args)
+public static int main(string[] args)
 {
     Test.init(ref args);
-    Test.add_func("/MessageAssembler/CorrectPackingMessage", test_messageassembler_correct_packing_message);
+    Test.add_func("/palmpre/accessor/initialize", test_palmpre_accessor_initialize);
     Test.run();
+    return 0;
 }
-
