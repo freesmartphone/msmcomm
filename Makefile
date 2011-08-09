@@ -19,6 +19,6 @@ maintainer-clean:
 	for i in $(SUBDIRS); do $(MAKE) maintainer-clean -C $$i; done
 
 rebuild:
-	pushd libmsmcomm; sudo make uninstall; ./autogen.sh; sudo make install; popd
-	pushd msmcomm-specs; sudo make uinstall; ./autogen.sh; make clean; make; sudo make install; popd
-	pushd msmcommd; sudo make uninstall; ./autogen.sh; sudo make install; popd
+	pushd libmsmcomm; sudo make uninstall; ./autogen.sh; sudo make install; popd || exit 1
+	pushd msmcomm-specs; sudo make uinstall; ./autogen.sh; make clean; make; sudo make install; popd || exit 1
+	pushd msmcommd; sudo make uninstall; ./autogen.sh; sudo make install; popd || exit 1
