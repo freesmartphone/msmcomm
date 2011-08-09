@@ -19,30 +19,28 @@
  *
  **/
 
-
-namespace Msmcomm.LowLevel
+namespace Msmcomm
 {
-    public class VoicemailResponseMessageGroup : BaseMessageGroup
+    public abstract class BaseRadioAccess : Common.AbstractObject
     {
-        public static const uint8 GROUP_ID = 0x28;
+        protected FsoFramework.BaseTransport transport;
 
-        public VoicemailResponseMessageGroup()
+        //
+        // private
+        //
+
+        //
+        // public API
+        //
+
+        protected BaseRadioAccess(FsoFramework.BaseTransport transport)
         {
-            base(VoicemailResponseMessageGroup.GROUP_ID);
-
-            message_types[VoicemailReturnResponseMessage.MESSAGE_ID] = typeof(VoicemailReturnResponseMessage);
+            this.transport = transport;
         }
-    }
 
-    public class VoicemailUrcMessageGroup : BaseMessageGroup
-    {
-        public static const uint8 GROUP_ID = 0x29;
-
-        public VoicemailUrcMessageGroup()
+        public override string repr()
         {
-            base(VoicemailUrcMessageGroup.GROUP_ID);
-
-            message_types[VoicemailUrcMessage.MESSAGE_ID] = typeof(VoicemailUrcMessage);
+            return @"<>";
         }
     }
 }

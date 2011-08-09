@@ -19,32 +19,17 @@
  *
  **/
 
-namespace Msmcomm.LowLevel
+namespace Msmcomm
 {
-    public class MessageAssembler
+    public abstract class PalmPre.CallClient : BaseClient
     {
-        public MessageAssembler()
+        //
+        // public API
+        //
+
+        public CallClient(BaseRadioAccess radio_access)
         {
-        }
-
-        public uint8[] pack_message(BaseMessage message)
-        {
-            uint8[] payload;
-            uint8[] buffer;
-
-            /* pack message payload and build buffer to contain header and payload */
-            payload = message.pack();
-            buffer = new uint8[MESSAGE_HEADER_SIZE + payload.length];
-
-            /* set group and message id to buffer */
-            buffer[0] = message.group_id;
-            buffer[1] = (uint8) (message.message_id & 0x00ff);
-            buffer[2] = (uint8) ((message.message_id & 0xff00) >> 8);
-
-            /* copy message payload to buffer */
-            Memory.copy(((uint8*) buffer) + 3, payload, payload.length);
-
-            return buffer;
+            base(radio_access);
         }
     }
 }

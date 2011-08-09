@@ -36,32 +36,32 @@ EXTRA_DIST += \
 #
 # message disassembler test
 #
-TEST_PROGS += testmessagedisassembler
-testmessagedisassembler_VALASOURCES = testmessagedisassembler.vala
-testmessagedisassembler_SOURCES = testmessagedisassembler.c
-$(testmessagedisassembler_SOURCES): $(testmessagedisassembler_VALASOURCES)
-	$(VALAC) $(VALAC_ARGS) $^
-	touch $@
-testmessagedisassembler_LDADD = $(progs_ldadd)
-EXTRA_DIST += $(testmessagedisassembler_VALASOURCES)
+#TEST_PROGS += testmessagedisassembler
+#testmessagedisassembler_VALASOURCES = testmessagedisassembler.vala
+#testmessagedisassembler_SOURCES = testmessagedisassembler.c
+#$(testmessagedisassembler_SOURCES): $(testmessagedisassembler_VALASOURCES)
+#	$(VALAC) $(VALAC_ARGS) $^
+#	touch $@
+#testmessagedisassembler_LDADD = $(progs_ldadd)
+#EXTRA_DIST += $(testmessagedisassembler_VALASOURCES)
 
-TEST_PROGS += testmessageassembler
-testmessageassembler_VALASOURCES = testmessageassembler.vala
-testmessageassembler_SOURCES = testmessageassembler.c
-$(testmessageassembler_SOURCES): $(testmessageassembler_VALASOURCES)
-	$(VALAC) $(VALAC_ARGS) $^
-	touch $@
-testmessageassembler_LDADD = $(progs_ldadd)
-EXTRA_DIST += $(testmessageassembler_VALASOURCES)
+#TEST_PROGS += testmessageassembler
+#testmessageassembler_VALASOURCES = testmessageassembler.vala
+#testmessageassembler_SOURCES = testmessageassembler.c
+#$(testmessageassembler_SOURCES): $(testmessageassembler_VALASOURCES)
+#	$(VALAC) $(VALAC_ARGS) $^
+#	touch $@
+#testmessageassembler_LDADD = $(progs_ldadd)
+#EXTRA_DIST += $(testmessageassembler_VALASOURCES)
 
-TEST_PROGS += testmessageutils
-testmessageutils_VALASOURCES = testmessageutils.vala
-testmessageutils_SOURCES = testmessageutils.c
-$(testmessageutils_SOURCES): $(testmessageutils_VALASOURCES)
-	$(VALAC) $(VALAC_ARGS) $^
-	touch $@
-testmessageutils_LDADD = $(progs_ldadd)
-EXTRA_DIST += $(testmessageutils_VALASOURCES)
+#TEST_PROGS += testmessageutils
+#testmessageutils_VALASOURCES = testmessageutils.vala
+#testmessageutils_SOURCES = testmessageutils.c
+#$(testmessageutils_SOURCES): $(testmessageutils_VALASOURCES)
+#	$(VALAC) $(VALAC_ARGS) $^
+#	touch $@
+#testmessageutils_LDADD = $(progs_ldadd)
+#EXTRA_DIST += $(testmessageutils_VALASOURCES)
 
 
 

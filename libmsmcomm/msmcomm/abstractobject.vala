@@ -19,7 +19,7 @@
  *
  **/
 
-namespace Msmcomm.LowLevel
+namespace Msmcomm.Common
 {
     public abstract class AbstractObject : GLib.Object
     {

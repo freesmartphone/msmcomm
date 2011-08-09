@@ -19,28 +19,17 @@
  *
  **/
 
-
-namespace Msmcomm.LowLevel
+namespace Msmcomm
 {
-    public class SoundResponseMessageGroup : BaseMessageGroup
+    public class PalmPre.RadioAccess : BaseRadioAccess
     {
-        public static const uint8 GROUP_ID = 0x1f;
+        //
+        // public API
+        //
 
-        public SoundResponseMessageGroup()
+        public RadioAccess(FsoFramework.BaseTransport transport)
         {
-            base(SoundResponseMessageGroup.GROUP_ID);
-
-            message_types[SoundCallbackResponseMessage.MESSAGE_ID] = typeof(SoundCallbackResponseMessage);
-        }
-    }
-
-    public class SoundUnsolicitedResponseMessageGroup : BaseMessageGroup
-    {
-        public static const uint8 GROUP_ID = 0x20;
-
-        public SoundUnsolicitedResponseMessageGroup()
-        {
-            base(SoundUnsolicitedResponseMessageGroup.GROUP_ID);
+            base(transport);
         }
     }
 }

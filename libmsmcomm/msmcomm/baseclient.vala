@@ -19,18 +19,28 @@
  *
  **/
 
-namespace Msmcomm.LowLevel
+namespace Msmcomm
 {
-    public enum MessageResult
+    public abstract class BaseClient : Common.AbstractObject
     {
-        OK,
-        ERROR_BAD_CALL_ID,
-        ERROR_BAD_SIM_STATE,
-        ERROR_PHONEBOOK_NOT_ACTIVE,
-        ERROR_PHONEBOOK_RECORD_EMPTY,
-        ERROR_PHONEBOOK_FAILED_TO_WRITE_RECORD,
-        ERROR_BAD_PIN,
-        ERROR_NOT_ONLINE,
-        ERROR_UNKNOWN,
+        private BaseRadioAccess radio_access;
+
+        //
+        // private
+        //
+
+        //
+        // public API
+        //
+
+        protected BaseClient(BaseRadioAccess radio_access)
+        {
+            this.radio_access = radio_access;
+        }
+
+        public override string repr()
+        {
+            return @"<>";
+        }
     }
 }

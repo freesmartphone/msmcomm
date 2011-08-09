@@ -19,33 +19,17 @@
  *
  **/
 
-namespace Msmcomm.LowLevel
+namespace Msmcomm
 {
-    public enum MessageClass
+    public class PalmPre.ModemAccessor : BaseModemAccessor
     {
-        UNKNOWN,
-        COMMAND,
-        SOLICITED_RESPONSE,
-        UNSOLICITED_RESPONSE,
-    }
+        //
+        // public API
+        //
 
-    public string messageClassToString(MessageClass class)
-    {
-        string result = "UNKNOWN";
-
-        switch (class)
+        public ModemAccessor(FsoFramework.BaseTransport transport)
         {
-            case MessageClass.COMMAND:
-                result = "COMMAND";
-                break;
-            case MessageClass.SOLICITED_RESPONSE:
-                result = "SOLICITED_RESPONSE";
-                break;
-            case MessageClass.UNSOLICITED_RESPONSE:
-                result = "UNSOLICITED_RESPONSE";
-                break;
+            base(new PalmPre.RadioAccess(transport));
         }
-
-        return result;
     }
 }

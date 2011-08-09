@@ -14,6 +14,7 @@ VALAC_ARGS = \
 	--pkg glib-2.0 \
 	--pkg gee-1.0 \
 	--pkg fsobasics-2.0 \
+	--pkg fsotransport-2.0 \
 	--header msmcomm.h \
 	--library msmcomm-2.0
 
@@ -30,36 +31,14 @@ lib_LTLIBRARIES = \
 
 libmsmcomm_la_VALASOURCES = \
 	abstractobject.vala \
-	messagetype.vala \
-	messageresult.vala \
-	messageclass.vala \
-	messageutil.vala \
-	basemessage.vala \
-	callmessage.vala \
-	statemessage.vala \
-	miscmessage.vala \
-	simmessage.vala \
-	networkmessage.vala \
-	phonebookmessage.vala \
-	soundmessage.vala \
-	supsmessage.vala \
-	voicemailmessage.vala \
-	smsmessage.vala \
-	pdsmmessage.vala \
-	basemessagegroup.vala \
-	callmessagegroup.vala \
-	statemessagegroup.vala \
-	miscmessagegroup.vala \
-	simmessagegroup.vala \
-	smsmessagegroup.vala \
-	phonebookmessagegroup.vala \
-	networkmessagegroup.vala \
-	soundmessagegroup.vala \
-	supsmessagegroup.vala \
-	voicemailmessagegroup.vala \
-	pdsmmessagegroup.vala \
-	messageassembler.vala \
-	messagedisassembler.vala \
+	\
+	baseclient.vala \
+	basemodemaccessor.vala \
+	baseradioaccess.vala \
+	\
+	palmpremodemaccessor.vala \
+	palmpreradioaccess.vala \
+	palmprecallclient.vala \
 	$(NULL)
 
 libmsmcomm_la_SOURCES = \

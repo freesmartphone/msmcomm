@@ -19,32 +19,33 @@
  *
  **/
 
-
-namespace Msmcomm.LowLevel
+namespace Msmcomm
 {
-    public class PdsmResponseMessageGroup : BaseMessageGroup
+    public abstract class BaseModemAccessor : Common.AbstractObject
     {
-        public static const uint8 GROUP_ID = 0x22;
+        private BaseRadioAccess radio_access;
 
-        public PdsmResponseMessageGroup()
+        //
+        // private
+        //
+
+        //
+        // public API
+        //
+
+        protected BaseModemAccessor(BaseRadioAccess radio_access)
         {
-            base(PdsmResponseMessageGroup.GROUP_ID);
-
-            message_types[Pdsm.Response.PaSetParam.MESSAGE_ID] = typeof(Pdsm.Response.PaSetParam);
-            message_types[Pdsm.Response.PdGetPosition.MESSAGE_ID] = typeof(Pdsm.Response.PdGetPosition);
+            this.radio_access = radio_access;
         }
-    }
 
-    public class PdsmUrcMessageGroup : BaseMessageGroup
-    {
-        public static const uint8 GROUP_ID = 0x23;
-
-        public PdsmUrcMessageGroup()
+        public BaseClient create_client<T>()
         {
-            base(PdsmUrcMessageGroup.GROUP_ID);
+            return null;
+        }
 
-            message_types[Pdsm.Urc.Pd.MESSAGE_ID] = typeof(Pdsm.Urc.Pd);
-            message_types[Pdsm.Urc.Xtra.MESSAGE_ID] = typeof(Pdsm.Urc.Xtra);
+        public override string repr()
+        {
+            return @"<>";
         }
     }
 }
