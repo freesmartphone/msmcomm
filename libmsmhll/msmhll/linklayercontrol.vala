@@ -94,7 +94,7 @@ namespace Msmcomm.HciLinkLayer
             start();
         }
 
-        public void processIncommingData(uint8[] data)
+        public void processIncomingData(uint8[] data)
         {
             uint start = 0;
             uint n = 0;
@@ -104,7 +104,7 @@ namespace Msmcomm.HciLinkLayer
             var tmp = new uint8[in_buffer.len];
             Memory.copy(tmp, in_buffer.data, in_buffer.len);
 
-            // try to find a valid frame within the incomming data
+            // try to find a valid frame within the incoming data
             foreach (var byte in tmp)
             {
                 n++;
@@ -118,14 +118,14 @@ namespace Msmcomm.HciLinkLayer
                     // FIXME implement exception to get a better error handling
                     if (!frame.unpack(tmp[start:n]))
                     {
-                        warning("processIncommingData: Could not unpack valid frame! crc error?");
+                        warning("processIncomingData: Could not unpack valid frame! crc error?");
 
                         // Continue with searching for next valid frame in buffer
                         start = n + 1;
                         continue;
                     }
 
-                    handleIncommingFrame(frame);
+                    handleIncomingFrame(frame);
                     start = n + 1;
                 }
             }
@@ -180,7 +180,7 @@ namespace Msmcomm.HciLinkLayer
             context.max_send_attempts = settings.max_send_attempts;
         }
 
-        private void handleIncommingFrame(Frame frame)
+        private void handleIncomingFrame(Frame frame)
         {
             debug(@"Got a $(frame.fr_type) frame from modem");
 
