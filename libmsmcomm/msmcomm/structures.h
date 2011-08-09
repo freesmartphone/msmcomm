@@ -24,18 +24,18 @@
 
 #include <stdint.h>
 
-struct plmn_field
+struct palmpre_plmn_field
 {
 	uint16_t mcc;
 	uint8_t mnc;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_plmn_field_init(struct plmn_field* self)
+static void msmcomm_palmpre_plmn_field_init(struct palmpre_plmn_field* self)
 {
 }
 
 
-struct call_event
+struct palmpre_call_event
 {
 	uint8_t call_id;
 	uint8_t call_type;
@@ -44,7 +44,7 @@ struct call_event
 	uint8_t caller_id[15];
 #define CALL_EVENT_UNKNOWN1_SIZE 39
 	uint8_t unknown1[39];
-	struct plmn_field plmn;
+	struct palmpre_plmn_field plmn;
 #define CALL_EVENT_UNKNOWN2_SIZE 7
 	uint8_t unknown2[7];
 	uint8_t caller_id_len;
@@ -66,13 +66,13 @@ struct call_event
 	uint8_t unknown7[174];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_call_event_init(struct call_event* self)
+static void msmcomm_palmpre_call_event_init(struct palmpre_call_event* self)
 {
 	self->caller_id_len = 15;
 }
 
 
-struct call_callback_resp
+struct palmpre_call_callback_resp
 {
 	uint32_t ref_id;
 	uint16_t cmd_type;
@@ -82,12 +82,12 @@ struct call_callback_resp
 	uint8_t unknown1[2];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_call_callback_resp_init(struct call_callback_resp* self)
+static void msmcomm_palmpre_call_callback_resp_init(struct palmpre_call_callback_resp* self)
 {
 }
 
 
-struct call_answer_msg
+struct palmpre_call_answer_msg
 {
 	uint32_t ref_id;
 	uint8_t call_id;
@@ -96,12 +96,12 @@ struct call_answer_msg
 	uint8_t value2;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_call_answer_msg_init(struct call_answer_msg* self)
+static void msmcomm_palmpre_call_answer_msg_init(struct palmpre_call_answer_msg* self)
 {
 }
 
 
-struct call_end_msg
+struct palmpre_call_end_msg
 {
 	uint32_t ref_id;
 	uint8_t value0;
@@ -110,12 +110,12 @@ struct call_end_msg
 	uint8_t unknown0[55];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_call_end_msg_init(struct call_end_msg* self)
+static void msmcomm_palmpre_call_end_msg_init(struct palmpre_call_end_msg* self)
 {
 }
 
 
-struct call_origination_msg
+struct palmpre_call_origination_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
@@ -134,13 +134,13 @@ struct call_origination_msg
 	uint8_t unknown4;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_call_origination_msg_init(struct call_origination_msg* self)
+static void msmcomm_palmpre_call_origination_msg_init(struct palmpre_call_origination_msg* self)
 {
 	self->caller_id_len = 64;
 }
 
 
-struct call_sups_msg
+struct palmpre_call_sups_msg
 {
 	uint32_t ref_id;
 	uint8_t command;
@@ -152,55 +152,55 @@ struct call_sups_msg
 	uint8_t unknown1[20];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_call_sups_msg_init(struct call_sups_msg* self)
+static void msmcomm_palmpre_call_sups_msg_init(struct palmpre_call_sups_msg* self)
 {
 }
 
 
-struct misc_test_alive_msg
+struct palmpre_misc_test_alive_msg
 {
 	uint32_t ref_id;
 	uint8_t some_value1;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_test_alive_msg_init(struct misc_test_alive_msg* self)
+static void msmcomm_palmpre_misc_test_alive_msg_init(struct palmpre_misc_test_alive_msg* self)
 {
 }
 
 
-struct misc_get_imei_msg
+struct palmpre_misc_get_imei_msg
 {
 	uint32_t ref_id;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_get_imei_msg_init(struct misc_get_imei_msg* self)
+static void msmcomm_palmpre_misc_get_imei_msg_init(struct palmpre_misc_get_imei_msg* self)
 {
 }
 
 
-struct misc_get_imei_resp
+struct palmpre_misc_get_imei_resp
 {
 	uint32_t ref_id;
 #define MISC_GET_IMEI_RESP_IMEI_SIZE 17
 	uint8_t imei[17];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_get_imei_resp_init(struct misc_get_imei_resp* self)
+static void msmcomm_palmpre_misc_get_imei_resp_init(struct palmpre_misc_get_imei_resp* self)
 {
 }
 
 
-struct misc_get_radio_firmware_version_msg
+struct palmpre_misc_get_radio_firmware_version_msg
 {
 	uint32_t ref_id;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_get_radio_firmware_version_msg_init(struct misc_get_radio_firmware_version_msg* self)
+static void msmcomm_palmpre_misc_get_radio_firmware_version_msg_init(struct palmpre_misc_get_radio_firmware_version_msg* self)
 {
 }
 
 
-struct misc_get_radio_firmware_version_resp
+struct palmpre_misc_get_radio_firmware_version_resp
 {
 	uint32_t ref_id;
 	uint8_t carrier_id;
@@ -212,12 +212,12 @@ struct misc_get_radio_firmware_version_resp
 	uint8_t unknown1[122];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_get_radio_firmware_version_resp_init(struct misc_get_radio_firmware_version_resp* self)
+static void msmcomm_palmpre_misc_get_radio_firmware_version_resp_init(struct palmpre_misc_get_radio_firmware_version_resp* self)
 {
 }
 
 
-struct misc_get_charger_status_msg
+struct palmpre_misc_get_charger_status_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
@@ -229,12 +229,12 @@ struct misc_get_charger_status_msg
 	uint8_t rc;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_get_charger_status_msg_init(struct misc_get_charger_status_msg* self)
+static void msmcomm_palmpre_misc_get_charger_status_msg_init(struct palmpre_misc_get_charger_status_msg* self)
 {
 }
 
 
-struct misc_set_charge_msg
+struct palmpre_misc_set_charge_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
@@ -243,12 +243,12 @@ struct misc_set_charge_msg
 	uint8_t rc;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_set_charge_msg_init(struct misc_set_charge_msg* self)
+static void msmcomm_palmpre_misc_set_charge_msg_init(struct palmpre_misc_set_charge_msg* self)
 {
 }
 
 
-struct misc_set_date_msg
+struct palmpre_misc_set_date_msg
 {
 	uint32_t ref_id;
 	uint16_t year;
@@ -266,34 +266,34 @@ struct misc_set_date_msg
 	uint8_t unknown2;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_set_date_msg_init(struct misc_set_date_msg* self)
+static void msmcomm_palmpre_misc_set_date_msg_init(struct palmpre_misc_set_date_msg* self)
 {
 }
 
 
-struct misc_set_date_resp
+struct palmpre_misc_set_date_resp
 {
 	uint32_t ref_id;
 	uint8_t rc;
 	uint8_t unknown0;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_set_date_resp_init(struct misc_set_date_resp* self)
+static void msmcomm_palmpre_misc_set_date_resp_init(struct palmpre_misc_set_date_resp* self)
 {
 }
 
 
-struct misc_get_home_network_name_msg
+struct palmpre_misc_get_home_network_name_msg
 {
 	uint32_t ref_id;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_get_home_network_name_msg_init(struct misc_get_home_network_name_msg* self)
+static void msmcomm_palmpre_misc_get_home_network_name_msg_init(struct palmpre_misc_get_home_network_name_msg* self)
 {
 }
 
 
-struct misc_get_home_network_name_resp
+struct palmpre_misc_get_home_network_name_resp
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
@@ -307,13 +307,13 @@ struct misc_get_home_network_name_resp
 	uint8_t mnc;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_get_home_network_name_resp_init(struct misc_get_home_network_name_resp* self)
+static void msmcomm_palmpre_misc_get_home_network_name_resp_init(struct palmpre_misc_get_home_network_name_resp* self)
 {
 	self->operator_name_len = 16;
 }
 
 
-struct misc_charger_status_event
+struct palmpre_misc_charger_status_event
 {
 #define MISC_CHARGER_STATUS_EVENT_UNKNOWN0_SIZE 5
 	uint8_t unknown0[5];
@@ -322,23 +322,23 @@ struct misc_charger_status_event
 	uint8_t unknown1[6];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_charger_status_event_init(struct misc_charger_status_event* self)
+static void msmcomm_palmpre_misc_charger_status_event_init(struct palmpre_misc_charger_status_event* self)
 {
 }
 
 
-struct misc_radio_reset_ind_event
+struct palmpre_misc_radio_reset_ind_event
 {
 #define MISC_RADIO_RESET_IND_EVENT_UNKNOWN0_SIZE 76
 	uint8_t unknown0[76];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_radio_reset_ind_event_init(struct misc_radio_reset_ind_event* self)
+static void msmcomm_palmpre_misc_radio_reset_ind_event_init(struct palmpre_misc_radio_reset_ind_event* self)
 {
 }
 
 
-struct misc_get_cell_id_resp
+struct palmpre_misc_get_cell_id_resp
 {
 	uint32_t ref_id;
 	uint8_t status;
@@ -351,23 +351,23 @@ struct misc_get_cell_id_resp
 	uint8_t unknown0[77];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_misc_get_cell_id_resp_init(struct misc_get_cell_id_resp* self)
+static void msmcomm_palmpre_misc_get_cell_id_resp_init(struct palmpre_misc_get_cell_id_resp* self)
 {
 }
 
 
-struct state_change_operation_mode_msg
+struct palmpre_state_change_operation_mode_msg
 {
 	uint32_t ref_id;
 	uint8_t mode;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_state_change_operation_mode_msg_init(struct state_change_operation_mode_msg* self)
+static void msmcomm_palmpre_state_change_operation_mode_msg_init(struct palmpre_state_change_operation_mode_msg* self)
 {
 }
 
 
-struct state_sys_sel_pref_msg
+struct palmpre_state_sys_sel_pref_msg
 {
 	uint32_t ref_id;
 	uint8_t mode;
@@ -388,12 +388,12 @@ struct state_sys_sel_pref_msg
 	uint8_t unknown4[4];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_state_sys_sel_pref_msg_init(struct state_sys_sel_pref_msg* self)
+static void msmcomm_palmpre_state_sys_sel_pref_msg_init(struct palmpre_state_sys_sel_pref_msg* self)
 {
 }
 
 
-struct state_callback_resp
+struct palmpre_state_callback_resp
 {
 	uint32_t ref_id;
 #define STATE_CALLBACK_RESP_UNKNOWN0_SIZE 7
@@ -401,14 +401,14 @@ struct state_callback_resp
 	uint8_t result;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_state_callback_resp_init(struct state_callback_resp* self)
+static void msmcomm_palmpre_state_callback_resp_init(struct palmpre_state_callback_resp* self)
 {
 }
 
 
-struct network_info_field
+struct palmpre_network_info_field
 {
-	struct plmn_field plmn;
+	struct palmpre_plmn_field plmn;
 	uint8_t unknown0;
 	uint8_t radio_type;
 #define NETWORK_INFO_FIELD_UNKNOWN1_SIZE 7
@@ -418,13 +418,13 @@ struct network_info_field
 	uint8_t name[82];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_network_info_field_init(struct network_info_field* self)
+static void msmcomm_palmpre_network_info_field_init(struct palmpre_network_info_field* self)
 {
 	self->name_len = 82;
 }
 
 
-struct state_event
+struct palmpre_state_event
 {
 	uint8_t unknown0;
 	uint8_t mode;
@@ -434,14 +434,14 @@ struct state_event
 #define STATE_EVENT_UNKNOWN2_SIZE 9
 	uint8_t unknown2[9];
 	uint8_t network_mode_preference;
-	struct plmn_field current_plmn;
+	struct palmpre_plmn_field current_plmn;
 #define STATE_EVENT_UNKNOWN3_SIZE 251
 	uint8_t unknown3[251];
 	uint8_t network_count;
 #define STATE_EVENT_UNKNOWN4_SIZE 3
 	uint8_t unknown4[3];
 #define STATE_EVENT_NETWORKS_SIZE 10
-	struct network_info_field networks[10];
+	struct palmpre_network_info_field networks[10];
 #define STATE_EVENT_UNKNOWN5_SIZE 2853
 	uint8_t unknown5[2853];
 	uint8_t als_allowed;
@@ -450,12 +450,12 @@ struct state_event
 	uint8_t unknown6[17];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_state_event_init(struct state_event* self)
+static void msmcomm_palmpre_state_event_init(struct palmpre_state_event* self)
 {
 }
 
 
-struct wms_read_template_field
+struct palmpre_wms_read_template_field
 {
 #define WMS_READ_TEMPLATE_FIELD_UNKNOWN0_SIZE 172
 	uint8_t unknown0[172];
@@ -476,13 +476,13 @@ struct wms_read_template_field
 	uint8_t unknown3[1813];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_read_template_field_init(struct wms_read_template_field* self)
+static void msmcomm_palmpre_wms_read_template_field_init(struct palmpre_wms_read_template_field* self)
 {
 	self->smsc_number_len = 21;
 }
 
 
-struct wms_sms_received_field
+struct palmpre_wms_sms_received_field
 {
 #define WMS_SMS_RECEIVED_FIELD_UNKNOWN0_SIZE 15
 	uint8_t unknown0[15];
@@ -496,14 +496,14 @@ struct wms_sms_received_field
 	uint8_t pdu[2017];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_sms_received_field_init(struct wms_sms_received_field* self)
+static void msmcomm_palmpre_wms_sms_received_field_init(struct palmpre_wms_sms_received_field* self)
 {
 	self->sender_len = 36;
 	self->pdu_len = 2017;
 }
 
 
-struct wms_msg_group_event
+struct palmpre_wms_msg_group_event
 {
 	uint8_t response_type;
 #define WMS_MSG_GROUP_EVENT_UNKNOWN0_SIZE 3
@@ -513,36 +513,36 @@ struct wms_msg_group_event
 	uint8_t command_data[2075];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_msg_group_event_init(struct wms_msg_group_event* self)
+static void msmcomm_palmpre_wms_msg_group_event_init(struct palmpre_wms_msg_group_event* self)
 {
 }
 
 
-struct wms_cfg_group_event
+struct palmpre_wms_cfg_group_event
 {
 	uint8_t response_type;
 #define WMS_CFG_GROUP_EVENT_UNKNOWN0_SIZE 1542
 	uint8_t unknown0[1542];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_cfg_group_event_init(struct wms_cfg_group_event* self)
+static void msmcomm_palmpre_wms_cfg_group_event_init(struct palmpre_wms_cfg_group_event* self)
 {
 }
 
 
-struct wms_acknowledge_msg
+struct palmpre_wms_acknowledge_msg
 {
 	uint32_t ref_id;
 #define WMS_ACKNOWLEDGE_MSG_UNKNOWN0_SIZE 1897
 	uint8_t unknown0[1897];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_acknowledge_msg_init(struct wms_acknowledge_msg* self)
+static void msmcomm_palmpre_wms_acknowledge_msg_init(struct palmpre_wms_acknowledge_msg* self)
 {
 }
 
 
-struct wms_send_msg
+struct palmpre_wms_send_msg
 {
 	uint32_t ref_id;
 #define WMS_SEND_MSG_UNKNOWN0_SIZE 2
@@ -564,26 +564,26 @@ struct wms_send_msg
 	uint8_t pdu[255];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_send_msg_init(struct wms_send_msg* self)
+static void msmcomm_palmpre_wms_send_msg_init(struct palmpre_wms_send_msg* self)
 {
 	self->service_center_len = 36;
 	self->pdu_len = 255;
 }
 
 
-struct sms_get_info_msg
+struct palmpre_sms_get_info_msg
 {
 	uint32_t ref_id;
 #define SMS_GET_INFO_MSG_UNKNOWN0_SIZE 5
 	uint8_t unknown0[5];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sms_get_info_msg_init(struct sms_get_info_msg* self)
+static void msmcomm_palmpre_sms_get_info_msg_init(struct palmpre_sms_get_info_msg* self)
 {
 }
 
 
-struct wms_read_template_msg
+struct palmpre_wms_read_template_msg
 {
 	uint32_t ref_id;
 	uint16_t template;
@@ -591,35 +591,35 @@ struct wms_read_template_msg
 	uint8_t unknown0[3];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_read_template_msg_init(struct wms_read_template_msg* self)
+static void msmcomm_palmpre_wms_read_template_msg_init(struct palmpre_wms_read_template_msg* self)
 {
 }
 
 
-struct wms_cfg_set_gw_domain_pref_msg
+struct palmpre_wms_cfg_set_gw_domain_pref_msg
 {
 	uint32_t ref_id;
 	uint8_t mode;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_cfg_set_gw_domain_pref_msg_init(struct wms_cfg_set_gw_domain_pref_msg* self)
+static void msmcomm_palmpre_wms_cfg_set_gw_domain_pref_msg_init(struct palmpre_wms_cfg_set_gw_domain_pref_msg* self)
 {
 }
 
 
-struct wms_cfg_set_routes_msg
+struct palmpre_wms_cfg_set_routes_msg
 {
 	uint32_t ref_id;
 #define WMS_CFG_SET_ROUTES_MSG_UNKNOWN_BYTES_SIZE 25
 	uint8_t unknown_bytes[25];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_cfg_set_routes_msg_init(struct wms_cfg_set_routes_msg* self)
+static void msmcomm_palmpre_wms_cfg_set_routes_msg_init(struct palmpre_wms_cfg_set_routes_msg* self)
 {
 }
 
 
-struct wms_cfg_get_message_list_msg
+struct palmpre_wms_cfg_get_message_list_msg
 {
 	uint32_t ref_id;
 	uint8_t value0;
@@ -627,36 +627,36 @@ struct wms_cfg_get_message_list_msg
 	uint8_t unknown0[2];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_cfg_get_message_list_msg_init(struct wms_cfg_get_message_list_msg* self)
+static void msmcomm_palmpre_wms_cfg_get_message_list_msg_init(struct palmpre_wms_cfg_get_message_list_msg* self)
 {
 }
 
 
-struct wms_read_msg
+struct palmpre_wms_read_msg
 {
 	uint32_t ref_id;
 #define WMS_READ_MSG_UNKNOWN0_SIZE 5
 	uint8_t unknown0[5];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_read_msg_init(struct wms_read_msg* self)
+static void msmcomm_palmpre_wms_read_msg_init(struct palmpre_wms_read_msg* self)
 {
 }
 
 
-struct wms_delete_msg
+struct palmpre_wms_delete_msg
 {
 	uint32_t ref_id;
 #define WMS_DELETE_MSG_UNKNOWN0_SIZE 5
 	uint8_t unknown0[5];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_delete_msg_init(struct wms_delete_msg* self)
+static void msmcomm_palmpre_wms_delete_msg_init(struct palmpre_wms_delete_msg* self)
 {
 }
 
 
-struct wms_get_memory_status_msg
+struct palmpre_wms_get_memory_status_msg
 {
 	uint32_t ref_id;
 	uint8_t value0;
@@ -664,21 +664,21 @@ struct wms_get_memory_status_msg
 	uint8_t unknown0[2];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_get_memory_status_msg_init(struct wms_get_memory_status_msg* self)
+static void msmcomm_palmpre_wms_get_memory_status_msg_init(struct palmpre_wms_get_memory_status_msg* self)
 {
 }
 
 
-struct wms_return_resp
+struct palmpre_wms_return_resp
 {
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_return_resp_init(struct wms_return_resp* self)
+static void msmcomm_palmpre_wms_return_resp_init(struct palmpre_wms_return_resp* self)
 {
 }
 
 
-struct wms_callback_resp
+struct palmpre_wms_callback_resp
 {
 	uint16_t command;
 #define WMS_CALLBACK_RESP_UNKNOWN0_SIZE 2
@@ -688,12 +688,12 @@ struct wms_callback_resp
 	uint8_t unknown1;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_wms_callback_resp_init(struct wms_callback_resp* self)
+static void msmcomm_palmpre_wms_callback_resp_init(struct palmpre_wms_callback_resp* self)
 {
 }
 
 
-struct sim_pin_status_msg
+struct palmpre_sim_pin_status_msg
 {
 	uint32_t ref_id;
 	uint8_t pin_type;
@@ -702,22 +702,22 @@ struct sim_pin_status_msg
 	uint8_t unknown0;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_pin_status_msg_init(struct sim_pin_status_msg* self)
+static void msmcomm_palmpre_sim_pin_status_msg_init(struct palmpre_sim_pin_status_msg* self)
 {
 }
 
 
-struct sim_get_call_forward_info_msg
+struct palmpre_sim_get_call_forward_info_msg
 {
 	uint32_t ref_id;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_get_call_forward_info_msg_init(struct sim_get_call_forward_info_msg* self)
+static void msmcomm_palmpre_sim_get_call_forward_info_msg_init(struct palmpre_sim_get_call_forward_info_msg* self)
 {
 }
 
 
-struct sim_return_resp
+struct palmpre_sim_return_resp
 {
 	uint32_t ref_id;
 	uint16_t command;
@@ -726,12 +726,12 @@ struct sim_return_resp
 	uint8_t unknown0[260];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_return_resp_init(struct sim_return_resp* self)
+static void msmcomm_palmpre_sim_return_resp_init(struct palmpre_sim_return_resp* self)
 {
 }
 
 
-struct sim_read_resp
+struct palmpre_sim_read_resp
 {
 	uint16_t file_type;
 	uint8_t result;
@@ -743,13 +743,13 @@ struct sim_read_resp
 	uint8_t unknown1[1911];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_read_resp_init(struct sim_read_resp* self)
+static void msmcomm_palmpre_sim_read_resp_init(struct palmpre_sim_read_resp* self)
 {
 	self->file_data_len = 8;
 }
 
 
-struct sim_verify_pin_resp
+struct palmpre_sim_verify_pin_resp
 {
 	uint8_t unknown0;
 	uint8_t pin_retries;
@@ -759,24 +759,24 @@ struct sim_verify_pin_resp
 	uint8_t unknown1[1920];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_verify_pin_resp_init(struct sim_verify_pin_resp* self)
+static void msmcomm_palmpre_sim_verify_pin_resp_init(struct palmpre_sim_verify_pin_resp* self)
 {
 }
 
 
-struct sim_pin_status_resp
+struct palmpre_sim_pin_status_resp
 {
 	uint8_t pin_count;
 #define SIM_PIN_STATUS_RESP_UNKNOWN0_SIZE 1923
 	uint8_t unknown0[1923];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_pin_status_resp_init(struct sim_pin_status_resp* self)
+static void msmcomm_palmpre_sim_pin_status_resp_init(struct palmpre_sim_pin_status_resp* self)
 {
 }
 
 
-struct sim_get_fdn_status_resp
+struct palmpre_sim_get_fdn_status_resp
 {
 #define SIM_GET_FDN_STATUS_RESP_UNKNOWN0_SIZE 7
 	uint8_t unknown0[7];
@@ -785,12 +785,12 @@ struct sim_get_fdn_status_resp
 	uint8_t unknown1[1916];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_get_fdn_status_resp_init(struct sim_get_fdn_status_resp* self)
+static void msmcomm_palmpre_sim_get_fdn_status_resp_init(struct palmpre_sim_get_fdn_status_resp* self)
 {
 }
 
 
-struct sim_callback_resp
+struct palmpre_sim_callback_resp
 {
 #define SIM_CALLBACK_RESP_UNKNOWN0_SIZE 4
 	uint8_t unknown0[4];
@@ -801,12 +801,12 @@ struct sim_callback_resp
 	uint8_t response_data[1924];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_callback_resp_init(struct sim_callback_resp* self)
+static void msmcomm_palmpre_sim_callback_resp_init(struct palmpre_sim_callback_resp* self)
 {
 }
 
 
-struct sim_change_pin_msg
+struct palmpre_sim_change_pin_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
@@ -816,22 +816,22 @@ struct sim_change_pin_msg
 	uint8_t new_pin[9];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_change_pin_msg_init(struct sim_change_pin_msg* self)
+static void msmcomm_palmpre_sim_change_pin_msg_init(struct palmpre_sim_change_pin_msg* self)
 {
 }
 
 
-struct sim_get_sim_capabilities_msg
+struct palmpre_sim_get_sim_capabilities_msg
 {
 	uint32_t ref_id;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_get_sim_capabilities_msg_init(struct sim_get_sim_capabilities_msg* self)
+static void msmcomm_palmpre_sim_get_sim_capabilities_msg_init(struct palmpre_sim_get_sim_capabilities_msg* self)
 {
 }
 
 
-struct sim_read_msg
+struct palmpre_sim_read_msg
 {
 	uint32_t ref_id;
 	uint16_t field_type;
@@ -839,35 +839,35 @@ struct sim_read_msg
 	uint8_t unknown0[35];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_read_msg_init(struct sim_read_msg* self)
+static void msmcomm_palmpre_sim_read_msg_init(struct palmpre_sim_read_msg* self)
 {
 }
 
 
-struct sim_get_all_pin_status_info_msg
+struct palmpre_sim_get_all_pin_status_info_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sim_get_all_pin_status_info_msg_init(struct sim_get_all_pin_status_info_msg* self)
+static void msmcomm_palmpre_sim_get_all_pin_status_info_msg_init(struct palmpre_sim_get_all_pin_status_info_msg* self)
 {
 }
 
 
-struct phonebook_read_record_msg
+struct palmpre_phonebook_read_record_msg
 {
 	uint32_t ref_id;
 	uint8_t position;
 	uint8_t book_type;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_phonebook_read_record_msg_init(struct phonebook_read_record_msg* self)
+static void msmcomm_palmpre_phonebook_read_record_msg_init(struct palmpre_phonebook_read_record_msg* self)
 {
 }
 
 
-struct phonebook_read_record_bulk_msg
+struct palmpre_phonebook_read_record_bulk_msg
 {
 	uint32_t ref_id;
 	uint8_t first_position;
@@ -876,12 +876,12 @@ struct phonebook_read_record_bulk_msg
 	uint8_t last_book_type;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_phonebook_read_record_bulk_msg_init(struct phonebook_read_record_bulk_msg* self)
+static void msmcomm_palmpre_phonebook_read_record_bulk_msg_init(struct palmpre_phonebook_read_record_bulk_msg* self)
 {
 }
 
 
-struct phonebook_write_record_msg
+struct palmpre_phonebook_write_record_msg
 {
 	uint32_t ref_id;
 	uint8_t position;
@@ -894,23 +894,23 @@ struct phonebook_write_record_msg
 	uint8_t value0;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_phonebook_write_record_msg_init(struct phonebook_write_record_msg* self)
+static void msmcomm_palmpre_phonebook_write_record_msg_init(struct palmpre_phonebook_write_record_msg* self)
 {
 }
 
 
-struct phonebook_extended_file_info_msg
+struct palmpre_phonebook_extended_file_info_msg
 {
 	uint32_t ref_id;
 	uint8_t book_type;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_phonebook_extended_file_info_msg_init(struct phonebook_extended_file_info_msg* self)
+static void msmcomm_palmpre_phonebook_extended_file_info_msg_init(struct palmpre_phonebook_extended_file_info_msg* self)
 {
 }
 
 
-struct phonebook_return_resp
+struct palmpre_phonebook_return_resp
 {
 	uint32_t ref_id;
 	uint16_t command_id;
@@ -924,12 +924,12 @@ struct phonebook_return_resp
 	uint8_t encoding_type;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_phonebook_return_resp_init(struct phonebook_return_resp* self)
+static void msmcomm_palmpre_phonebook_return_resp_init(struct palmpre_phonebook_return_resp* self)
 {
 }
 
 
-struct phonebook_event
+struct palmpre_phonebook_event
 {
 	uint8_t position;
 	uint8_t unknown0;
@@ -938,12 +938,12 @@ struct phonebook_event
 	uint8_t unknown1[200];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_phonebook_event_init(struct phonebook_event* self)
+static void msmcomm_palmpre_phonebook_event_init(struct palmpre_phonebook_event* self)
 {
 }
 
 
-struct phonebook_extended_file_info_event
+struct palmpre_phonebook_extended_file_info_event
 {
 	uint8_t result;
 	uint8_t book_type;
@@ -955,34 +955,34 @@ struct phonebook_extended_file_info_event
 	uint8_t unknown0[185];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_phonebook_extended_file_info_event_init(struct phonebook_extended_file_info_event* self)
+static void msmcomm_palmpre_phonebook_extended_file_info_event_init(struct palmpre_phonebook_extended_file_info_event* self)
 {
 }
 
 
-struct network_report_rssi_msg
+struct palmpre_network_report_rssi_msg
 {
 	uint32_t ref_id;
 	uint8_t mode;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_network_report_rssi_msg_init(struct network_report_rssi_msg* self)
+static void msmcomm_palmpre_network_report_rssi_msg_init(struct palmpre_network_report_rssi_msg* self)
 {
 }
 
 
-struct network_report_health_msg
+struct palmpre_network_report_health_msg
 {
 	uint32_t ref_id;
 	uint8_t mode;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_network_report_health_msg_init(struct network_report_health_msg* self)
+static void msmcomm_palmpre_network_report_health_msg_init(struct palmpre_network_report_health_msg* self)
 {
 }
 
 
-struct network_callback_resp
+struct palmpre_network_callback_resp
 {
 	uint32_t ref_id;
 	uint16_t command;
@@ -990,12 +990,12 @@ struct network_callback_resp
 	uint8_t unknown0[2];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_network_callback_resp_init(struct network_callback_resp* self)
+static void msmcomm_palmpre_network_callback_resp_init(struct palmpre_network_callback_resp* self)
 {
 }
 
 
-struct network_state_info_event
+struct palmpre_network_state_info_event
 {
 #define NETWORK_STATE_INFO_EVENT_CHANGE_FIELD_SIZE 8
 	uint8_t change_field[8];
@@ -1005,7 +1005,7 @@ struct network_state_info_event
 	uint8_t gprs_attached;
 	uint16_t roam;
 	uint8_t unknown0;
-	struct plmn_field plmn;
+	struct palmpre_plmn_field plmn;
 #define NETWORK_STATE_INFO_EVENT_UNKNOWN1_SIZE 3
 	uint8_t unknown1[3];
 	uint8_t operator_name_len;
@@ -1039,14 +1039,14 @@ struct network_state_info_event
 	uint8_t unknown7;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_network_state_info_event_init(struct network_state_info_event* self)
+static void msmcomm_palmpre_network_state_info_event_init(struct palmpre_network_state_info_event* self)
 {
 	self->hplmn_len = 16;
 	self->operator_name_len = 80;
 }
 
 
-struct sound_set_device_msg
+struct palmpre_sound_set_device_msg
 {
 	uint32_t ref_id;
 	uint8_t device_class;
@@ -1056,24 +1056,24 @@ struct sound_set_device_msg
 	uint8_t unknown1[3];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sound_set_device_msg_init(struct sound_set_device_msg* self)
+static void msmcomm_palmpre_sound_set_device_msg_init(struct palmpre_sound_set_device_msg* self)
 {
 }
 
 
-struct sound_callback_resp
+struct palmpre_sound_callback_resp
 {
 	uint32_t ref_id;
 #define SOUND_CALLBACK_RESP_UNKNOWN0_SIZE 7
 	uint8_t unknown0[7];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sound_callback_resp_init(struct sound_callback_resp* self)
+static void msmcomm_palmpre_sound_callback_resp_init(struct palmpre_sound_callback_resp* self)
 {
 }
 
 
-struct sups_interrogate_msg
+struct palmpre_sups_interrogate_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
@@ -1084,12 +1084,12 @@ struct sups_interrogate_msg
 	uint8_t unknown1;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sups_interrogate_msg_init(struct sups_interrogate_msg* self)
+static void msmcomm_palmpre_sups_interrogate_msg_init(struct palmpre_sups_interrogate_msg* self)
 {
 }
 
 
-struct sups_register_msg
+struct palmpre_sups_register_msg
 {
 	uint32_t ref_id;
 	uint8_t feature;
@@ -1104,13 +1104,13 @@ struct sups_register_msg
 	uint8_t unknown1[45];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sups_register_msg_init(struct sups_register_msg* self)
+static void msmcomm_palmpre_sups_register_msg_init(struct palmpre_sups_register_msg* self)
 {
 	self->number_len = 21;
 }
 
 
-struct sups_erase_msg
+struct palmpre_sups_erase_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
@@ -1119,12 +1119,12 @@ struct sups_erase_msg
 	uint8_t unknown1[4];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sups_erase_msg_init(struct sups_erase_msg* self)
+static void msmcomm_palmpre_sups_erase_msg_init(struct palmpre_sups_erase_msg* self)
 {
 }
 
 
-struct sups_status_msg
+struct palmpre_sups_status_msg
 {
 	uint32_t ref_id;
 	uint8_t unknown0;
@@ -1133,12 +1133,12 @@ struct sups_status_msg
 	uint8_t unknown1[9];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sups_status_msg_init(struct sups_status_msg* self)
+static void msmcomm_palmpre_sups_status_msg_init(struct palmpre_sups_status_msg* self)
 {
 }
 
 
-struct sups_callback_resp
+struct palmpre_sups_callback_resp
 {
 	uint32_t ref_id;
 	uint8_t command;
@@ -1147,12 +1147,12 @@ struct sups_callback_resp
 	uint8_t unknown1;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sups_callback_resp_init(struct sups_callback_resp* self)
+static void msmcomm_palmpre_sups_callback_resp_init(struct palmpre_sups_callback_resp* self)
 {
 }
 
 
-struct sups_event
+struct palmpre_sups_event
 {
 #define SUPS_EVENT_UNKNOWN0_SIZE 3
 	uint8_t unknown0[3];
@@ -1168,35 +1168,35 @@ struct sups_event
 	uint8_t unknown2[4112];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_sups_event_init(struct sups_event* self)
+static void msmcomm_palmpre_sups_event_init(struct palmpre_sups_event* self)
 {
 	self->number_len = 21;
 }
 
 
-struct voicemail_get_info_msg
+struct palmpre_voicemail_get_info_msg
 {
 	uint32_t ref_id;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_voicemail_get_info_msg_init(struct voicemail_get_info_msg* self)
+static void msmcomm_palmpre_voicemail_get_info_msg_init(struct palmpre_voicemail_get_info_msg* self)
 {
 }
 
 
-struct voicemail_return_resp
+struct palmpre_voicemail_return_resp
 {
 	uint32_t ref_id;
 #define VOICEMAIL_RETURN_RESP_UNKNOWN0_SIZE 3
 	uint8_t unknown0[3];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_voicemail_return_resp_init(struct voicemail_return_resp* self)
+static void msmcomm_palmpre_voicemail_return_resp_init(struct palmpre_voicemail_return_resp* self)
 {
 }
 
 
-struct voicemail_event
+struct palmpre_voicemail_event
 {
 	uint8_t line0_vm_count;
 	uint8_t line1_vm_count;
@@ -1204,12 +1204,12 @@ struct voicemail_event
 	uint8_t unknown0[7];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_voicemail_event_init(struct voicemail_event* self)
+static void msmcomm_palmpre_voicemail_event_init(struct palmpre_voicemail_event* self)
 {
 }
 
 
-struct pdsm_pd_get_pos_msg
+struct palmpre_pdsm_pd_get_pos_msg
 {
 	uint32_t ref_id;
 	uint8_t value0;
@@ -1231,7 +1231,7 @@ struct pdsm_pd_get_pos_msg
 	uint8_t unknown4[4];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_pdsm_pd_get_pos_msg_init(struct pdsm_pd_get_pos_msg* self)
+static void msmcomm_palmpre_pdsm_pd_get_pos_msg_init(struct palmpre_pdsm_pd_get_pos_msg* self)
 {
 	self->value4 = 0x1e;
 	self->value3 = 0xffff;
@@ -1241,7 +1241,7 @@ static void msmcomm_low_level_structures_pdsm_pd_get_pos_msg_init(struct pdsm_pd
 }
 
 
-struct pdsm_pa_set_parm_msg
+struct palmpre_pdsm_pa_set_parm_msg
 {
 	uint32_t ref_id;
 	uint8_t value0;
@@ -1249,13 +1249,13 @@ struct pdsm_pa_set_parm_msg
 	uint8_t unknown0[262];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_pdsm_pa_set_parm_msg_init(struct pdsm_pa_set_parm_msg* self)
+static void msmcomm_palmpre_pdsm_pa_set_parm_msg_init(struct palmpre_pdsm_pa_set_parm_msg* self)
 {
 	self->value0 = 3;
 }
 
 
-struct pdsm_xtra_set_data_msg
+struct palmpre_pdsm_xtra_set_data_msg
 {
 	uint32_t ref_id;
 	uint32_t packet_size;
@@ -1266,46 +1266,46 @@ struct pdsm_xtra_set_data_msg
 	uint8_t unknown0;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_pdsm_xtra_set_data_msg_init(struct pdsm_xtra_set_data_msg* self)
+static void msmcomm_palmpre_pdsm_xtra_set_data_msg_init(struct palmpre_pdsm_xtra_set_data_msg* self)
 {
 }
 
 
-struct pdsm_pd_end_session_msg
+struct palmpre_pdsm_pd_end_session_msg
 {
 #define PDSM_PD_END_SESSION_MSG_UNKNOWN0_SIZE 12
 	uint8_t unknown0[12];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_pdsm_pd_end_session_msg_init(struct pdsm_pd_end_session_msg* self)
+static void msmcomm_palmpre_pdsm_pd_end_session_msg_init(struct palmpre_pdsm_pd_end_session_msg* self)
 {
 }
 
 
-struct pdsm_xtra_set_data_resp
+struct palmpre_pdsm_xtra_set_data_resp
 {
 #define PDSM_XTRA_SET_DATA_RESP_UNKNOWN0_SIZE 13
 	uint8_t unknown0[13];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_pdsm_xtra_set_data_resp_init(struct pdsm_xtra_set_data_resp* self)
+static void msmcomm_palmpre_pdsm_xtra_set_data_resp_init(struct palmpre_pdsm_xtra_set_data_resp* self)
 {
 }
 
 
-struct pdsm_pa_set_parm_resp
+struct palmpre_pdsm_pa_set_parm_resp
 {
 #define PDSM_PA_SET_PARM_RESP_UNKNOWN0_SIZE 9
 	uint8_t unknown0[9];
 	uint32_t result;
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_pdsm_pa_set_parm_resp_init(struct pdsm_pa_set_parm_resp* self)
+static void msmcomm_palmpre_pdsm_pa_set_parm_resp_init(struct palmpre_pdsm_pa_set_parm_resp* self)
 {
 }
 
 
-struct pdsm_pd_get_pos_resp
+struct palmpre_pdsm_pd_get_pos_resp
 {
 #define PDSM_PD_GET_POS_RESP_UNKNOWN0_SIZE 4
 	uint8_t unknown0[4];
@@ -1314,23 +1314,23 @@ struct pdsm_pd_get_pos_resp
 	uint8_t unknown1[5];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_pdsm_pd_get_pos_resp_init(struct pdsm_pd_get_pos_resp* self)
+static void msmcomm_palmpre_pdsm_pd_get_pos_resp_init(struct palmpre_pdsm_pd_get_pos_resp* self)
 {
 }
 
 
-struct pdsm_pd_end_session_resp
+struct palmpre_pdsm_pd_end_session_resp
 {
 #define PDSM_PD_END_SESSION_RESP_UNKNOWN0_SIZE 13
 	uint8_t unknown0[13];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_pdsm_pd_end_session_resp_init(struct pdsm_pd_end_session_resp* self)
+static void msmcomm_palmpre_pdsm_pd_end_session_resp_init(struct palmpre_pdsm_pd_end_session_resp* self)
 {
 }
 
 
-struct pdsm_xtra_event
+struct palmpre_pdsm_xtra_event
 {
 	uint8_t response_type;
 #define PDSM_XTRA_EVENT_UNKNOWN0_SIZE 16
@@ -1341,12 +1341,12 @@ struct pdsm_xtra_event
 	uint8_t unknown1[717];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_pdsm_xtra_event_init(struct pdsm_xtra_event* self)
+static void msmcomm_palmpre_pdsm_xtra_event_init(struct palmpre_pdsm_xtra_event* self)
 {
 }
 
 
-struct pdsm_pd_event
+struct palmpre_pdsm_pd_event
 {
 	uint8_t response_type;
 #define PDSM_PD_EVENT_UNKNOWN0_SIZE 19
@@ -1363,7 +1363,7 @@ struct pdsm_pd_event
 	uint8_t unknown2[147];
 } __attribute__ ((packed));
 
-static void msmcomm_low_level_structures_pdsm_pd_event_init(struct pdsm_pd_event* self)
+static void msmcomm_palmpre_pdsm_pd_event_init(struct palmpre_pdsm_pd_event* self)
 {
 }
 

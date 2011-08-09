@@ -32,8 +32,8 @@ def has_len(members, name):
       return True
   return False
 
-def build_object(name, len, parts):
-  print "struct %s" % name
+def build_object(name, device_name, len, parts):
+  print "struct %s_%s" % (device_name, name)
   print "{"
 
   lengths = {}
@@ -45,7 +45,7 @@ def build_object(name, len, parts):
     member_len = part['len']
 
     if not type in base_types:
-        type = "struct " + type
+        type = "struct %s_%s" % (device_name, type)
     to_print = "%s %s" % (type, member_name)
 
     if part.has_key('value') and not part['value'] == None:
@@ -65,7 +65,7 @@ def build_object(name, len, parts):
   print "} __attribute__ ((packed));"
 
   print ""
-  print "static void msmcomm_low_level_structures_%s_init(struct %s* self)" % (name, name)
+  print "static void msmcomm_%s_%s_init(struct %s_%s* self)" % (device_name, name, device_name, name)
   print "{"
   for n,l in lengths.iteritems():
     print_indent("self->%s = %i;" % (n, l))
@@ -75,6 +75,7 @@ def build_object(name, len, parts):
 
 in_object = False
 object_name = ""
+object_device_name = ""
 object_len = 0
 object_parts = []
 unknown_counter = 0
@@ -122,6 +123,10 @@ with open(sys.argv[1]) as f:
       parts = line.split(' ')
       object_name = parts[1]
       object_len = int(parts[2])
+      if len(parts) == 4:
+        object_device_name = parts[3].split("=")[1]
+      else:
+        object_device_name = "common"
     elif line.startswith('[') and in_object:
       start = 0
       rparts = line.split(' ')
@@ -186,7 +191,7 @@ with open(sys.argv[1]) as f:
       if not first_object:
         print_object_header()
       first_object = False
-      build_object(object_name, object_len, object_parts)
+      build_object(object_name, object_device_name, object_len, object_parts)
 
       # reset everything
       object_parts = []

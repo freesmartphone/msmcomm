@@ -52,12 +52,12 @@ def format_name(name):
   vala_types[name] = new_name
   return new_name
 
-def build_object(name, len, parts):
+def build_object(name, device_name, len, parts):
   global indent
   vala_name = format_name(name)
 
-  print "[CCode (cname = \"struct %s\", cheader_filename = \"structures.h\", destroy_function = \"\")]" % name
-  print "struct %s" % vala_name
+  print "[CCode (cname = \"struct %s_%s\", cheader_filename = \"structures.h\", destroy_function = \"\")]" % (device_name, name)
+  print "struct %s.%s" % (device_name.capitalize(), vala_name)
   print "{"
 
   len_params = {}
@@ -107,12 +107,13 @@ def build_object(name, len, parts):
   print_indent("}")
   indent -= 1
   print_indent("}")
-  print_indent("[CCode (cname = \"msmcomm_low_level_structures_%s_init\")]" % name)
+  print_indent("[CCode (cname = \"msmcomm_%s_%s_init\")]" % (device_name, name))
   print_indent("public %s();" % vala_name)
   print "}"
 
 in_object = False
 object_name = ""
+object_device_name = ""
 object_len = 0
 object_parts = []
 unknown_counter = 0
@@ -122,6 +123,7 @@ first_object = True
 patterns = {
   'part' : r"^[(.*)] (\w*) (\w*).*$",
 }
+
 print "/* "
 print " * (c) 2010-2011 by Simon Busch <morphis@gravedo.de>"
 print " * All Rights Reserved"
@@ -159,6 +161,10 @@ with open(sys.argv[1]) as f:
       parts = line.split(' ')
       object_name = parts[1]
       object_len = int(parts[2])
+      if len(parts) == 4:
+        object_device_name = parts[3].split("=")[1]
+      else:
+        object_device_name = "common"
     elif line.startswith('[') and in_object:
       start = 0
       rparts = line.split(' ')
@@ -181,7 +187,7 @@ with open(sys.argv[1]) as f:
       else:
         start_offset = int(offsets[0])
         end_offset = int(offsets[1])
-      
+
       # do we have to fill a gap between the last part and this one?
       if start_offset > last_end_offset:
         gap = {}
@@ -222,12 +228,12 @@ with open(sys.argv[1]) as f:
         gap['type'] = 'uint8_t'
         gap['len'] = object_len - last_end_offset
         object_parts.append(gap)
-      
+
       if not first_object:
         print_object_header()
       first_object = False
       byte_size[object_name] = object_len
-      build_object(object_name, object_len, object_parts)
+      build_object(object_name, object_device_name, object_len, object_parts)
 
       # reset everything
       object_parts = []

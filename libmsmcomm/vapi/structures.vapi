@@ -22,8 +22,8 @@
 
 namespace Msmcomm.LowLevel.Structures
 {
-[CCode (cname = "struct plmn_field", cheader_filename = "structures.h", destroy_function = "")]
-struct PlmnField
+[CCode (cname = "struct palmpre_plmn_field", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PlmnField
 {
 	public uint16 mcc;
 	public uint8 mnc;
@@ -36,13 +36,13 @@ struct PlmnField
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_plmn_field_init")]
+	[CCode (cname = "msmcomm_palmpre_plmn_field_init")]
 	public PlmnField();
 }
 
 
-[CCode (cname = "struct call_event", cheader_filename = "structures.h", destroy_function = "")]
-struct CallEvent
+[CCode (cname = "struct palmpre_call_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.CallEvent
 {
 	public uint8 call_id;
 	public uint8 call_type;
@@ -72,13 +72,13 @@ struct CallEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_call_event_init")]
+	[CCode (cname = "msmcomm_palmpre_call_event_init")]
 	public CallEvent();
 }
 
 
-[CCode (cname = "struct call_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct CallCallbackResponse
+[CCode (cname = "struct palmpre_call_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.CallCallbackResponse
 {
 	public uint32 ref_id;
 	public uint16 cmd_type;
@@ -94,13 +94,13 @@ struct CallCallbackResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_call_callback_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_call_callback_resp_init")]
 	public CallCallbackResponse();
 }
 
 
-[CCode (cname = "struct call_answer_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct CallAnswerMessage
+[CCode (cname = "struct palmpre_call_answer_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.CallAnswerMessage
 {
 	public uint32 ref_id;
 	public uint8 call_id;
@@ -116,13 +116,13 @@ struct CallAnswerMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_call_answer_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_call_answer_msg_init")]
 	public CallAnswerMessage();
 }
 
 
-[CCode (cname = "struct call_end_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct CallEndMessage
+[CCode (cname = "struct palmpre_call_end_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.CallEndMessage
 {
 	public uint32 ref_id;
 	public uint8 value0;
@@ -137,13 +137,13 @@ struct CallEndMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_call_end_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_call_end_msg_init")]
 	public CallEndMessage();
 }
 
 
-[CCode (cname = "struct call_origination_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct CallOriginationMessage
+[CCode (cname = "struct palmpre_call_origination_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.CallOriginationMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
@@ -165,13 +165,13 @@ struct CallOriginationMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_call_origination_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_call_origination_msg_init")]
 	public CallOriginationMessage();
 }
 
 
-[CCode (cname = "struct call_sups_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct CallSupsMessage
+[CCode (cname = "struct palmpre_call_sups_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.CallSupsMessage
 {
 	public uint32 ref_id;
 	public uint8 command;
@@ -188,13 +188,13 @@ struct CallSupsMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_call_sups_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_call_sups_msg_init")]
 	public CallSupsMessage();
 }
 
 
-[CCode (cname = "struct misc_test_alive_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscTestAliveMessage
+[CCode (cname = "struct palmpre_misc_test_alive_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscTestAliveMessage
 {
 	public uint32 ref_id;
 	public uint8 some_value1;
@@ -207,13 +207,13 @@ struct MiscTestAliveMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_test_alive_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_test_alive_msg_init")]
 	public MiscTestAliveMessage();
 }
 
 
-[CCode (cname = "struct misc_get_imei_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscGetImeiMessage
+[CCode (cname = "struct palmpre_misc_get_imei_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscGetImeiMessage
 {
 	public uint32 ref_id;
 	public unowned uint8[] data
@@ -225,13 +225,13 @@ struct MiscGetImeiMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_get_imei_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_get_imei_msg_init")]
 	public MiscGetImeiMessage();
 }
 
 
-[CCode (cname = "struct misc_get_imei_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscGetImeiResponse
+[CCode (cname = "struct palmpre_misc_get_imei_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscGetImeiResponse
 {
 	public uint32 ref_id;
 	public uint8 imei[17];
@@ -244,13 +244,13 @@ struct MiscGetImeiResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_get_imei_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_get_imei_resp_init")]
 	public MiscGetImeiResponse();
 }
 
 
-[CCode (cname = "struct misc_get_radio_firmware_version_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscGetRadioFirmwareVersionMessage
+[CCode (cname = "struct palmpre_misc_get_radio_firmware_version_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscGetRadioFirmwareVersionMessage
 {
 	public uint32 ref_id;
 	public unowned uint8[] data
@@ -262,13 +262,13 @@ struct MiscGetRadioFirmwareVersionMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_get_radio_firmware_version_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_get_radio_firmware_version_msg_init")]
 	public MiscGetRadioFirmwareVersionMessage();
 }
 
 
-[CCode (cname = "struct misc_get_radio_firmware_version_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscGetRadioFirmwareVersionResponse
+[CCode (cname = "struct palmpre_misc_get_radio_firmware_version_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscGetRadioFirmwareVersionResponse
 {
 	public uint32 ref_id;
 	public uint8 carrier_id;
@@ -284,13 +284,13 @@ struct MiscGetRadioFirmwareVersionResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_get_radio_firmware_version_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_get_radio_firmware_version_resp_init")]
 	public MiscGetRadioFirmwareVersionResponse();
 }
 
 
-[CCode (cname = "struct misc_get_charger_status_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscGetChargerStatusMessage
+[CCode (cname = "struct palmpre_misc_get_charger_status_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscGetChargerStatusMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
@@ -308,13 +308,13 @@ struct MiscGetChargerStatusMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_get_charger_status_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_get_charger_status_msg_init")]
 	public MiscGetChargerStatusMessage();
 }
 
 
-[CCode (cname = "struct misc_set_charge_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscSetChargeMessage
+[CCode (cname = "struct palmpre_misc_set_charge_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscSetChargeMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
@@ -330,13 +330,13 @@ struct MiscSetChargeMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_set_charge_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_set_charge_msg_init")]
 	public MiscSetChargeMessage();
 }
 
 
-[CCode (cname = "struct misc_set_date_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscSetDateMessage
+[CCode (cname = "struct palmpre_misc_set_date_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscSetDateMessage
 {
 	public uint32 ref_id;
 	public uint16 year;
@@ -360,13 +360,13 @@ struct MiscSetDateMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_set_date_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_set_date_msg_init")]
 	public MiscSetDateMessage();
 }
 
 
-[CCode (cname = "struct misc_set_date_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscSetDateResponse
+[CCode (cname = "struct palmpre_misc_set_date_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscSetDateResponse
 {
 	public uint32 ref_id;
 	public uint8 rc;
@@ -380,13 +380,13 @@ struct MiscSetDateResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_set_date_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_set_date_resp_init")]
 	public MiscSetDateResponse();
 }
 
 
-[CCode (cname = "struct misc_get_home_network_name_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscGetHomeNetworkNameMessage
+[CCode (cname = "struct palmpre_misc_get_home_network_name_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscGetHomeNetworkNameMessage
 {
 	public uint32 ref_id;
 	public unowned uint8[] data
@@ -398,13 +398,13 @@ struct MiscGetHomeNetworkNameMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_get_home_network_name_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_get_home_network_name_msg_init")]
 	public MiscGetHomeNetworkNameMessage();
 }
 
 
-[CCode (cname = "struct misc_get_home_network_name_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscGetHomeNetworkNameResponse
+[CCode (cname = "struct palmpre_misc_get_home_network_name_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscGetHomeNetworkNameResponse
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
@@ -423,13 +423,13 @@ struct MiscGetHomeNetworkNameResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_get_home_network_name_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_get_home_network_name_resp_init")]
 	public MiscGetHomeNetworkNameResponse();
 }
 
 
-[CCode (cname = "struct misc_charger_status_event", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscChargerStatusEvent
+[CCode (cname = "struct palmpre_misc_charger_status_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscChargerStatusEvent
 {
 	public uint8 unknown0[5];
 	public uint16 voltage;
@@ -443,13 +443,13 @@ struct MiscChargerStatusEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_charger_status_event_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_charger_status_event_init")]
 	public MiscChargerStatusEvent();
 }
 
 
-[CCode (cname = "struct misc_radio_reset_ind_event", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscRadioResetIndEvent
+[CCode (cname = "struct palmpre_misc_radio_reset_ind_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscRadioResetIndEvent
 {
 	public uint8 unknown0[76];
 	public unowned uint8[] data
@@ -461,13 +461,13 @@ struct MiscRadioResetIndEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_radio_reset_ind_event_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_radio_reset_ind_event_init")]
 	public MiscRadioResetIndEvent();
 }
 
 
-[CCode (cname = "struct misc_get_cell_id_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct MiscGetCellIdResponse
+[CCode (cname = "struct palmpre_misc_get_cell_id_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.MiscGetCellIdResponse
 {
 	public uint32 ref_id;
 	public uint8 status;
@@ -485,13 +485,13 @@ struct MiscGetCellIdResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_misc_get_cell_id_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_misc_get_cell_id_resp_init")]
 	public MiscGetCellIdResponse();
 }
 
 
-[CCode (cname = "struct state_change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct StateChangeOperationModeMessage
+[CCode (cname = "struct palmpre_state_change_operation_mode_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.StateChangeOperationModeMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
@@ -504,13 +504,13 @@ struct StateChangeOperationModeMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_state_change_operation_mode_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_state_change_operation_mode_msg_init")]
 	public StateChangeOperationModeMessage();
 }
 
 
-[CCode (cname = "struct state_sys_sel_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct StateSysSelPrefMessage
+[CCode (cname = "struct palmpre_state_sys_sel_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.StateSysSelPrefMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
@@ -534,13 +534,13 @@ struct StateSysSelPrefMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_state_sys_sel_pref_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_state_sys_sel_pref_msg_init")]
 	public StateSysSelPrefMessage();
 }
 
 
-[CCode (cname = "struct state_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct StateCallbackResponse
+[CCode (cname = "struct palmpre_state_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.StateCallbackResponse
 {
 	public uint32 ref_id;
 	public uint8 unknown0[7];
@@ -554,13 +554,13 @@ struct StateCallbackResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_state_callback_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_state_callback_resp_init")]
 	public StateCallbackResponse();
 }
 
 
-[CCode (cname = "struct network_info_field", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkInfoField
+[CCode (cname = "struct palmpre_network_info_field", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.NetworkInfoField
 {
 	public PlmnField plmn;
 	public uint8 unknown0;
@@ -577,13 +577,13 @@ struct NetworkInfoField
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_network_info_field_init")]
+	[CCode (cname = "msmcomm_palmpre_network_info_field_init")]
 	public NetworkInfoField();
 }
 
 
-[CCode (cname = "struct state_event", cheader_filename = "structures.h", destroy_function = "")]
-struct StateEvent
+[CCode (cname = "struct palmpre_state_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.StateEvent
 {
 	public uint8 unknown0;
 	public uint8 mode;
@@ -609,13 +609,13 @@ struct StateEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_state_event_init")]
+	[CCode (cname = "msmcomm_palmpre_state_event_init")]
 	public StateEvent();
 }
 
 
-[CCode (cname = "struct wms_read_template_field", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsReadTemplateField
+[CCode (cname = "struct palmpre_wms_read_template_field", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsReadTemplateField
 {
 	public uint8 unknown0[172];
 	public uint8 received_mask;
@@ -638,13 +638,13 @@ struct WmsReadTemplateField
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_read_template_field_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_read_template_field_init")]
 	public WmsReadTemplateField();
 }
 
 
-[CCode (cname = "struct wms_sms_received_field", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsSmsReceivedField
+[CCode (cname = "struct palmpre_wms_sms_received_field", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsSmsReceivedField
 {
 	public uint8 unknown0[15];
 	public uint8 sender_len;
@@ -661,13 +661,13 @@ struct WmsSmsReceivedField
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_sms_received_field_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_sms_received_field_init")]
 	public WmsSmsReceivedField();
 }
 
 
-[CCode (cname = "struct wms_msg_group_event", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsMsgGroupEvent
+[CCode (cname = "struct palmpre_wms_msg_group_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsMsgGroupEvent
 {
 	public uint8 response_type;
 	public uint8 unknown0[3];
@@ -696,13 +696,13 @@ struct WmsMsgGroupEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_msg_group_event_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_msg_group_event_init")]
 	public WmsMsgGroupEvent();
 }
 
 
-[CCode (cname = "struct wms_cfg_group_event", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsCfgGroupEvent
+[CCode (cname = "struct palmpre_wms_cfg_group_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsCfgGroupEvent
 {
 	public uint8 response_type;
 	public uint8 unknown0[1542];
@@ -715,13 +715,13 @@ struct WmsCfgGroupEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_cfg_group_event_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_cfg_group_event_init")]
 	public WmsCfgGroupEvent();
 }
 
 
-[CCode (cname = "struct wms_acknowledge_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsAcknowledgeMessage
+[CCode (cname = "struct palmpre_wms_acknowledge_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsAcknowledgeMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0[1897];
@@ -734,13 +734,13 @@ struct WmsAcknowledgeMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_acknowledge_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_acknowledge_msg_init")]
 	public WmsAcknowledgeMessage();
 }
 
 
-[CCode (cname = "struct wms_send_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsSendMessage
+[CCode (cname = "struct palmpre_wms_send_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsSendMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0[2];
@@ -765,13 +765,13 @@ struct WmsSendMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_send_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_send_msg_init")]
 	public WmsSendMessage();
 }
 
 
-[CCode (cname = "struct sms_get_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SmsGetInfoMessage
+[CCode (cname = "struct palmpre_sms_get_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SmsGetInfoMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0[5];
@@ -784,13 +784,13 @@ struct SmsGetInfoMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sms_get_info_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sms_get_info_msg_init")]
 	public SmsGetInfoMessage();
 }
 
 
-[CCode (cname = "struct wms_read_template_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsReadTemplateMessage
+[CCode (cname = "struct palmpre_wms_read_template_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsReadTemplateMessage
 {
 	public uint32 ref_id;
 	public uint16 template;
@@ -804,13 +804,13 @@ struct WmsReadTemplateMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_read_template_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_read_template_msg_init")]
 	public WmsReadTemplateMessage();
 }
 
 
-[CCode (cname = "struct wms_cfg_set_gw_domain_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsCfgSetGwDomainPrefMessage
+[CCode (cname = "struct palmpre_wms_cfg_set_gw_domain_pref_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsCfgSetGwDomainPrefMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
@@ -823,13 +823,13 @@ struct WmsCfgSetGwDomainPrefMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_cfg_set_gw_domain_pref_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_cfg_set_gw_domain_pref_msg_init")]
 	public WmsCfgSetGwDomainPrefMessage();
 }
 
 
-[CCode (cname = "struct wms_cfg_set_routes_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsCfgSetRoutesMessage
+[CCode (cname = "struct palmpre_wms_cfg_set_routes_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsCfgSetRoutesMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown_bytes[25];
@@ -842,13 +842,13 @@ struct WmsCfgSetRoutesMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_cfg_set_routes_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_cfg_set_routes_msg_init")]
 	public WmsCfgSetRoutesMessage();
 }
 
 
-[CCode (cname = "struct wms_cfg_get_message_list_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsCfgGetMessageListMessage
+[CCode (cname = "struct palmpre_wms_cfg_get_message_list_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsCfgGetMessageListMessage
 {
 	public uint32 ref_id;
 	public uint8 value0;
@@ -862,13 +862,13 @@ struct WmsCfgGetMessageListMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_cfg_get_message_list_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_cfg_get_message_list_msg_init")]
 	public WmsCfgGetMessageListMessage();
 }
 
 
-[CCode (cname = "struct wms_read_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsReadMessage
+[CCode (cname = "struct palmpre_wms_read_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsReadMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0[5];
@@ -881,13 +881,13 @@ struct WmsReadMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_read_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_read_msg_init")]
 	public WmsReadMessage();
 }
 
 
-[CCode (cname = "struct wms_delete_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsDeleteMessage
+[CCode (cname = "struct palmpre_wms_delete_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsDeleteMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0[5];
@@ -900,13 +900,13 @@ struct WmsDeleteMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_delete_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_delete_msg_init")]
 	public WmsDeleteMessage();
 }
 
 
-[CCode (cname = "struct wms_get_memory_status_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsGetMemoryStatusMessage
+[CCode (cname = "struct palmpre_wms_get_memory_status_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsGetMemoryStatusMessage
 {
 	public uint32 ref_id;
 	public uint8 value0;
@@ -920,13 +920,13 @@ struct WmsGetMemoryStatusMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_get_memory_status_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_get_memory_status_msg_init")]
 	public WmsGetMemoryStatusMessage();
 }
 
 
-[CCode (cname = "struct wms_return_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsReturnResponse
+[CCode (cname = "struct palmpre_wms_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsReturnResponse
 {
 	public unowned uint8[] data
 	{
@@ -937,13 +937,13 @@ struct WmsReturnResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_return_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_return_resp_init")]
 	public WmsReturnResponse();
 }
 
 
-[CCode (cname = "struct wms_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct WmsCallbackResponse
+[CCode (cname = "struct palmpre_wms_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.WmsCallbackResponse
 {
 	public uint16 command;
 	public uint8 unknown0[2];
@@ -959,13 +959,13 @@ struct WmsCallbackResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_wms_callback_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_wms_callback_resp_init")]
 	public WmsCallbackResponse();
 }
 
 
-[CCode (cname = "struct sim_pin_status_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimPinStatusMessage
+[CCode (cname = "struct palmpre_sim_pin_status_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimPinStatusMessage
 {
 	public uint32 ref_id;
 	public uint8 pin_type;
@@ -980,13 +980,13 @@ struct SimPinStatusMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_pin_status_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_pin_status_msg_init")]
 	public SimPinStatusMessage();
 }
 
 
-[CCode (cname = "struct sim_get_call_forward_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimGetCallForwardInfoMessage
+[CCode (cname = "struct palmpre_sim_get_call_forward_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimGetCallForwardInfoMessage
 {
 	public uint32 ref_id;
 	public unowned uint8[] data
@@ -998,13 +998,13 @@ struct SimGetCallForwardInfoMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_get_call_forward_info_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_get_call_forward_info_msg_init")]
 	public SimGetCallForwardInfoMessage();
 }
 
 
-[CCode (cname = "struct sim_return_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SimReturnResponse
+[CCode (cname = "struct palmpre_sim_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimReturnResponse
 {
 	public uint32 ref_id;
 	public uint16 command;
@@ -1019,13 +1019,13 @@ struct SimReturnResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_return_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_return_resp_init")]
 	public SimReturnResponse();
 }
 
 
-[CCode (cname = "struct sim_read_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SimReadResponse
+[CCode (cname = "struct palmpre_sim_read_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimReadResponse
 {
 	public uint16 file_type;
 	public uint8 result;
@@ -1042,13 +1042,13 @@ struct SimReadResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_read_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_read_resp_init")]
 	public SimReadResponse();
 }
 
 
-[CCode (cname = "struct sim_verify_pin_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SimVerifyPinResponse
+[CCode (cname = "struct palmpre_sim_verify_pin_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimVerifyPinResponse
 {
 	public uint8 unknown0;
 	public uint8 pin_retries;
@@ -1064,13 +1064,13 @@ struct SimVerifyPinResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_verify_pin_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_verify_pin_resp_init")]
 	public SimVerifyPinResponse();
 }
 
 
-[CCode (cname = "struct sim_pin_status_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SimPinStatusResponse
+[CCode (cname = "struct palmpre_sim_pin_status_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimPinStatusResponse
 {
 	public uint8 pin_count;
 	public uint8 unknown0[1923];
@@ -1083,13 +1083,13 @@ struct SimPinStatusResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_pin_status_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_pin_status_resp_init")]
 	public SimPinStatusResponse();
 }
 
 
-[CCode (cname = "struct sim_get_fdn_status_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SimGetFdnStatusResponse
+[CCode (cname = "struct palmpre_sim_get_fdn_status_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimGetFdnStatusResponse
 {
 	public uint8 unknown0[7];
 	public uint8 usim;
@@ -1103,13 +1103,13 @@ struct SimGetFdnStatusResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_get_fdn_status_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_get_fdn_status_resp_init")]
 	public SimGetFdnStatusResponse();
 }
 
 
-[CCode (cname = "struct sim_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SimCallbackResponse
+[CCode (cname = "struct palmpre_sim_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimCallbackResponse
 {
 	public uint8 unknown0[4];
 	public uint8 rc;
@@ -1153,13 +1153,13 @@ struct SimCallbackResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_callback_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_callback_resp_init")]
 	public SimCallbackResponse();
 }
 
 
-[CCode (cname = "struct sim_change_pin_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimChangePinMessage
+[CCode (cname = "struct palmpre_sim_change_pin_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimChangePinMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
@@ -1174,13 +1174,13 @@ struct SimChangePinMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_change_pin_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_change_pin_msg_init")]
 	public SimChangePinMessage();
 }
 
 
-[CCode (cname = "struct sim_get_sim_capabilities_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimGetSimCapabilitiesMessage
+[CCode (cname = "struct palmpre_sim_get_sim_capabilities_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimGetSimCapabilitiesMessage
 {
 	public uint32 ref_id;
 	public unowned uint8[] data
@@ -1192,13 +1192,13 @@ struct SimGetSimCapabilitiesMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_get_sim_capabilities_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_get_sim_capabilities_msg_init")]
 	public SimGetSimCapabilitiesMessage();
 }
 
 
-[CCode (cname = "struct sim_read_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimReadMessage
+[CCode (cname = "struct palmpre_sim_read_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimReadMessage
 {
 	public uint32 ref_id;
 	public uint16 field_type;
@@ -1212,13 +1212,13 @@ struct SimReadMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_read_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_read_msg_init")]
 	public SimReadMessage();
 }
 
 
-[CCode (cname = "struct sim_get_all_pin_status_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SimGetAllPinStatusInfoMessage
+[CCode (cname = "struct palmpre_sim_get_all_pin_status_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SimGetAllPinStatusInfoMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
@@ -1231,13 +1231,13 @@ struct SimGetAllPinStatusInfoMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sim_get_all_pin_status_info_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sim_get_all_pin_status_info_msg_init")]
 	public SimGetAllPinStatusInfoMessage();
 }
 
 
-[CCode (cname = "struct phonebook_read_record_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookReadRecordMessage
+[CCode (cname = "struct palmpre_phonebook_read_record_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PhonebookReadRecordMessage
 {
 	public uint32 ref_id;
 	public uint8 position;
@@ -1251,13 +1251,13 @@ struct PhonebookReadRecordMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_read_record_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_phonebook_read_record_msg_init")]
 	public PhonebookReadRecordMessage();
 }
 
 
-[CCode (cname = "struct phonebook_read_record_bulk_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookReadRecordBulkMessage
+[CCode (cname = "struct palmpre_phonebook_read_record_bulk_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PhonebookReadRecordBulkMessage
 {
 	public uint32 ref_id;
 	public uint8 first_position;
@@ -1273,13 +1273,13 @@ struct PhonebookReadRecordBulkMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_read_record_bulk_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_phonebook_read_record_bulk_msg_init")]
 	public PhonebookReadRecordBulkMessage();
 }
 
 
-[CCode (cname = "struct phonebook_write_record_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookWriteRecordMessage
+[CCode (cname = "struct palmpre_phonebook_write_record_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PhonebookWriteRecordMessage
 {
 	public uint32 ref_id;
 	public uint8 position;
@@ -1297,13 +1297,13 @@ struct PhonebookWriteRecordMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_write_record_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_phonebook_write_record_msg_init")]
 	public PhonebookWriteRecordMessage();
 }
 
 
-[CCode (cname = "struct phonebook_extended_file_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookExtendedFileInfoMessage
+[CCode (cname = "struct palmpre_phonebook_extended_file_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PhonebookExtendedFileInfoMessage
 {
 	public uint32 ref_id;
 	public uint8 book_type;
@@ -1316,13 +1316,13 @@ struct PhonebookExtendedFileInfoMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_extended_file_info_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_phonebook_extended_file_info_msg_init")]
 	public PhonebookExtendedFileInfoMessage();
 }
 
 
-[CCode (cname = "struct phonebook_return_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookReturnResponse
+[CCode (cname = "struct palmpre_phonebook_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PhonebookReturnResponse
 {
 	public uint32 ref_id;
 	public uint16 command_id;
@@ -1341,13 +1341,13 @@ struct PhonebookReturnResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_return_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_phonebook_return_resp_init")]
 	public PhonebookReturnResponse();
 }
 
 
-[CCode (cname = "struct phonebook_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookEvent
+[CCode (cname = "struct palmpre_phonebook_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PhonebookEvent
 {
 	public uint8 position;
 	public uint8 unknown0;
@@ -1362,13 +1362,13 @@ struct PhonebookEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_event_init")]
+	[CCode (cname = "msmcomm_palmpre_phonebook_event_init")]
 	public PhonebookEvent();
 }
 
 
-[CCode (cname = "struct phonebook_extended_file_info_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PhonebookExtendedFileInfoEvent
+[CCode (cname = "struct palmpre_phonebook_extended_file_info_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PhonebookExtendedFileInfoEvent
 {
 	public uint8 result;
 	public uint8 book_type;
@@ -1386,13 +1386,13 @@ struct PhonebookExtendedFileInfoEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_phonebook_extended_file_info_event_init")]
+	[CCode (cname = "msmcomm_palmpre_phonebook_extended_file_info_event_init")]
 	public PhonebookExtendedFileInfoEvent();
 }
 
 
-[CCode (cname = "struct network_report_rssi_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkReportRssiMessage
+[CCode (cname = "struct palmpre_network_report_rssi_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.NetworkReportRssiMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
@@ -1405,13 +1405,13 @@ struct NetworkReportRssiMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_network_report_rssi_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_network_report_rssi_msg_init")]
 	public NetworkReportRssiMessage();
 }
 
 
-[CCode (cname = "struct network_report_health_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkReportHealthMessage
+[CCode (cname = "struct palmpre_network_report_health_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.NetworkReportHealthMessage
 {
 	public uint32 ref_id;
 	public uint8 mode;
@@ -1424,13 +1424,13 @@ struct NetworkReportHealthMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_network_report_health_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_network_report_health_msg_init")]
 	public NetworkReportHealthMessage();
 }
 
 
-[CCode (cname = "struct network_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkCallbackResponse
+[CCode (cname = "struct palmpre_network_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.NetworkCallbackResponse
 {
 	public uint32 ref_id;
 	public uint16 command;
@@ -1444,13 +1444,13 @@ struct NetworkCallbackResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_network_callback_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_network_callback_resp_init")]
 	public NetworkCallbackResponse();
 }
 
 
-[CCode (cname = "struct network_state_info_event", cheader_filename = "structures.h", destroy_function = "")]
-struct NetworkStateInfoEvent
+[CCode (cname = "struct palmpre_network_state_info_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.NetworkStateInfoEvent
 {
 	public uint8 change_field[8];
 	public uint8 serv_status;
@@ -1493,13 +1493,13 @@ struct NetworkStateInfoEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_network_state_info_event_init")]
+	[CCode (cname = "msmcomm_palmpre_network_state_info_event_init")]
 	public NetworkStateInfoEvent();
 }
 
 
-[CCode (cname = "struct sound_set_device_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SoundSetDeviceMessage
+[CCode (cname = "struct palmpre_sound_set_device_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SoundSetDeviceMessage
 {
 	public uint32 ref_id;
 	public uint8 device_class;
@@ -1515,13 +1515,13 @@ struct SoundSetDeviceMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sound_set_device_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sound_set_device_msg_init")]
 	public SoundSetDeviceMessage();
 }
 
 
-[CCode (cname = "struct sound_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SoundCallbackResponse
+[CCode (cname = "struct palmpre_sound_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SoundCallbackResponse
 {
 	public uint32 ref_id;
 	public uint8 unknown0[7];
@@ -1534,13 +1534,13 @@ struct SoundCallbackResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sound_callback_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_sound_callback_resp_init")]
 	public SoundCallbackResponse();
 }
 
 
-[CCode (cname = "struct sups_interrogate_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SupsInterrogateMessage
+[CCode (cname = "struct palmpre_sups_interrogate_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SupsInterrogateMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
@@ -1558,13 +1558,13 @@ struct SupsInterrogateMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sups_interrogate_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sups_interrogate_msg_init")]
 	public SupsInterrogateMessage();
 }
 
 
-[CCode (cname = "struct sups_register_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SupsRegisterMessage
+[CCode (cname = "struct palmpre_sups_register_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SupsRegisterMessage
 {
 	public uint32 ref_id;
 	public uint8 feature;
@@ -1583,13 +1583,13 @@ struct SupsRegisterMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sups_register_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sups_register_msg_init")]
 	public SupsRegisterMessage();
 }
 
 
-[CCode (cname = "struct sups_erase_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SupsEraseMessage
+[CCode (cname = "struct palmpre_sups_erase_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SupsEraseMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
@@ -1604,13 +1604,13 @@ struct SupsEraseMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sups_erase_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sups_erase_msg_init")]
 	public SupsEraseMessage();
 }
 
 
-[CCode (cname = "struct sups_status_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct SupsStatusMessage
+[CCode (cname = "struct palmpre_sups_status_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SupsStatusMessage
 {
 	public uint32 ref_id;
 	public uint8 unknown0;
@@ -1625,13 +1625,13 @@ struct SupsStatusMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sups_status_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_sups_status_msg_init")]
 	public SupsStatusMessage();
 }
 
 
-[CCode (cname = "struct sups_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct SupsCallbackResponse
+[CCode (cname = "struct palmpre_sups_callback_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SupsCallbackResponse
 {
 	public uint32 ref_id;
 	public uint8 command;
@@ -1647,13 +1647,13 @@ struct SupsCallbackResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sups_callback_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_sups_callback_resp_init")]
 	public SupsCallbackResponse();
 }
 
 
-[CCode (cname = "struct sups_event", cheader_filename = "structures.h", destroy_function = "")]
-struct SupsEvent
+[CCode (cname = "struct palmpre_sups_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.SupsEvent
 {
 	public uint8 unknown0[3];
 	public uint8 feature;
@@ -1672,13 +1672,13 @@ struct SupsEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_sups_event_init")]
+	[CCode (cname = "msmcomm_palmpre_sups_event_init")]
 	public SupsEvent();
 }
 
 
-[CCode (cname = "struct voicemail_get_info_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct VoicemailGetInfoMessage
+[CCode (cname = "struct palmpre_voicemail_get_info_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.VoicemailGetInfoMessage
 {
 	public uint32 ref_id;
 	public unowned uint8[] data
@@ -1690,13 +1690,13 @@ struct VoicemailGetInfoMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_voicemail_get_info_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_voicemail_get_info_msg_init")]
 	public VoicemailGetInfoMessage();
 }
 
 
-[CCode (cname = "struct voicemail_return_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct VoicemailReturnResponse
+[CCode (cname = "struct palmpre_voicemail_return_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.VoicemailReturnResponse
 {
 	public uint32 ref_id;
 	public uint8 unknown0[3];
@@ -1709,13 +1709,13 @@ struct VoicemailReturnResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_voicemail_return_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_voicemail_return_resp_init")]
 	public VoicemailReturnResponse();
 }
 
 
-[CCode (cname = "struct voicemail_event", cheader_filename = "structures.h", destroy_function = "")]
-struct VoicemailEvent
+[CCode (cname = "struct palmpre_voicemail_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.VoicemailEvent
 {
 	public uint8 line0_vm_count;
 	public uint8 line1_vm_count;
@@ -1729,13 +1729,13 @@ struct VoicemailEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_voicemail_event_init")]
+	[CCode (cname = "msmcomm_palmpre_voicemail_event_init")]
 	public VoicemailEvent();
 }
 
 
-[CCode (cname = "struct pdsm_pd_get_pos_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmPdGetPosMessage
+[CCode (cname = "struct palmpre_pdsm_pd_get_pos_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PdsmPdGetPosMessage
 {
 	public uint32 ref_id;
 	public uint8 value0;
@@ -1759,13 +1759,13 @@ struct PdsmPdGetPosMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_pdsm_pd_get_pos_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_pdsm_pd_get_pos_msg_init")]
 	public PdsmPdGetPosMessage();
 }
 
 
-[CCode (cname = "struct pdsm_pa_set_parm_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmPaSetParmMessage
+[CCode (cname = "struct palmpre_pdsm_pa_set_parm_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PdsmPaSetParmMessage
 {
 	public uint32 ref_id;
 	public uint8 value0;
@@ -1779,13 +1779,13 @@ struct PdsmPaSetParmMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_pdsm_pa_set_parm_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_pdsm_pa_set_parm_msg_init")]
 	public PdsmPaSetParmMessage();
 }
 
 
-[CCode (cname = "struct pdsm_xtra_set_data_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmXtraSetDataMessage
+[CCode (cname = "struct palmpre_pdsm_xtra_set_data_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PdsmXtraSetDataMessage
 {
 	public uint32 ref_id;
 	public uint32 packet_size;
@@ -1802,13 +1802,13 @@ struct PdsmXtraSetDataMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_pdsm_xtra_set_data_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_pdsm_xtra_set_data_msg_init")]
 	public PdsmXtraSetDataMessage();
 }
 
 
-[CCode (cname = "struct pdsm_pd_end_session_msg", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmPdEndSessionMessage
+[CCode (cname = "struct palmpre_pdsm_pd_end_session_msg", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PdsmPdEndSessionMessage
 {
 	public uint8 unknown0[12];
 	public unowned uint8[] data
@@ -1820,13 +1820,13 @@ struct PdsmPdEndSessionMessage
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_pdsm_pd_end_session_msg_init")]
+	[CCode (cname = "msmcomm_palmpre_pdsm_pd_end_session_msg_init")]
 	public PdsmPdEndSessionMessage();
 }
 
 
-[CCode (cname = "struct pdsm_xtra_set_data_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmXtraSetDataResponse
+[CCode (cname = "struct palmpre_pdsm_xtra_set_data_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PdsmXtraSetDataResponse
 {
 	public uint8 unknown0[13];
 	public unowned uint8[] data
@@ -1838,13 +1838,13 @@ struct PdsmXtraSetDataResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_pdsm_xtra_set_data_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_pdsm_xtra_set_data_resp_init")]
 	public PdsmXtraSetDataResponse();
 }
 
 
-[CCode (cname = "struct pdsm_pa_set_parm_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmPaSetParmResponse
+[CCode (cname = "struct palmpre_pdsm_pa_set_parm_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PdsmPaSetParmResponse
 {
 	public uint8 unknown0[9];
 	public uint32 result;
@@ -1857,13 +1857,13 @@ struct PdsmPaSetParmResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_pdsm_pa_set_parm_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_pdsm_pa_set_parm_resp_init")]
 	public PdsmPaSetParmResponse();
 }
 
 
-[CCode (cname = "struct pdsm_pd_get_pos_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmPdGetPosResponse
+[CCode (cname = "struct palmpre_pdsm_pd_get_pos_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PdsmPdGetPosResponse
 {
 	public uint8 unknown0[4];
 	public uint32 ref_id;
@@ -1877,13 +1877,13 @@ struct PdsmPdGetPosResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_pdsm_pd_get_pos_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_pdsm_pd_get_pos_resp_init")]
 	public PdsmPdGetPosResponse();
 }
 
 
-[CCode (cname = "struct pdsm_pd_end_session_resp", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmPdEndSessionResponse
+[CCode (cname = "struct palmpre_pdsm_pd_end_session_resp", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PdsmPdEndSessionResponse
 {
 	public uint8 unknown0[13];
 	public unowned uint8[] data
@@ -1895,13 +1895,13 @@ struct PdsmPdEndSessionResponse
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_pdsm_pd_end_session_resp_init")]
+	[CCode (cname = "msmcomm_palmpre_pdsm_pd_end_session_resp_init")]
 	public PdsmPdEndSessionResponse();
 }
 
 
-[CCode (cname = "struct pdsm_xtra_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmXtraEvent
+[CCode (cname = "struct palmpre_pdsm_xtra_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PdsmXtraEvent
 {
 	public uint8 response_type;
 	public uint8 unknown0[16];
@@ -1916,13 +1916,13 @@ struct PdsmXtraEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_pdsm_xtra_event_init")]
+	[CCode (cname = "msmcomm_palmpre_pdsm_xtra_event_init")]
 	public PdsmXtraEvent();
 }
 
 
-[CCode (cname = "struct pdsm_pd_event", cheader_filename = "structures.h", destroy_function = "")]
-struct PdsmPdEvent
+[CCode (cname = "struct palmpre_pdsm_pd_event", cheader_filename = "structures.h", destroy_function = "")]
+struct Palmpre.PdsmPdEvent
 {
 	public uint8 response_type;
 	public uint8 unknown0[19];
@@ -1943,7 +1943,7 @@ struct PdsmPdEvent
 			return res;
 		}
 	}
-	[CCode (cname = "msmcomm_low_level_structures_pdsm_pd_event_init")]
+	[CCode (cname = "msmcomm_palmpre_pdsm_pd_event_init")]
 	public PdsmPdEvent();
 }
 
