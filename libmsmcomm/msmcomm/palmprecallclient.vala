@@ -27,7 +27,7 @@ namespace Msmcomm.PalmPre
         // public API
         //
 
-        public CallClient(BaseRadioAccess radio_access)
+        public CallClient(PalmPre.RadioAccess radio_access)
         {
             base(radio_access);
         }

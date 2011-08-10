@@ -31,6 +31,7 @@ namespace Msmcomm
         private bool active;
         private bool in_link_setup;
         private GLib.ByteArray inbuffer;
+        private PalmPre.CommandQueue commandqueue;
 
         //
         // private
@@ -53,7 +54,7 @@ namespace Msmcomm
         private void handle_frame_content(uint8[] data)
         {
             if (!in_link_setup && active)
-                this.incoming_data(data);
+                incoming_data(data);
         }
 
         private void handle_send_data(uint8[] data)
@@ -86,7 +87,7 @@ namespace Msmcomm
             base(transport);
             in_link_setup = false;
             inbuffer = new GLib.ByteArray();
-
+            commandqueue = new PalmPre.CommandQueue(this);
         }
 
         public override bool open()
