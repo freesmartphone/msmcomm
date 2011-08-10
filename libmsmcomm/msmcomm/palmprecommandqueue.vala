@@ -398,6 +398,47 @@ namespace Msmcomm.PalmPre
             return true;
         }
 
+        public async unowned BaseMessage? enqueue_async_simple(owned BaseMessage command, int retries = 0, int timeout = 0)
+        {
+            if (!radio_access.is_active())
+                return null;
+
+            radio_access.lock();
+
+            command.ref_id = next_valid_ref_id();
+            var handler = new CommandHandler(command, retries, timeout, handle_timeout);
+            handler.callback = enqueue_async_simple.callback;
+            enqueue_command( handler );
+            yield;
+
+            pending.remove(handler);
+            radio_access.unlock();
+
+            if (handler.timed_out)
+                return null;
+
+            return handler.response;
+        }
+
+        public bool enqueue_sync(owned BaseMessage command)
+        {
+            /* Check wether modem is already ready for processing commands */
+            if (!radio_access.is_active())
+                return false;
+
+            radio_access.lock();
+
+            // create and command and send it out but do not wait for a response
+            command.ref_id = next_valid_ref_id();
+            var handler = new CommandHandler(command, 0);
+            handler.ignore_response = true;
+            enqueue_command( handler );
+
+            radio_access.unlock();
+
+            return true;
+        }
+
         public override string repr()
         {
             return @"<>";
