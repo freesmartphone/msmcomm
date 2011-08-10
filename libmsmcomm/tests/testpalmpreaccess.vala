@@ -21,18 +21,18 @@
 
 using Msmcomm;
 
-PalmPre.ModemAccessor accessor;
+PalmPre.RadioAccess radio_access;
 
 async void test_palmpre_accessor_initialize_test_alive()
 {
-    PalmPre.MiscClient misc_client = accessor.create_client<PalmPre.MiscClient>();
+    PalmPre.MiscClient misc_client = new PalmPre.MiscClient(radio_access);
 
     yield misc_client.send_test_alive();
 }
 
 async void test_palmpre_accessor_initialize_modem_reset()
 {
-    PalmPre.StateClient state_client = accessor.create_client<PalmPre.StateClient>();
+    PalmPre.StateClient state_client = new PalmPre.StateClient(radio_access);
 
     yield state_client.set_operation_mode(PalmPre.StateMode.RESET);
 }
@@ -42,7 +42,7 @@ void test_palmpre_accessor_initialize()
     var mainloop = new GLib.MainLoop(null, false);
     var transport = new FsoFramework.SocketTransport("tcp", "192.168.0.202", 3001);
 
-    accessor = new PalmPre.ModemAccessor(transport);
+    radio_access = new PalmPre.RadioAccess(transport);
 
     Idle.add(() => {
         test_palmpre_accessor_initialize_test_alive();

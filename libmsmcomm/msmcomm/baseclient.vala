@@ -26,8 +26,13 @@ namespace Msmcomm
         public  BaseRadioAccess radio_access;
 
         //
-        // private
+        // protected
         //
+
+        protected BaseClient(BaseRadioAccess radio_access)
+        {
+            this.radio_access = radio_access;
+        }
 
         //
         // public API

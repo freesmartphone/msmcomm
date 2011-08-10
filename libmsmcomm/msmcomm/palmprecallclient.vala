@@ -21,10 +21,15 @@
 
 namespace Msmcomm.PalmPre
 {
-    public abstract class CallClient : Client
+    public class CallClient : Client
     {
         //
         // public API
         //
+
+        public CallClient(RadioAccess radio_access)
+        {
+            base(radio_access);
+        }
     }
 }

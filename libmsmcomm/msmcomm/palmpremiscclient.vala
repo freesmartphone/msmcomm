@@ -21,11 +21,16 @@
 
 namespace Msmcomm.PalmPre
 {
-    public abstract class MiscClient : Client
+    public class MiscClient : Client
     {
         //
         // public API
         //
+
+        public MiscClient(RadioAccess radio_access)
+        {
+            base(radio_access);
+        }
 
         public async void send_test_alive()
         {

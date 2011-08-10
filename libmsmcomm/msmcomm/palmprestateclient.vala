@@ -21,7 +21,7 @@
 
 namespace Msmcomm.PalmPre
 {
-    public abstract class StateClient : Client
+    public class StateClient : Client
     {
         //
         // protected
@@ -34,6 +34,11 @@ namespace Msmcomm.PalmPre
         //
         // public API
         //
+
+        public StateClient(RadioAccess radio_access)
+        {
+            base(radio_access);
+        }
 
         public async bool set_preferred_technology(StateTechnology technology)
         {
