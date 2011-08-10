@@ -39,12 +39,12 @@ namespace Msmcomm.PalmPre
 
             message_groups[StateResponseMessageGroup.GROUP_ID] = new StateResponseMessageGroup();
             message_groups[StateUnsolicitedResponseMessageGroup.GROUP_ID] = new StateUnsolicitedResponseMessageGroup();
+            message_groups[MiscResponseMessageGroup.GROUP_ID] = new MiscResponseMessageGroup();
+            message_groups[MiscUnsolicitedResponseMessageGroup.GROUP_ID] = new MiscUnsolicitedResponseMessageGroup();
 
 #if 0
             message_groups[CallResponseMessageGroup.GROUP_ID] = new CallResponseMessageGroup();
             message_groups[CallUnsolicitedResponseMessageGroup.GROUP_ID] = new CallUnsolicitedResponseMessageGroup();
-            message_groups[MiscResponseMessageGroup.GROUP_ID] = new MiscResponseMessageGroup();
-            message_groups[MiscUnsolicitedResponseMessageGroup.GROUP_ID] = new MiscUnsolicitedResponseMessageGroup();
             message_groups[SimResponseMessageGroup.GROUP_ID] = new SimResponseMessageGroup();
             message_groups[SimUnsolicitedResponseMessageGroup.GROUP_ID] = new SimUnsolicitedResponseMessageGroup();
             message_groups[PhonebookResponseMessageGroup.GROUP_ID] = new PhonebookResponseMessageGroup();
