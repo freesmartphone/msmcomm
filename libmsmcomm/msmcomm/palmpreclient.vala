@@ -25,13 +25,18 @@ namespace Msmcomm.PalmPre
 
     public abstract class Client : BaseClient
     {
+
+        protected CommandQueue commandqueue
+        {
+            get { return ((PalmPre.RadioAccess) radio_access).commandqueue; }
+        }
+
         //
-        // public API
+        // protected
         //
 
-        protected Client(PalmPre.RadioAccess radio_access)
+        protected void handle_unsolicited_response(BaseMessage message)
         {
-            base(radio_access);
         }
     }
 }

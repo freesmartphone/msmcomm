@@ -23,22 +23,17 @@ namespace Msmcomm.PalmPre
 {
     public abstract class StateClient : Client
     {
-        private PalmPre.CommandQueue commandqueue
+        //
+        // protected
+        //
+
+        protected override void handle_unsolicited_response(BaseMessage message)
         {
-            get
-            {
-                return ((PalmPre.RadioAccess) radio_access).commandqueue;
-            }
         }
 
         //
         // public API
         //
-
-        public StateClient(PalmPre.RadioAccess radio_access)
-        {
-            base(radio_access);
-        }
 
         public async bool set_preferred_technology(StateTechnology technology)
         {

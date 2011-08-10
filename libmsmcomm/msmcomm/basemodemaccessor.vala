@@ -38,9 +38,26 @@ namespace Msmcomm
             this.radio_access = radio_access;
         }
 
-        public BaseClient? create_client<T>()
+        /**
+         * Create a new client for a service provided by the modem.
+         **/
+        public T? create_client<T>()
         {
-            return null;
+            BaseClient? client = null;
+            Type client_type = typeof(T);
+
+            // check if client type is derived from base client class
+            foreach (var child_type in client_type.children())
+            {
+                if (child_type.is_a(typeof(BaseClient)))
+                {
+                    client = (BaseClient?) GLib.Object.new(client_type);
+                    client.radio_access = radio_access;
+                    break;
+                }
+            }
+
+            return client;
         }
 
         public override string repr()

@@ -23,7 +23,7 @@ namespace Msmcomm
 {
     public abstract class BaseClient : Common.AbstractObject
     {
-        protected BaseRadioAccess radio_access;
+        public  BaseRadioAccess radio_access;
 
         //
         // private
@@ -32,11 +32,6 @@ namespace Msmcomm
         //
         // public API
         //
-
-        protected BaseClient(BaseRadioAccess radio_access)
-        {
-            this.radio_access = radio_access;
-        }
 
         public override string repr()
         {
