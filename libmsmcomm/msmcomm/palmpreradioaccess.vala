@@ -31,7 +31,8 @@ namespace Msmcomm
         private bool active;
         private bool in_link_setup;
         private GLib.ByteArray inbuffer;
-        private PalmPre.CommandQueue commandqueue;
+
+        public PalmPre.CommandQueue commandqueue { get; private set; }
 
         //
         // private

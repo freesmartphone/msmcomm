@@ -30,7 +30,7 @@ namespace Msmcomm.PalmPre
         RESET = 0x7,
     }
 
-    public enum RadioAccessTechnology
+    public enum StateTechnology
     {
         AUTOMATIC = 0x2,
         GSM = 0xd,
@@ -42,7 +42,7 @@ namespace Msmcomm.PalmPre
         public StateMode mode;
     }
 
-    public class StateChangeOperationModeRequestCommandMessage : StateBaseOperationModeMessage
+    public class StateChangeOperationModeCommandMessage : StateBaseOperationModeMessage
     {
         public static const uint8 GROUP_ID = 0x3;
         public static const uint16 MESSAGE_ID = 0x0;
@@ -72,7 +72,7 @@ namespace Msmcomm.PalmPre
 
         private StateSysSelPrefMessage _message;
 
-        public RadioAccessTechnology technology;
+        public StateTechnology technology;
 
         construct
         {
@@ -170,7 +170,7 @@ namespace Msmcomm.PalmPre
 
         protected override void evaluate_data()
         {
-            mode = (StateBaseOperationModeMessage.Mode) _message.mode;
+            mode = (StateMode) _message.mode;
             line = _message.line;
             als_allowed = _message.als_allowed;
 

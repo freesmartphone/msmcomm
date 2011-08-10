@@ -36,11 +36,13 @@ namespace Msmcomm.PalmPre
         private void setup_message_groups()
         {
             message_groups = new Gee.HashMap<uint8,BaseMessageGroup>();
+
+            message_groups[StateResponseMessageGroup.GROUP_ID] = new StateResponseMessageGroup();
+            message_groups[StateUnsolicitedResponseMessageGroup.GROUP_ID] = new StateUnsolicitedResponseMessageGroup();
+
 #if 0
             message_groups[CallResponseMessageGroup.GROUP_ID] = new CallResponseMessageGroup();
             message_groups[CallUnsolicitedResponseMessageGroup.GROUP_ID] = new CallUnsolicitedResponseMessageGroup();
-            message_groups[StateResponseMessageGroup.GROUP_ID] = new StateResponseMessageGroup();
-            message_groups[StateUnsolicitedResponseMessageGroup.GROUP_ID] = new StateUnsolicitedResponseMessageGroup();
             message_groups[MiscResponseMessageGroup.GROUP_ID] = new MiscResponseMessageGroup();
             message_groups[MiscUnsolicitedResponseMessageGroup.GROUP_ID] = new MiscUnsolicitedResponseMessageGroup();
             message_groups[SimResponseMessageGroup.GROUP_ID] = new SimResponseMessageGroup();
@@ -160,7 +162,7 @@ namespace Msmcomm.PalmPre
             else if (message.message_class == MessageClass.UNSOLICITED_RESPONSE)
             {
                 handle_specific_unsolicited_response(message);
-                // request_handle_unsolicitedResponse(message); // signal
+                unsolicited_response(message); // signal
             }
         }
 
@@ -345,7 +347,11 @@ namespace Msmcomm.PalmPre
             }
         }
 
+        //
+        // signals
+        //
 
+        public signal void unsolicited_response(BaseMessage message);
 
         //
         // public API
