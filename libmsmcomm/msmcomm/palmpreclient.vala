@@ -37,6 +37,7 @@ namespace Msmcomm.PalmPre
         protected Client(PalmPre.RadioAccess radio_access)
         {
             base(radio_access);
+            radio_access.commandqueue.unsolicited_response.connect(handle_unsolicited_response);
         }
 
         protected virtual void handle_unsolicited_response(BaseMessage message)
