@@ -58,6 +58,7 @@ libmsmcomm_la_VALASOURCES = \
 	\
 	palmprestateclient.vala \
 	palmprecallclient.vala \
+	palmpremiscclient.vala \
 	$(NULL)
 
 libmsmcomm_la_SOURCES = \
