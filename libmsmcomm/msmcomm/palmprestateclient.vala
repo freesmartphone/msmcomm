@@ -50,7 +50,6 @@ namespace Msmcomm.PalmPre
                 return false;
             });
 
-
             return result;
         }
 

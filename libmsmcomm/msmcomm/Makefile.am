@@ -51,8 +51,10 @@ libmsmcomm_la_VALASOURCES = \
 	\
 	palmpremessageutil.vala \
 	palmprestatemessage.vala \
+	palmpremiscmessage.vala \
 	\
-	palmprestatemessagegroup.vala
+	palmprestatemessagegroup.vala \
+	palmpremiscmessagegroup.vala \
 	\
 	palmprestateclient.vala \
 	palmprecallclient.vala \
