@@ -60,7 +60,6 @@ AC_CONFIG_FILES([
 	Makefile
 	msmrpc-1.0.pc
 	msmrpc/Makefile
-	vapi/Makefile
 	tests/Makefile
 ])
 
