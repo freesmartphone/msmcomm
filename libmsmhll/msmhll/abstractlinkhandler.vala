@@ -21,7 +21,7 @@
  
 namespace Msmcomm.HciLinkLayer
 {
-    public abstract class AbstractLinkHandler
+    public abstract class AbstractLinkHandler : FsoFramework.AbstractObject
     {
         protected LinkContext context;
         protected ILinkControl control;
@@ -50,6 +50,11 @@ namespace Msmcomm.HciLinkLayer
         
         public virtual void stop()
         {
+        }
+
+        public override string repr()
+        {
+            return @"<>";
         }
 
         //

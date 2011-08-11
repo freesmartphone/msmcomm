@@ -37,7 +37,7 @@ namespace Msmcomm.HciLinkLayer
         }
     }
 
-    public class LinkLayerControl : ILinkControl, ITransmissionControl, GLib.Object
+    public class LinkLayerControl : ILinkControl, ITransmissionControl, FsoFramework.AbstractObject
     {
         private LinkContext context;
         private Gee.ArrayList<AbstractLinkHandler> handlers;
@@ -69,7 +69,7 @@ namespace Msmcomm.HciLinkLayer
 
         public void start()
         {
-            debug("starting up the link layer");
+            assert( logger.debug("starting up the link layer") );
 
             context.reset();
             foreach (AbstractLinkHandler handler in handlers)
@@ -80,7 +80,7 @@ namespace Msmcomm.HciLinkLayer
 
         public void stop()
         {
-            debug("shutting down the link layer");
+            assert( logger.debug("shutting down the link layer") );
 
             foreach (AbstractLinkHandler handler in handlers)
             {
@@ -118,7 +118,7 @@ namespace Msmcomm.HciLinkLayer
                     // FIXME implement exception to get a better error handling
                     if (!frame.unpack(tmp[start:n]))
                     {
-                        warning("processIncomingData: Could not unpack valid frame! crc error?");
+                        logger.warning("processIncomingData: Could not unpack valid frame! crc error?");
 
                         // Continue with searching for next valid frame in buffer
                         start = n + 1;
@@ -147,7 +147,7 @@ namespace Msmcomm.HciLinkLayer
             frame.fr_type = FrameType.DATA;
 
             frame.payload.append(data);
-            debug(@"send a DATA frame to modem (length = $(data.length))");
+            assert( logger.debug(@"send a DATA frame to modem (length = $(data.length))") );
 
             transmission_handler.enequeFrame(frame);
         }
@@ -160,6 +160,11 @@ namespace Msmcomm.HciLinkLayer
         public void sendFrame(Frame frame)
         {
             transmission_handler.enequeFrame(frame);
+        }
+
+        public override string repr()
+        {
+            return @"<>";
         }
 
         //
@@ -182,7 +187,7 @@ namespace Msmcomm.HciLinkLayer
 
         private void handleIncomingFrame(Frame frame)
         {
-            debug(@"Got a $(frame.fr_type) frame from modem");
+            assert( logger.debug(@"Got a $(frame.fr_type) frame from modem") );
 
             foreach (AbstractLinkHandler handler in handlers)
             {

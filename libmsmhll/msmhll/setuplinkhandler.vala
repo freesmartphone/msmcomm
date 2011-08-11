@@ -75,7 +75,7 @@ namespace Msmcomm.HciLinkLayer
         {
             bool frameHandled = true;
 
-            debug(@"received $(frame.fr_type) frame");
+            logger.debug(@"received $(frame.fr_type) frame");
 
             switch (context.state)
             {
@@ -106,13 +106,13 @@ namespace Msmcomm.HciLinkLayer
                     }
                     else
                     {
-                        debug(@"recieve $(frame.fr_type) frame in $(context.state) state ... discard frame!");
+                        logger.debug(@"recieve $(frame.fr_type) frame in $(context.state) state ... discard frame!");
                     }
                     break;
                 case LinkStateType.ACTIVE:
                     if (frame.fr_type == FrameType.SYNC)
                     {
-                        debug("got SYNC FRAME in ACTIVE state -> restart link!");
+                        logger.debug("got SYNC FRAME in ACTIVE state -> restart link!");
                         // The spec tolds us to restart the whole stack if we receive
                         // a sync message in ACTIVE state
                         requestLinkReset();
@@ -126,12 +126,12 @@ namespace Msmcomm.HciLinkLayer
                     }
                     else
                     {
-                        debug(@"SetupLinkHandler: recieve $(frame.fr_type) frame in ACTIVE state ... discarding frame!");
+                        logger.debug(@"SetupLinkHandler: recieve $(frame.fr_type) frame in ACTIVE state ... discarding frame!");
                         frameHandled = false;
                     }
                     break;
                 default:
-                    warning("arrived in invalid state ... assuming restart!");
+                    logger.warning("arrived in invalid state ... assuming restart!");
                     requestLinkReset();
                     break;
             }
