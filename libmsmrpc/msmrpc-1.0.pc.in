@@ -6,7 +6,7 @@ datarootdir=@datarootdir@
 datadir=@datadir@
 
 Name: libmsmrpc
-Description: A implemenation of th onc rpc protocol based on the Android librpc library.
+Description: A implementation of the oncrpc protocol used in MSM based devices.
 Version: @VERSION@
 Libs: -L${libdir} -lmsmrpc
 Cflags: -I${includedir}/msmrpc-1.0
