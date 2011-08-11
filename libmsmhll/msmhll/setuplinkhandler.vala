@@ -44,7 +44,7 @@ namespace Msmcomm.HciLinkLayer
                 requestModemReset();
             }
 
-            createAndSendFrame(FrameType.SYNC); 
+            createAndSendFrame(FrameType.SYNC);
             return true;
         }
 
@@ -99,9 +99,6 @@ namespace Msmcomm.HciLinkLayer
                     else if (frame.fr_type == FrameType.CONFIG)
                     {
                         createAndSendFrame(FrameType.CONFIG_RESP);
-                    }
-                    else if (frame.fr_type == FrameType.CONFIG_RESP)
-                    {
                         context.changeState(LinkStateType.ACTIVE);
                     }
                     else
