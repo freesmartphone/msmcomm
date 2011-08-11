@@ -43,8 +43,8 @@ namespace Msmcomm.HciLinkLayer
                     {
                         // in debug mode we should log the frame for bug
                         // hunting ...
-                        debug("receive DATA frame with data from modem (seq=0x%x, ack=0x%x)".printf(frame.seq, frame.ack));
-                        debug("frame.payload size = %i".printf(frame.payload.data.length));
+                        assert( logger.debug("receive DATA frame with data from modem (seq=0x%x, ack=0x%x)".printf(frame.seq, frame.ack)) );
+                        assert( logger.debug("frame.payload size = %i".printf(frame.payload.data.length)) );
                         // hexdump2(true, frame.payload.data, logger);
 
                         // we have new data for our registered data handlers
@@ -54,7 +54,7 @@ namespace Msmcomm.HciLinkLayer
                     }
                     break;
                 default:
-                    warning("ActiveLinkHandler: recieve frame in wrong state ... discard frame!");
+                    logger.warning("ActiveLinkHandler: recieve frame in wrong state ... discard frame!");
                     break;
             }
 

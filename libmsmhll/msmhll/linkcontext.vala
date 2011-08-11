@@ -28,7 +28,7 @@ namespace Msmcomm.HciLinkLayer
         ACTIVE
     }
 
-    public class LinkContext
+    public class LinkContext : FsoFramework.AbstractObject
     { 
         public uint8 window_size { get; set; default = 8; }
         public uint8 max_sequence_number { get; private set; default = 0xf; }
@@ -81,9 +81,14 @@ namespace Msmcomm.HciLinkLayer
 
         public void changeState(LinkStateType new_state)
         {
-            debug(@"link layer state has changed to $(new_state)");
+            logger.debug(@"link layer state has changed to $(new_state)");
             state = new_state;
             stateChanged(new_state);
+        }
+
+        public override string repr()
+        {
+            return @"<>";
         }
 
         public signal void stateChanged(LinkStateType new_state);

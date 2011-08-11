@@ -6,6 +6,7 @@ AM_CFLAGS = \
 	-DG_LOG_DOMAIN=\"libmsmhll\" \
 	$(GLIB_CFLAGS) \
 	$(GEE_CFLAGS) \
+	$(FSO_CFLAGS) \
 	$(NULL)
 
 VALAC_ARGS = \
@@ -15,6 +16,7 @@ VALAC_ARGS = \
 	--pkg glib-2.0 \
 	--pkg gio-2.0 \
 	--pkg gee-1.0 \
+	--pkg fsobasics-2.0 \
 	--header msmhll.h \
 	--library msmhll-1.0 \
 	$(NULL)
@@ -61,6 +63,7 @@ libmsmhll_la_LIBADD = \
 	-lpthread \
 	$(GLIB_LIBS) \
 	$(GEE_LIBS) \
+	$(FSO_LIBS) \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi

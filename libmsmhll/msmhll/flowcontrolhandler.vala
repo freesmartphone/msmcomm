@@ -52,7 +52,7 @@ namespace Msmcomm.HciLinkLayer
                 // in a different way
                 if (frame.fr_type == FrameType.ACK)
                 {
-                    debug("Recieve ACK frame in ACTIVE state => frame handled!");
+                    assert( logger.debug("Recieve ACK frame in ACTIVE state => frame handled!") );
                     frameHandled = true;
                 }
                 else if (frame.fr_type == FrameType.DATA)
@@ -91,7 +91,7 @@ namespace Msmcomm.HciLinkLayer
                 // the max window size
                 if (context.ack_queue.size > context.window_size)
                 {
-                    debug("Resending all frames stored in ack queue cause ack_queue.size > window_size");
+                    assert( logger.debug("Resending all frames stored in ack queue cause ack_queue.size > window_size") );
                     var framesToRemove = new Gee.ArrayList<Frame>();
                     foreach (Frame fr in context.ack_queue)
                     {
@@ -111,22 +111,22 @@ namespace Msmcomm.HciLinkLayer
 
                 // check which frames are acknowledged with this ack and mark
                 // them for a later remove
-                debug(@"FlowControlHandler: check which frames are acknowledged with this ack");
-                debug(@"ack_queue.size = $(context.ack_queue.size)");
+                assert( logger.debug(@"FlowControlHandler: check which frames are acknowledged with this ack") );
+                assert( logger.debug(@"ack_queue.size = $(context.ack_queue.size)") );
                 var framesToRemove = new Gee.ArrayList<Frame>();
                 foreach (Frame fr in context.ack_queue)
                 {
-                    debug(@"last_ack = $(context.last_ack) fr.seq = $(fr.seq) frame.ack = $(frame.ack)");
+                    assert( logger.debug(@"last_ack = $(context.last_ack) fr.seq = $(fr.seq) frame.ack = $(frame.ack)") );
                     if (!isValidAcknowledge(context.last_ack, fr.seq, frame.ack)) 
                     {
                         break;
                     }
 
-                    debug("Found frame which is aknowledged with this ack");
+                    assert( logger.debug("Found frame which is aknowledged with this ack") );
                     framesToRemove.add(fr);
                 }
 
-                debug(@"framesToRemove.size $(framesToRemove.size)");
+                assert( logger.debug(@"framesToRemove.size $(framesToRemove.size)") );
                 context.ack_queue.remove_all(framesToRemove);
 
                 // check wether ack queue is empty. If it is empty, stop the
@@ -156,7 +156,7 @@ namespace Msmcomm.HciLinkLayer
 
         private bool handleAckTimerEvent()
         {
-            debug("ack timer event occured => resend all frames in ack queue");
+            assert( logger.debug("ack timer event occured => resend all frames in ack queue") );
 
             // ack timer event occured, so one or more frames are not acknowledged
             // in time, so we have to resend these frames

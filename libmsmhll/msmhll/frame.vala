@@ -208,10 +208,6 @@ namespace Msmcomm.HciLinkLayer
                 payload.append(tmp);
             }
 
-#if DEBUG
-            debug(@"Frame.unpack: type = $(fr_type) seq = $(seq) ack = $(ack) payload.len = $(payload.len)");
-#endif
-
             return true;
         }
     }

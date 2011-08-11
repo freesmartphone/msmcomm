@@ -21,7 +21,7 @@
  
 namespace Msmcomm.HciLinkLayer
 {
-    public class TransmissionHandler 
+    public class TransmissionHandler : FsoFramework.AbstractObject
     {
         private LinkContext context;
         private Gee.LinkedList<Frame> queue;
@@ -51,12 +51,17 @@ namespace Msmcomm.HciLinkLayer
 
         public void enequeFrame(Frame frame)
         {
-            debug(@"eneque $(frame.fr_type) frame for sending");
+            logger.debug(@"eneque $(frame.fr_type) frame for sending");
 
             frame.attempts = 0;
             queue.add(frame);
 
             timer.start();
+        }
+
+        public override string repr()
+        {
+            return @"<>";
         }
 
         //
@@ -69,7 +74,7 @@ namespace Msmcomm.HciLinkLayer
             {
                 // FIXME implement different exception for better error handling while
                 // frame packing
-                debug(@"Send a $(frame.fr_type) frame to modem");
+                logger.debug(@"Send a $(frame.fr_type) frame to modem");
 
                 if (frame.fr_type == FrameType.DATA)
                 {
