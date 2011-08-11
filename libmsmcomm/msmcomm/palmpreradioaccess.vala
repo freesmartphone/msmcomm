@@ -109,19 +109,19 @@ namespace Msmcomm
             settings.window_size = (uint8) config.intValue("hll", "window_size", 8);
             settings.max_send_attempts = config.intValue("hll", "max_send_attempts", 10);
 
-            in_link_setup = true;
+            assert( logger.debug(@"Configuring hll with window_size = $(settings.window_size)"
+                + ", max_send_attempts = $(settings.max_send_attempts)") );
 
+            in_link_setup = true;
             llctrl = new LinkLayerControl(settings);
             llctrl.requestHandleSendData.connect(handle_send_data);
             llctrl.requestHandleFrameContent.connect(handle_frame_content);
             llctrl.requestModemReset.connect(handle_modem_reset_request);
             llctrl.requestHandleLinkSetupComplete.connect(() => {
-                Idle.add(() => {
-                    setup_complete(); // signal
-                    return false;
-                });
                 in_link_setup = false;
                 active = true;
+                // tell all clients that link setup method has finished
+                Idle.add(() => { setup_complete(); return false; });
             });
 
             llctrl.start();
