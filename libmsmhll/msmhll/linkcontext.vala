@@ -93,5 +93,4 @@ namespace Msmcomm.HciLinkLayer
 
         public signal void stateChanged(LinkStateType new_state);
     }
-    
 } // namespace Msmcomm

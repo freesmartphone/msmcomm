@@ -30,7 +30,7 @@ namespace Msmcomm.HciLinkLayer
         public FlowControlHandler(LinkContext context, ILinkControl control)
         {
             base(context, control);
-            
+
             context.ack_timer.requestHandleEvent.connect(handleAckTimerEvent);
         }
 
@@ -39,12 +39,12 @@ namespace Msmcomm.HciLinkLayer
             context.ack_queue.clear();
             context.ack_timer.stop();
         }
-        
+
         public override bool handleFrame(Frame frame)
         {
             int count = 0;
             bool frameHandled = false;
-            
+
             if (context.state == LinkStateType.ACTIVE && 
                 (frame.fr_type == FrameType.ACK || frame.fr_type == FrameType.DATA))
             {
@@ -64,7 +64,7 @@ namespace Msmcomm.HciLinkLayer
                         // Drop this frame!
                         return true;
                     }
-                    
+
                     // ack the recieved frame so the modem knows we recieved the 
                     // frame, but only if the frame is valid otherwise we drop it
                     if (frame.crc_result)
@@ -73,15 +73,15 @@ namespace Msmcomm.HciLinkLayer
                         fr.fr_type = FrameType.ACK;
                         fr.ack = context.nextAcknowledgeNumber();
                         sendFrame(fr);
-                        
+
                         context.expected_seq = fr.ack;
                     }
-                    else 
+                    else
                     {
                         return true;
                     }
                 }
-                
+
                 //
                 // below we do several things, which are the same for every frame
                 // which includes a acknowledge number
@@ -97,16 +97,13 @@ namespace Msmcomm.HciLinkLayer
                     {
                         if (count == context.window_size)
                             break;
-                        
                         framesToRemove.add(fr);
                         sendFrame(fr);
                         count++;
                     }
-                    
+
                     foreach (Frame fr in framesToRemove)
-                    {
                         context.ack_queue.remove(fr);
-                    }
                 }
 
                 // check which frames are acknowledged with this ack and mark
@@ -118,9 +115,7 @@ namespace Msmcomm.HciLinkLayer
                 {
                     assert( logger.debug(@"last_ack = $(context.last_ack) fr.seq = $(fr.seq) frame.ack = $(frame.ack)") );
                     if (!isValidAcknowledge(context.last_ack, fr.seq, frame.ack)) 
-                    {
                         break;
-                    }
 
                     assert( logger.debug("Found frame which is aknowledged with this ack") );
                     framesToRemove.add(fr);
