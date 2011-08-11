@@ -58,6 +58,9 @@ libmsmcomm_la_VALASOURCES = \
 	palmprestateclient.vala \
 	palmprecallclient.vala \
 	palmpremiscclient.vala \
+	\
+	hpveerradioaccess.vala \
+	hpveermessage.vala \
 	$(NULL)
 
 libmsmcomm_la_SOURCES = \
