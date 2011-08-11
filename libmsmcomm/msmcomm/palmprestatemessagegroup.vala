@@ -43,9 +43,9 @@ namespace Msmcomm.PalmPre
             base(StateUnsolicitedResponseMessageGroup.GROUP_ID);
         }
 
-        protected override void set_message_type(uint16 id, Message message)
+        protected override void set_message_type(Message message)
         {
-            switch (id)
+            switch (message.message_id)
             {
                 case 0x0:
                     message.message_type = MessageType.UNSOLICITED_RESPONSE_STATE_OPRT_MODE;

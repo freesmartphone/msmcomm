@@ -162,10 +162,10 @@ namespace Msmcomm.PalmPre
             set_payload(_message.data);
         }
 
-        protected override void check_size(int size, int payload_size)
+        protected override bool check_size(int size, int payload_size)
         {
-            /* Quirk for webOS modem firmware version CU 0.5.66(5027) */
-            assert(size == payload_size || size == (payload_size + 1));
+            // quirk for webOS modem firmware version CU 0.5.66(5027)
+            return (size == payload_size || size == (payload_size + 1));
         }
 
         protected override void evaluate_data()

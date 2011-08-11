@@ -37,27 +37,63 @@ namespace Msmcomm.PalmPre
 
         protected unowned uint8[] _payload;
 
+        public static bool validate_size(uint8[] data)
+        {
+            return (data.length >= MESSAGE_HEADER_SIZE);
+        }
+
+        public static uint8 unpack_group_id(uint8[] data)
+        {
+            return data[0];
+        }
+
+        public static uint16 unpack_message_id(uint8[] data)
+        {
+            return (data[1] | (data[2] << 8));
+        }
+
         public override uint8[] pack()
         {
+            uint8[] buffer;
+
             prepare_data();
-            return _payload;
+
+            buffer = new uint8[MESSAGE_HEADER_SIZE + _payload.length];
+
+            // append group and message id to the buffer
+            buffer[0] = group_id;
+            buffer[1] = (uint8) (message_id & 0x00ff);
+            buffer[2] = (uint8) ((message_id & 0xff00) >> 8);
+
+            // append message payload to the buffer
+            Memory.copy(((uint8*) buffer) + 3, _payload, _payload.length);
+
+            return buffer;
         }
 
         protected virtual void prepare_data()
         {
         }
 
-        protected virtual void check_size(int size, int payload_size)
+        protected virtual bool check_size(int size, int payload_size)
         {
             assert( logger.debug(@"size = $size, payload_size = $payload_size") );
-            assert(size == payload_size);
+            return (size == payload_size);
         }
 
-        public override void unpack(uint8[] payload)
+        public override bool unpack(uint8[] data)
         {
-            check_size(payload.length, _payload.length);
-            Memory.copy(_payload, payload, _payload.length);
+            if (validate_size(data) || !check_size(data.length - MESSAGE_HEADER_SIZE, _payload.length))
+                return false;
+
+            group_id = unpack_group_id(data);
+            message_id = unpack_message_id(data);
+
+            Memory.copy(_payload, data[MESSAGE_HEADER_SIZE:data.length], _payload.length);
+
             evaluate_data();
+
+            return true;
         }
 
         protected virtual void evaluate_data()

@@ -33,7 +33,7 @@ namespace Msmcomm.PalmPre
         // private
         //
 
-        private void setup_message_groups()
+        private void create_message_groups()
         {
             message_groups = new Gee.HashMap<uint8,BaseMessageGroup>();
 
@@ -64,71 +64,33 @@ namespace Msmcomm.PalmPre
 #endif
         }
 
-        private uint8 unpack_group_id(uint8[] data)
-        {
-            assert(data.length >= MESSAGE_HEADER_SIZE);
-            return data[0];
-        }
-
-        private uint16 unpack_message_id(uint8[] data)
-        {
-            assert(data.length >= MESSAGE_HEADER_SIZE);
-            return (data[1] | (data[2] << 8));
-        }
-
-        private Message? unpack_message(uint8[] data)
+        private Message? unpack_message_by_group(uint8[] data)
         {
             Message? message = null;
+            uint8 groupId = 0x0;
 
-            /* Minimum required size to have a valid message are four bytes */
-            if (data.length < MESSAGE_HEADER_SIZE)
-            {
-                logger.error(@"Got invalid message from remote side!");
+            if (!Message.validate_size(data))
                 return null;
-            }
 
-            /* Extract group and message id from the first three bytes */
-            uint8 groupId = unpack_group_id(data);
-            uint16 messageId = unpack_message_id(data);
-
-            /* Check for message group and unpack message for byte stream */
+            // check for message group and unpack message for byte stream
+            groupId = Message.unpack_group_id(data);
             if (message_groups.has_key(groupId))
             {
                 var group = message_groups[groupId];
-                message = group.unpack_message(messageId, data[3:data.length]);
+                message = group.unpack_message(data);
             }
 
             return message;
         }
 
-        private uint8[] pack_message(Message message)
-        {
-            uint8[] payload;
-            uint8[] buffer;
-
-            /* pack message payload and build buffer to contain header and payload */
-            payload = message.pack();
-            buffer = new uint8[MESSAGE_HEADER_SIZE + payload.length];
-
-            /* set group and message id to buffer */
-            buffer[0] = message.group_id;
-            buffer[1] = (uint8) (message.message_id & 0x00ff);
-            buffer[2] = (uint8) ((message.message_id & 0xff00) >> 8);
-
-            /* copy message payload to buffer */
-            Memory.copy(((uint8*) buffer) + 3, payload, payload.length);
-
-            return buffer;
-        }
-
         private void handle_incoming_data(uint8[] data)
         {
-            Message? message = unpack_message(data);
+            Message? message = unpack_message_by_group(data);
 
             if (message == null)
             {
                 logger.error("Could not unpack incomming message: groupId = %02x, messageId = %02x"
-                    .printf(unpack_group_id(data), unpack_message_id(data)));
+                    .printf(Message.unpack_group_id(data), Message.unpack_message_id(data)));
                 return;
             }
 
@@ -217,9 +179,7 @@ namespace Msmcomm.PalmPre
 
         protected void write_command(CommandHandler handler)
         {
-            uint8[] data;
-            data = pack_message(handler.command);
-            radio_access.send(data);
+            radio_access.send(handler.command);
         }
 
         protected bool handle_timeout(CommandHandler command)
@@ -363,7 +323,7 @@ namespace Msmcomm.PalmPre
             this.queue = new Gee.LinkedList<CommandHandler>();
             this.pending = new Gee.ArrayList<CommandHandler>();
 
-            setup_message_groups();
+            create_message_groups();
 
             this.radio_access.incoming_data.connect(handle_incoming_data);
         }

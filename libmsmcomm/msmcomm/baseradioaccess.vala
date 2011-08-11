@@ -19,6 +19,8 @@
  *
  **/
 
+using Msmcomm.Common;
+
 namespace Msmcomm
 {
     public abstract class BaseRadioAccess : Common.AbstractObject
@@ -55,7 +57,7 @@ namespace Msmcomm
         {
         }
 
-        public virtual async void send(uint8[] data)
+        public virtual async void send(BaseMessage message)
         {
         }
 

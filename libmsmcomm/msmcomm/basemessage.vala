@@ -24,7 +24,7 @@ namespace Msmcomm.Common
     public abstract class BaseMessage : FsoFramework.AbstractObject
     {
         public abstract uint8[] pack();
-        public abstract void unpack(uint8[] payload);
+        public abstract bool unpack(uint8[] payload);
 
         public override string repr()
         {

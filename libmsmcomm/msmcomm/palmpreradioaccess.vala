@@ -20,6 +20,7 @@
  **/
 
 using Msmcomm.HciLinkLayer;
+using Msmcomm.Common;
 
 namespace Msmcomm
 {
@@ -140,10 +141,15 @@ namespace Msmcomm
             return active;
         }
 
-        public override async void send(uint8[] data)
+        public override async void send(BaseMessage message)
         {
+            uint8[] data;
+
             if (!in_link_setup && active)
+            {
+                data = message.pack();
                 llctrl.sendDataFrame(data);
+            }
         }
 
         public override async bool suspend()

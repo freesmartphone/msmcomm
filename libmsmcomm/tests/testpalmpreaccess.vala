@@ -23,18 +23,14 @@ using Msmcomm;
 
 PalmPre.RadioAccess radio_access;
 
-async void test_palmpre_accessor_initialize_test_alive()
+async void test_palmpre_accessor_initialize_test_procedure()
 {
     PalmPre.MiscClient misc_client = new PalmPre.MiscClient(radio_access);
-
-    yield misc_client.send_test_alive();
-}
-
-async void test_palmpre_accessor_initialize_modem_reset()
-{
     PalmPre.StateClient state_client = new PalmPre.StateClient(radio_access);
 
-    yield state_client.set_operation_mode(PalmPre.StateMode.RESET);
+    yield misc_client.send_test_alive();
+    // yield state_client.set_operation_mode(PalmPre.StateMode.RESET);
+    // yield misc_client.send_test_alive();
 }
 
 async void test_palmpre_accessor_initialize_async()
@@ -43,8 +39,7 @@ async void test_palmpre_accessor_initialize_async()
     yield radio_access.open();
 
     radio_access.setup_complete.connect(() => {
-        test_palmpre_accessor_initialize_test_alive();
-        test_palmpre_accessor_initialize_modem_reset();
+        test_palmpre_accessor_initialize_test_procedure();
     });
 }
 
