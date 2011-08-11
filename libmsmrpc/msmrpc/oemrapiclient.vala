@@ -150,6 +150,8 @@ namespace Msmrpc
             buffer.retrive_remaining_data(out data);
             handle_incoming_data(data);
 
+            assert( logger.debug(@"Sending reply for remote call:") );
+            resultmessage.dump(logger);
             resultmessage.to_buffer(out_buffer);
             yield base.reply(reqhdr.xid, out_buffer.data);
         }
@@ -170,7 +172,7 @@ namespace Msmrpc
          * Additionally a callback handler can registered to handle callback responses
          * too.
          **/
-        public async bool send(uint8[] input_data, CallbackHandlerFunc? callback = null, uint32 event = 0, uint32 handle = 0)
+        public async bool send(uint8[] input_data, uint32 event = 0, uint32 handle = 0)
         {
             OemRapiCallMessage callmessage = OemRapiCallMessage();
             OutputXdrBuffer out_buffer = new OutputXdrBuffer();
@@ -182,10 +184,6 @@ namespace Msmrpc
             callmessage.event = event;
             callmessage.input_data = input_data;
             callmessage.input_length = input_data.length;
-
-            // If we have a callback we need to register it to the registry and set its id
-            if (callback != null) 
-                callmessage.cb_id = cbregistry.register(callback);
 
             assert( logger.debug(@"Sending call message to remote side:") );
             callmessage.dump(logger);

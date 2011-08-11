@@ -183,6 +183,7 @@ namespace Msmrpc
         CLIENT_NULL_CB_ID = uint32.MAX,
     }
 
+    // FIXME should not part of libmsmrpc as it's hci specific
     public const uint32 OEM_RAPI_EVENT_HCI_EVENT = 0x2;
     public const uint32 OEM_RAPI_EVENT_HCI_CALLBACK = 0x3;
 }

@@ -21,15 +21,10 @@
 
 Msmrpc.OemRapiClient client;
 
-bool handle_hci_misc_version_event(Msmrpc.InputXdrBuffer buffer)
-{
-    return true;
-}
-
 async void test_rpc_client_initialize_async()
 {
-    yield client.send(new uint8[] { }, handle_hci_misc_version_event,
-        Msmrpc.OEM_RAPI_EVENT_HCI_EVENT, (uint32) 0x2de98);
+    // NOTE this is needed to tell the remote side we want to retrieve hci events
+    yield client.send(new uint8[] { }, Msmrpc.OEM_RAPI_EVENT_HCI_EVENT, (uint32) 0x2de98);
 
     uint8[] hci_misc_version_cmd = new uint8[] {
         0x00, 0x00, 0x00, 0x00, // sequence number
@@ -40,8 +35,7 @@ async void test_rpc_client_initialize_async()
         0x00, 0x00, 0x00, 0x00  // client id or unknown
     };
 
-    yield client.send(hci_misc_version_cmd, null,
-        Msmrpc.OEM_RAPI_EVENT_HCI_CALLBACK);
+    yield client.send(hci_misc_version_cmd, Msmrpc.OEM_RAPI_EVENT_HCI_CALLBACK);
 }
 
 void test_rpc_client_initialize()
