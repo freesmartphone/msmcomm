@@ -76,9 +76,9 @@ namespace Msmcomm.PalmPre
             return (data[1] | (data[2] << 8));
         }
 
-        private BaseMessage? unpack_message(uint8[] data)
+        private Message? unpack_message(uint8[] data)
         {
-            BaseMessage? message = null;
+            Message? message = null;
 
             /* Minimum required size to have a valid message are four bytes */
             if (data.length < MESSAGE_HEADER_SIZE)
@@ -101,7 +101,7 @@ namespace Msmcomm.PalmPre
             return message;
         }
 
-        private uint8[] pack_message(BaseMessage message)
+        private uint8[] pack_message(Message message)
         {
             uint8[] payload;
             uint8[] buffer;
@@ -123,7 +123,7 @@ namespace Msmcomm.PalmPre
 
         private void handle_incoming_data(uint8[] data)
         {
-            BaseMessage? message = unpack_message(data);
+            Message? message = unpack_message(data);
 
             if (message == null)
             {
@@ -134,7 +134,7 @@ namespace Msmcomm.PalmPre
 
             logger.debug(@"$(message.message_type)");
 
-            if (message.message_class == MessageClass.SOLICITED_RESPONSE)
+            if (message.message_class == MessageFlavour.SOLICITED_RESPONSE)
             {
                 if (pending.size == 0)
                 {
@@ -159,7 +159,7 @@ namespace Msmcomm.PalmPre
                     handle_solicited_response(handler, message);
                 }
             }
-            else if (message.message_class == MessageClass.UNSOLICITED_RESPONSE)
+            else if (message.message_class == MessageFlavour.UNSOLICITED_RESPONSE)
             {
                 handle_specific_unsolicited_response(message);
                 unsolicited_response(message); // signal
@@ -270,7 +270,7 @@ namespace Msmcomm.PalmPre
 #endif
         }
 
-        private bool check_response_for_command_handler(BaseMessage response, CommandHandler bundle)
+        private bool check_response_for_command_handler(Message response, CommandHandler bundle)
         {
             // Check wether command and response have the same reference id
             return response.ref_id == bundle.command.ref_id;
@@ -284,7 +284,7 @@ namespace Msmcomm.PalmPre
             return ++current_ref_id;
         }
 
-        protected void handle_solicited_response( CommandHandler bundle, BaseMessage response )
+        protected void handle_solicited_response( CommandHandler bundle, Message response )
         {
             if (bundle.callback != null)
             {
@@ -308,7 +308,7 @@ namespace Msmcomm.PalmPre
          * Some unsolicited response needed to be handled here first before passing them
          * to the connect client handlers
          **/
-        private void handle_specific_unsolicited_response(BaseMessage message)
+        private void handle_specific_unsolicited_response(Message message)
         {
             if (message.message_type == MessageType.UNSOLICITED_RESPONSE_MISC_RADIO_RESET_IND)
             {
@@ -351,7 +351,7 @@ namespace Msmcomm.PalmPre
         // signals
         //
 
-        public signal void unsolicited_response(BaseMessage message);
+        public signal void unsolicited_response(Message message);
 
         //
         // public API
@@ -368,7 +368,7 @@ namespace Msmcomm.PalmPre
             this.radio_access.incoming_data.connect(handle_incoming_data);
         }
 
-        public async bool enqueue_async( owned BaseMessage command,
+        public async bool enqueue_async( owned Message command,
                                          bool report_all_urcs,
                                          owned ResponseHandlerFunc response_handler_func,
                                          int retries = 0, int timeout = 0 )
@@ -398,7 +398,7 @@ namespace Msmcomm.PalmPre
             return true;
         }
 
-        public async unowned BaseMessage? enqueue_async_simple(owned BaseMessage command, int retries = 0, int timeout = 0)
+        public async unowned Message? enqueue_async_simple(owned Message command, int retries = 0, int timeout = 0)
         {
             if (!radio_access.is_active())
                 return null;
@@ -420,7 +420,7 @@ namespace Msmcomm.PalmPre
             return handler.response;
         }
 
-        public bool enqueue_sync(owned BaseMessage command)
+        public bool enqueue_sync(owned Message command)
         {
             /* Check wether modem is already ready for processing commands */
             if (!radio_access.is_active())

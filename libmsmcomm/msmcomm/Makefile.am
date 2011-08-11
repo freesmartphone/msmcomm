@@ -36,6 +36,7 @@ libmsmcomm_la_VALASOURCES = \
 	\
 	baseclient.vala \
 	baseradioaccess.vala \
+	basemessage.vala \
 	\
 	palmprebasemessage.vala \
 	palmprebasemessagegroup.vala \

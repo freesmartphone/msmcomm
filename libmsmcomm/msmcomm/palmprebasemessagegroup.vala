@@ -28,11 +28,11 @@ namespace Msmcomm.PalmPre
             base(id);
         }
 
-        public override BaseMessage? unpack_message(uint16 id, uint8[] data)
+        public override Message? unpack_message(uint16 id, uint8[] data)
         {
-            BaseMessage? message = null;
+            Message? message = null;
 
-            message = Object.new(typeof(T)) as BaseMessage;
+            message = Object.new(typeof(T)) as Message;
             assert(message != null);
 
             message.unpack(data);
@@ -42,7 +42,7 @@ namespace Msmcomm.PalmPre
             return message;
         }
 
-        protected abstract void set_message_type(uint16 id, BaseMessage messsage);
+        protected abstract void set_message_type(uint16 id, Message messsage);
     }
 
     public abstract class BaseMessageGroup
@@ -57,9 +57,9 @@ namespace Msmcomm.PalmPre
             this.id = id;
         }
 
-        public virtual BaseMessage? unpack_message(uint16 id, uint8[] data)
+        public virtual Message? unpack_message(uint16 id, uint8[] data)
         {
-            BaseMessage? message = null;
+            Message? message = null;
 
             /* If message class exists create it and unpack it from supplied data */
             if (message_types.has_key(id))
@@ -71,7 +71,7 @@ namespace Msmcomm.PalmPre
                     return null;
                 }
 
-                message = Object.new(typ) as BaseMessage;
+                message = Object.new(typ) as Message;
                 assert(message != null);
 
                 message.unpack(data);

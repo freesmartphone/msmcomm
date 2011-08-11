@@ -43,7 +43,7 @@ namespace Msmcomm.PalmPre
             base(StateUnsolicitedResponseMessageGroup.GROUP_ID);
         }
 
-        protected override void set_message_type(uint16 id, BaseMessage message)
+        protected override void set_message_type(uint16 id, Message message)
         {
             switch (id)
             {

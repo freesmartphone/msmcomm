@@ -21,15 +21,15 @@
 namespace Msmcomm.PalmPre
 {
     public delegate bool CommandHandlerTimeoutFunc(CommandHandler handler);
-    public delegate bool ResponseHandlerFunc(BaseMessage response);
+    public delegate bool ResponseHandlerFunc(Message response);
 
     /**
      * @class CommandHandler
      **/
     public class CommandHandler
     {
-        public unowned BaseMessage command;
-        public unowned BaseMessage response;
+        public unowned Message command;
+        public unowned Message response;
 
         public int timeout;
         public int retry;
@@ -44,7 +44,7 @@ namespace Msmcomm.PalmPre
         public ResponseHandlerFunc? response_handler_func;
         private uint timeout_watch;
 
-        public CommandHandler( BaseMessage command, int retries = 0, int timeout = 0,
+        public CommandHandler( Message command, int retries = 0, int timeout = 0,
                                CommandHandlerTimeoutFunc? timeout_func = null,
                                ResponseHandlerFunc? response_handler_func = null )
         {
@@ -74,7 +74,7 @@ namespace Msmcomm.PalmPre
          * true. As long as he wants to continue processing response he have to return
          * false.
          **/
-        public void handle_response_message(BaseMessage response)
+        public void handle_response_message(Message response)
         {
             if (response_handler_func != null && response_handler_func( response ))
                 this.callback();

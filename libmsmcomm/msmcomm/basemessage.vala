@@ -19,30 +19,16 @@
  *
  **/
 
-namespace Msmcomm.PalmPre
+namespace Msmcomm.Common
 {
-    internal static const int MESSAGE_HEADER_SIZE = 3;
-
-    public abstract class Client : BaseClient
+    public abstract class BaseMessage : FsoFramework.AbstractObject
     {
-        protected CommandQueue commandqueue
-        {
-            get { return ((PalmPre.RadioAccess) radio_access).commandqueue; }
-        }
+        public abstract uint8[] pack();
+        public abstract void unpack(uint8[] payload);
 
-        //
-        // protected
-        //
-
-        protected Client(PalmPre.RadioAccess radio_access)
+        public override string repr()
         {
-            base(radio_access);
-            radio_access.commandqueue.unsolicited_response.connect(handle_unsolicited_response);
-        }
-
-        protected virtual void handle_unsolicited_response(Message message)
-        {
+            return @"<>";
         }
     }
 }
-

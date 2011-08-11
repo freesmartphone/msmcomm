@@ -27,7 +27,7 @@ namespace Msmcomm.PalmPre
         // protected
         //
 
-        protected override void handle_unsolicited_response(BaseMessage message)
+        protected override void handle_unsolicited_response(Message message)
         {
         }
 

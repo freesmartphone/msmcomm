@@ -37,7 +37,7 @@ namespace Msmcomm.PalmPre
         UMTS = 0xe,
     }
 
-    public abstract class StateBaseOperationModeMessage : BaseMessage
+    public abstract class StateBaseOperationModeMessage : Message
     {
         public StateMode mode;
     }
@@ -52,7 +52,7 @@ namespace Msmcomm.PalmPre
         construct
         {
             set_description(GROUP_ID, MESSAGE_ID, 
-                MessageType.COMMAND_STATE_CHANGE_OPERATION_MODE_REQUEST, MessageClass.COMMAND);
+                MessageType.COMMAND_STATE_CHANGE_OPERATION_MODE_REQUEST, MessageFlavour.COMMAND);
 
             _message = StateChangeOperationModeMessage();
             set_payload(_message.data);
@@ -65,7 +65,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class StateSysSelPrefCommandMessage : BaseMessage
+    public class StateSysSelPrefCommandMessage : Message
     {
         public static const uint8 GROUP_ID = 0x3;
         public static const uint16 MESSAGE_ID = 0x1;
@@ -76,7 +76,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_STATE_SYS_SEL_PREF, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_STATE_SYS_SEL_PREF, MessageFlavour.COMMAND);
 
             _message = StateSysSelPrefMessage();
             set_payload(_message.data);
@@ -96,7 +96,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class StateCallbackResponseMessage : BaseMessage
+    public class StateCallbackResponseMessage : Message
     {
         public static const uint8 GROUP_ID = 0x4;
         public static const uint16 MESSAGE_ID = 0x1;
@@ -108,7 +108,7 @@ namespace Msmcomm.PalmPre
 
         construct 
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_STATE_CALLBACK, MessageClass.SOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_STATE_CALLBACK, MessageFlavour.SOLICITED_RESPONSE);
 
             _message = StateCallbackResponse();
             set_payload(_message.data);
@@ -158,7 +158,7 @@ namespace Msmcomm.PalmPre
         construct
         {
             _message = StateEvent();
-            message_class = MessageClass.UNSOLICITED_RESPONSE;
+            message_class = MessageFlavour.UNSOLICITED_RESPONSE;
             set_payload(_message.data);
         }
 

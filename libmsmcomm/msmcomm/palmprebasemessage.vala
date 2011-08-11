@@ -25,7 +25,7 @@ namespace Msmcomm.PalmPre
     public static const uint32 REFERENCE_ID_INITIAL = 1;
     public static const uint32 REFERENCE_ID_INVALID = 0;
 
-    public abstract class BaseMessage : GLib.Object
+    public abstract class Message : Common.BaseMessage
     {
         public uint8 group_id { get; set;  }
         public uint16 message_id { get; set; }
@@ -33,11 +33,11 @@ namespace Msmcomm.PalmPre
         public uint16 command_id { get; set; default = COMMAND_ID_INVALID; }
         public MessageType message_type { get; set; }
         public MessageResult result { get; protected set; default = MessageResult.OK; }
-        public MessageClass message_class { get; protected set; default = MessageClass.UNKNOWN; }
+        public MessageFlavour message_class { get; protected set; default = MessageFlavour.UNKNOWN; }
 
         protected unowned uint8[] _payload;
 
-        public uint8[] pack()
+        public override uint8[] pack()
         {
             prepare_data();
             return _payload;
@@ -53,7 +53,7 @@ namespace Msmcomm.PalmPre
             assert(size == payload_size);
         }
 
-        public void unpack(uint8[] payload)
+        public override void unpack(uint8[] payload)
         {
             check_size(payload.length, _payload.length);
             Memory.copy(_payload, payload, _payload.length);
@@ -69,7 +69,7 @@ namespace Msmcomm.PalmPre
             _payload = payload;
         }
 
-        protected void set_description(uint8 group_id, uint16 message_id, MessageType message_type, MessageClass message_class)
+        protected void set_description(uint8 group_id, uint16 message_id, MessageType message_type, MessageFlavour message_class)
         {
             this.group_id = group_id;
             this.message_id = message_id;

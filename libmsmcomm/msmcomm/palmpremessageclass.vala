@@ -21,7 +21,7 @@
 
 namespace Msmcomm.PalmPre
 {
-    public enum MessageClass
+    public enum MessageFlavour
     {
         UNKNOWN,
         COMMAND,

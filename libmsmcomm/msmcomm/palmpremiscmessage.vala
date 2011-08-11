@@ -24,7 +24,7 @@ using Msmcomm.Structures.Palmpre;
 
 namespace Msmcomm.PalmPre
 {
-    public class MiscTestAliveCommandMessage : BaseMessage
+    public class MiscTestAliveCommandMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1b;
         public static const uint16 MESSAGE_ID = 0x1;
@@ -33,7 +33,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_TEST_ALIVE, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_TEST_ALIVE, MessageFlavour.COMMAND);
 
             _message = MiscTestAliveMessage();
             set_payload(_message.data);
@@ -46,7 +46,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscTestAliveResponseMessage : BaseMessage
+    public class MiscTestAliveResponseMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1c;
         public static const uint16 MESSAGE_ID = 0x2;
@@ -55,7 +55,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_TEST_ALIVE, MessageClass.SOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_TEST_ALIVE, MessageFlavour.SOLICITED_RESPONSE);
 
             _message = MiscTestAliveMessage();
             set_payload(_message.data);
@@ -68,7 +68,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscGetRadioFirmwareVersionCommandMessage : BaseMessage
+    public class MiscGetRadioFirmwareVersionCommandMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1b;
         public static const uint16 MESSAGE_ID = 0x9;
@@ -77,7 +77,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_RADIO_FIRMWARE_VERSION, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_RADIO_FIRMWARE_VERSION, MessageFlavour.COMMAND);
 
             _message = MiscGetRadioFirmwareVersionMessage();
             set_payload(_message.data);
@@ -89,7 +89,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscGetRadioFirmwareVersionResponseMessage : BaseMessage
+    public class MiscGetRadioFirmwareVersionResponseMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1c;
         public static const uint16 MESSAGE_ID = 0xa;
@@ -103,7 +103,7 @@ namespace Msmcomm.PalmPre
 
         construct 
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_RADIO_FIRMWARE_VERSION, MessageClass.SOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_RADIO_FIRMWARE_VERSION, MessageFlavour.SOLICITED_RESPONSE);
 
             _message = MiscGetRadioFirmwareVersionResponse();
             set_payload(_message.data);
@@ -121,7 +121,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public abstract class MiscBaseChargingMessage : BaseMessage
+    public abstract class MiscBaseChargingMessage : Message
     {
         public enum Mode
         {
@@ -140,7 +140,7 @@ namespace Msmcomm.PalmPre
         public Voltage voltage;
     }
 
-    public class MiscGetChargerStatusCommandMessage : BaseMessage
+    public class MiscGetChargerStatusCommandMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1b;
         public static const uint16 MESSAGE_ID = 0x15;
@@ -149,7 +149,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_CHARGER_STATUS, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_CHARGER_STATUS, MessageFlavour.COMMAND);
 
             _message = MiscGetChargerStatusMessage();
             set_payload(_message.data);
@@ -170,7 +170,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_CHARGER_STATUS, MessageClass.SOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_CHARGER_STATUS, MessageFlavour.SOLICITED_RESPONSE);
 
             _message = MiscGetChargerStatusMessage();
             set_payload(_message.data);
@@ -194,7 +194,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_SET_CHARGE, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_SET_CHARGE, MessageFlavour.COMMAND);
 
             _message = MiscSetChargeMessage();
             set_payload(_message.data);
@@ -217,7 +217,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_SET_CHARGE, MessageClass.SOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_SET_CHARGE, MessageFlavour.SOLICITED_RESPONSE);
 
             _message = MiscSetChargeMessage();
             set_payload(_message.data);
@@ -231,7 +231,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscSetDateCommandMessage : BaseMessage
+    public class MiscSetDateCommandMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1b;
         public static const uint16 MESSAGE_ID = 0xe;
@@ -255,7 +255,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_SET_DATE, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_SET_DATE, MessageFlavour.COMMAND);
 
             _message = MiscSetDateMessage();
             set_payload(_message.data);
@@ -276,7 +276,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscSetDateResponseMessage : BaseMessage
+    public class MiscSetDateResponseMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1c;
         public static const uint16 MESSAGE_ID = 0xf;
@@ -285,7 +285,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_SET_DATE, MessageClass.SOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_SET_DATE, MessageFlavour.SOLICITED_RESPONSE);
 
             _message = MiscSetDateResponse();
             set_payload(_message.data);
@@ -298,7 +298,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscGetImeiCommandMessage : BaseMessage
+    public class MiscGetImeiCommandMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1b;
         public static const uint16 MESSAGE_ID = 0x8;
@@ -307,7 +307,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_IMEI, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_IMEI, MessageFlavour.COMMAND);
 
             _message = MiscGetImeiMessage();
             set_payload(_message.data);
@@ -319,7 +319,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscGetImeiResponseMessage : BaseMessage
+    public class MiscGetImeiResponseMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1c;
         public static const uint16 MESSAGE_ID = 0x9;
@@ -331,7 +331,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_IMEI, MessageClass.SOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_IMEI, MessageFlavour.SOLICITED_RESPONSE);
 
             _message = MiscGetImeiResponse();
             set_payload(_message.data);
@@ -349,7 +349,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscGetHomeNetworkNameCommandMessage : BaseMessage
+    public class MiscGetHomeNetworkNameCommandMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1b;
         public static const uint16 MESSAGE_ID = 0x16;
@@ -358,7 +358,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_HOME_NETWORK_NAME, MessageClass.COMMAND);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.COMMAND_MISC_GET_HOME_NETWORK_NAME, MessageFlavour.COMMAND);
 
             _message = MiscGetHomeNetworkNameMessage();
             set_payload(_message.data);
@@ -370,7 +370,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscGetHomeNetworkNameResponseMessage : BaseMessage
+    public class MiscGetHomeNetworkNameResponseMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1c;
         public static const uint16 MESSAGE_ID = 0x17;
@@ -383,7 +383,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_HOME_NETWORK_NAME, MessageClass.SOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_HOME_NETWORK_NAME, MessageFlavour.SOLICITED_RESPONSE);
 
             _message = MiscGetHomeNetworkNameResponse();
             set_payload(_message.data);
@@ -413,7 +413,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscGetCellIdResponseMessage : BaseMessage
+    public class MiscGetCellIdResponseMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1c;
         public static const uint16 MESSAGE_ID = 0x13;
@@ -427,7 +427,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_CELL_ID, MessageClass.UNSOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.RESPONSE_MISC_GET_CELL_ID, MessageFlavour.UNSOLICITED_RESPONSE);
 
             _message = MiscGetCellIdResponse();
             set_payload(_message.data);
@@ -443,7 +443,7 @@ namespace Msmcomm.PalmPre
         }
     }
 
-    public class MiscRadioResetIndUnsolicitedRespMessage : BaseMessage
+    public class MiscRadioResetIndUnsolicitedRespMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1d;
         public static const uint16 MESSAGE_ID = 0x0;
@@ -452,14 +452,14 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_MISC_RADIO_RESET_IND, MessageClass.UNSOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_MISC_RADIO_RESET_IND, MessageFlavour.UNSOLICITED_RESPONSE);
 
             _message = MiscRadioResetIndEvent();
             set_payload(_message.data);
         }
     }
 
-    public class MiscChargerStatusUnsolicitedRespMessage : BaseMessage
+    public class MiscChargerStatusUnsolicitedRespMessage : Message
     {
         public static const uint8 GROUP_ID = 0x1d;
         public static const uint16 MESSAGE_ID = 0x1;
@@ -471,7 +471,7 @@ namespace Msmcomm.PalmPre
 
         construct
         {
-            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS, MessageClass.UNSOLICITED_RESPONSE);
+            set_description(GROUP_ID, MESSAGE_ID, MessageType.UNSOLICITED_RESPONSE_MISC_CHARGER_STATUS, MessageFlavour.UNSOLICITED_RESPONSE);
 
             _message = MiscChargerStatusEvent();
             set_payload(_message.data);
