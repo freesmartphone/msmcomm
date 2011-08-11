@@ -110,7 +110,7 @@ namespace Msmcomm
             settings.max_send_attempts = config.intValue("hll", "max_send_attempts", 10);
 
             assert( logger.debug(@"Configuring hll with window_size = $(settings.window_size)"
-                + ", max_send_attempts = $(settings.max_send_attempts)") );
+                + @", max_send_attempts = $(settings.max_send_attempts)") );
 
             in_link_setup = true;
             llctrl = new LinkLayerControl(settings);

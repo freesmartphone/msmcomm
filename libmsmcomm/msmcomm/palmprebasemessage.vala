@@ -49,7 +49,7 @@ namespace Msmcomm.PalmPre
 
         protected virtual void check_size(int size, int payload_size)
         {
-            debug(@"size = $size, payload_size = $payload_size");
+            assert( logger.debug(@"size = $size, payload_size = $payload_size") );
             assert(size == payload_size);
         }
 
