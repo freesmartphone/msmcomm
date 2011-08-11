@@ -37,6 +37,17 @@ async void test_palmpre_accessor_initialize_modem_reset()
     yield state_client.set_operation_mode(PalmPre.StateMode.RESET);
 }
 
+async void test_palmpre_accessor_initialize_async()
+{
+    debug(@"Opening radio access ...");
+    yield radio_access.open();
+
+    radio_access.setup_complete.connect(() => {
+        test_palmpre_accessor_initialize_test_alive();
+        test_palmpre_accessor_initialize_modem_reset();
+    });
+}
+
 void test_palmpre_accessor_initialize()
 {
     var mainloop = new GLib.MainLoop(null, false);
@@ -45,12 +56,13 @@ void test_palmpre_accessor_initialize()
     radio_access = new PalmPre.RadioAccess(transport);
 
     Idle.add(() => {
-        test_palmpre_accessor_initialize_test_alive();
-        test_palmpre_accessor_initialize_modem_reset();
+        test_palmpre_accessor_initialize_async();
         return false;
     });
 
     mainloop.run();
+
+    radio_access.close();
 }
 
 public static int main(string[] args)
