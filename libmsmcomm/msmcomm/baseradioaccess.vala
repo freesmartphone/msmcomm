@@ -46,7 +46,7 @@ namespace Msmcomm
             this.lock_count = 0;
         }
 
-        public virtual bool open()
+        public virtual async bool open()
         {
             return true;
         }
@@ -55,16 +55,16 @@ namespace Msmcomm
         {
         }
 
-        public virtual void send(uint8[] data)
+        public virtual async void send(uint8[] data)
         {
         }
 
-        public virtual bool suspend()
+        public virtual async bool suspend()
         {
             return true;
         }
 
-        public virtual void resume()
+        public virtual async void resume()
         {
         }
 

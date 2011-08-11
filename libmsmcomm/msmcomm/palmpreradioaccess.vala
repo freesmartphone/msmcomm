@@ -80,6 +80,12 @@ namespace Msmcomm
         }
 
         //
+        // signals
+        //
+
+        public signal void setup_complete();
+
+        //
         // public API
         //
 
@@ -91,7 +97,7 @@ namespace Msmcomm
             commandqueue = new PalmPre.CommandQueue(this);
         }
 
-        public override bool open()
+        public override async bool open()
         {
             assert( logger.debug(@"Initializing palmpre radio access ...") );
 
@@ -103,14 +109,22 @@ namespace Msmcomm
             settings.window_size = (uint8) config.intValue("hll", "window_size", 8);
             settings.max_send_attempts = config.intValue("hll", "max_send_attempts", 10);
 
+            in_link_setup = true;
+
             llctrl = new LinkLayerControl(settings);
             llctrl.requestHandleSendData.connect(handle_send_data);
             llctrl.requestHandleFrameContent.connect(handle_frame_content);
             llctrl.requestModemReset.connect(handle_modem_reset_request);
             llctrl.requestHandleLinkSetupComplete.connect(() => {
+                Idle.add(() => {
+                    setup_complete(); // signal
+                    return false;
+                });
                 in_link_setup = false;
                 active = true;
             });
+
+            llctrl.start();
 
             return true;
         }
@@ -126,13 +140,13 @@ namespace Msmcomm
             return active;
         }
 
-        public override void send(uint8[] data)
+        public override async void send(uint8[] data)
         {
             if (!in_link_setup && active)
                 llctrl.sendDataFrame(data);
         }
 
-        public override bool suspend()
+        public override async bool suspend()
         {
             if (!active)
             {
@@ -155,7 +169,7 @@ namespace Msmcomm
             return true;
         }
 
-        public override void resume()
+        public override async void resume()
         {
             transport.resume();
             in_link_setup = true;
