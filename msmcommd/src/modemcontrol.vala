@@ -56,7 +56,7 @@ namespace Msmcomm.Daemon
 
             if (in_link_setup || active)
             {
-                 llc.processIncommingData(data[0:bread]);
+                 llc.processIncomingData(data[0:bread]);
             }
             else
             {
