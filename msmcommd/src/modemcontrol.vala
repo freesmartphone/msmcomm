@@ -339,7 +339,6 @@ namespace Msmcomm.Daemon
                 // suspend state.
                 active = false;
                 llc.sendAllFramesNow();
-                llc.stop();
                 transport.flush();
                 transport.freeze();
                 statusUpdate(Msmcomm.ModemStatus.INACTIVE);
@@ -366,9 +365,8 @@ namespace Msmcomm.Daemon
                     hsuartTransport.resume();
                 }
 
-                in_link_setup = true;
                 transport.thaw();
-                llc.start();
+                active = true;
             }
 
             return true;
