@@ -269,9 +269,6 @@ namespace Msmcomm.Daemon
         {
             uint8[] data;
             data = masm.pack_message(handler.command);
-#if DEBUG
-            hexdump2(true, data, logger);
-#endif
             modem.sendData(data);
         }
 
