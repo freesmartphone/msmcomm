@@ -260,30 +260,4 @@ namespace Msmcomm.Daemon
 
         return result;
     }
-
-    public CallSupsCommandMessage.Action convertSupsActionForModem(SupsAction action)
-    {
-        var result = CallSupsCommandMessage.Action.DROP_ALL_OR_SEND_BUSY;
-
-        switch (action)
-        {
-            case SupsAction.DROP_ALL_OR_SEND_BUSY:
-                result = CallSupsCommandMessage.Action.DROP_ALL_OR_SEND_BUSY;
-                break;
-            case SupsAction.DROP_ALL_AND_ACCEPT_WAITING_OR_HELD:
-                result = CallSupsCommandMessage.Action.DROP_ALL_AND_ACCEPT_WAITING_OR_HELD;
-                break;
-            case SupsAction.HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD:
-                result = CallSupsCommandMessage.Action.HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD;
-                break;
-            case SupsAction.ACTIVATE_HELD:
-                result = CallSupsCommandMessage.Action.ACTIVATE_HELD;
-                break;
-            case SupsAction.DROP_SELF_AND_CONNECT_ACTIVE:
-                result = CallSupsCommandMessage.Action.DROP_SELF_AND_CONNECT_ACTIVE;
-                break;
-        }
-
-        return result;
-    }
 }

@@ -25,13 +25,7 @@ namespace Msmcomm
     [DBus (use_string_marshalling = true)]
     public enum SupsAction
     {
-        DROP_ALL_OR_SEND_BUSY,
-        DROP_ALL_AND_ACCEPT_WAITING_OR_HELD,
-        DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
-        HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD,
-        HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD,
-        ACTIVATE_HELD,
-        DROP_SELF_AND_CONNECT_ACTIVE,
+        HANGUP_ACTIVE_CALL,
     }
 
     [CCode (cprefix = "MSMCOMM_CALL_TYPE_", cheader_filename = "msmcomm-specs.h")]

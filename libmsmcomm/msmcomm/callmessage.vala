@@ -132,13 +132,7 @@ namespace Msmcomm.LowLevel
 
         public enum Action
         {
-            DROP_ALL_OR_SEND_BUSY = 0,
-            DROP_ALL_AND_ACCEPT_WAITING_OR_HELD = 1,
-            DROP_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD = 1,
-            HOLD_ALL_AND_ACCEPT_WAITING_OR_HELD = 2,
-            HOLD_SPECIFIC_AND_ACCEPT_WAITING_OR_HELD = 2,
-            ACTIVATE_HELD = 3,
-            DROP_SELF_AND_CONNECT_ACTIVE = 4,
+            HANGUP_ACTIVE_CALL = 1,
         }
 
         public uint8 call_id;

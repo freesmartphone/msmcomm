@@ -20,6 +20,7 @@
  **/
 
 using Msmcomm.LowLevel;
+using FsoFramework;
 
 namespace Msmcomm.Daemon
 {
@@ -88,7 +89,7 @@ namespace Msmcomm.Daemon
         {
             var message = new CallSupsCommandMessage();
             message.call_id = (uint8) id;
-            message.action = convertSupsActionForModem(action);
+            message.action = StringHandling.convertEnum<SupsAction,Msmcomm.LowLevel.CallSupsCommandMessage.Action>(action);
 
             var response = yield channel.enqueueAsync(message);
             checkResponse(response);
