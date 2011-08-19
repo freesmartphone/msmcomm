@@ -244,9 +244,7 @@ namespace Msmcomm.Daemon
         public void sendData(uint8[] data)
         {
             if (in_link_setup || active)
-            {
                 llc.sendDataFrame(data);
-            }
         }
 
         /*
@@ -367,6 +365,7 @@ namespace Msmcomm.Daemon
 
                 transport.thaw();
                 active = true;
+                statusUpdate(Msmcomm.ModemStatus.ACTIVE);
             }
 
             return true;
