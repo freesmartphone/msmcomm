@@ -568,6 +568,12 @@ static void msmcomm_low_level_structures_wms_send_msg_init(struct wms_send_msg* 
 {
 	self->service_center_len = 36;
 	self->pdu_len = 255;
+	self->number_plan = 0x01;
+	self->six_three = 0x0306;
+	self->five = 0x05;
+	self->number_type = 0x01;
+	self->ffffffff = 0xffffffff;
+	self->nr = 0x01;
 }
 
 

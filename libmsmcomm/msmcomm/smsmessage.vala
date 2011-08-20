@@ -84,13 +84,6 @@ namespace Msmcomm.LowLevel
         {
             _message.ref_id = ref_id;
 
-            _message.nr = (uint8)0x01;
-            _message.five = (uint8)0x05;
-            _message.ffffffff = (uint32)0xffffffff;
-            _message.number_type = (uint8)0x01;
-            _message.number_plan = (uint8)0x01;
-            _message.six_three = (uint16)0x0306;
-
             _message.service_center_len = (uint8)smsc.length;
             uint8[] smsc_bytes = new uint8[smsc.length];
             for (int i = 0; i<smsc.length; ++i)
