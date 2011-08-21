@@ -125,18 +125,19 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public enum CallSupsAction
+    {
+        REJCT_INCOMING_CALL = 0,
+        HANGUP_ACTIVE_CALL = 1,
+    }
+
     public class CallSupsCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x0;
         public static const uint16 MESSAGE_ID = 0x3;
 
-        public enum Action
-        {
-            HANGUP_ACTIVE_CALL = 1,
-        }
-
         public uint8 call_id;
-        public Action action;
+        public CallSupsAction action;
 
         private CallSupsMessage _message;
 

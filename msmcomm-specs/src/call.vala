@@ -25,6 +25,7 @@ namespace Msmcomm
     [DBus (use_string_marshalling = true)]
     public enum SupsAction
     {
+        REJECT_INCOMING_CALL,
         HANGUP_ACTIVE_CALL,
     }
 

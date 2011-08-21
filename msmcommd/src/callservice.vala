@@ -89,7 +89,7 @@ namespace Msmcomm.Daemon
         {
             var message = new CallSupsCommandMessage();
             message.call_id = (uint8) id;
-            message.action = StringHandling.convertEnum<SupsAction,Msmcomm.LowLevel.CallSupsCommandMessage.Action>(action);
+            message.action = StringHandling.convertEnum<SupsAction,Msmcomm.LowLevel.CallSupsAction>(action);
 
             var response = yield channel.enqueueAsync(message);
             checkResponse(response);
