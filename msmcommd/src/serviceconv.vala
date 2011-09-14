@@ -23,46 +23,6 @@ using Msmcomm.LowLevel;
 
 namespace Msmcomm.Daemon
 {
-    public OperationMode convertOperationModeForService(StateBaseOperationModeMessage.Mode mode)
-    {
-        OperationMode result = OperationMode.OFFLINE;
-
-        switch (mode)
-        {
-            case StateBaseOperationModeMessage.Mode.RESET:
-                result = OperationMode.RESET;
-                break;
-            case StateBaseOperationModeMessage.Mode.ONLINE:
-                result = OperationMode.ONLINE;
-                break;
-            case StateBaseOperationModeMessage.Mode.OFFLINE:
-                result = OperationMode.OFFLINE;
-                break;
-        }
-
-        return result;
-    }
-
-    public StateBaseOperationModeMessage.Mode convertOperationModeForModem(OperationMode mode)
-    {
-        StateBaseOperationModeMessage.Mode result = StateBaseOperationModeMessage.Mode.OFFLINE;
-
-        switch (mode)
-        {
-            case OperationMode.RESET:
-                result = StateBaseOperationModeMessage.Mode.RESET;
-                break;
-            case OperationMode.ONLINE:
-                result = StateBaseOperationModeMessage.Mode.ONLINE;
-                break;
-            case OperationMode.OFFLINE:
-                result = StateBaseOperationModeMessage.Mode.OFFLINE;
-                break;
-        }
-
-        return result;
-    }
-
     public ChargerMode convertChargerModeForService(MiscBaseChargingMessage.Mode mode)
     {
         ChargerMode result = ChargerMode.USB;
@@ -223,26 +183,6 @@ namespace Msmcomm.Daemon
         return result;
     }
 #endif
-
-    public StateSysSelPrefCommandMessage.Mode convertNetworkPreferenceModeForModem(NetworkPreferenceMode mode)
-    {
-        StateSysSelPrefCommandMessage.Mode result = StateSysSelPrefCommandMessage.Mode.AUTOMATIC;
-
-        switch (mode)
-        {
-            case NetworkPreferenceMode.AUTOMATIC:
-                result = StateSysSelPrefCommandMessage.Mode.AUTOMATIC;
-                break;
-            case NetworkPreferenceMode.GSM:
-                result = StateSysSelPrefCommandMessage.Mode.GSM;
-                break;
-            case NetworkPreferenceMode.UMTS:
-                result = StateSysSelPrefCommandMessage.Mode.UMTS;
-                break;
-        }
-
-        return result;
-    }
 
     public CallType convertCallTypeForService(CallBaseMessage.Type call_type)
     {

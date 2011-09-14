@@ -23,24 +23,22 @@ using Msmcomm.LowLevel.Structures.Palmpre;
 
 namespace Msmcomm.LowLevel
 {
-    public abstract class StateBaseOperationModeMessage : BaseMessage
+    public enum State.OperationMode
     {
-        public enum Mode
-        {
-            ONLINE = 0x5,
-            OFFLINE = 0x6,
-            RESET = 0x7,
-        }
-
-        public Mode mode;
+        POWER_OFF = 0x0,
+        ONLINE = 0x5,
+        OFFLINE = 0x6,
+        RESET = 0x7,
     }
 
-    public class StateChangeOperationModeRequestCommandMessage : StateBaseOperationModeMessage
+    public class StateChangeOperationModeRequestCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x3;
         public static const uint16 MESSAGE_ID = 0x0;
 
         private StateChangeOperationModeMessage _message;
+
+        public State.OperationMode mode;
 
         construct
         {
@@ -57,6 +55,13 @@ namespace Msmcomm.LowLevel
         }
     }
 
+    public enum State.NetworkModePreference
+    {
+        AUTOMATIC = 2,
+        GSM = 13,
+        UMTS = 14,
+    }
+
     public class StateSysSelPrefCommandMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x3;
@@ -64,14 +69,7 @@ namespace Msmcomm.LowLevel
 
         private StateSysSelPrefMessage _message;
 
-        public enum Mode
-        {
-            AUTOMATIC = 0x2,
-            GSM = 0xd,
-            UMTS = 0xe,
-        }
-
-        public Mode mode;
+        public State.NetworkModePreference mode_preference;
 
         construct
         {
@@ -84,14 +82,7 @@ namespace Msmcomm.LowLevel
         protected override void prepare_data()
         {
             _message.ref_id = ref_id;
-            _message.mode = mode;
-
-            _message.value0 = 0x3;
-            _message.value1 = 0x40;
-            _message.value2 = 0x40;
-            _message.value3 = 0x1;
-            _message.value4 = 0x2;
-            _message.value5 = 0x4;
+            _message.mode_preference = mode_preference;
         }
     }
 
@@ -143,7 +134,7 @@ namespace Msmcomm.LowLevel
         public string name;
     }
 
-    public class StateUnsolicitedResponseMessage : StateBaseOperationModeMessage
+    public class StateUnsolicitedResponseMessage : BaseMessage
     {
         public static const uint8 GROUP_ID = 0x5;
 
@@ -153,6 +144,7 @@ namespace Msmcomm.LowLevel
         public uint8 als_allowed;
 
         public NetworkProviderInfo[] networks;
+        public State.OperationMode mode;
 
         construct
         {
@@ -169,7 +161,7 @@ namespace Msmcomm.LowLevel
 
         protected override void evaluate_data()
         {
-            mode = (StateBaseOperationModeMessage.Mode) _message.mode;
+            mode = (State.OperationMode) _message.mode;
             line = _message.line;
             als_allowed = _message.als_allowed;
 

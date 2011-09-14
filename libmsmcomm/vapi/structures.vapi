@@ -513,7 +513,7 @@ struct Palmpre.StateChangeOperationModeMessage
 struct Palmpre.StateSysSelPrefMessage
 {
 	public uint32 ref_id;
-	public uint8 mode;
+	public uint8 mode_preference;
 	public uint8 unknown0[5];
 	public uint8 value0;
 	public uint8 unknown1[3];

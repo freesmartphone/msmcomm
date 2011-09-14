@@ -370,7 +370,7 @@ static void msmcomm_palmpre_state_change_operation_mode_msg_init(struct palmpre_
 struct palmpre_state_sys_sel_pref_msg
 {
 	uint32_t ref_id;
-	uint8_t mode;
+	uint8_t mode_preference;
 #define STATE_SYS_SEL_PREF_MSG_UNKNOWN0_SIZE 5
 	uint8_t unknown0[5];
 	uint8_t value0;
@@ -390,6 +390,12 @@ struct palmpre_state_sys_sel_pref_msg
 
 static void msmcomm_palmpre_state_sys_sel_pref_msg_init(struct palmpre_state_sys_sel_pref_msg* self)
 {
+	self->value5 = 0x4;
+	self->value4 = 0x2;
+	self->value3 = 0x1;
+	self->value2 = 0x40;
+	self->value1 = 0x40;
+	self->value0 = 0x3;
 }
 
 

@@ -16,13 +16,13 @@
 
 		<structure name="state_sys_sel_pref_msg" length="29">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="mode" start="4" type="uint8_t"/>
-			<field name="value0" start="10" type="uint8_t"/>
-			<field name="value1" start="14" type="uint8_t"/>
-			<field name="value2" start="20" type="uint8_t"/>
-			<field name="value3" start="22" type="uint8_t"/>
-			<field name="value4" start="23" type="uint8_t"/>
-			<field name="value5" start="24" type="uint8_t"/>
+			<field name="mode_preference" start="4" type="uint8_t"/>
+			<field start="10" type="uint8_t" value="0x3"/>
+			<field start="14" type="uint8_t" value="0x40"/>
+			<field start="20" type="uint8_t" value="0x40"/>
+			<field start="22" type="uint8_t" value="0x1"/>
+			<field start="23" type="uint8_t" value="0x2"/>
+			<field start="24" type="uint8_t" value="0x4"/>
 		</structure>
 
 		<structure name="state_callback_resp" length="12">

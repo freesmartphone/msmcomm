@@ -25,9 +25,10 @@ namespace Msmcomm
     [DBus (use_string_marshalling = true)]
     public enum OperationMode
     {
-        RESET,
-        OFFLINE,
+        POWER_OFF,
         ONLINE,
+        OFFLINE,
+        RESET,
     }
 
     [CCode (type_id = "MSMCOMM_STATE_INFO", cheader_filename = "msmcomm-specs.h")]
@@ -38,9 +39,9 @@ namespace Msmcomm
         public uint als_allowed;
     }
 
-    [CCode (cprefix = "MSMCOMM_NETWORK_PREFERENCE_MODE_", cheader_filename = "msmcomm-specs.h")]
+    [CCode (cprefix = "MSMCOMM_NETWORK_MODE_PREFERENCE_", cheader_filename = "msmcomm-specs.h")]
     [DBus (use_string_marshalling = true)]
-    public enum NetworkPreferenceMode
+    public enum NetworkModePreference
     {
         AUTOMATIC,
         GSM,
@@ -51,7 +52,7 @@ namespace Msmcomm
     public interface State : GLib.Object
     {
         public abstract async void change_operation_mode(OperationMode mode) throws GLib.Error, Msmcomm.Error;
-        public abstract async void sys_sel_pref(NetworkPreferenceMode mode) throws GLib.Error, Msmcomm.Error;
+        public abstract async void sys_sel_pref(NetworkModePreference mode_preference) throws GLib.Error, Msmcomm.Error;
 
         public signal void operation_mode(StateInfo info);
         public signal void info_avail(StateInfo info);

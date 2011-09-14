@@ -20,6 +20,7 @@
  **/
 
 using Msmcomm.LowLevel;
+using FsoFramework.StringHandling;
 
 namespace Msmcomm.Daemon
 {
@@ -51,7 +52,7 @@ namespace Msmcomm.Daemon
         {
             var info = StateInfo();
 
-            info.mode = convertOperationModeForService(message.mode);
+            info.mode = convertEnum<Msmcomm.LowLevel.State.OperationMode,OperationMode>(message.mode);
             info.line = message.line;
             info.als_allowed = message.als_allowed;
 
@@ -66,16 +67,16 @@ namespace Msmcomm.Daemon
         public async void change_operation_mode(OperationMode mode) throws GLib.Error, Msmcomm.Error
         {
             var message = new StateChangeOperationModeRequestCommandMessage();
-            message.mode = convertOperationModeForModem(mode);
+            message.mode = convertEnum<OperationMode,Msmcomm.LowLevel.State.OperationMode>(mode);
 
             var response = yield channel.enqueueAsync(message);
             checkResponse(response);
         }
 
-        public async void sys_sel_pref(NetworkPreferenceMode mode) throws GLib.Error, Msmcomm.Error
+        public async void sys_sel_pref(NetworkModePreference mode_preference) throws GLib.Error, Msmcomm.Error
         {
             var message = new StateSysSelPrefCommandMessage();
-            message.mode = convertNetworkPreferenceModeForModem(mode);
+            message.mode_preference = convertEnum<NetworkModePreference,Msmcomm.LowLevel.State.NetworkModePreference>(mode_preference);
 
             var response = yield channel.enqueueAsync(message);
             checkResponse(response);

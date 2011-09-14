@@ -145,13 +145,13 @@ end
 
 start state_sys_sel_pref_msg 29 device=palmpre
 [0-3] uint32_t ref_id
-[4] uint8_t mode
-[10] uint8_t value0
-[14] uint8_t value1
-[20] uint8_t value2
-[22] uint8_t value3
-[23] uint8_t value4
-[24] uint8_t value5
+[4] uint8_t mode_preference
+[10] uint8_t value0 = 0x3
+[14] uint8_t value1 = 0x40
+[20] uint8_t value2 = 0x40
+[22] uint8_t value3 = 0x1
+[23] uint8_t value4 = 0x2
+[24] uint8_t value5 = 0x4
 end
 
 start state_callback_resp 12 device=palmpre
