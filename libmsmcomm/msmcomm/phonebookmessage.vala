@@ -28,10 +28,10 @@ namespace Msmcomm.LowLevel
 
     public enum PhonebookBookType
     {
-        ADN,
-        FDN,
-        SDN,
-        ECC,
+        ADN, // Abbreviated Dialing Number list
+        FDN, // Fixed Dialing Number list
+        SDN, // Service Dialing Number list
+        ECC, // Emergency Call Code list
         UNKNOWN,
     }
 
@@ -58,7 +58,7 @@ namespace Msmcomm.LowLevel
                 result = ext_info ? 0xe : 0x8;
                 break;
             case PhonebookBookType.ECC:
-                result = ext_info ? 0x0 : 0x30;
+                result = ext_info ? 0x5 : 0x30; /* FIXME Needs testing for ext_info = true */
                 break;
             default:
                 assert_not_reached();
