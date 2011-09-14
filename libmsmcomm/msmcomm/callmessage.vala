@@ -127,7 +127,7 @@ namespace Msmcomm.LowLevel
 
     public enum CallSupsAction
     {
-        REJCT_INCOMING_CALL = 0,
+        REJECT_INCOMING_CALL = 0,
         HANGUP_ACTIVE_CALL = 1,
     }
 
