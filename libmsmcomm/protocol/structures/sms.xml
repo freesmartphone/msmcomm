@@ -3,20 +3,20 @@
 	<structures>
 		<structure name="wms_read_template_field" length="2075">
 			<field name="received_mask" start="172" type="uint8_t"/>
-			<field name="digit_mode" start="217" type="uint8_t"/>
-			<field name="number_mode" start="218" end="221" type="uint32_t"/>
-			<field name="number_type" start="222" type="uint8_t">
+			<field name="digit_mode" start="214" type="uint8_t"/>
+			<field name="number_mode" start="215" end="218" type="uint32_t"/>
+			<field name="number_type" start="219" type="uint8_t">
 				<description>
 					As per 23.040 Section 9.1.2.5
 				</description>
 			</field>
-			<field name="numbering_plan" start="223" type="uint8_t">
+			<field name="numbering_plan" start="220" type="uint8_t">
 				<description>
 					As per 23.040 Section 9.1.2.5
 				</description>
 			</field>
-			<field name="smsc_number_len" start="224" type="uint8_t"/>
-			<field name="smsc_number" start="225" end="245" type="uint8_t"/>
+			<field name="smsc_number_len" start="221" type="uint8_t"/>
+			<field name="smsc_number" start="222" end="242" type="uint8_t"/>
 			<field name="protocol_id" start="261" type="uint8_t"/>
 		</structure>
 

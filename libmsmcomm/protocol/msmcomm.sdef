@@ -194,12 +194,12 @@ end
 #-------------------------------------------------------------------
 start wms_read_template_field 2075
 [172] uint8_t received_mask
-[217] uint8_t digit_mode
-[218-221] uint32_t number_mode
-[222] uint8_t number_type
-[223] uint8_t numbering_plan
-[224] uint8_t smsc_number_len
-[225-245] uint8_t smsc_number
+[214] uint8_t digit_mode
+[215-218] uint32_t number_mode
+[219] uint8_t number_type
+[220] uint8_t numbering_plan
+[221] uint8_t smsc_number_len
+[222-242] uint8_t smsc_number
 [261] uint8_t protocol_id
 end
 

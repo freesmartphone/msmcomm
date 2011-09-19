@@ -40,9 +40,7 @@ namespace Msmcomm.Daemon
         public override bool handleUnsolicitedResponse( LowLevel.BaseMessage message )
         {
             bool handled = false;
-            stdout.printf( "\nGroupID:    : %x\n", message.group_id );
-            stdout.printf( "MessageID:  : %x\n", message.message_id );
-            stdout.printf( "RefID:      : %x\n", message.ref_id );
+            stdout.printf( "\nGroupID/MessageID/RefID:    : %x / %x / %x\n", message.group_id, message.message_id, message.ref_id );
 
             switch ( message.message_type )
             {
@@ -52,18 +50,10 @@ namespace Msmcomm.Daemon
                     stdout.printf( "UNSOLICITED_RESPONSE_SMS_MSG_GROUP: 0x%x 0x%x\n", smsmsg.GROUP_ID, smsmsg.MESSAGE_ID );
                     stdout.printf( "    ResponseType: 0x%x\n", smsmsg.response_type );
 
-                    string sender = smsmsg.sender;
-                    uint8[] pdu    = smsmsg.pdu;
-                    stdout.printf( "    Sender      : %s\n", sender );
-                    stdout.printf( "    PDU         :" );
-                    for (int i = 0; i<pdu.length; ++i) {
-                        stdout.printf(" %x", pdu[i]);
-                    }
-                    stdout.printf("\n");
-
-
+                    /* Message received */
                     if ( smsmsg.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_RECEIVED )
                     {
+                         stdout.printf( "Message received\n" );
                         var msg = SmsMessage();
                         msg.sender = smsmsg.sender;
                         msg.pdu = smsmsg.pdu;
@@ -73,9 +63,18 @@ namespace Msmcomm.Daemon
                         handled = true;
                     }
 
+                    /* Message send */
                     if ( smsmsg.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_SEND )
                     {
                         handled = true;
+                    }
+
+                    /* Message read template */
+                    if ( smsmsg.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_READ_TEMPLATE )
+                    {
+                         stdout.printf( "MESSAGE_READ_TEMPLATE\n" );
+                         stdout.printf( "smsc: %s\n", smsmsg.smsc_number );
+                         handled = true;
                     }
                     break;
 

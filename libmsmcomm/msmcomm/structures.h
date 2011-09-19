@@ -460,8 +460,8 @@ struct wms_read_template_field
 #define WMS_READ_TEMPLATE_FIELD_UNKNOWN0_SIZE 172
 	uint8_t unknown0[172];
 	uint8_t received_mask;
-#define WMS_READ_TEMPLATE_FIELD_UNKNOWN1_SIZE 44
-	uint8_t unknown1[44];
+#define WMS_READ_TEMPLATE_FIELD_UNKNOWN1_SIZE 41
+	uint8_t unknown1[41];
 	uint8_t digit_mode;
 	uint32_t number_mode;
 	uint8_t number_type;
@@ -469,8 +469,8 @@ struct wms_read_template_field
 	uint8_t smsc_number_len;
 #define WMS_READ_TEMPLATE_FIELD_SMSC_NUMBER_SIZE 21
 	uint8_t smsc_number[21];
-#define WMS_READ_TEMPLATE_FIELD_UNKNOWN2_SIZE 15
-	uint8_t unknown2[15];
+#define WMS_READ_TEMPLATE_FIELD_UNKNOWN2_SIZE 18
+	uint8_t unknown2[18];
 	uint8_t protocol_id;
 #define WMS_READ_TEMPLATE_FIELD_UNKNOWN3_SIZE 1813
 	uint8_t unknown3[1813];
