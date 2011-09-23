@@ -40,11 +40,27 @@ namespace Msmcomm.Daemon
         public override bool handleUnsolicitedResponse( LowLevel.BaseMessage message )
         {
             bool handled = false;
+            stdout.printf( "\nGroupID:    : %x\n", message.group_id );
+            stdout.printf( "MessageID:  : %x\n", message.message_id );
+            stdout.printf( "RefID:      : %x\n", message.ref_id );
 
             switch ( message.message_type )
             {
                 case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_MSG_GROUP:
                     var smsmsg = message as LowLevel.Sms.Urc.MsgGroup;
+
+                    stdout.printf( "UNSOLICITED_RESPONSE_SMS_MSG_GROUP: 0x%x 0x%x\n", smsmsg.GROUP_ID, smsmsg.MESSAGE_ID );
+                    stdout.printf( "    ResponseType: 0x%x\n", smsmsg.response_type );
+
+                    string sender = smsmsg.sender;
+                    uint8[] pdu    = smsmsg.pdu;
+                    stdout.printf( "    Sender      : %s\n", sender );
+                    stdout.printf( "    PDU         :" );
+                    for (int i = 0; i<pdu.length; ++i) {
+                        stdout.printf(" %x", pdu[i]);
+                    }
+                    stdout.printf("\n");
+
 
                     if ( smsmsg.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_RECEIVED )
                     {
@@ -57,6 +73,18 @@ namespace Msmcomm.Daemon
                         handled = true;
                     }
 
+                    if ( smsmsg.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_SEND )
+                    {
+                        handled = true;
+                    }
+                    break;
+
+                case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_CFG_GROUP:
+                    var smsmsg = message as LowLevel.Sms.Urc.CfgGroup;
+                    stdout.printf( "UNSOLICITED_RESPONSE_SMS_CFG_GROUP: 0x%x 0x%x\n", smsmsg.GROUP_ID, smsmsg.MESSAGE_ID );
+                    //TODO
+                    break;
+                default:
                     break;
             }
 
@@ -169,5 +197,17 @@ namespace Msmcomm.Daemon
 
             return memory_message_count;
         }
+
+        public async void send_message(string smsc, uint8[] pdu) throws GLib.Error, Msmcomm.Error
+        {
+            var message = new LowLevel.Sms.Command.SendMessage();
+
+            message.smsc = smsc;
+            message.pdu = pdu;
+
+            var response = yield channel.enqueueAsync(message);
+            checkResponse(response);
+        }
+
     }
 }

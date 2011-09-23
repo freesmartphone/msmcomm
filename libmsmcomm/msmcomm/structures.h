@@ -551,11 +551,11 @@ static void msmcomm_palmpre_wms_acknowledge_msg_init(struct palmpre_wms_acknowle
 struct palmpre_wms_send_msg
 {
 	uint32_t ref_id;
-#define WMS_SEND_MSG_UNKNOWN0_SIZE 2
-	uint8_t unknown0[2];
+	uint8_t unknown0;
 	uint8_t nr;
 	uint8_t five;
-	uint8_t unknown1;
+#define WMS_SEND_MSG_UNKNOWN1_SIZE 2
+	uint8_t unknown1[2];
 	uint32_t ffffffff;
 #define WMS_SEND_MSG_UNKNOWN2_SIZE 6
 	uint8_t unknown2[6];
