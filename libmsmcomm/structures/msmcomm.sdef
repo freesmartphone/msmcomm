@@ -179,12 +179,12 @@ end
 
 start wms_read_template_field 2075 device=palmpre
 [172] uint8_t received_mask
-[217] uint8_t digit_mode
-[218-221] uint32_t number_mode
-[222] uint8_t number_type
-[223] uint8_t numbering_plan
-[224] uint8_t smsc_number_len
-[225-245] uint8_t smsc_number
+[214] uint8_t digit_mode
+[215-218] uint32_t number_mode
+[219] uint8_t number_type
+[220] uint8_t numbering_plan
+[221] uint8_t smsc_number_len
+[222-242] uint8_t smsc_number
 [261] uint8_t protocol_id
 end
 
@@ -211,14 +211,14 @@ end
 
 start wms_send_msg 319 device=palmpre
 [0-3] uint32_t ref_id
-[5] uint8_t nr
-[6] uint8_t five
-[9-12] uint32_t ffffffff
-[19] uint8_t number_type
-[20] uint8_t number_plan
+[5] uint8_t nr = 0x01
+[6] uint8_t five = 0x05
+[9-12] uint32_t ffffffff = 0xffffffff
+[19] uint8_t number_type = 0x01
+[20] uint8_t number_plan = 0x01
 [21] uint8_t service_center_len
 [22-57] uint8_t service_center
-[58-59] uint16_t six_three
+[58-59] uint16_t six_three = 0x0306
 [60-63] uint32_t pdu_len
 [64-318] uint8_t pdu
 end

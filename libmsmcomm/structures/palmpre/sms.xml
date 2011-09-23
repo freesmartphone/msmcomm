@@ -3,20 +3,20 @@
 	<structures>
 		<structure name="wms_read_template_field" length="2075">
 			<field name="received_mask" start="172" type="uint8_t"/>
-			<field name="digit_mode" start="217" type="uint8_t"/>
-			<field name="number_mode" start="218" end="221" type="uint32_t"/>
-			<field name="number_type" start="222" type="uint8_t">
+			<field name="digit_mode" start="214" type="uint8_t"/>
+			<field name="number_mode" start="215" end="218" type="uint32_t"/>
+			<field name="number_type" start="219" type="uint8_t">
 				<description>
 					As per 23.040 Section 9.1.2.5
 				</description>
 			</field>
-			<field name="numbering_plan" start="223" type="uint8_t">
+			<field name="numbering_plan" start="220" type="uint8_t">
 				<description>
 					As per 23.040 Section 9.1.2.5
 				</description>
 			</field>
-			<field name="smsc_number_len" start="224" type="uint8_t"/>
-			<field name="smsc_number" start="225" end="245" type="uint8_t"/>
+			<field name="smsc_number_len" start="221" type="uint8_t"/>
+			<field name="smsc_number" start="222" end="242" type="uint8_t"/>
 			<field name="protocol_id" start="261" type="uint8_t"/>
 		</structure>
 
@@ -42,19 +42,19 @@
 
 		<structure name="wms_acknowledge_msg" length="1901">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-        </structure>
+		</structure>
 
 		<structure name="wms_send_msg" length="319">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<field name="nr" start="5" type="uint8_t"/>
-			<field name="five" start="6" type="uint8_t"/>
-			<field name="ffffffff" start="9" end="12" type="uint32_t"/>
+			<field name="nr" start="5" type="uint8_t" value="0x01"/>
+			<field name="five" start="6" type="uint8_t" value="0x05"/>
+			<field name="ffffffff" start="9" end="12" type="uint32_t" value="0xffffffff"/>
 			<!-- guessing: number_type is always 1 -->
-			<field name="number_type" start="19" type="uint8_t"/>
-			<field name="number_plan" start="20" type="uint8_t"/>
+			<field name="number_type" start="19" type="uint8_t" value="0x01"/>
+			<field name="number_plan" start="20" type="uint8_t" value="0x01"/>
 			<field name="service_center_len" start="21" type="uint8_t"/>
 			<field name="service_center" start="22" end="57" type="uint8_t"/>
-			<field name="six_three" start="58" end="59" type="uint16_t"/>
+			<field name="six_three" start="58" end="59" type="uint16_t" value="0x0306"/>
 			<field name="pdu_len" start="60" end="63" type="uint32_t"/>
 			<field name="pdu" start="64" end="318" type="uint8_t"/>
 		</structure>
@@ -66,7 +66,7 @@
 		<structure name="wms_read_template_msg" length="9">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="template" start="4" end="5" type="uint16_t"/>
-        </structure>
+		</structure>
 
 		<structure name="wms_cfg_set_gw_domain_pref_msg" length="5">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
@@ -85,7 +85,7 @@
 
 		<structure name="wms_read_msg" length="9">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-        </structure>
+		</structure>
 
 		<structure name="wms_delete_msg" length="9">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
@@ -103,6 +103,6 @@
 			<field name="command" start="0" end="1" type="uint16_t"/>
 			<field name="ref_id" start="4" end="7" type="uint32_t"/>
 			<field name="rc" start="8" type="uint8_t"/>
-        </structure>
+		</structure>
 	</structures>
 </namespace:sms>
