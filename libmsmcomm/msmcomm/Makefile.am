@@ -75,8 +75,7 @@ msmcomm-2.0.vapi msmcomm.vala.stamp: $(libmsmcomm_la_VALASOURCES)
 	touch $@
 
 libmsmcomm_la_LIBADD = \
-	$(GLIB_LIBS) \
-	$(LIBNL_LIBS) \
+	$(DEPS_LIBS) \
 	$(NULL)
 
 vapidir = $(datadir)/vala/vapi
