@@ -47,14 +47,14 @@
 		<structure name="wms_send_msg" length="319">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
 			<field name="nr" start="5" type="uint8_t" value="0x01"/>
-			<field name="five" start="6" type="uint8_t" value="0x05"/>
-			<field name="ffffffff" start="9" end="12" type="uint32_t" value="0xffffffff"/>
+			<field start="6" type="uint8_t" value="0x05"/>
+			<field start="9" end="12" type="uint32_t" value="0xffffffff"/>
 			<!-- guessing: number_type is always 1 -->
 			<field name="number_type" start="19" type="uint8_t" value="0x01"/>
 			<field name="number_plan" start="20" type="uint8_t" value="0x01"/>
 			<field name="service_center_len" start="21" type="uint8_t"/>
 			<field name="service_center" start="22" end="57" type="uint8_t"/>
-			<field name="six_three" start="58" end="59" type="uint16_t" value="0x0306"/>
+			<field start="58" end="59" type="uint16_t" value="0x0306"/>
 			<field name="pdu_len" start="60" end="63" type="uint32_t"/>
 			<field name="pdu" start="64" end="318" type="uint8_t"/>
 		</structure>
