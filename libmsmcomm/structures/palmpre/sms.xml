@@ -29,6 +29,7 @@
 
 		<structure name="wms_msg_group_event" length="2083">
 			<field name="response_type" start="0" type="uint8_t"/>
+			<field name="nr" start="3" type="uint8_t"/>
 			<field name="ref_id" start="4" end="7" type="uint32_t"/>
 			<field name="command_data" start="8" end="2082" type="uint8_t">
 				<variant type="wms_read_template_field"/>
@@ -42,6 +43,12 @@
 
 		<structure name="wms_acknowledge_msg" length="1901">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
+			<!-- guessing: this nr needs to be ack'ed -->
+			<field name="nr" start="4" end="3" type="uint32_t"/>
+			<!-- guessing: always 0x01 -->
+			<field start="9" type="uint8_t" value="0x01"/>
+			<!-- guessing: always 0x09 -->
+			<field start="11" type="uint8_t" value="0x09"/>
 		</structure>
 
 		<structure name="wms_send_msg" length="319">

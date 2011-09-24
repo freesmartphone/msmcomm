@@ -103,6 +103,7 @@ namespace Msmcomm.LowLevel
 
         public uint8 value0;
         public uint8 value1;
+        public uint8 nr;
 
         private WmsAcknowledgeMessage _message;
 
@@ -421,6 +422,7 @@ namespace Msmcomm.LowLevel
         /* response_type == ResponseType.MESSAGE_RECEIVED */
         public string sender;
         public uint8[] pdu;
+        public uint8 nr;
 
         construct
         {
@@ -467,6 +469,8 @@ namespace Msmcomm.LowLevel
 
                     pdu = new uint8[_message.wms_sms_received.pdu_len];
                     Memory.copy( (uint8*) pdu, (uint8*) _message.wms_sms_received.pdu, _message.wms_sms_received.pdu_len );
+
+                    nr = _message.nr;
                     break;
                 case ResponseType.MESSAGE_SUBMIT_REPORT:
                     break;

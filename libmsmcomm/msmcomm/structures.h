@@ -512,8 +512,9 @@ static void msmcomm_palmpre_wms_sms_received_field_init(struct palmpre_wms_sms_r
 struct palmpre_wms_msg_group_event
 {
 	uint8_t response_type;
-#define WMS_MSG_GROUP_EVENT_UNKNOWN0_SIZE 3
-	uint8_t unknown0[3];
+#define WMS_MSG_GROUP_EVENT_UNKNOWN0_SIZE 2
+	uint8_t unknown0[2];
+	uint8_t nr;
 	uint32_t ref_id;
 #define WMS_MSG_GROUP_EVENT_COMMAND_DATA_SIZE 2075
 	uint8_t command_data[2075];
@@ -539,12 +540,19 @@ static void msmcomm_palmpre_wms_cfg_group_event_init(struct palmpre_wms_cfg_grou
 struct palmpre_wms_acknowledge_msg
 {
 	uint32_t ref_id;
-#define WMS_ACKNOWLEDGE_MSG_UNKNOWN0_SIZE 1897
-	uint8_t unknown0[1897];
+#define WMS_ACKNOWLEDGE_MSG_UNKNOWN0_SIZE 5
+	uint8_t unknown0[5];
+	uint8_t value0;
+	uint8_t unknown1;
+	uint8_t value1;
+#define WMS_ACKNOWLEDGE_MSG_UNKNOWN2_SIZE 1889
+	uint8_t unknown2[1889];
 } __attribute__ ((packed));
 
 static void msmcomm_palmpre_wms_acknowledge_msg_init(struct palmpre_wms_acknowledge_msg* self)
 {
+	self->value1 = 0x09;
+	self->value0 = 0x01;
 }
 
 
@@ -553,10 +561,10 @@ struct palmpre_wms_send_msg
 	uint32_t ref_id;
 	uint8_t unknown0;
 	uint8_t nr;
-	uint8_t five;
+	uint8_t value0;
 #define WMS_SEND_MSG_UNKNOWN1_SIZE 2
 	uint8_t unknown1[2];
-	uint32_t ffffffff;
+	uint32_t value1;
 #define WMS_SEND_MSG_UNKNOWN2_SIZE 6
 	uint8_t unknown2[6];
 	uint8_t number_type;
@@ -564,7 +572,7 @@ struct palmpre_wms_send_msg
 	uint8_t service_center_len;
 #define WMS_SEND_MSG_SERVICE_CENTER_SIZE 36
 	uint8_t service_center[36];
-	uint16_t six_three;
+	uint16_t value2;
 	uint32_t pdu_len;
 #define WMS_SEND_MSG_PDU_SIZE 255
 	uint8_t pdu[255];
@@ -575,11 +583,11 @@ static void msmcomm_palmpre_wms_send_msg_init(struct palmpre_wms_send_msg* self)
 	self->service_center_len = 36;
 	self->pdu_len = 255;
 	self->number_plan = 0x01;
-	self->six_three = 0x0306;
-	self->five = 0x05;
-	self->number_type = 0x01;
-	self->ffffffff = 0xffffffff;
+	self->value2 = 0x0306;
+	self->value1 = 0xffffffff;
+	self->value0 = 0x05;
 	self->nr = 0x01;
+	self->number_type = 0x01;
 }
 
 

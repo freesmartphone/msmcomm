@@ -197,6 +197,7 @@ end
 
 start wms_msg_group_event 2083 device=palmpre
 [0] uint8_t response_type
+[3] uint8_t nr
 [4-7] uint32_t ref_id
 [8-2082] uint8_t command_data [wms_read_template_field,wms_sms_received_field]
 end
@@ -207,18 +208,21 @@ end
 
 start wms_acknowledge_msg 1901 device=palmpre
 [0-3] uint32_t ref_id
+[4] uint32_t nr
+[9] uint8_t value0 = 0x01
+[11] uint8_t value1 = 0x09
 end
 
 start wms_send_msg 319 device=palmpre
 [0-3] uint32_t ref_id
 [5] uint8_t nr = 0x01
-[6] uint8_t five = 0x05
-[9-12] uint32_t ffffffff = 0xffffffff
+[6] uint8_t value0 = 0x05
+[9-12] uint32_t value1 = 0xffffffff
 [19] uint8_t number_type = 0x01
 [20] uint8_t number_plan = 0x01
 [21] uint8_t service_center_len
 [22-57] uint8_t service_center
-[58-59] uint16_t six_three = 0x0306
+[58-59] uint16_t value2 = 0x0306
 [60-63] uint32_t pdu_len
 [64-318] uint8_t pdu
 end

@@ -670,7 +670,8 @@ struct Palmpre.WmsSmsReceivedField
 struct Palmpre.WmsMsgGroupEvent
 {
 	public uint8 response_type;
-	public uint8 unknown0[3];
+	public uint8 unknown0[2];
+	public uint8 nr;
 	public uint32 ref_id;
 	public WmsReadTemplateField wms_read_template
 	{
@@ -724,7 +725,11 @@ struct Palmpre.WmsCfgGroupEvent
 struct Palmpre.WmsAcknowledgeMessage
 {
 	public uint32 ref_id;
-	public uint8 unknown0[1897];
+	public uint8 unknown0[5];
+	public uint8 value0;
+	public uint8 unknown1;
+	public uint8 value1;
+	public uint8 unknown2[1889];
 	public unowned uint8[] data
 	{
 		get
@@ -745,15 +750,15 @@ struct Palmpre.WmsSendMessage
 	public uint32 ref_id;
 	public uint8 unknown0;
 	public uint8 nr;
-	public uint8 five;
+	public uint8 value0;
 	public uint8 unknown1[2];
-	public uint32 ffffffff;
+	public uint32 value1;
 	public uint8 unknown2[6];
 	public uint8 number_type;
 	public uint8 number_plan;
 	public uint8 service_center_len;
 	public uint8 service_center[36];
-	public uint16 six_three;
+	public uint16 value2;
 	public uint32 pdu_len;
 	public uint8 pdu[255];
 	public unowned uint8[] data

@@ -40,23 +40,21 @@ namespace Msmcomm.Daemon
         public override bool handleUnsolicitedResponse( LowLevel.BaseMessage message )
         {
             bool handled = false;
-            stdout.printf( "\nGroupID/MessageID/RefID:    : %x / %x / %x\n", message.group_id, message.message_id, message.ref_id );
 
             switch ( message.message_type )
             {
                 case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_MSG_GROUP:
                     var smsmsg = message as LowLevel.Sms.Urc.MsgGroup;
 
-                    stdout.printf( "UNSOLICITED_RESPONSE_SMS_MSG_GROUP: 0x%x 0x%x\n", smsmsg.GROUP_ID, smsmsg.MESSAGE_ID );
-                    stdout.printf( "    ResponseType: 0x%x\n", smsmsg.response_type );
-
                     /* Message received */
                     if ( smsmsg.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_RECEIVED )
                     {
-                         stdout.printf( "Message received\n" );
+                        stdout.printf( "Message received from: %s\n", smsmsg.sender );
+
                         var msg = SmsMessage();
                         msg.sender = smsmsg.sender;
                         msg.pdu = smsmsg.pdu;
+                        msg.nr = smsmsg.nr;
 
                         incomming_message( msg ); // DBUS SIGNAL
 
@@ -205,6 +203,17 @@ namespace Msmcomm.Daemon
             message.pdu = pdu;
 
             var response = yield channel.enqueueAsync(message);
+            checkResponse(response);
+        }
+
+        public async void acknowledge_message(uint8 nr) throws GLib.Error, Msmcomm.Error
+        {
+            stdout.printf( "acknowledge_message with nr: %i\n", nr );
+
+            var ack_msg = new LowLevel.Sms.Command.AcknowledgeMessage();
+            ack_msg.nr = nr;
+
+            var response = yield channel.enqueueAsync(ack_msg);
             checkResponse(response);
         }
 
