@@ -50,14 +50,11 @@ namespace Msmcomm.Daemon
                     /* Message received */
                     if ( smsmsg.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_RECEIVED )
                     {
-                        stdout.printf( "Message received from: %s\n", smsmsg.sender );
-
                         var msg = SmsMessage();
                         msg.sender = smsmsg.sender;
                         msg.pdu = smsmsg.pdu;
-                        msg.nr = smsmsg.nr;
 
-                        incomming_message( msg ); // DBUS SIGNAL
+                        incoming_message( msg ); // DBUS SIGNAL
 
                         handled = true;
                     }
@@ -71,15 +68,13 @@ namespace Msmcomm.Daemon
                     /* Message read template */
                     if ( smsmsg.response_type == LowLevel.Sms.Urc.MsgGroup.ResponseType.MESSAGE_READ_TEMPLATE )
                     {
-                         stdout.printf( "MESSAGE_READ_TEMPLATE\n" );
-                         stdout.printf( "smsc: %s\n", smsmsg.smsc_number );
+                         stdout.printf( "MESSAGE_READ_TEMPLATE: smsc: %s\n", smsmsg.smsc_number );
                          handled = true;
                     }
                     break;
 
                 case LowLevel.MessageType.UNSOLICITED_RESPONSE_SMS_CFG_GROUP:
                     var smsmsg = message as LowLevel.Sms.Urc.CfgGroup;
-                    stdout.printf( "UNSOLICITED_RESPONSE_SMS_CFG_GROUP: 0x%x 0x%x\n", smsmsg.GROUP_ID, smsmsg.MESSAGE_ID );
                     //TODO
                     break;
                 default:
@@ -207,14 +202,11 @@ namespace Msmcomm.Daemon
             checkResponse(response);
         }
 
-        public async void acknowledge_message(uint8 nr) throws GLib.Error, Msmcomm.Error
+        public async void acknowledge_message() throws GLib.Error, Msmcomm.Error
         {
-            stdout.printf( "acknowledge_message with nr: %i\n", nr );
+            var message = new LowLevel.Sms.Command.AcknowledgeMessage();
 
-            var ack_msg = new LowLevel.Sms.Command.AcknowledgeMessage();
-            ack_msg.nr = nr;
-
-            var response = yield channel.enqueueAsync(ack_msg);
+            var response = yield channel.enqueueAsync(message);
             checkResponse(response);
         }
 

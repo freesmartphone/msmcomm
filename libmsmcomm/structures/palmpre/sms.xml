@@ -43,7 +43,6 @@
 
 		<structure name="wms_acknowledge_msg" length="1901">
 			<field name="ref_id" start="0" end="3" type="uint32_t"/>
-			<!-- guessing: this nr needs to be ack'ed -->
 			<field name="nr" start="4" end="3" type="uint32_t"/>
 			<!-- guessing: always 0x01 -->
 			<field start="9" type="uint8_t" value="0x01"/>
