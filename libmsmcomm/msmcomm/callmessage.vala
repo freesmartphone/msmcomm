@@ -129,6 +129,8 @@ namespace Msmcomm.LowLevel
     {
         REJECT_INCOMING_CALL = 0,
         HANGUP_ACTIVE_CALL = 1,
+        RELEASE_SPECIFIC_CALL = 2,
+        HOLD_ALL_ACTIVE_AND_ACCEPT_HELD_OR_WAITING = 3,
     }
 
     public class CallSupsCommandMessage : BaseMessage

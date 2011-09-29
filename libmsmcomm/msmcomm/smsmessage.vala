@@ -401,12 +401,28 @@ namespace Msmcomm.LowLevel
 
         public enum ResponseType
         {
-            MESSAGE_SEND = 0x0,
-            MESSAGE_READ = 0x2,
-            MESSAGE_DELETE = 0x4,
-            MESSAGE_READ_TEMPLATE = 0x7,
-            MESSAGE_RECEIVED = 0xf,
-            MESSAGE_SUBMIT_REPORT = 0x10,
+            MESSAGE_SEND = 0,
+            MESSAGE_ACK = 1,
+            MESSAGE_READ = 2,
+            MESSAGE_WRITE = 3,
+            MESSAGE_DELETE = 4,
+            MESSAGE_DELETE_ALL = 5,
+            MESSAGE_MODIFY_TAG = 6,
+            MESSAGE_READ_TEMPLATE = 7,
+            MESSAGE_WRITE_TEMPLATE = 8,
+            MESSAGE_DELETE_TEMPLATE = 9,
+            MESSAGE_DELETE_TEMPLATE_ALL = 10,
+            MESSAGE_READ_STS_REPORT = 11,
+            MESSAGE_WRITE_STS_REPORT = 12,
+            MESSAGE_DELETE_STS_REPORT = 13,
+            MESSAGE_DELETE_STS_REPORT_ALL = 14,
+            MESSAGE_RECEIVED = 15,
+            MESSAGE_SUBMIT_REPORT = 16,
+            MESSAGE_STATUS_REPORT = 17,
+            MESSAGE_MT_MESSAGE_ERROR = 18,
+            MESSAGE_ACK_REPORT = 19,
+            MESSAGE_DUPLICATE_CB_PAGE = 20,
+            MAX = 0xff,
             UNKNOWN = -1,
         }
 
@@ -438,10 +454,19 @@ namespace Msmcomm.LowLevel
             ref_id = _message.ref_id;
             response_type = (ResponseType) _message.response_type;
 
+            if (_message.response_type > ResponseType.MAX)
+            {
+                response_type = ResponseType.UNKNOWN;
+                theLogger.error( @"Found unknown $(message_type) response type: 0x%02x".printf(_message.response_type ) );
+                return;
+            }
+
+            assert( theLogger.debug( @"Got UNSOLICITED_RESPONSE_SMS_MSG_GROUP with "
+                                   + "response type = $((ResponseType)_message.response_type)" ));
+
             switch ( _message.response_type )
             {
                 case ResponseType.MESSAGE_SEND:
-                    stdout.printf("ResponseType.MESSAGE_SEND\n");
                     break;
                 case ResponseType.MESSAGE_READ:
                     break;
@@ -476,8 +501,6 @@ namespace Msmcomm.LowLevel
                 case ResponseType.MESSAGE_SUBMIT_REPORT:
                     break;
                 default:
-                    response_type = ResponseType.UNKNOWN;
-                    theLogger.error( @"Found unknown $(message_type) response type: 0x%02x".printf(_message.response_type ) );
                     break;
             }
         }
